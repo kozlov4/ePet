@@ -1,5 +1,7 @@
 package com.example.epet.ui.splash.view
 
+import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -8,21 +10,23 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.epet.R
+import com.example.epet.ui.auth.view.AuthActivity
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.style.ForegroundColorSpan
-import android.graphics.Color
+import android.animation.ValueAnimator
 
 class SplashActivity : AppCompatActivity() {
 
     private val ANIM_DURATION: Long = 400
+    private val TEXT_DELAY: Long = 150
 
     private lateinit var tv_tettletext: TextView
     private lateinit var iv_icon_cat: ImageView
     private lateinit var iv_icon_trident: ImageView
 
     private val handler = Handler(Looper.getMainLooper())
-    private val fadeIn by lazy { AnimationUtils.loadAnimation(this, R.anim.fade_in) }
+    private val fadeIn by lazy { AnimationUtils.loadAnimation(this, R.anim.fade_in_logo) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,15 +34,29 @@ class SplashActivity : AppCompatActivity() {
 
         initViews()
 
-        animateText("Привіт 🐾", 150)
+        animateText("Привіт 🐾", TEXT_DELAY)
+
         showImage(iv_icon_cat)
         showImage(iv_icon_trident)
+
+        handler.postDelayed({
+            navigateToAuthActivity()
+        }, 2000)
     }
 
+    /** Ініціалізація всіх елементів інтерфейсу **/
     private fun initViews() {
         tv_tettletext = findViewById(R.id.tv_tittletext)
         iv_icon_cat = findViewById(R.id.iv_icon_cat)
         iv_icon_trident = findViewById(R.id.iv_icon_trident)
+    }
+
+    /** Переход на наступну активність **/
+    private fun navigateToAuthActivity() {
+        val intent = Intent(this, AuthActivity::class.java)
+        startActivity(intent)
+        overridePendingTransition(R.anim.slide_in_bottom, 0)
+        finish()
     }
 
     /** Ефект друкарської машинки **/
@@ -58,6 +76,7 @@ class SplashActivity : AppCompatActivity() {
                 Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
             )
         }
+
         tv_tettletext.text = spannable
 
         for (i in symbols.indices) {
@@ -75,7 +94,7 @@ class SplashActivity : AppCompatActivity() {
             }
 
             handler.postDelayed({
-                val animator = android.animation.ValueAnimator.ofInt(0, 255)
+                val animator = ValueAnimator.ofInt(0, 255)
                 animator.duration = ANIM_DURATION
                 animator.addUpdateListener { valueAnimator ->
                     val alpha = valueAnimator.animatedValue as Int
@@ -94,7 +113,7 @@ class SplashActivity : AppCompatActivity() {
         }
     }
 
-    /** Поява іконок **/
+    /** Поява іконок із плавною анімацією **/
     private fun showImage(image: ImageView) {
         image.startAnimation(fadeIn)
         image.alpha = 1f
