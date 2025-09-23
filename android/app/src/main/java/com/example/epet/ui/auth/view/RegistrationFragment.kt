@@ -10,6 +10,7 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.LinearLayout
 import androidx.appcompat.widget.AppCompatButton
+import androidx.navigation.fragment.findNavController
 
 class RegistrationFragment : Fragment() {
 
@@ -31,6 +32,7 @@ class RegistrationFragment : Fragment() {
     private lateinit var et_password: EditText
 
     private lateinit var bth_registration: AppCompatButton
+    private lateinit var bth_to_login: AppCompatButton
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_registration, container, false)
@@ -39,6 +41,7 @@ class RegistrationFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initViews(view)
+        initButtons()
     }
 
     /** Ініціалізація всіх елементів інтерфейсу **/
@@ -61,6 +64,13 @@ class RegistrationFragment : Fragment() {
         et_password = view.findViewById(R.id.et_password)
 
         bth_registration = view.findViewById(R.id.bth_registration)
+        bth_to_login = view.findViewById(R.id.bth_to_login)
     }
 
+    /** Ініціалізація всіх кнопок інтерфейсу **/
+    private fun initButtons() {
+        bth_to_login.setOnClickListener {
+            findNavController().navigate(R.id.registration_to_login)
+        }
+    }
 }
