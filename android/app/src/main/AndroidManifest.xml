@@ -12,14 +12,22 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.EPet">
         <activity
-            android:name=".ui.splash.view.SplashActivity"
-            android:exported="true">
+            android:name=".ui.auth.view.AuthActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-    </application>
 
+        <activity
+            android:name=".ui.splash.view.SplashActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden"/>
+
+    </application>
 </manifest>

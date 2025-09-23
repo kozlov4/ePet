@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/tv_tittletext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/e_ukraine_regular"
+        android:text="Реєстрація"
+        android:textColor="@android:color/black"
+        android:textSize="32sp"
+        app:layout_constraintStart_toStartOf="@+id/guideline_vertical_left"
+        app:layout_constraintTop_toTopOf="@+id/guideline_horizontal_text" />
+
+    <LinearLayout
+        android:id="@+id/ll_fullname"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/bg_white"
+        app:layout_constraintStart_toStartOf="@+id/guideline_vertical_left"
+        app:layout_constraintEnd_toEndOf="@+id/guideline_vertical_right"
+        app:layout_constraintTop_toTopOf="@+id/guideline_horizontal_fields">
+
+        <EditText
+            android:id="@+id/et_surname"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:paddingHorizontal="18dp"
+            android:inputType="text"
+            android:hint="Прізвище"
+            android:textSize="14sp"
+            android:textColor="@color/black"
+            android:textColorHint="@color/gray_hint_text"
+            android:fontFamily="@font/e_ukraine_regular"
+            android:background="@null" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/gray_hint_text"/>
+
+        <EditText
+            android:id="@+id/et_name"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:paddingHorizontal="18dp"
+            android:inputType="text"
+            android:hint="Імʼя"
+            android:textSize="14sp"
+            android:textColor="@color/black"
+            android:textColorHint="@color/gray_hint_text"
+            android:fontFamily="@font/e_ukraine_regular"
+            android:background="@null" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/gray_hint_text"/>
+
+        <EditText
+            android:id="@+id/et_patronymic"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:paddingHorizontal="18dp"
+            android:inputType="text"
+            android:hint="По-батькові"
+            android:textSize="14sp"
+            android:textColor="@color/black"
+            android:textColorHint="@color/gray_hint_text"
+            android:fontFamily="@font/e_ukraine_regular"
+            android:background="@null" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_passport"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="25dp"
+        android:background="@drawable/bg_white"
+        app:layout_constraintStart_toStartOf="@+id/guideline_vertical_left"
+        app:layout_constraintEnd_toEndOf="@+id/guideline_vertical_right"
+        app:layout_constraintTop_toBottomOf="@id/ll_fullname">
+
+        <EditText
+            android:id="@+id/et_passport_number"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:paddingHorizontal="18dp"
+            android:inputType="text"
+            android:hint="Номер паспорту"
+            android:textSize="14sp"
+            android:textColor="@color/black"
+            android:textColorHint="@color/gray_hint_text"
+            android:fontFamily="@font/e_ukraine_regular"
+            android:background="@null" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_contact"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="25dp"
+        android:background="@drawable/bg_white"
+        app:layout_constraintStart_toStartOf="@+id/guideline_vertical_left"
+        app:layout_constraintEnd_toEndOf="@+id/guideline_vertical_right"
+        app:layout_constraintTop_toBottomOf="@id/ll_passport">
+
+        <EditText
+            android:id="@+id/et_address"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:paddingHorizontal="18dp"
+            android:inputType="text"
+            android:hint="Адреса"
+            android:textSize="14sp"
+            android:textColor="@color/black"
+            android:textColorHint="@color/gray_hint_text"
+            android:fontFamily="@font/e_ukraine_regular"
+            android:background="@null" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/gray_hint_text"/>
+
+        <EditText
+            android:id="@+id/et_postal_code"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:paddingHorizontal="18dp"
+            android:inputType="text"
+            android:hint="Поштовий індекс"
+            android:textSize="14sp"
+            android:textColor="@color/black"
+            android:textColorHint="@color/gray_hint_text"
+            android:fontFamily="@font/e_ukraine_regular"
+            android:background="@null" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/gray_hint_text"/>
+
+        <EditText
+            android:id="@+id/et_email_address"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:paddingHorizontal="18dp"
+            android:inputType="text"
+            android:hint="Електрона адреса"
+            android:textSize="14sp"
+            android:textColor="@color/black"
+            android:textColorHint="@color/gray_hint_text"
+            android:fontFamily="@font/e_ukraine_regular"
+            android:background="@null" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_password"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="25dp"
+        android:background="@drawable/bg_white"
+        app:layout_constraintStart_toStartOf="@+id/guideline_vertical_left"
+        app:layout_constraintEnd_toEndOf="@+id/guideline_vertical_right"
+        app:layout_constraintTop_toBottomOf="@id/ll_contact">
+
+        <EditText
+            android:id="@+id/et_password"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:paddingHorizontal="18dp"
+            android:inputType="text"
+            android:hint="Пароль"
+            android:textSize="14sp"
+            android:textColor="@color/black"
+            android:textColorHint="@color/gray_hint_text"
+            android:fontFamily="@font/e_ukraine_regular"
+            android:background="@null" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:fontFamily="@font/e_ukraine_regular"
+        android:text="Пароль має містити НЕ менше 8 символів"
+        android:textColor="@color/blue_hint_text"
+        android:textSize="10sp"
+        app:layout_constraintStart_toStartOf="@+id/guideline_vertical_left"
+        app:layout_constraintEnd_toEndOf="@+id/guideline_vertical_right"
+        app:layout_constraintTop_toBottomOf="@id/ll_password" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/bth_registration"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:background="@drawable/bg_black"
+        android:text="Зареєструватися"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="13sp"
+        android:fontFamily="@font/e_ukraine_regular"
+        android:gravity="center"
+        android:stateListAnimator="@null"
+        android:layout_marginStart="50dp"
+        android:layout_marginEnd="50dp"
+        app:layout_constraintStart_toStartOf="@+id/guideline_vertical_left"
+        app:layout_constraintEnd_toEndOf="@+id/guideline_vertical_right"
+        app:layout_constraintBottom_toBottomOf="@id/guideline_horizontal_button"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_horizontal_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.12" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_horizontal_fields"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.2" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_horizontal_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.85" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_vertical_left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.07" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_vertical_right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.93" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

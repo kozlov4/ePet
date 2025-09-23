@@ -36,7 +36,7 @@ class SplashActivity : AppCompatActivity() {
     }
 
     private fun initViews() {
-        tv_tettletext = findViewById(R.id.tv_tettletext)
+        tv_tettletext = findViewById(R.id.tv_tittletext)
         iv_icon_cat = findViewById(R.id.iv_icon_cat)
         iv_icon_trident = findViewById(R.id.iv_icon_trident)
     }

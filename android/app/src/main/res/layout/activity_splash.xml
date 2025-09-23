@@ -7,11 +7,11 @@
     android:fitsSystemWindows="true">
 
     <TextView
-        android:id="@+id/tv_tettletext"
+        android:id="@+id/tv_tittletext"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/e_ukraine_regular"
-        android:text="Привіт 👋"
+        android:text="Привіт 🐾"
         android:textColor="@android:color/black"
         android:textSize="50sp"
         app:layout_constraintEnd_toEndOf="parent"

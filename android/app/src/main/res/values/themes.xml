@@ -4,6 +4,7 @@
 
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="colorControlActivated">@android:color/black</item>
     </style>
 
     <style name="Theme.EPet" parent="Base.Theme.EPet" />
