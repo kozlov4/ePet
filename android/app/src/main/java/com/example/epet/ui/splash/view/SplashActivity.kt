@@ -16,12 +16,6 @@ import android.graphics.Color
 class SplashActivity : AppCompatActivity() {
 
     private val ANIM_DURATION: Long = 400
-    private val GREETINGS_WORDS = listOf(
-        "Привіт \uD83D\uDC3E",
-        "Привіт \uD83D\uDC36",
-        "Привіт \uD83D\uDE3A",
-        "Привіт \uD83D\uDC39",
-    )
 
     private lateinit var tv_tettletext: TextView
     private lateinit var iv_icon_cat: ImageView
@@ -36,7 +30,7 @@ class SplashActivity : AppCompatActivity() {
 
         initViews()
 
-        animateText(GREETINGS_WORDS.random(), 150)
+        animateText("Привіт 🐾", 150)
         showImage(iv_icon_cat)
         showImage(iv_icon_trident)
     }
