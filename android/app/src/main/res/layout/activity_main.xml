@@ -5,7 +5,20 @@
     android:layout_height="match_parent"
     android:background="@drawable/bg_gradient">
 
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragment_container_main"
+        android:name="androidx.navigation.fragment.NavHostFragment"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:navGraph="@navigation/nav_graph_main"
+        app:defaultNavHost="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_horizontal_menu"/>
+
     <LinearLayout
+        android:id="@+id/ll_menu_container"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@color/black"
@@ -18,20 +31,21 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline_horizontal_menu">
 
+        <!-- Feed -->
         <LinearLayout
+            android:id="@+id/ll_to_feed"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:clickable="true"
+            android:focusable="true">
 
             <ImageView
-                android:id="@+id/img1"
                 android:layout_width="27dp"
                 android:layout_height="27dp"
                 android:adjustViewBounds="true"
-                android:clickable="true"
-                android:focusable="true"
                 android:scaleType="centerCrop"
                 android:src="@drawable/icon_services" />
 
@@ -45,19 +59,21 @@
                 android:textSize="11sp" />
         </LinearLayout>
 
+        <!-- Documents -->
         <LinearLayout
+            android:id="@+id/ll_to_documents"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:clickable="true"
+            android:focusable="true">
 
             <ImageView
                 android:layout_width="27dp"
                 android:layout_height="27dp"
                 android:adjustViewBounds="true"
-                android:clickable="true"
-                android:focusable="true"
                 android:scaleType="centerCrop"
                 android:src="@drawable/icon_services" />
 
@@ -71,20 +87,21 @@
                 android:textSize="11sp" />
         </LinearLayout>
 
-
+        <!-- Services -->
         <LinearLayout
+            android:id="@+id/ll_to_services"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:clickable="true"
+            android:focusable="true">
 
             <ImageView
                 android:layout_width="27dp"
                 android:layout_height="27dp"
                 android:adjustViewBounds="true"
-                android:clickable="true"
-                android:focusable="true"
                 android:scaleType="centerCrop"
                 android:src="@drawable/icon_services" />
 
@@ -98,20 +115,21 @@
                 android:textSize="11sp" />
         </LinearLayout>
 
-
+        <!-- Menu -->
         <LinearLayout
+            android:id="@+id/ll_to_menu"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:clickable="true"
+            android:focusable="true">
 
             <ImageView
                 android:layout_width="27dp"
                 android:layout_height="27dp"
                 android:adjustViewBounds="true"
-                android:clickable="true"
-                android:focusable="true"
                 android:scaleType="centerCrop"
                 android:src="@drawable/icon_services" />
 
