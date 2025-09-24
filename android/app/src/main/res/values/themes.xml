@@ -1,5 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <style name="Base.Theme.EPet" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="Theme.CustomAuthActivity" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="android:windowBackground">@drawable/bg_gradient</item>
 
         <item name="android:windowLightStatusBar">true</item>
@@ -7,5 +7,12 @@
         <item name="colorControlActivated">@android:color/black</item>
     </style>
 
-    <style name="Theme.EPet" parent="Base.Theme.EPet" />
+    <style name="Theme.CustomMainActivity" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:windowBackground">@drawable/bg_gradient</item>
+
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:navigationBarColor">@android:color/black</item>
+        <item name="colorControlActivated">@android:color/black</item>
+    </style>
+
 </resources>
