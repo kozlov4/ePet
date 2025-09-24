@@ -31,7 +31,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline_horizontal_menu">
 
-        <!-- Feed -->
         <LinearLayout
             android:id="@+id/ll_to_feed"
             android:layout_width="0dp"
@@ -59,7 +58,6 @@
                 android:textSize="11sp" />
         </LinearLayout>
 
-        <!-- Documents -->
         <LinearLayout
             android:id="@+id/ll_to_documents"
             android:layout_width="0dp"
@@ -87,7 +85,6 @@
                 android:textSize="11sp" />
         </LinearLayout>
 
-        <!-- Services -->
         <LinearLayout
             android:id="@+id/ll_to_services"
             android:layout_width="0dp"
@@ -115,7 +112,6 @@
                 android:textSize="11sp" />
         </LinearLayout>
 
-        <!-- Menu -->
         <LinearLayout
             android:id="@+id/ll_to_menu"
             android:layout_width="0dp"

@@ -27,8 +27,6 @@
 
     </LinearLayout>
 
-
-
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_horizontal_text"
         android:layout_width="wrap_content"
