@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">єУлюбленець</string>
+    <string name="bth_to_registration">Якщо вже зареєстровані <u>Увійти</u></string>
+    <string name="bth_to_login">Якщо ще не зареєстровані <u>Зареєструватися</u></string>
 </resources>
