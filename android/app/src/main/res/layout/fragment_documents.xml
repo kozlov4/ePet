@@ -12,22 +12,37 @@
         android:overScrollMode="never"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline_horizontal_documents"
-        app:layout_constraintBottom_toBottomOf="@+id/guideline_horizontal_menu" />
+        app:layout_constraintTop_toTopOf="@+id/guideline_horizontal_documents_top"
+        app:layout_constraintBottom_toBottomOf="@+id/guideline_horizontal_documents_bottom" />
+
+    <LinearLayout
+        android:id="@+id/ll_indicators"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toTopOf="@+id/guideline_horizontal_indicators" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline_horizontal_documents"
+        android:id="@+id/guideline_horizontal_documents_top"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.2" />
+        app:layout_constraintGuide_percent="0.16" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline_horizontal_menu"
+        android:id="@+id/guideline_horizontal_documents_bottom"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.865" />
+        app:layout_constraintGuide_percent="0.72" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_horizontal_indicators"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.74" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -47,11 +47,15 @@ class MainActivity : AppCompatActivity() {
     /** Ініціалізація всіх кнопок інтерфейсу **/
     private fun initButtons() {
         ll_to_feed.setOnClickListener {
-            navController.navigate(R.id.fragment_feed, null, navOptions)
+            if (navController.currentDestination?.id != R.id.fragment_feed) {
+                navController.navigate(R.id.fragment_feed, null, navOptions)
+            }
         }
 
         ll_to_documents.setOnClickListener {
-            navController.navigate(R.id.fragment_documents, null, navOptions)
+            if (navController.currentDestination?.id != R.id.fragment_documents) {
+                navController.navigate(R.id.fragment_documents, null, navOptions)
+            }
         }
     }
 
