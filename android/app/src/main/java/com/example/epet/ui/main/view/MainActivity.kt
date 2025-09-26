@@ -57,6 +57,12 @@ class MainActivity : AppCompatActivity() {
                 navController.navigate(R.id.fragment_documents, null, navOptions)
             }
         }
+
+        ll_to_services.setOnClickListener {
+            if (navController.currentDestination?.id != R.id.fragment_services) {
+                navController.navigate(R.id.fragment_services, null, navOptions)
+            }
+        }
     }
 
     /** Ініціалізація навігаційного інтерфейсу **/
