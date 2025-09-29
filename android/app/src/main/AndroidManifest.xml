@@ -12,11 +12,11 @@
         android:supportsRtl="true">
 
         <activity
-            android:name=".ui.auth.view.AuthActivity"
+            android:name=".ui.main.view.MainActivity"
             android:exported="true"
             android:screenOrientation="portrait"
             android:configChanges="orientation|keyboardHidden"
-            android:theme="@style/Theme.CustomAuthActivity">
+            android:theme="@style/Theme.CustomMainActivity">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,11 +26,11 @@
         </activity>
 
         <activity
-            android:name=".ui.main.view.MainActivity"
+            android:name=".ui.auth.view.AuthActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:configChanges="orientation|keyboardHidden"
-            android:theme="@style/Theme.CustomMainActivity"/>
+            android:theme="@style/Theme.CustomAuthActivity"/>
 
         <activity
             android:name=".ui.splash.view.SplashActivity"
