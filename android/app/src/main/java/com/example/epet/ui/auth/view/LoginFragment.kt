@@ -13,9 +13,9 @@ import androidx.navigation.fragment.findNavController
 class LoginFragment : Fragment() {
 
     private lateinit var tv_tittletext: TextView
+    private lateinit var tv_to_registration: TextView
 
     private lateinit var bth_login: AppCompatButton
-    private lateinit var bth_to_registration: AppCompatButton
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_login, container, false)
@@ -30,14 +30,14 @@ class LoginFragment : Fragment() {
     /** Ініціалізація всіх елементів інтерфейсу **/
     private fun initViews(view: View) {
         tv_tittletext = view.findViewById(R.id.tv_tittletext)
+        tv_to_registration = view.findViewById(R.id.tv_to_registration)
 
         bth_login = view.findViewById(R.id.bth_login)
-        bth_to_registration = view.findViewById(R.id.bth_to_registration)
     }
 
     /** Ініціалізація всіх кнопок інтерфейсу **/
     private fun initButtons() {
-        bth_to_registration.setOnClickListener {
+        tv_to_registration.setOnClickListener {
             findNavController().navigate(R.id.login_to_registration)
         }
     }

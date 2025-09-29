@@ -16,6 +16,7 @@ class RegistrationFragment : Fragment() {
 
     private lateinit var tv_tittletext: TextView
     private lateinit var tv_message: TextView
+    private lateinit var tv_to_login: TextView
 
     private lateinit var ll_fullname: LinearLayout
     private lateinit var ll_passport: LinearLayout
@@ -32,7 +33,6 @@ class RegistrationFragment : Fragment() {
     private lateinit var et_password: EditText
 
     private lateinit var bth_registration: AppCompatButton
-    private lateinit var bth_to_login: AppCompatButton
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_registration, container, false)
@@ -48,6 +48,7 @@ class RegistrationFragment : Fragment() {
     private fun initViews(view: View) {
         tv_tittletext = view.findViewById(R.id.tv_tittletext)
         tv_message = view.findViewById(R.id.tv_message)
+        tv_to_login = view.findViewById(R.id.tv_to_login)
 
         ll_fullname = view.findViewById(R.id.ll_fullname)
         ll_passport = view.findViewById(R.id.ll_passport)
@@ -64,12 +65,11 @@ class RegistrationFragment : Fragment() {
         et_password = view.findViewById(R.id.et_password)
 
         bth_registration = view.findViewById(R.id.bth_registration)
-        bth_to_login = view.findViewById(R.id.bth_to_login)
     }
 
     /** Ініціалізація всіх кнопок інтерфейсу **/
     private fun initButtons() {
-        bth_to_login.setOnClickListener {
+        tv_to_login.setOnClickListener {
             findNavController().navigate(R.id.registration_to_login)
         }
     }
