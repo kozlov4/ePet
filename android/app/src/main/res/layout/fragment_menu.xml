@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/bg_gradient"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -15,6 +16,191 @@
         app:layout_constraintStart_toStartOf="@+id/guideline_vertical_left"
         app:layout_constraintTop_toTopOf="@+id/guideline_horizontal_text" />
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/ll_mail"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/bg_white"
+        app:layout_constraintStart_toStartOf="@+id/guideline_vertical_left"
+        app:layout_constraintEnd_toEndOf="@+id/guideline_vertical_right"
+        app:layout_constraintTop_toTopOf="@+id/guideline_horizontal_menu">
+
+        <ImageView
+            android:id="@+id/iv_mail"
+            android:layout_width="40dp"
+            android:layout_height="45dp"
+            android:scaleType="centerCrop"
+            android:padding="11dp"
+            android:layout_marginLeft="10dp"
+            android:src="@drawable/icon_mail"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <TextView
+            android:id="@+id/tv_to_mail"
+            android:layout_width="0dp"
+            android:layout_height="45dp"
+            android:background="@null"
+            android:gravity="center_vertical"
+            android:fontFamily="@font/e_ukraine_regular"
+            android:text="Повідомлення"
+            android:paddingStart="8dp"
+            android:textColor="@color/black"
+            android:textSize="13sp"
+            android:clickable="true"
+            android:focusable="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/iv_mail"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/ll_update_app"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="20dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
+        android:background="@drawable/bg_white"
+        app:layout_constraintStart_toStartOf="@+id/guideline_vertical_left"
+        app:layout_constraintEnd_toEndOf="@+id/guideline_vertical_right"
+        app:layout_constraintTop_toBottomOf="@+id/ll_mail">
+
+        <ImageView
+            android:id="@+id/iv_settings"
+            android:layout_width="40dp"
+            android:layout_height="45dp"
+            android:scaleType="centerCrop"
+            android:padding="11dp"
+            android:layout_marginLeft="10dp"
+            android:src="@drawable/icon_settings"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_to_settings"
+            android:layout_width="0dp"
+            android:layout_height="45dp"
+            android:background="@null"
+            android:gravity="center_vertical"
+            android:fontFamily="@font/e_ukraine_regular"
+            android:paddingStart="8dp"
+            android:text="Налаштування"
+            android:textColor="@color/black"
+            android:textSize="13sp"
+            android:clickable="true"
+            android:focusable="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/iv_settings"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/iv_update_app"
+            android:layout_width="40dp"
+            android:layout_height="45dp"
+            android:scaleType="centerCrop"
+            android:padding="11dp"
+            android:layout_marginLeft="10dp"
+            android:src="@drawable/icon_update_app"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_to_settings"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <TextView
+            android:id="@+id/tv_to_update_app"
+            android:layout_width="0dp"
+            android:layout_height="45dp"
+            android:background="@null"
+            android:gravity="center_vertical"
+            android:fontFamily="@font/e_ukraine_regular"
+            android:paddingStart="8dp"
+            android:text="Оновити застосунок"
+            android:textColor="@color/black"
+            android:textSize="13sp"
+            android:clickable="true"
+            android:focusable="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/iv_settings"
+            app:layout_constraintTop_toBottomOf="@+id/tv_to_settings" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/ll_support"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="20dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
+        android:background="@drawable/bg_white"
+        app:layout_constraintStart_toStartOf="@+id/guideline_vertical_left"
+        app:layout_constraintEnd_toEndOf="@+id/guideline_vertical_right"
+        app:layout_constraintTop_toBottomOf="@+id/ll_update_app">
+
+        <ImageView
+            android:id="@+id/iv_support"
+            android:layout_width="40dp"
+            android:layout_height="45dp"
+            android:scaleType="centerCrop"
+            android:padding="11dp"
+            android:layout_marginLeft="10dp"
+            android:src="@drawable/icon_support"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_to_support"
+            android:layout_width="0dp"
+            android:layout_height="45dp"
+            android:background="@null"
+            android:gravity="center_vertical"
+            android:fontFamily="@font/e_ukraine_regular"
+            android:paddingStart="8dp"
+            android:text="Служба підтримки"
+            android:textColor="@color/black"
+            android:textSize="13sp"
+            android:clickable="true"
+            android:focusable="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/iv_support"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/iv_question"
+            android:layout_width="40dp"
+            android:layout_height="45dp"
+            android:scaleType="centerCrop"
+            android:padding="11dp"
+            android:layout_marginLeft="10dp"
+            android:src="@drawable/icon_question"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_to_support"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <TextView
+            android:id="@+id/tv_to_question"
+            android:layout_width="0dp"
+            android:layout_height="45dp"
+            android:background="@null"
+            android:gravity="center_vertical"
+            android:fontFamily="@font/e_ukraine_regular"
+            android:paddingStart="8dp"
+            android:text="Питання та відповіді"
+            android:textColor="@color/black"
+            android:textSize="13sp"
+            android:clickable="true"
+            android:focusable="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/iv_support"
+            app:layout_constraintTop_toBottomOf="@+id/tv_to_support" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_horizontal_text"
@@ -24,11 +210,11 @@
         app:layout_constraintGuide_percent="0.12" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline_horizontal_search"
+        android:id="@+id/guideline_horizontal_menu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_begin="146dp" />
+        app:layout_constraintGuide_percent="0.2" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_vertical_left"
