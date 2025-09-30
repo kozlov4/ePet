@@ -1,15 +1,17 @@
-package com.example.epet.ui.main.view
+package com.example.epet.ui.main.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.cardview.widget.CardView
+import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.epet.R
 import com.example.epet.data.model.PetPassport
 
-class PassportAdapter(private val passport_list: List<PetPassport>) :
-    RecyclerView.Adapter<PassportAdapter.PassportViewHolder>() {
+class PassportAdapter(
+    private val passportList: List<PetPassport>,
+    private val onMenuClick: () -> Unit) : RecyclerView.Adapter<PassportAdapter.PassportViewHolder>() {
 
     inner class PassportViewHolder(val card: CardView) : RecyclerView.ViewHolder(card) {
         val tv_name_ua: TextView = card.findViewById(R.id.tv_name_ua)
@@ -17,6 +19,7 @@ class PassportAdapter(private val passport_list: List<PetPassport>) :
         val tv_birth_date: TextView = card.findViewById(R.id.tv_birth_date)
         val tv_passport_number: TextView = card.findViewById(R.id.tv_passport_number)
         val tv_last_update: TextView = card.findViewById(R.id.tv_last_update)
+        val iv_menu: ImageView = card.findViewById(R.id.iv_menu)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PassportViewHolder {
@@ -28,9 +31,8 @@ class PassportAdapter(private val passport_list: List<PetPassport>) :
         return PassportViewHolder(view)
     }
 
-
     override fun onBindViewHolder(holder: PassportViewHolder, position: Int) {
-        val passport = passport_list[position]
+        val passport = passportList[position]
         holder.tv_name_ua.text = passport.nameUA
         holder.tv_name_en.text = passport.nameEN
         holder.tv_birth_date.text = passport.birthDate
@@ -39,7 +41,11 @@ class PassportAdapter(private val passport_list: List<PetPassport>) :
         val repeatedText = "Паспорт оновлено ${passport.lastUpdate} "
         holder.tv_last_update.text = repeatedText.repeat(100)
         holder.tv_last_update.isSelected = true
+
+        holder.iv_menu.setOnClickListener {
+            onMenuClick()
+        }
     }
 
-    override fun getItemCount(): Int = passport_list.size
+    override fun getItemCount(): Int = passportList.size
 }

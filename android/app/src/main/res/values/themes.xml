@@ -15,4 +15,8 @@
         <item name="colorControlActivated">@android:color/black</item>
     </style>
 
+    <style name="BottomSheetAnimation" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="android:windowEnterAnimation">@anim/enter_bottom_passport_menu</item>
+        <item name="android:windowExitAnimation">@anim/exit_bottom_passport_menu</item>
+    </style>
 </resources>

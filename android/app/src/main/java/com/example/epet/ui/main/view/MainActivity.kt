@@ -38,6 +38,7 @@ class MainActivity : AppCompatActivity() {
         initNavigation()
         initNavigationBar()
         initButtons()
+
     }
 
     /** Ініціалізація всіх елементів інтерфейсу **/
