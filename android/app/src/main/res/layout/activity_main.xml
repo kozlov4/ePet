@@ -42,11 +42,12 @@
             android:focusable="true">
 
             <ImageView
-                android:layout_width="27dp"
+                android:id="@+id/iv_to_feed"
+                android:layout_width="35dp"
                 android:layout_height="27dp"
                 android:adjustViewBounds="true"
-                android:scaleType="centerCrop"
-                android:src="@drawable/icon_services" />
+                android:scaleType="centerInside"
+                android:src="@drawable/icon_feed_default" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -69,11 +70,12 @@
             android:focusable="true">
 
             <ImageView
-                android:layout_width="27dp"
+                android:id="@+id/iv_to_documents"
+                android:layout_width="35dp"
                 android:layout_height="27dp"
                 android:adjustViewBounds="true"
-                android:scaleType="centerCrop"
-                android:src="@drawable/icon_services" />
+                android:scaleType="centerInside"
+                android:src="@drawable/icon_documents_default" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -96,11 +98,12 @@
             android:focusable="true">
 
             <ImageView
-                android:layout_width="27dp"
+                android:id="@+id/iv_to_services"
+                android:layout_width="35dp"
                 android:layout_height="27dp"
                 android:adjustViewBounds="true"
-                android:scaleType="centerCrop"
-                android:src="@drawable/icon_services" />
+                android:scaleType="centerInside"
+                android:src="@drawable/icon_services_default" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -123,11 +126,12 @@
             android:focusable="true">
 
             <ImageView
-                android:layout_width="27dp"
+                android:id="@+id/iv_to_menu"
+                android:layout_width="35dp"
                 android:layout_height="27dp"
                 android:adjustViewBounds="true"
-                android:scaleType="centerCrop"
-                android:src="@drawable/icon_services" />
+                android:scaleType="centerInside"
+                android:src="@drawable/icon_menu_default" />
 
             <TextView
                 android:layout_width="wrap_content"

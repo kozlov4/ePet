@@ -18,7 +18,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/ll_search"
         android:layout_width="0dp"
-        android:layout_height="45dp"
+        android:layout_height="42dp"
         android:orientation="vertical"
         android:background="@drawable/bg_white"
         app:layout_constraintStart_toStartOf="@+id/guideline_vertical_left"
@@ -30,7 +30,7 @@
             android:layout_width="30dp"
             android:layout_height="0dp"
             android:scaleType="centerCrop"
-            android:padding="10dp"
+            android:padding="12dp"
             android:layout_marginLeft="10dp"
             android:src="@drawable/icon_magnifier"
             app:layout_constraintStart_toStartOf="@+id/ll_search"

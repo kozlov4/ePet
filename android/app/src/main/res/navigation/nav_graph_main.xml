@@ -15,4 +15,8 @@
     <fragment
         android:id="@+id/fragment_services"
         android:name="com.example.epet.ui.main.view.ServicesFragment" />
+
+    <fragment
+        android:id="@+id/fragment_menu"
+        android:name="com.example.epet.ui.main.view.MenuFragment" />
 </navigation>
