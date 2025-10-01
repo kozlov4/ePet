@@ -13,8 +13,7 @@ import com.example.epet.R
 import com.example.epet.data.model.PetPassport
 import com.example.epet.ui.main.adapter.PassportAdapter
 import kotlin.math.abs
-import MenuPassportAdapter
-import MenuPassportInfoAdapter
+import MenuPassport
 
 class DocumentsFragment : Fragment() {
 
@@ -64,7 +63,7 @@ class DocumentsFragment : Fragment() {
 
     /** Налаштування RecyclerView **/
     private fun setupRecyclerView(passports: List<PetPassport>) {
-        passportAdapter = PassportAdapter(passports) {MenuPassportAdapter().show(parentFragmentManager, "MenuPassportAdapter")}
+        passportAdapter = PassportAdapter(passports) {MenuPassport().show(parentFragmentManager, "MenuPassportAdapter")}
         layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         rvPassports.layoutManager = layoutManager
         rvPassports.adapter = passportAdapter

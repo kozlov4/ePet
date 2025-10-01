@@ -13,7 +13,7 @@ import com.example.epet.R
 import android.widget.TextView
 import android.widget.ImageView
 
-class MenuPassportInfoAdapter(private val onClose: (() -> Unit)? = null) : BottomSheetDialogFragment() {
+class MenuPassportInfo(private val onClose: (() -> Unit)? = null) : BottomSheetDialogFragment() {
 
     private lateinit var sv_main: NestedScrollView
     private lateinit var tv_passport_number: TextView

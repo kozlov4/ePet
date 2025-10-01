@@ -15,10 +15,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.epet.data.model.Vaccination
 import com.example.epet.ui.main.adapter.VaccinationAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.epet.data.model.PetPassport
-import com.example.epet.ui.main.adapter.PassportAdapter
 
-class MenuVaccinationInfoAdapter(private val onClose: (() -> Unit)? = null) : BottomSheetDialogFragment() {
+class MenuVaccinationInfo(private val onClose: (() -> Unit)? = null) : BottomSheetDialogFragment() {
 
     private lateinit var sv_main: NestedScrollView
     private lateinit var tv_last_update: TextView

@@ -10,7 +10,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.example.epet.R
 
-class MenuPassportAdapter(private val onClose: (() -> Unit)? = null) : BottomSheetDialogFragment() {
+class MenuPassport(private val onClose: (() -> Unit)? = null) : BottomSheetDialogFragment() {
 
     private lateinit var tv_passport_info: TextView
     private lateinit var tv_vaccination_info: TextView
@@ -61,12 +61,12 @@ class MenuPassportAdapter(private val onClose: (() -> Unit)? = null) : BottomShe
 
         tv_passport_info.setOnClickListener {
             dismiss()
-            MenuPassportInfoAdapter().show(parentFragmentManager, "MenuPassportInfoAdapter")
+            MenuPassportInfo().show(parentFragmentManager, "MenuPassportInfo")
         }
 
         tv_vaccination_info.setOnClickListener {
             dismiss()
-            MenuVaccinationInfoAdapter().show(parentFragmentManager, "MenuVaccinationInfoAdapter")
+            MenuVaccinationInfo().show(parentFragmentManager, "MenuVaccinationInfo")
         }
 
         tv_close.setOnClickListener {
