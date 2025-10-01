@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_menu">
+
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_height="3dp"
+        android:scaleType="centerInside"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/icon_slider"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/sv_main"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        android:scrollbars="none"
+        app:layout_constraintTop_toTopOf="@+id/guideline_horizontal_scroll"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tv_tittletext"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/e_ukraine_regular"
+                android:text="Вакцинації"
+                android:textColor="@android:color/black"
+                android:textSize="24sp"
+                app:layout_constraintStart_toStartOf="@+id/guideline_vertical_left"
+                app:layout_constraintEnd_toEndOf="@+id/guideline_vertical_right"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_passport_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/e_ukraine_regular"
+                android:text="UA AA 658199"
+                android:textColor="@android:color/black"
+                android:textSize="24sp"
+                android:layout_marginTop="7dp"
+                app:layout_constraintStart_toStartOf="@+id/guideline_vertical_left"
+                app:layout_constraintTop_toBottomOf="@+id/tv_tittletext" />
+
+            <ImageView
+                android:id="@+id/iv_copy_passport"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_marginStart="3dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/icon_copy"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_passport_number"
+                app:layout_constraintStart_toEndOf="@+id/tv_passport_number"
+                app:layout_constraintTop_toTopOf="@+id/tv_passport_number" />
+
+            <TextView
+                android:id="@+id/tv_last_update"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_marquee"
+                android:ellipsize="marquee"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:fontFamily="@font/e_ukraine_regular"
+                android:freezesText="true"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:layout_marginTop="15dp"
+                android:scrollHorizontally="true"
+                android:singleLine="true"
+                android:text="Паспорт оновлено 24.09.2025 Паспорт оновлено 24.09.2025"
+                android:textColor="@android:color/black"
+                android:textSize="13sp"
+                app:layout_constraintTop_toBottomOf="@+id/tv_passport_number" />
+
+            <LinearLayout
+                android:id="@+id/ll_main"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:orientation="vertical"
+                android:paddingTop="15dp"
+                android:background="@drawable/bg_vaccinnation_main"
+                app:layout_constraintEnd_toEndOf="@+id/guideline_vertical_right"
+                app:layout_constraintStart_toStartOf="@+id/guideline_vertical_left"
+                app:layout_constraintTop_toBottomOf="@+id/tv_last_update">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingLeft="12dp"
+                    android:paddingRight="12dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.6"
+                        android:fontFamily="@font/e_ukraine_regular"
+                        android:text="Назва та серія:"
+                        android:textColor="@android:color/black"
+                        android:textSize="13sp" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/e_ukraine_regular"
+                        android:text="Дата:"
+                        android:textColor="@color/black"
+                        android:textSize="13sp" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/e_ukraine_regular"
+                        android:text="Діє до:"
+                        android:textColor="@color/black"
+                        android:textSize="13sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingLeft="12dp"
+                    android:paddingRight="12dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.6"
+                        android:fontFamily="@font/e_ukraine_regular"
+                        android:text="Name and serial number "
+                        android:textColor="@color/gray_hint_text"
+                        android:textSize="10sp" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/e_ukraine_regular"
+                        android:text="Date"
+                        android:textColor="@color/gray_hint_text"
+                        android:textSize="10sp" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/e_ukraine_regular"
+                        android:text="Valid until"
+                        android:textColor="@color/gray_hint_text"
+                        android:textSize="10sp" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/gray_hint_text"
+                    android:layout_marginTop="10dp"/>
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_vaccination_list"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:scrollbars="vertical"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                android:background="@drawable/bg_vaccinnation_list"
+                app:layout_constraintEnd_toEndOf="@+id/guideline_vertical_right"
+                app:layout_constraintStart_toStartOf="@+id/guideline_vertical_left"
+                app:layout_constraintTop_toBottomOf="@+id/ll_main"/>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="80dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/rv_vaccination_list"/>
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline_vertical_left"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.07" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline_vertical_right"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.93" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_horizontal_scroll"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.04" />
+</androidx.constraintlayout.widget.ConstraintLayout>

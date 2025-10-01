@@ -66,7 +66,7 @@ class MenuPassportAdapter(private val onClose: (() -> Unit)? = null) : BottomShe
 
         tv_vaccination_info.setOnClickListener {
             dismiss()
-
+            MenuVaccinationInfoAdapter().show(parentFragmentManager, "MenuVaccinationInfoAdapter")
         }
 
         tv_close.setOnClickListener {
