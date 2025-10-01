@@ -16,6 +16,7 @@
         app:layout_constraintStart_toStartOf="@+id/guideline_vertical_left">
 
         <TextView
+            android:id="@+id/tv_passport_info"
             android:layout_width="match_parent"
             android:layout_height="45dp"
             android:gravity="center_vertical"
@@ -30,6 +31,7 @@
             android:textSize="13sp" />
 
         <TextView
+            android:id="@+id/tv_vaccination_info"
             android:layout_width="match_parent"
             android:layout_height="45dp"
             android:gravity="center_vertical"
@@ -44,6 +46,7 @@
             android:textSize="13sp" />
 
         <TextView
+            android:id="@+id/tv_documents"
             android:layout_width="match_parent"
             android:layout_height="45dp"
             android:gravity="center_vertical"
@@ -58,6 +61,7 @@
             android:textSize="13sp" />
 
         <TextView
+            android:id="@+id/tv_question"
             android:layout_width="match_parent"
             android:layout_height="45dp"
             android:gravity="center_vertical"

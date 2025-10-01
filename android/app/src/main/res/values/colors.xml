@@ -4,4 +4,5 @@
     <color name="white">#FFFFFFFF</color>
     <color name="gray_hint_text">#B3B3B3</color>
     <color name="blue_hint_text">#6A7F9B</color>
+    <color name="bg_menu_purple">#F0EEFF</color>
 </resources>

@@ -13,7 +13,8 @@ import com.example.epet.R
 import com.example.epet.data.model.PetPassport
 import com.example.epet.ui.main.adapter.PassportAdapter
 import kotlin.math.abs
-import BottomMenuFragment
+import MenuPassportAdapter
+import MenuPassportInfoAdapter
 
 class DocumentsFragment : Fragment() {
 
@@ -63,7 +64,7 @@ class DocumentsFragment : Fragment() {
 
     /** Налаштування RecyclerView **/
     private fun setupRecyclerView(passports: List<PetPassport>) {
-        passportAdapter = PassportAdapter(passports) {BottomMenuFragment().show(parentFragmentManager, "BottomMenu")}
+        passportAdapter = PassportAdapter(passports) {MenuPassportAdapter().show(parentFragmentManager, "MenuPassportAdapter")}
         layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         rvPassports.layoutManager = layoutManager
         rvPassports.adapter = passportAdapter
@@ -115,7 +116,6 @@ class DocumentsFragment : Fragment() {
         val childCount = rvPassports.childCount
         val indicatorCount = llIndicators.childCount
 
-        // Сброс alpha точек
         for (i in 0 until indicatorCount) llIndicators.getChildAt(i).alpha = INDICATOR_ALPHA_MIN
 
         for (i in 0 until childCount) {
@@ -123,12 +123,10 @@ class DocumentsFragment : Fragment() {
             val childCenter = (child.left + child.right) / 2
             val distance = abs(center - childCenter)
 
-            // Масштабування карток
             val scale = CARD_SCALE_MAX - (distance.toFloat() / rvPassports.width) * (CARD_SCALE_MAX - CARD_SCALE_MIN)
             child.scaleX = scale
             child.scaleY = scale
 
-            // Плавне оновлення індикатора
             val position = layoutManager.getPosition(child)
             if (position in 0 until indicatorCount) {
                 val alpha = 1f - (distance.toFloat() / rvPassports.width)

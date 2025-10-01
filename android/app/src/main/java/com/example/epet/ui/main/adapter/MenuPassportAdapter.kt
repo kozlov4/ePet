@@ -10,12 +10,16 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.example.epet.R
 
-class BottomMenuFragment(private val onClose: (() -> Unit)? = null) : BottomSheetDialogFragment() {
+class MenuPassportAdapter(private val onClose: (() -> Unit)? = null) : BottomSheetDialogFragment() {
 
+    private lateinit var tv_passport_info: TextView
+    private lateinit var tv_vaccination_info: TextView
+    private lateinit var tv_documents: TextView
+    private lateinit var tv_question: TextView
     private lateinit var tv_close: TextView
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        return BottomSheetDialog(requireContext(), R.style.BottomSheetAnimation).apply {
+        return BottomSheetDialog(requireContext(), R.style.MenuPassportAnimation).apply {
             setOnShowListener { dialogInterface ->
                 val bottomSheetDialog = dialogInterface as BottomSheetDialog
                 val bottomSheet = bottomSheetDialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
@@ -45,11 +49,26 @@ class BottomMenuFragment(private val onClose: (() -> Unit)? = null) : BottomShee
 
     /** Ініціалізація всіх елементів інтерфейсу **/
     private fun initViews(view: View) {
+        tv_passport_info = view.findViewById(R.id.tv_passport_info)
+        tv_vaccination_info = view.findViewById(R.id.tv_vaccination_info)
+        tv_documents = view.findViewById(R.id.tv_documents)
+        tv_question = view.findViewById(R.id.tv_question)
         tv_close = view.findViewById(R.id.tv_close)
     }
 
     /** Ініціалізація всіх кнопок інтерфейсу **/
     private fun initButtons() {
+
+        tv_passport_info.setOnClickListener {
+            dismiss()
+            MenuPassportInfoAdapter().show(parentFragmentManager, "MenuPassportInfoAdapter")
+        }
+
+        tv_vaccination_info.setOnClickListener {
+            dismiss()
+
+        }
+
         tv_close.setOnClickListener {
             dismiss()
         }

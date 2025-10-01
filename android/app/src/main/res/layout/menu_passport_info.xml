@@ -1,0 +1,751 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_menu">
+
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_height="3dp"
+        android:scaleType="centerInside"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/icon_slider"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/sv_main"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        android:scrollbars="none"
+        app:layout_constraintTop_toTopOf="@+id/guideline_horizontal_scroll"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tv_tittletext"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/e_ukraine_regular"
+                android:text="Паспорт домашньої\nтварини"
+                android:textColor="@android:color/black"
+                android:textSize="24sp"
+                app:layout_constraintStart_toStartOf="@+id/guideline_vertical_left"
+                app:layout_constraintEnd_toEndOf="@+id/guideline_vertical_right"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_passport_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/e_ukraine_regular"
+                android:text="UA AA 658199"
+                android:textColor="@android:color/black"
+                android:textSize="24sp"
+                android:layout_marginTop="7dp"
+                app:layout_constraintStart_toStartOf="@+id/guideline_vertical_left"
+                app:layout_constraintTop_toBottomOf="@+id/tv_tittletext" />
+
+            <ImageView
+                android:id="@+id/iv_copy_passport"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_marginStart="3dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/icon_copy"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_passport_number"
+                app:layout_constraintStart_toEndOf="@+id/tv_passport_number"
+                app:layout_constraintTop_toTopOf="@+id/tv_passport_number" />
+
+            <TextView
+                android:id="@+id/tv_last_update"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_marquee"
+                android:ellipsize="marquee"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:fontFamily="@font/e_ukraine_regular"
+                android:freezesText="true"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:layout_marginTop="15dp"
+                android:scrollHorizontally="true"
+                android:singleLine="true"
+                android:text="Паспорт оновлено 24.09.2025 Паспорт оновлено 24.09.2025"
+                android:textColor="@android:color/black"
+                android:textSize="13sp"
+                app:layout_constraintTop_toBottomOf="@+id/tv_passport_number" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/сl_info1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_white"
+                android:orientation="vertical"
+                android:layout_marginTop="15dp"
+                android:paddingTop="15dp"
+                android:paddingBottom="12dp"
+                android:paddingLeft="12dp"
+                app:layout_constraintEnd_toEndOf="@+id/guideline_vertical_right"
+                app:layout_constraintStart_toStartOf="@+id/guideline_vertical_left"
+                app:layout_constraintTop_toBottomOf="@+id/tv_last_update">
+
+                <TextView
+                    android:id="@+id/tv_name_ua"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/e_ukraine_regular"
+                    android:text="Донні"
+                    android:textColor="@android:color/black"
+                    android:textSize="24sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tv_name_en"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/e_ukraine_regular"
+                    android:text="Donni"
+                    android:textColor="@android:color/black"
+                    android:textSize="13sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_name_ua" />
+
+                <ImageView
+                    android:id="@+id/iv_photo"
+                    android:layout_width="109dp"
+                    android:layout_height="143dp"
+                    android:scaleType="centerCrop"
+                    android:layout_marginTop="9dp"
+                    android:src="@drawable/icon_cat_test"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_name_en" />
+
+                <LinearLayout
+                    android:id="@+id/ll_info"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingTop="10dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/iv_photo"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@id/guideline_vertical_center1"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_name_ua">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/e_ukraine_regular"
+                        android:text="Дата\nнародження:"
+                        android:textColor="@android:color/black"
+                        android:textSize="13sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/e_ukraine_regular"
+                        android:text="Date of birth"
+                        android:textColor="@color/gray_hint_text"
+                        android:textSize="10sp" />
+
+                    <TextView
+                        android:id="@+id/tv_birth_date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="7dp"
+                        android:fontFamily="@font/e_ukraine_regular"
+                        android:text="24.03.2020"
+                        android:textColor="@android:color/black"
+                        android:textSize="13sp" />
+                </LinearLayout>
+
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/guideline_vertical_center1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_percent="0.48" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <LinearLayout
+                android:id="@+id/сl_info2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_white"
+                android:orientation="vertical"
+                android:layout_marginTop="15dp"
+                android:paddingTop="15dp"
+                android:paddingBottom="15dp"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                app:layout_constraintEnd_toEndOf="@+id/guideline_vertical_right"
+                app:layout_constraintStart_toStartOf="@+id/guideline_vertical_left"
+                app:layout_constraintTop_toBottomOf="@+id/сl_info1">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/e_ukraine_regular"
+                        android:text="Порода:"
+                        android:textColor="@android:color/black"
+                        android:textSize="13sp" />
+
+                    <TextView
+                        android:id="@+id/tv_breed_ua"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/e_ukraine_regular"
+                        android:text="Метис"
+                        android:textColor="@color/black"
+                        android:textSize="13sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="2dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/e_ukraine_regular"
+                        android:text="Breed"
+                        android:textColor="@color/gray_hint_text"
+                        android:textSize="10sp" />
+
+                    <TextView
+                        android:id="@+id/tv_breed_en"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/e_ukraine_regular"
+                        android:text="Mixed"
+                        android:textColor="@color/gray_hint_text"
+                        android:textSize="10sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="20dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/e_ukraine_regular"
+                        android:text="Стать:"
+                        android:textColor="@android:color/black"
+                        android:textSize="13sp" />
+
+                    <TextView
+                        android:id="@+id/tv_sex_ua"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/e_ukraine_regular"
+                        android:text="Ч"
+                        android:textColor="@color/black"
+                        android:textSize="13sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="2dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/e_ukraine_regular"
+                        android:text="Sex"
+                        android:textColor="@color/gray_hint_text"
+                        android:textSize="10sp" />
+
+                    <TextView
+                        android:id="@+id/tv_sex_en"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/e_ukraine_regular"
+                        android:text="M"
+                        android:textColor="@color/gray_hint_text"
+                        android:textSize="10sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/сl_info3"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_white"
+                android:orientation="vertical"
+                android:layout_marginTop="15dp"
+                android:paddingTop="15dp"
+                android:paddingBottom="15dp"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                app:layout_constraintEnd_toEndOf="@+id/guideline_vertical_right"
+                app:layout_constraintStart_toStartOf="@+id/guideline_vertical_left"
+                app:layout_constraintTop_toBottomOf="@+id/сl_info2">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/e_ukraine_regular"
+                        android:text="Масть:"
+                        android:textColor="@android:color/black"
+                        android:textSize="13sp" />
+
+                    <TextView
+                        android:id="@+id/tv_color_ua"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/e_ukraine_regular"
+                        android:text="Рудо-білий"
+                        android:textColor="@color/black"
+                        android:textSize="13sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="2dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/e_ukraine_regular"
+                        android:text="Color"
+                        android:textColor="@color/gray_hint_text"
+                        android:textSize="10sp" />
+
+                    <TextView
+                        android:id="@+id/tv_color_en"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/e_ukraine_regular"
+                        android:text="Red and white"
+                        android:textColor="@color/gray_hint_text"
+                        android:textSize="10sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="20dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/e_ukraine_regular"
+                        android:text="Вид:"
+                        android:textColor="@android:color/black"
+                        android:textSize="13sp" />
+
+                    <TextView
+                        android:id="@+id/tv_species_ua"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/e_ukraine_regular"
+                        android:text="Кіт"
+                        android:textColor="@color/black"
+                        android:textSize="13sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="2dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/e_ukraine_regular"
+                        android:text="Species"
+                        android:textColor="@color/gray_hint_text"
+                        android:textSize="10sp" />
+
+                    <TextView
+                        android:id="@+id/tv_species_en"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/e_ukraine_regular"
+                        android:text="Cat"
+                        android:textColor="@color/gray_hint_text"
+                        android:textSize="10sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/сl_info4"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_white"
+                android:orientation="vertical"
+                android:layout_marginTop="15dp"
+                android:paddingTop="15dp"
+                android:paddingBottom="15dp"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                app:layout_constraintEnd_toEndOf="@+id/guideline_vertical_right"
+                app:layout_constraintStart_toStartOf="@+id/guideline_vertical_left"
+                app:layout_constraintTop_toBottomOf="@+id/сl_info3">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/e_ukraine_regular"
+                        android:text="Власник:"
+                        android:textColor="@android:color/black"
+                        android:textSize="13sp" />
+
+                    <TextView
+                        android:id="@+id/tv_owner_passport_number"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/e_ukraine_regular"
+                        android:text="009154744"
+                        android:textColor="@color/black"
+                        android:textSize="13sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="2dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/e_ukraine_regular"
+                        android:text="Owner"
+                        android:textColor="@color/gray_hint_text"
+                        android:textSize="10sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="20dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/e_ukraine_regular"
+                        android:text="Орган що видав:"
+                        android:textColor="@android:color/black"
+                        android:textSize="13sp" />
+
+                    <TextView
+                        android:id="@+id/tv_autority"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/e_ukraine_regular"
+                        android:text="6326"
+                        android:textColor="@color/black"
+                        android:textSize="13sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="2dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/e_ukraine_regular"
+                        android:text="Autority"
+                        android:textColor="@color/gray_hint_text"
+                        android:textSize="10sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/сl_info5"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_white"
+                android:orientation="vertical"
+                android:layout_marginTop="15dp"
+                android:paddingTop="15dp"
+                android:paddingBottom="15dp"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                app:layout_constraintEnd_toEndOf="@+id/guideline_vertical_right"
+                app:layout_constraintStart_toStartOf="@+id/guideline_vertical_left"
+                app:layout_constraintTop_toBottomOf="@+id/сl_info4">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/e_ukraine_regular"
+                        android:text="Місцезнаходження чіпу:"
+                        android:textColor="@android:color/black"
+                        android:textSize="13sp" />
+
+                    <TextView
+                        android:id="@+id/tv_chip_location_ua"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/e_ukraine_regular"
+                        android:text="Холка"
+                        android:textColor="@color/black"
+                        android:textSize="13sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="2dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/e_ukraine_regular"
+                        android:text="Chip location"
+                        android:textColor="@color/gray_hint_text"
+                        android:textSize="10sp" />
+
+                    <TextView
+                        android:id="@+id/tv_chip_location_en"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/e_ukraine_regular"
+                        android:text="Withers"
+                        android:textColor="@color/gray_hint_text"
+                        android:textSize="10sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="20dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/e_ukraine_regular"
+                        android:text="Дата чіпування:"
+                        android:textColor="@android:color/black"
+                        android:textSize="13sp" />
+
+                    <TextView
+                        android:id="@+id/tv_chip_date"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/e_ukraine_regular"
+                        android:text="04.09.2025"
+                        android:textColor="@color/black"
+                        android:textSize="13sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="2dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/e_ukraine_regular"
+                        android:text="Chip date"
+                        android:textColor="@color/gray_hint_text"
+                        android:textSize="10sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingTop="20dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/e_ukraine_regular"
+                        android:text="Номер чіпу:"
+                        android:textColor="@android:color/black"
+                        android:textSize="13sp" />
+
+                    <TextView
+                        android:id="@+id/tv_number_chip"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/e_ukraine_regular"
+                        android:text="5097 8976 86897"
+                        android:textColor="@color/black"
+                        android:textSize="13sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="2dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/e_ukraine_regular"
+                        android:text="Batch number chip"
+                        android:textColor="@color/gray_hint_text"
+                        android:textSize="10sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="80dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/сl_info5"/>
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline_vertical_left"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.07" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline_vertical_right"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.93" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_horizontal_scroll"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.04" />
+</androidx.constraintlayout.widget.ConstraintLayout>

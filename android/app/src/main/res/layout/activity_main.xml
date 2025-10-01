@@ -47,7 +47,7 @@
                 android:layout_height="27dp"
                 android:adjustViewBounds="true"
                 android:scaleType="centerInside"
-                android:src="@drawable/icon_feed_default" />
+                android:src="@drawable/icon_feed_selected" />
 
             <TextView
                 android:layout_width="wrap_content"
