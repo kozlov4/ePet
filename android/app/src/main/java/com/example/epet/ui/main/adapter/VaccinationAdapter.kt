@@ -15,6 +15,7 @@ class VaccinationAdapter(private val vaccinations: List<Vaccination>) : Recycler
         val tv_date_start: TextView = itemView.findViewById(R.id.tv_date_start)
         val tv_date_end: TextView = itemView.findViewById(R.id.tv_date_end)
         val tv_serial_number: TextView = itemView.findViewById(R.id.tv_serial_number)
+        val tv_vet: TextView = itemView.findViewById(R.id.tv_vet)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VaccinationViewHolder {
@@ -28,6 +29,7 @@ class VaccinationAdapter(private val vaccinations: List<Vaccination>) : Recycler
         holder.tv_date_start.text = vac.dateStart
         holder.tv_date_end.text = vac.dateEnd
         holder.tv_serial_number.text = vac.serialNumber
+        holder.tv_vet.text = vac.vet
     }
 
     override fun getItemCount(): Int = vaccinations.size

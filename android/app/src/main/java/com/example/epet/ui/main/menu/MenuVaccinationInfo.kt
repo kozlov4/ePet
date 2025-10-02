@@ -94,11 +94,11 @@ class MenuVaccinationInfo(private val onClose: (() -> Unit)? = null) : BottomShe
 
     /** Повертає приклад даних про вакцинації **/
     private fun getSampleVaccinations(): List<Vaccination> = listOf(
-        Vaccination("Nobivac Rabies", "04.09.2024", "04.09.2025", "A452A01"),
-        Vaccination("Nobivac DHPPi/L", "10.05.2023", "10.05.2024", "B123C45"),
-        Vaccination("Nobivac Rabies", "04.09.2024", "04.09.2025", "A452A01"),
-        Vaccination("Nobivac DHPPi/L", "10.05.2023", "10.05.2024", "B123C45"),
-        Vaccination("Nobivac Lepto", "15.06.2025", "15.06.2026", "C987D65")
+        Vaccination("Nobivac Rabies", "04.09.2024", "04.09.2025", "A452A01", "ЕкоЦентр"),
+        Vaccination("Nobivac DHPPi/L", "10.05.2023", "10.05.2024", "B123C45", "ЕкоЦентр"),
+        Vaccination("Nobivac Rabies", "04.09.2024", "04.09.2025", "A452A01", "ЕкоЦентр"),
+        Vaccination("Nobivac DHPPi/L", "10.05.2023", "10.05.2024", "B123C45", "ЕкоЦентр"),
+        Vaccination("Nobivac Lepto", "15.06.2025", "15.06.2026", "C987D65", "ЕкоЦентр")
     )
 
     /** Налаштування RecyclerView **/

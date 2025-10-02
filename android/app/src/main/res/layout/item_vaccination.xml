@@ -16,9 +16,9 @@
             android:id="@+id/tv_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1.6"
+            android:layout_weight="1.5"
             android:fontFamily="@font/e_ukraine_regular"
-            android:text="Nobivac Rabies"
+            android:text="null"
             android:textColor="@android:color/black"
             android:textSize="13sp" />
 
@@ -28,17 +28,17 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:fontFamily="@font/e_ukraine_regular"
-            android:text="04.09.2024"
+            android:text="00.00.0000"
             android:textColor="@color/black"
             android:textSize="13sp" />
 
         <TextView
-            android:id="@+id/tv_date_end"
+            android:id="@+id/tv_vet"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:fontFamily="@font/e_ukraine_regular"
-            android:text="04.09.2025"
+            android:text="null"
             android:textColor="@color/black"
             android:textSize="13sp" />
     </LinearLayout>
@@ -50,11 +50,22 @@
 
         <TextView
             android:id="@+id/tv_serial_number"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1.5"
             android:fontFamily="@font/e_ukraine_regular"
-            android:text="A452A01"
+            android:text="null"
             android:textColor="@android:color/black"
             android:textSize="13sp" />
+
+        <TextView
+            android:id="@+id/tv_date_end"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:fontFamily="@font/e_ukraine_regular"
+            android:text="до 00.00.0000"
+            android:textColor="@color/gray_hint_text"
+            android:textSize="10sp" />
     </LinearLayout>
 </LinearLayout>

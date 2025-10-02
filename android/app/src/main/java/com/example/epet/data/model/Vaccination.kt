@@ -4,5 +4,6 @@ data class Vaccination(
     val name: String,
     val dateStart: String,
     val dateEnd: String,
-    val serialNumber: String
+    val serialNumber: String,
+    val vet: String
 )
