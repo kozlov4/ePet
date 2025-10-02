@@ -17,10 +17,9 @@
         app:layout_constraintTop_toTopOf="@+id/guideline_horizontal_text" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/ll_mail"
+        android:id="@+id/cl_mail"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:background="@drawable/bg_white"
         app:layout_constraintStart_toStartOf="@+id/guideline_vertical_left"
         app:layout_constraintEnd_toEndOf="@+id/guideline_vertical_right"
@@ -59,17 +58,16 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/ll_update_app"
+        android:id="@+id/cl_update_app"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:layout_marginTop="20dp"
         android:paddingTop="4dp"
         android:paddingBottom="4dp"
         android:background="@drawable/bg_white"
         app:layout_constraintStart_toStartOf="@+id/guideline_vertical_left"
         app:layout_constraintEnd_toEndOf="@+id/guideline_vertical_right"
-        app:layout_constraintTop_toBottomOf="@+id/ll_mail">
+        app:layout_constraintTop_toBottomOf="@+id/cl_mail">
 
         <ImageView
             android:id="@+id/iv_settings"
@@ -131,17 +129,16 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/ll_support"
+        android:id="@+id/cl_support"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:layout_marginTop="20dp"
         android:paddingTop="4dp"
         android:paddingBottom="4dp"
         android:background="@drawable/bg_white"
         app:layout_constraintStart_toStartOf="@+id/guideline_vertical_left"
         app:layout_constraintEnd_toEndOf="@+id/guideline_vertical_right"
-        app:layout_constraintTop_toBottomOf="@+id/ll_update_app">
+        app:layout_constraintTop_toBottomOf="@+id/cl_update_app">
 
         <ImageView
             android:id="@+id/iv_support"

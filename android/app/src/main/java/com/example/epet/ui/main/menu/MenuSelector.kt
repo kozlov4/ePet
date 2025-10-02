@@ -10,7 +10,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.example.epet.R
 
-class MenuPassport(private val onClose: (() -> Unit)? = null) : BottomSheetDialogFragment() {
+class MenuSelector(private val onClose: (() -> Unit)? = null) : BottomSheetDialogFragment() {
 
     private lateinit var tv_passport_info: TextView
     private lateinit var tv_vaccination_info: TextView
@@ -33,7 +33,7 @@ class MenuPassport(private val onClose: (() -> Unit)? = null) : BottomSheetDialo
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        return inflater.inflate(R.layout.menu_passport, container, false)
+        return inflater.inflate(R.layout.menu_selector, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

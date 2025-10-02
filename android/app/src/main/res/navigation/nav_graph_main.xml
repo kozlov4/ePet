@@ -14,9 +14,22 @@
 
     <fragment
         android:id="@+id/fragment_services"
-        android:name="com.example.epet.ui.main.view.ServicesFragment" />
+        android:name="com.example.epet.ui.main.view.ServicesFragment" >
+
+        <action
+            android:id="@+id/action_services_to_documents"
+            app:destination="@id/fragment_services_documents"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
 
     <fragment
         android:id="@+id/fragment_menu"
         android:name="com.example.epet.ui.main.view.MenuFragment" />
+
+    <fragment
+        android:id="@+id/fragment_services_documents"
+        android:name="com.example.epet.ui.main.view.ServicesDocumentsFragment" />
 </navigation>

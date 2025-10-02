@@ -24,12 +24,12 @@ class VaccinationAdapter(private val vaccinations: List<Vaccination>) : Recycler
     }
 
     override fun onBindViewHolder(holder: VaccinationViewHolder, position: Int) {
-        val vac = vaccinations[position]
-        holder.tv_name.text = vac.name
-        holder.tv_date_start.text = vac.dateStart
-        holder.tv_date_end.text = vac.dateEnd
-        holder.tv_serial_number.text = vac.serialNumber
-        holder.tv_vet.text = vac.vet
+        val vaccination = vaccinations[position]
+        holder.tv_name.text = vaccination.name
+        holder.tv_date_start.text = vaccination.dateStart
+        holder.tv_date_end.text = "до ${vaccination.dateEnd}"
+        holder.tv_serial_number.text = vaccination.serialNumber
+        holder.tv_vet.text = vaccination.vet
     }
 
     override fun getItemCount(): Int = vaccinations.size

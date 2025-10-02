@@ -1,21 +1,20 @@
 package com.example.epet.ui.main.view
 
-import androidx.navigation.fragment.findNavController
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.fragment.app.Fragment
-import androidx.cardview.widget.CardView
+import androidx.navigation.fragment.findNavController
 import com.example.epet.R
 
-class ServicesFragment : Fragment() {
+class ServicesDocumentsFragment : Fragment() {
 
-    private lateinit var card_to_shelter: CardView
-    private lateinit var card_to_documents: CardView
+    private lateinit var iv_to_back: ImageView
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_services, container, false)
+        return inflater.inflate(R.layout.fragment_services_documents, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -26,14 +25,13 @@ class ServicesFragment : Fragment() {
 
     /** Ініціалізація всіх елементів інтерфейсу **/
     private fun initViews(view: View) {
-        card_to_shelter = view.findViewById(R.id.card_to_shelter)
-        card_to_documents = view.findViewById(R.id.card_to_documents)
+        iv_to_back = view.findViewById(R.id.iv_to_back)
     }
 
     /** Ініціалізація всіх кнопок інтерфейсу **/
     private fun initButtons() {
-        card_to_documents.setOnClickListener {
-            findNavController().navigate(R.id.action_services_to_documents)
+        iv_to_back.setOnClickListener {
+            findNavController().popBackStack()
         }
     }
 }
