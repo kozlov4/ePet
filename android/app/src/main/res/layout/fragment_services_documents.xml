@@ -52,14 +52,14 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/сс_to_documents"
             android:layout_width="match_parent"
-            android:layout_height="45dp">
+            android:layout_height="45dp"
+            android:clickable="true"
+            android:focusable="true">
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:background="@null"
-                android:clickable="true"
-                android:focusable="true"
                 android:fontFamily="@font/e_ukraine_regular"
                 android:gravity="center_vertical"
                 android:text="Витяг про улюбленця"
@@ -82,14 +82,14 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="45dp">
+            android:layout_height="45dp"
+            android:clickable="true"
+            android:focusable="true">
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:background="@null"
-                android:clickable="true"
-                android:focusable="true"
                 android:fontFamily="@font/e_ukraine_regular"
                 android:gravity="center_vertical"
                 android:text="Питання та відповіді"
@@ -112,13 +112,14 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="45dp">
+            android:layout_height="45dp"
+            android:clickable="true"
+            android:focusable="true">
+
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:background="@null"
-                android:clickable="true"
-                android:focusable="true"
                 android:fontFamily="@font/e_ukraine_regular"
                 android:gravity="center_vertical"
                 android:text="Питання та відповіді"
@@ -141,14 +142,14 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="45dp">
+            android:layout_height="45dp"
+            android:clickable="true"
+            android:focusable="true">
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:background="@null"
-                android:clickable="true"
-                android:focusable="true"
                 android:fontFamily="@font/e_ukraine_regular"
                 android:gravity="center_vertical"
                 android:text="Питання та відповіді"
