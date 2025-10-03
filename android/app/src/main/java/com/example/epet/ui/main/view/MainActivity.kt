@@ -61,8 +61,8 @@ class MainActivity : AppCompatActivity() {
         val buttons = listOf(ll_to_feed, ll_to_documents, ll_to_services, ll_to_menu)
         val icons = listOf(iv_to_feed, iv_to_documents, iv_to_services, iv_to_menu)
 
-        val selectedImages = listOf(R.drawable.icon_feed_selected, R.drawable.icon_documents_selected, R.drawable.icon_services_selected, R.drawable.icon_menu_selected)
-        val defaultImages = listOf(R.drawable.icon_feed_default, R.drawable.icon_documents_default, R.drawable.icon_services_default, R.drawable.icon_menu_default)
+        val selectedImages = listOf(R.drawable.icon_selected_feed, R.drawable.icon_selected_documents, R.drawable.icon_selected_services, R.drawable.icon_selected_menu)
+        val defaultImages = listOf(R.drawable.icon_default_feed, R.drawable.icon_default_documents, R.drawable.icon_default_services, R.drawable.icon_default_menu)
 
         buttons.forEachIndexed { index, button ->
             button.setOnClickListener {

@@ -143,7 +143,7 @@ class DocumentsFragment : Fragment() {
         repeat(count) {
             val dot = View(requireContext()).apply {
                 layoutParams = LinearLayout.LayoutParams(sizePx, sizePx).apply { setMargins(marginPx, 0, marginPx, 0) }
-                setBackgroundResource(R.drawable.bg_indicator)
+                setBackgroundResource(R.drawable.icon_indicator)
                 alpha = INDICATOR_ALPHA_MIN
             }
             llIndicators.addView(dot)

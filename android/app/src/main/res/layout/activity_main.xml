@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_gradient">
+    android:background="@drawable/bg_main">
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragment_container_main"
@@ -47,7 +47,7 @@
                 android:layout_height="27dp"
                 android:adjustViewBounds="true"
                 android:scaleType="centerInside"
-                android:src="@drawable/icon_feed_selected" />
+                android:src="@drawable/icon_selected_feed" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -75,7 +75,7 @@
                 android:layout_height="27dp"
                 android:adjustViewBounds="true"
                 android:scaleType="centerInside"
-                android:src="@drawable/icon_documents_default" />
+                android:src="@drawable/icon_default_documents" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -103,7 +103,7 @@
                 android:layout_height="27dp"
                 android:adjustViewBounds="true"
                 android:scaleType="centerInside"
-                android:src="@drawable/icon_services_default" />
+                android:src="@drawable/icon_default_services" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -131,7 +131,7 @@
                 android:layout_height="27dp"
                 android:adjustViewBounds="true"
                 android:scaleType="centerInside"
-                android:src="@drawable/icon_menu_default" />
+                android:src="@drawable/icon_default_menu" />
 
             <TextView
                 android:layout_width="wrap_content"
