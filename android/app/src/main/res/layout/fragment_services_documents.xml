@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/bg_gradient"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -13,8 +14,8 @@
 
         <ImageView
             android:id="@+id/iv_to_back"
-            android:layout_width="20dp"
-            android:layout_height="0dp"
+            android:layout_width="30dp"
+            android:layout_height="17dp"
             android:scaleType="centerCrop"
             android:src="@drawable/icon_arrow_left"
             android:clickable="true"
@@ -36,7 +37,7 @@
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@drawable/bg_white"
@@ -44,118 +45,139 @@
         android:paddingBottom="10dp"
         android:paddingRight="20dp"
         android:paddingLeft="20dp"
+        android:orientation="vertical"
         app:layout_constraintStart_toStartOf="@+id/guideline_vertical_left"
         app:layout_constraintEnd_toEndOf="@+id/guideline_vertical_right"
         app:layout_constraintTop_toTopOf="@+id/guideline_horizontal_menu">
 
-        <TextView
-            android:id="@+id/tv_to_documents"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:background="@null"
-            android:gravity="center_vertical"
-            android:fontFamily="@font/e_ukraine_regular"
-            android:text="Витяг про улюбленця"
-            android:textColor="@color/black"
-            android:textSize="13sp"
-            android:clickable="true"
-            android:focusable="true"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/сс_to_documents"
+            android:layout_width="match_parent"
+            android:layout_height="45dp">
 
-        <ImageView
-            android:layout_width="40dp"
-            android:layout_height="45dp"
-            android:padding="10dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/icon_arrow"
-            app:layout_constraintBottom_toBottomOf="@+id/tv_to_documents"
-            app:layout_constraintEnd_toEndOf="@+id/tv_to_documents" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:clickable="true"
+                android:focusable="true"
+                android:fontFamily="@font/e_ukraine_regular"
+                android:gravity="center_vertical"
+                android:text="Витяг про улюбленця"
+                android:textColor="@color/black"
+                android:textSize="13sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/tv_1"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:background="@null"
-            android:gravity="center_vertical"
-            android:fontFamily="@font/e_ukraine_regular"
-            android:text="Служба підтримки"
-            android:textColor="@color/black"
-            android:textSize="13sp"
-            android:clickable="true"
-            android:focusable="true"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_to_documents" />
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="23dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/icon_arrow"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <ImageView
-            android:layout_width="40dp"
-            android:layout_height="45dp"
-            android:padding="10dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/icon_arrow"
-            app:layout_constraintBottom_toBottomOf="@+id/tv_1"
-            app:layout_constraintEnd_toEndOf="@+id/tv_1" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp">
 
-        <TextView
-            android:id="@+id/tv_2"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:background="@null"
-            android:gravity="center_vertical"
-            android:fontFamily="@font/e_ukraine_regular"
-            android:text="Служба підтримки"
-            android:textColor="@color/black"
-            android:textSize="13sp"
-            android:clickable="true"
-            android:focusable="true"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_1" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:clickable="true"
+                android:focusable="true"
+                android:fontFamily="@font/e_ukraine_regular"
+                android:gravity="center_vertical"
+                android:text="Питання та відповіді"
+                android:textColor="@color/black"
+                android:textSize="13sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            android:layout_width="40dp"
-            android:layout_height="45dp"
-            android:padding="10dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/icon_arrow"
-            app:layout_constraintBottom_toBottomOf="@+id/tv_2"
-            app:layout_constraintEnd_toEndOf="@+id/tv_2" />
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="23dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/icon_arrow"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <TextView
-            android:id="@+id/tv_3"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:background="@null"
-            android:gravity="center_vertical"
-            android:fontFamily="@font/e_ukraine_regular"
-            android:text="Служба підтримки"
-            android:textColor="@color/black"
-            android:textSize="13sp"
-            android:clickable="true"
-            android:focusable="true"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_2" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:clickable="true"
+                android:focusable="true"
+                android:fontFamily="@font/e_ukraine_regular"
+                android:gravity="center_vertical"
+                android:text="Питання та відповіді"
+                android:textColor="@color/black"
+                android:textSize="13sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            android:layout_width="40dp"
-            android:layout_height="45dp"
-            android:padding="10dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/icon_arrow"
-            app:layout_constraintBottom_toBottomOf="@+id/tv_3"
-            app:layout_constraintEnd_toEndOf="@+id/tv_3" />
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="23dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/icon_arrow"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:clickable="true"
+                android:focusable="true"
+                android:fontFamily="@font/e_ukraine_regular"
+                android:gravity="center_vertical"
+                android:text="Питання та відповіді"
+                android:textColor="@color/black"
+                android:textSize="13sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="23dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/icon_arrow"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </LinearLayout>
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_horizontal_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.12" />
+        app:layout_constraintGuide_percent="0.13" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_horizontal_menu"
