@@ -20,7 +20,7 @@ class MenuVaccinationInfo(private val onClose: (() -> Unit)? = null) : BottomShe
 
     private lateinit var sv_main: NestedScrollView
     private lateinit var tv_last_update: TextView
-    private lateinit var rv_vaccination_list: RecyclerView
+    private lateinit var rv_vaccinations: RecyclerView
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return BottomSheetDialog(requireContext(), R.style.MenuPassportAnimation).apply {
@@ -71,7 +71,7 @@ class MenuVaccinationInfo(private val onClose: (() -> Unit)? = null) : BottomShe
     private fun initViews(view: View) {
         sv_main = view.findViewById(R.id.sv_main)
         tv_last_update = view.findViewById(R.id.tv_last_update)
-        rv_vaccination_list = view.findViewById(R.id.rv_vaccination_list)
+        rv_vaccinations = view.findViewById(R.id.rv_vaccinations)
     }
 
     /** Ініціалізація кнопок **/
@@ -104,7 +104,7 @@ class MenuVaccinationInfo(private val onClose: (() -> Unit)? = null) : BottomShe
     /** Налаштування RecyclerView **/
     private fun setupRecyclerView(vaccinations: List<Vaccination>) {
         val adapter = VaccinationAdapter(vaccinations)
-        rv_vaccination_list.layoutManager = LinearLayoutManager(requireContext())
-        rv_vaccination_list.adapter = adapter
+        rv_vaccinations.layoutManager = LinearLayoutManager(requireContext())
+        rv_vaccinations.adapter = adapter
     }
 }

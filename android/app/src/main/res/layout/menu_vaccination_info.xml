@@ -176,7 +176,7 @@
             </LinearLayout>
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_vaccination_list"
+                android:id="@+id/rv_vaccinations"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:scrollbars="vertical"
@@ -192,7 +192,7 @@
                 android:layout_width="0dp"
                 android:layout_height="80dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/rv_vaccination_list"/>
+                app:layout_constraintTop_toBottomOf="@+id/rv_vaccinations"/>
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline_vertical_left"

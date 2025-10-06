@@ -522,7 +522,7 @@
                         android:textSize="13sp" />
 
                     <TextView
-                        android:id="@+id/tv_autority"
+                        android:id="@+id/tv_autority_number"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -691,7 +691,7 @@
                         android:textSize="13sp" />
 
                     <TextView
-                        android:id="@+id/tv_number_chip"
+                        android:id="@+id/tv_chip_number"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"

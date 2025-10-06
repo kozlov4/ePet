@@ -20,10 +20,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var ll_to_services: LinearLayout
     private lateinit var ll_to_menu: LinearLayout
 
-    private lateinit var iv_to_feed: ImageView
-    private lateinit var iv_to_documents: ImageView
-    private lateinit var iv_to_services: ImageView
-    private lateinit var iv_to_menu: ImageView
+    private lateinit var iv_icon_feed: ImageView
+    private lateinit var iv_icon_documents: ImageView
+    private lateinit var iv_icon_services: ImageView
+    private lateinit var iv_icon_menu: ImageView
 
     private lateinit var v_fake_bar: View
 
@@ -48,10 +48,10 @@ class MainActivity : AppCompatActivity() {
         ll_to_services = findViewById(R.id.ll_to_services)
         ll_to_menu = findViewById(R.id.ll_to_menu)
 
-        iv_to_feed = findViewById(R.id.iv_to_feed)
-        iv_to_documents = findViewById(R.id.iv_to_documents)
-        iv_to_services = findViewById(R.id.iv_to_services)
-        iv_to_menu = findViewById(R.id.iv_to_menu)
+        iv_icon_feed = findViewById(R.id.iv_icon_feed)
+        iv_icon_documents = findViewById(R.id.iv_icon_documents)
+        iv_icon_services = findViewById(R.id.iv_icon_services)
+        iv_icon_menu = findViewById(R.id.iv_icon_menu)
 
         v_fake_bar = findViewById(R.id.v_fake_bar)
     }
@@ -59,7 +59,7 @@ class MainActivity : AppCompatActivity() {
     /** Ініціалізація всіх кнопок інтерфейсу **/
     private fun initButtons() {
         val buttons = listOf(ll_to_feed, ll_to_documents, ll_to_services, ll_to_menu)
-        val icons = listOf(iv_to_feed, iv_to_documents, iv_to_services, iv_to_menu)
+        val icons = listOf(iv_icon_feed, iv_icon_documents, iv_icon_services, iv_icon_menu)
 
         val selectedImages = listOf(R.drawable.icon_selected_feed, R.drawable.icon_selected_documents, R.drawable.icon_selected_services, R.drawable.icon_selected_menu)
         val defaultImages = listOf(R.drawable.icon_default_feed, R.drawable.icon_default_documents, R.drawable.icon_default_services, R.drawable.icon_default_menu)

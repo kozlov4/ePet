@@ -42,7 +42,7 @@
             android:focusable="true">
 
             <ImageView
-                android:id="@+id/iv_to_feed"
+                android:id="@+id/iv_icon_feed"
                 android:layout_width="35dp"
                 android:layout_height="27dp"
                 android:adjustViewBounds="true"
@@ -70,7 +70,7 @@
             android:focusable="true">
 
             <ImageView
-                android:id="@+id/iv_to_documents"
+                android:id="@+id/iv_icon_documents"
                 android:layout_width="35dp"
                 android:layout_height="27dp"
                 android:adjustViewBounds="true"
@@ -98,7 +98,7 @@
             android:focusable="true">
 
             <ImageView
-                android:id="@+id/iv_to_services"
+                android:id="@+id/iv_icon_services"
                 android:layout_width="35dp"
                 android:layout_height="27dp"
                 android:adjustViewBounds="true"
@@ -126,7 +126,7 @@
             android:focusable="true">
 
             <ImageView
-                android:id="@+id/iv_to_menu"
+                android:id="@+id/iv_icon_menu"
                 android:layout_width="35dp"
                 android:layout_height="27dp"
                 android:adjustViewBounds="true"
