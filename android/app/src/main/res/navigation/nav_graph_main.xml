@@ -35,7 +35,7 @@
 
         <action
             android:id="@+id/action_documents_to_extract_pet"
-            app:destination="@id/fragment_services_documents_extract_pet"
+            app:destination="@id/fragment_services_extract_pet"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
@@ -43,6 +43,37 @@
     </fragment>
 
     <fragment
-        android:id="@+id/fragment_services_documents_extract_pet"
-        android:name="com.example.epet.ui.main.view.ServicesExtractPetFragment" />
+        android:id="@+id/fragment_services_extract_pet"
+        android:name="com.example.epet.ui.main.view.ServicesExtractPetFragment" >
+
+        <action
+            android:id="@+id/action_extract_pet_to_message"
+            app:destination="@id/fragment_message"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/fragment_message"
+        android:name="com.example.epet.ui.main.view.MessageFragment" >
+
+        <argument
+            android:name="tittletext"
+            app:argType="string" />
+
+        <argument
+            android:name="emoji"
+            app:argType="string" />
+
+        <argument
+            android:name="main"
+            app:argType="string" />
+
+        <argument
+            android:name="description"
+            app:argType="string" />
+    </fragment>
+
 </navigation>

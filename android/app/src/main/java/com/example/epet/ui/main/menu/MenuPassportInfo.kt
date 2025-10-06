@@ -32,11 +32,11 @@ class MenuPassportInfo(private val onClose: (() -> Unit)? = null) : BottomSheetD
     private lateinit var tv_species_ua: TextView
     private lateinit var tv_species_en: TextView
     private lateinit var tv_owner_passport_number: TextView
-    private lateinit var tv_autority: TextView
+    private lateinit var tv_autority_number: TextView
     private lateinit var tv_chip_location_ua: TextView
     private lateinit var tv_chip_location_en: TextView
     private lateinit var tv_chip_date: TextView
-    private lateinit var tv_number_chip: TextView
+    private lateinit var tv_chip_number: TextView
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return BottomSheetDialog(requireContext(), R.style.MenuPassportAnimation).apply {
@@ -102,11 +102,11 @@ class MenuPassportInfo(private val onClose: (() -> Unit)? = null) : BottomSheetD
         tv_species_ua = view.findViewById(R.id.tv_species_ua)
         tv_species_en = view.findViewById(R.id.tv_species_en)
         tv_owner_passport_number = view.findViewById(R.id.tv_owner_passport_number)
-        tv_autority = view.findViewById(R.id.tv_autority)
+        tv_autority_number = view.findViewById(R.id.tv_autority_number)
         tv_chip_location_ua = view.findViewById(R.id.tv_chip_location_ua)
         tv_chip_location_en = view.findViewById(R.id.tv_chip_location_en)
         tv_chip_date = view.findViewById(R.id.tv_chip_date)
-        tv_number_chip = view.findViewById(R.id.tv_number_chip)
+        tv_chip_number = view.findViewById(R.id.tv_chip_number)
     }
 
     /** Ініціалізація всіх кнопок інтерфейсу **/

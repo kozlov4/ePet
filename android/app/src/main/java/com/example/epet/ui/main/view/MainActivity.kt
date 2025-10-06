@@ -7,6 +7,8 @@ import androidx.core.view.WindowInsetsControllerCompat
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.navigation.fragment.NavHostFragment
@@ -14,6 +16,9 @@ import androidx.navigation.NavOptions
 import androidx.navigation.NavController
 
 class MainActivity : AppCompatActivity() {
+
+    private var lastBackPressedTime = 0L
+    private val backPressThreshold = 2000L
 
     private lateinit var ll_to_feed: LinearLayout
     private lateinit var ll_to_documents: LinearLayout
@@ -38,7 +43,7 @@ class MainActivity : AppCompatActivity() {
         initNavigation()
         initNavigationBar()
         initButtons()
-
+        setupBackPressed()
     }
 
     /** Ініціалізація всіх елементів інтерфейсу **/
@@ -72,7 +77,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // Фуекція для зміни іконок
+    /** Фуекція для зміни іконок */
     private fun updateIcons(
         icons: List<ImageView>,
         defaultImages: List<Int>,
@@ -84,7 +89,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // Фуекція для навігації
+    /** Фуекція для навігації **/
     private fun navigateToFragment(index: Int) {
         val destinationId = when(index) {
             0 -> R.id.fragment_feed
@@ -121,5 +126,35 @@ class MainActivity : AppCompatActivity() {
             .setPopEnterAnim(R.anim.fade_in_fragment)
             .setPopExitAnim(R.anim.fade_out_fragment)
             .build()
+    }
+
+    /** Перевизначення поведінки кнопки назад **/
+    private fun setupBackPressed() {
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragment_container_main) as NavHostFragment
+
+        onBackPressedDispatcher.addCallback(this) {
+            val currentFragment = navHostFragment.childFragmentManager.primaryNavigationFragment
+
+            val fragmentsWithCustomBack = listOf(
+                FeedFragment::class.java,
+                DocumentsFragment::class.java,
+                ServicesListFragment::class.java,
+                MenuFragment::class.java
+            )
+
+            if (currentFragment != null && fragmentsWithCustomBack.any { it.isInstance(currentFragment) }) {
+                val currentTime = System.currentTimeMillis()
+                if (currentTime - lastBackPressedTime < backPressThreshold) {
+                    finish()
+                } else {
+                    lastBackPressedTime = currentTime
+                    Toast.makeText(this@MainActivity, "Для виходу, натисніть ще раз", Toast.LENGTH_SHORT).show()
+                }
+            } else {
+                isEnabled = false
+                onBackPressedDispatcher.onBackPressed()
+                isEnabled = true
+            }
+        }
     }
 }
