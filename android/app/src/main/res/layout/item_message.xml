@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="100dp"
+    android:layout_marginBottom="15dp"
+    android:background="@drawable/bg_white"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:paddingLeft="18dp"
+    android:paddingRight="18dp">
+
+    <TextView
+        android:id="@+id/tv_main"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/e_ukraine_regular"
+        android:text="null"
+        android:textColor="@android:color/black"
+        android:textSize="15sp" />
+
+    <TextView
+        android:id="@+id/tv_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/e_ukraine_regular"
+        android:layout_marginTop="7dp"
+        android:text="null"
+        android:textColor="@color/black"
+        android:textSize="13sp" />
+</LinearLayout>

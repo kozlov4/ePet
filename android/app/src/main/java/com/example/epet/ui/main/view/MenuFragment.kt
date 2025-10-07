@@ -10,10 +10,11 @@ import android.widget.TextView
 import androidx.appcompat.widget.AppCompatButton
 import android.content.Intent
 import android.net.Uri
+import androidx.navigation.fragment.findNavController
 
 class MenuFragment : Fragment() {
 
-    private lateinit var tv_to_mail: TextView
+    private lateinit var tv_to_messages: TextView
     private lateinit var tv_to_settings: TextView
     private lateinit var tv_to_update_app: TextView
     private lateinit var tv_to_support: TextView
@@ -33,7 +34,7 @@ class MenuFragment : Fragment() {
 
     /** Ініціалізація всіх елементів інтерфейсу **/
     private fun initViews(view: View) {
-        tv_to_mail = view.findViewById(R.id.tv_to_mail)
+        tv_to_messages = view.findViewById(R.id.tv_to_messages)
         tv_to_settings = view.findViewById(R.id.tv_to_settings)
         tv_to_update_app = view.findViewById(R.id.tv_to_update_app)
         tv_to_support = view.findViewById(R.id.tv_to_support)
@@ -43,6 +44,10 @@ class MenuFragment : Fragment() {
 
     /** Ініціалізація всіх кнопок інтерфейсу **/
     private fun initButtons() {
+        tv_to_messages.setOnClickListener {
+            findNavController().navigate(R.id.action_menu_to_messages_list)
+        }
+
         tv_to_update_app.setOnClickListener {
             try {
                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse("market://"))
