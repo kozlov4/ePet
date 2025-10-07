@@ -48,6 +48,10 @@ class MenuFragment : Fragment() {
             findNavController().navigate(R.id.action_menu_to_messages_list)
         }
 
+        tv_to_settings.setOnClickListener {
+            findNavController().navigate(R.id.action_menu_to_settings)
+        }
+
         tv_to_update_app.setOnClickListener {
             try {
                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse("market://"))

@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@+id/guideline_vertical_left"
+        app:layout_constraintTop_toTopOf="@+id/guideline_horizontal_text">
+
+        <ImageView
+            android:id="@+id/iv_to_back"
+            android:layout_width="30dp"
+            android:layout_height="17dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/icon_arrow_left"
+            android:clickable="true"
+            android:focusable="true"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_tittletext"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tv_tittletext" />
+
+        <TextView
+            android:id="@+id/tv_tittletext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/e_ukraine_regular"
+            android:text="Налаштування"
+            android:layout_marginLeft="15dp"
+            android:textColor="@android:color/black"
+            android:textSize="20sp"
+            app:layout_constraintStart_toEndOf="@+id/iv_to_back"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_fullname"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/bg_white"
+        app:layout_constraintStart_toStartOf="@+id/guideline_vertical_left"
+        app:layout_constraintEnd_toEndOf="@+id/guideline_vertical_right"
+        app:layout_constraintTop_toTopOf="@+id/guideline_horizontal_fields">
+
+        <TextView
+            android:id="@+id/tv_surname"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:paddingHorizontal="18dp"
+            android:text="null"
+            android:gravity="center_vertical"
+            android:textSize="14sp"
+            android:textColor="@color/black"
+            android:textColorHint="@color/gray_hint_text"
+            android:fontFamily="@font/e_ukraine_regular"
+            android:background="@null" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/gray_hint_text"/>
+
+        <TextView
+            android:id="@+id/tv_name"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:paddingHorizontal="18dp"
+            android:text="null"
+            android:gravity="center_vertical"
+            android:textSize="14sp"
+            android:textColor="@color/black"
+            android:textColorHint="@color/gray_hint_text"
+            android:fontFamily="@font/e_ukraine_regular"
+            android:background="@null" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/gray_hint_text"/>
+
+        <TextView
+            android:id="@+id/tv_patronymic"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:paddingHorizontal="18dp"
+            android:text="null"
+            android:gravity="center_vertical"
+            android:textSize="14sp"
+            android:textColor="@color/black"
+            android:textColorHint="@color/gray_hint_text"
+            android:fontFamily="@font/e_ukraine_regular"
+            android:background="@null" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_passport"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="25dp"
+        android:background="@drawable/bg_white"
+        app:layout_constraintStart_toStartOf="@+id/guideline_vertical_left"
+        app:layout_constraintEnd_toEndOf="@+id/guideline_vertical_right"
+        app:layout_constraintTop_toBottomOf="@id/ll_fullname">
+
+        <TextView
+            android:id="@+id/tv_passport_number"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:paddingHorizontal="18dp"
+            android:text="null"
+            android:gravity="center_vertical"
+            android:textSize="14sp"
+            android:textColor="@color/black"
+            android:textColorHint="@color/gray_hint_text"
+            android:fontFamily="@font/e_ukraine_regular"
+            android:background="@null" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_contact"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="25dp"
+        android:background="@drawable/bg_white"
+        app:layout_constraintStart_toStartOf="@+id/guideline_vertical_left"
+        app:layout_constraintEnd_toEndOf="@+id/guideline_vertical_right"
+        app:layout_constraintTop_toBottomOf="@id/ll_passport">
+
+        <TextView
+            android:id="@+id/tv_address"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:paddingHorizontal="18dp"
+            android:text="null"
+            android:gravity="center_vertical"
+            android:textSize="14sp"
+            android:textColor="@color/black"
+            android:textColorHint="@color/gray_hint_text"
+            android:fontFamily="@font/e_ukraine_regular"
+            android:background="@null" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/gray_hint_text"/>
+
+        <TextView
+            android:id="@+id/tv_postal_code"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:paddingHorizontal="18dp"
+            android:text="null"
+            android:gravity="center_vertical"
+            android:textSize="14sp"
+            android:textColor="@color/black"
+            android:textColorHint="@color/gray_hint_text"
+            android:fontFamily="@font/e_ukraine_regular"
+            android:background="@null" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/gray_hint_text"/>
+
+        <EditText
+            android:id="@+id/et_email_address"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:paddingHorizontal="18dp"
+            android:inputType="text"
+            android:focusable="false"
+            android:clickable="false"
+            android:text="null"
+            android:textSize="14sp"
+            android:textColor="@color/black"
+            android:textColorHint="@color/gray_hint_text"
+            android:fontFamily="@font/e_ukraine_regular"
+            android:background="@null" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_password"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="25dp"
+        android:background="@drawable/bg_white"
+        app:layout_constraintStart_toStartOf="@+id/guideline_vertical_left"
+        app:layout_constraintEnd_toEndOf="@+id/guideline_vertical_right"
+        app:layout_constraintTop_toBottomOf="@id/ll_contact">
+
+        <EditText
+            android:id="@+id/et_password"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:paddingHorizontal="18dp"
+            android:focusable="false"
+            android:clickable="false"
+            android:inputType="text"
+            android:text="null"
+            android:textSize="14sp"
+            android:textColor="@color/black"
+            android:textColorHint="@color/gray_hint_text"
+            android:fontFamily="@font/e_ukraine_regular"
+            android:background="@null" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:fontFamily="@font/e_ukraine_regular"
+        android:text=""
+        android:textColor="@color/blue_hint_text"
+        android:textSize="10sp"
+        app:layout_constraintStart_toStartOf="@+id/guideline_vertical_left"
+        app:layout_constraintEnd_toEndOf="@+id/guideline_vertical_right"
+        app:layout_constraintTop_toBottomOf="@id/ll_password" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/bth_edit"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:background="@drawable/bg_black"
+        android:text="Редагувати"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="13sp"
+        android:fontFamily="@font/e_ukraine_regular"
+        android:gravity="center"
+        android:stateListAnimator="@null"
+        android:layout_marginStart="50dp"
+        android:layout_marginEnd="50dp"
+        app:layout_constraintStart_toStartOf="@+id/guideline_vertical_left"
+        app:layout_constraintEnd_toEndOf="@+id/guideline_vertical_right"
+        app:layout_constraintBottom_toBottomOf="@id/guideline_horizontal_button"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_horizontal_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.13" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_horizontal_fields"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.2"  />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_horizontal_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.815" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_vertical_left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.07" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_vertical_right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.93" />
+</androidx.constraintlayout.widget.ConstraintLayout>

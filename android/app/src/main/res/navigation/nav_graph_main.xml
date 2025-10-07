@@ -36,6 +36,14 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
+
+        <action
+            android:id="@+id/action_menu_to_settings"
+            app:destination="@id/fragment_settings"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
 
     <fragment
@@ -88,5 +96,9 @@
     <fragment
         android:id="@+id/fragment_messages_list"
         android:name="com.example.epet.ui.main.view.MessagesListFragment" />
+
+    <fragment
+        android:id="@+id/fragment_settings"
+        android:name="com.example.epet.ui.main.view.SettingsFragment" />
 
 </navigation>
