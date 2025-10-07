@@ -32,6 +32,10 @@ class ServicesListFragment : Fragment() {
 
     /** Ініціалізація всіх кнопок інтерфейсу **/
     private fun initButtons() {
+        card_to_shelter.setOnClickListener {
+            findNavController().navigate(R.id.action_list_to_shelter)
+        }
+
         card_to_documents.setOnClickListener {
             findNavController().navigate(R.id.action_list_to_documents)
         }
