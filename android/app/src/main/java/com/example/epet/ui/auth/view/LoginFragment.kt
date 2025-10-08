@@ -12,8 +12,8 @@ import androidx.navigation.fragment.findNavController
 
 class LoginFragment : Fragment() {
 
-    private lateinit var tv_tittletext: TextView
     private lateinit var tv_to_registration: TextView
+    private lateinit var tv_reset_password: TextView
 
     private lateinit var bth_login: AppCompatButton
 
@@ -29,8 +29,8 @@ class LoginFragment : Fragment() {
 
     /** Ініціалізація всіх елементів інтерфейсу **/
     private fun initViews(view: View) {
-        tv_tittletext = view.findViewById(R.id.tv_tittletext)
         tv_to_registration = view.findViewById(R.id.tv_to_registration)
+        tv_reset_password = view.findViewById(R.id.tv_reset_password)
 
         bth_login = view.findViewById(R.id.bth_login)
     }
