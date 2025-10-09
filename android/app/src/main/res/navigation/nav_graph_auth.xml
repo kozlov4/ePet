@@ -9,8 +9,16 @@
         android:name="com.example.epet.ui.auth.view.LoginFragment">
 
         <action
-            android:id="@+id/login_to_registration"
+            android:id="@+id/action_login_to_registration"
             app:destination="@id/fragment_registration" />
+
+        <action
+            android:id="@+id/action_login_to_reset_password"
+            app:destination="@id/fragment_reset_password"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
 
 
@@ -19,8 +27,50 @@
         android:name="com.example.epet.ui.auth.view.RegistrationFragment">
 
         <action
-            android:id="@+id/registration_to_login"
+            android:id="@+id/action_registration_to_login"
             app:destination="@id/fragment_login" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/fragment_reset_password"
+        android:name="com.example.epet.ui.auth.view.ResetPassowrdFragment">
+
+        <action
+            android:id="@+id/action_reset_password_to_message"
+            app:destination="@id/fragment_message"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/fragment_message"
+        android:name="com.example.epet.ui.main.view.MessageFragment" >
+
+        <action
+            android:id="@+id/action_message_to_login"
+            app:destination="@id/fragment_login"
+            app:enterAnim="@anim/slide_in_left"
+            app:exitAnim="@anim/slide_out_right"
+            app:popEnterAnim="@anim/slide_in_right"
+            app:popExitAnim="@anim/slide_out_left" />
+
+        <argument
+            android:name="tittletext"
+            app:argType="string" />
+
+        <argument
+            android:name="emoji"
+            app:argType="string" />
+
+        <argument
+            android:name="main"
+            app:argType="string" />
+
+        <argument
+            android:name="description"
+            app:argType="string" />
     </fragment>
 
 </navigation>

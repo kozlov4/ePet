@@ -70,7 +70,7 @@ class RegistrationFragment : Fragment() {
     /** Ініціалізація всіх кнопок інтерфейсу **/
     private fun initButtons() {
         tv_to_login.setOnClickListener {
-            findNavController().navigate(R.id.registration_to_login)
+            findNavController().navigate(R.id.action_registration_to_login)
         }
     }
 }

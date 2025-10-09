@@ -38,7 +38,11 @@ class LoginFragment : Fragment() {
     /** Ініціалізація всіх кнопок інтерфейсу **/
     private fun initButtons() {
         tv_to_registration.setOnClickListener {
-            findNavController().navigate(R.id.login_to_registration)
+            findNavController().navigate(R.id.action_login_to_registration)
+        }
+
+        tv_reset_password.setOnClickListener {
+            findNavController().navigate(R.id.action_login_to_reset_password)
         }
     }
 }

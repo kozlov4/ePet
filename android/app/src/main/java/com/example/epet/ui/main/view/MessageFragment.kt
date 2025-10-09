@@ -11,6 +11,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.epet.R
 import androidx.navigation.fragment.navArgs
 import kotlin.getValue
+import androidx.activity.addCallback
 
 class MessageFragment : Fragment() {
 
@@ -32,6 +33,7 @@ class MessageFragment : Fragment() {
         initViews(view)
         initButtons()
         initMessage()
+        initSystemBack()
     }
 
     /** Ініціалізація всіх елементів інтерфейсу **/
@@ -46,7 +48,12 @@ class MessageFragment : Fragment() {
     /** Ініціалізація всіх кнопок інтерфейсу **/
     private fun initButtons() {
         iv_to_back.setOnClickListener {
-            findNavController().popBackStack()
+
+            if (tv_tittletext.text.toString() == "Відновлення паролю") {
+                findNavController().navigate(R.id.action_message_to_login)
+            } else {
+                findNavController().popBackStack()
+            }
         }
     }
 
@@ -56,5 +63,16 @@ class MessageFragment : Fragment() {
         tv_emoji.setText(args.emoji)
         tv_main.setText(args.main)
         tv_description.setText(args.description)
+    }
+
+    /** Обробка системної кнопки "Назад" **/
+    private fun initSystemBack() {
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            if (tv_tittletext.text.toString() == "Відновлення паролю") {
+                findNavController().navigate(R.id.action_message_to_login)
+            } else {
+                findNavController().popBackStack()
+            }
+        }
     }
 }
