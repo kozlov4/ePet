@@ -1,4 +1,4 @@
-package com.example.epet.ui.main.view
+package com.example.epet.ui.messages.view
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.epet.R
 import com.example.epet.data.model.Message
-import com.example.epet.ui.main.adapter.MessageAdapter
+import com.example.epet.ui.messages.adapter.MessageAdapter
 
 class MessagesListFragment : Fragment() {
 
@@ -49,11 +49,26 @@ class MessagesListFragment : Fragment() {
 
     /** Повертає приклад даних про повідомлення **/
     private fun getSampleMessages(): List<Message> = listOf(
-        Message("Витяг сформовано!", "Документ про пухнастого буде надіслано вам найближчим часом на email"),
-        Message("Витяг сформовано!", "Документ про пухнастого буде надіслано вам найближчим часом на email"),
-        Message("Витяг сформовано!", "Документ про пухнастого буде надіслано вам найближчим часом на email"),
-        Message("Витяг сформовано!", "Документ про пухнастого буде надіслано вам найближчим часом на email"),
-        Message("Витяг сформовано!", "Документ про пухнастого буде надіслано вам найближчим часом на email")
+        Message(
+            "Витяг сформовано!",
+            "Документ про пухнастого буде надіслано вам найближчим часом на email"
+        ),
+        Message(
+            "Витяг сформовано!",
+            "Документ про пухнастого буде надіслано вам найближчим часом на email"
+        ),
+        Message(
+            "Витяг сформовано!",
+            "Документ про пухнастого буде надіслано вам найближчим часом на email"
+        ),
+        Message(
+            "Витяг сформовано!",
+            "Документ про пухнастого буде надіслано вам найближчим часом на email"
+        ),
+        Message(
+            "Витяг сформовано!",
+            "Документ про пухнастого буде надіслано вам найближчим часом на email"
+        )
     )
 
     /** Налаштування RecyclerView **/

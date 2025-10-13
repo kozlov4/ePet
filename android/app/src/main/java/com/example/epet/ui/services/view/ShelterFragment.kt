@@ -1,4 +1,4 @@
-package com.example.epet.ui.main.view
+package com.example.epet.ui.services.view
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,10 +11,9 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.epet.R
-import com.example.epet.data.model.Message
 import com.example.epet.data.model.PetShelter
 
-class ServicesShelterFragment : Fragment() {
+class ShelterFragment : Fragment() {
 
     private lateinit var card_container: FrameLayout
     private lateinit var ib_like: ImageButton

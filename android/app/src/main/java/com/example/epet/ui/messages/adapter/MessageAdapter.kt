@@ -1,4 +1,4 @@
-package com.example.epet.ui.main.adapter
+package com.example.epet.ui.messages.adapter
 
 import android.view.LayoutInflater
 import android.view.View

@@ -1,12 +1,12 @@
 package com.example.epet.ui.main.view
 
-import androidx.navigation.fragment.findNavController
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.cardview.widget.CardView
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.example.epet.R
 
 class ServicesListFragment : Fragment() {

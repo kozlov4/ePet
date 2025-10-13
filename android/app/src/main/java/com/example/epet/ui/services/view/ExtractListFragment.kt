@@ -1,4 +1,4 @@
-package com.example.epet.ui.main.view
+package com.example.epet.ui.services.view
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,14 +10,14 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.epet.R
 
-class ServicesDocumentsFragment : Fragment() {
+class ExtractListFragment : Fragment() {
 
     private lateinit var iv_to_back: ImageView
 
     private lateinit var сс_to_documents: ConstraintLayout
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_services_documents, container, false)
+        return inflater.inflate(R.layout.fragment_services_extract_list, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

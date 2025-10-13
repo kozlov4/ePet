@@ -1,4 +1,4 @@
-package com.example.epet.ui.main.view
+package com.example.epet.ui.services.view
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,8 +9,9 @@ import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.epet.R
+import com.example.epet.ui.services.view.ExtractPetFragmentDirections
 
-class ServicesExtractPetFragment : Fragment() {
+class ExtractPetFragment : Fragment() {
 
     private lateinit var iv_to_back: ImageView
     private lateinit var bth_create_extract: AppCompatButton
@@ -38,7 +39,7 @@ class ServicesExtractPetFragment : Fragment() {
         }
 
         bth_create_extract.setOnClickListener {
-            val action = ServicesExtractPetFragmentDirections.actionExtractPetToMessage(
+            val action = ExtractPetFragmentDirections.actionExtractPetToMessage(
                 tittletext = "Витяг про улюбленця",
                 emoji = "✅",
                 main = "Витяг сформовано!",

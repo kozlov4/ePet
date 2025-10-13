@@ -46,7 +46,7 @@
 
     <fragment
         android:id="@+id/fragment_message"
-        android:name="com.example.epet.ui.main.view.MessageFragment" >
+        android:name="com.example.epet.ui.common.view.MessageFragment" >
 
         <action
             android:id="@+id/action_message_to_login"

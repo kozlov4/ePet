@@ -56,7 +56,7 @@
 
     <fragment
         android:id="@+id/fragment_services_documents"
-        android:name="com.example.epet.ui.main.view.ServicesDocumentsFragment">
+        android:name="com.example.epet.ui.services.view.ExtractListFragment">
 
         <action
             android:id="@+id/action_documents_to_extract_pet"
@@ -69,7 +69,7 @@
 
     <fragment
         android:id="@+id/fragment_services_extract_pet"
-        android:name="com.example.epet.ui.main.view.ServicesExtractPetFragment" >
+        android:name="com.example.epet.ui.services.view.ExtractPetFragment" >
 
         <action
             android:id="@+id/action_extract_pet_to_message"
@@ -82,7 +82,7 @@
 
     <fragment
         android:id="@+id/fragment_message"
-        android:name="com.example.epet.ui.main.view.MessageFragment" >
+        android:name="com.example.epet.ui.common.view.MessageFragment" >
 
         <argument
             android:name="tittletext"
@@ -103,14 +103,14 @@
 
     <fragment
         android:id="@+id/fragment_messages_list"
-        android:name="com.example.epet.ui.main.view.MessagesListFragment" />
+        android:name="com.example.epet.ui.messages.view.MessagesListFragment" />
 
     <fragment
         android:id="@+id/fragment_settings"
-        android:name="com.example.epet.ui.main.view.SettingsFragment" />
+        android:name="com.example.epet.ui.settings.view.SettingsFragment" />
 
     <fragment
         android:id="@+id/fragment_services_shelter"
-        android:name="com.example.epet.ui.main.view.ServicesShelterFragment" />
+        android:name="com.example.epet.ui.services.view.ShelterFragment" />
 
 </navigation>

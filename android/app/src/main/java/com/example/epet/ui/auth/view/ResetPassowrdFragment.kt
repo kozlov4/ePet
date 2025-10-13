@@ -11,7 +11,6 @@ import com.example.epet.R
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatButton
 import androidx.navigation.fragment.findNavController
-import com.example.epet.ui.main.view.ServicesExtractPetFragmentDirections
 
 class ResetPassowrdFragment : Fragment() {
 
