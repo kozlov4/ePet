@@ -12,9 +12,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.epet.R
 
-class MessageFragment : Fragment() {
+class MessageDetailFragment : Fragment() {
 
-    private val args: MessageFragmentArgs by navArgs()
+    private val args: MessageDetailFragmentArgs by navArgs()
 
     private lateinit var iv_to_back: ImageView
 
@@ -24,7 +24,7 @@ class MessageFragment : Fragment() {
     private lateinit var tv_description: TextView
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_message, container, false)
+        return inflater.inflate(R.layout.fragment_message_detail, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

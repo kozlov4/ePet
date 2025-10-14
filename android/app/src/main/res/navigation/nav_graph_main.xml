@@ -2,18 +2,18 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/nav_graph_main"
-    app:startDestination="@id/fragment_feed">
+    app:startDestination="@id/fragment_ad">
 
     <fragment
-        android:id="@+id/fragment_feed"
+        android:id="@+id/fragment_ad"
         android:name="com.example.epet.ui.main.view.AdFragment" />
 
     <fragment
-        android:id="@+id/fragment_documents"
+        android:id="@+id/fragment_passport_list"
         android:name="com.example.epet.ui.main.view.PassportListFragment" />
 
     <fragment
-        android:id="@+id/fragment_service"
+        android:id="@+id/fragment_service_list"
         android:name="com.example.epet.ui.main.view.ServiceListFragment" >
 
         <action
@@ -73,7 +73,7 @@
 
         <action
             android:id="@+id/action_extract_pet_to_message"
-            app:destination="@id/fragment_message"
+            app:destination="@id/fragment_message_detail"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
@@ -81,8 +81,8 @@
     </fragment>
 
     <fragment
-        android:id="@+id/fragment_message"
-        android:name="com.example.epet.ui.common.view.MessageFragment" >
+        android:id="@+id/fragment_message_detail"
+        android:name="com.example.epet.ui.common.view.MessageDetailFragment" >
 
         <argument
             android:name="tittletext"

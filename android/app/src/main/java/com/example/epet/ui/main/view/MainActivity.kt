@@ -92,9 +92,9 @@ class MainActivity : AppCompatActivity() {
     /** Фуекція для навігації **/
     private fun navigateToFragment(index: Int) {
         val destinationId = when(index) {
-            0 -> R.id.fragment_feed
-            1 -> R.id.fragment_documents
-            2 -> R.id.fragment_service
+            0 -> R.id.fragment_ad
+            1 -> R.id.fragment_passport_list
+            2 -> R.id.fragment_service_list
             3 -> R.id.fragment_menu
             else -> null
         }
