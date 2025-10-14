@@ -1,4 +1,4 @@
-package com.example.epet.ui.main.view
+package com.example.epet.ui.messages.view
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,16 +10,16 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.epet.R
-import com.example.epet.data.model.Message
-import com.example.epet.ui.main.adapter.MessageAdapter
+import com.example.epet.data.model.OutputMessage
+import com.example.epet.ui.messages.adapter.MessageListAdapter
 
-class MessagesListFragment : Fragment() {
+class MessageListFragment : Fragment() {
 
     private lateinit var iv_to_back: ImageView
     private lateinit var rv_messages: RecyclerView
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_messages_list, container, false)
+        return inflater.inflate(R.layout.fragment_message_list, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -48,17 +48,32 @@ class MessagesListFragment : Fragment() {
     }
 
     /** Повертає приклад даних про повідомлення **/
-    private fun getSampleMessages(): List<Message> = listOf(
-        Message("Витяг сформовано!", "Документ про пухнастого буде надіслано вам найближчим часом на email"),
-        Message("Витяг сформовано!", "Документ про пухнастого буде надіслано вам найближчим часом на email"),
-        Message("Витяг сформовано!", "Документ про пухнастого буде надіслано вам найближчим часом на email"),
-        Message("Витяг сформовано!", "Документ про пухнастого буде надіслано вам найближчим часом на email"),
-        Message("Витяг сформовано!", "Документ про пухнастого буде надіслано вам найближчим часом на email")
+    private fun getSampleMessages(): List<OutputMessage> = listOf(
+        OutputMessage(
+            "Витяг сформовано!",
+            "Документ про пухнастого буде надіслано вам найближчим часом на email"
+        ),
+        OutputMessage(
+            "Витяг сформовано!",
+            "Документ про пухнастого буде надіслано вам найближчим часом на email"
+        ),
+        OutputMessage(
+            "Витяг сформовано!",
+            "Документ про пухнастого буде надіслано вам найближчим часом на email"
+        ),
+        OutputMessage(
+            "Витяг сформовано!",
+            "Документ про пухнастого буде надіслано вам найближчим часом на email"
+        ),
+        OutputMessage(
+            "Витяг сформовано!",
+            "Документ про пухнастого буде надіслано вам найближчим часом на email"
+        )
     )
 
     /** Налаштування RecyclerView **/
-    private fun setupRecyclerView(messages: List<Message>) {
-        val adapter = MessageAdapter(messages)
+    private fun setupRecyclerView(outputMessages: List<OutputMessage>) {
+        val adapter = MessageListAdapter(outputMessages)
         rv_messages.layoutManager = LinearLayoutManager(requireContext())
         rv_messages.adapter = adapter
     }

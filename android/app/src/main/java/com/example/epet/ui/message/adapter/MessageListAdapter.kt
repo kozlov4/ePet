@@ -1,4 +1,4 @@
-package com.example.epet.ui.main.adapter
+package com.example.epet.ui.messages.adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,9 +6,9 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.epet.R
-import com.example.epet.data.model.Message
+import com.example.epet.data.model.OutputMessage
 
-class MessageAdapter(private val messages: List<Message>) : RecyclerView.Adapter<MessageAdapter.MessageViewHolder>() {
+class MessageListAdapter(private val outputMessages: List<OutputMessage>) : RecyclerView.Adapter<MessageListAdapter.MessageViewHolder>() {
 
     class MessageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val tv_main: TextView = itemView.findViewById(R.id.tv_main)
@@ -21,10 +21,10 @@ class MessageAdapter(private val messages: List<Message>) : RecyclerView.Adapter
     }
 
     override fun onBindViewHolder(holder: MessageViewHolder, position: Int) {
-        val message = messages[position]
+        val message = outputMessages[position]
         holder.tv_main.text = message.main
         holder.tv_description.text = message.description
     }
 
-    override fun getItemCount(): Int = messages.size
+    override fun getItemCount(): Int = outputMessages.size
 }

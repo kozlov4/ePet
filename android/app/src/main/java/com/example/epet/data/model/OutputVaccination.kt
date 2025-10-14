@@ -1,6 +1,6 @@
 package com.example.epet.data.model
 
-data class Vaccination(
+data class OutputVaccination(
     val name: String,
     val dateStart: String,
     val dateEnd: String,

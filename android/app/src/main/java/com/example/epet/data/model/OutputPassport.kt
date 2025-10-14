@@ -1,6 +1,6 @@
 package com.example.epet.data.model
 
-data class PetPassport(
+data class OutputPassport(
     val nameUA: String,
     val nameEN: String,
     val birthDate: String,
