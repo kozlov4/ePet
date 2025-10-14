@@ -6,15 +6,15 @@
 
     <fragment
         android:id="@+id/fragment_feed"
-        android:name="com.example.epet.ui.main.view.FeedFragment" />
+        android:name="com.example.epet.ui.main.view.AdFragment" />
 
     <fragment
         android:id="@+id/fragment_documents"
-        android:name="com.example.epet.ui.main.view.DocumentsFragment" />
+        android:name="com.example.epet.ui.main.view.PassportListFragment" />
 
     <fragment
-        android:id="@+id/fragment_services"
-        android:name="com.example.epet.ui.main.view.ServicesListFragment" >
+        android:id="@+id/fragment_service"
+        android:name="com.example.epet.ui.main.view.ServiceListFragment" >
 
         <action
             android:id="@+id/action_list_to_documents"
@@ -103,7 +103,7 @@
 
     <fragment
         android:id="@+id/fragment_messages_list"
-        android:name="com.example.epet.ui.messages.view.MessagesListFragment" />
+        android:name="com.example.epet.ui.messages.view.MessageListFragment" />
 
     <fragment
         android:id="@+id/fragment_settings"

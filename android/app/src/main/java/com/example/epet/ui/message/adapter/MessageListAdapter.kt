@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.epet.R
 import com.example.epet.data.model.Message
 
-class MessageAdapter(private val messages: List<Message>) : RecyclerView.Adapter<MessageAdapter.MessageViewHolder>() {
+class MessageListAdapter(private val messages: List<Message>) : RecyclerView.Adapter<MessageListAdapter.MessageViewHolder>() {
 
     class MessageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val tv_main: TextView = itemView.findViewById(R.id.tv_main)

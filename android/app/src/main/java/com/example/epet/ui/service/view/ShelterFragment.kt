@@ -24,7 +24,7 @@ class ShelterFragment : Fragment() {
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_services_shelter, container, false)
+        return inflater.inflate(R.layout.fragment_shelter, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -73,7 +73,7 @@ class ShelterFragment : Fragment() {
         if (currentIndex >= petList.size) return
 
         val pet = petList[currentIndex]
-        val cardView = layoutInflater.inflate(R.layout.item_shelter_pet, card_container, false)
+        val cardView = layoutInflater.inflate(R.layout.item_shelter, card_container, false)
 
         val iv_photo = cardView.findViewById<ImageView>(R.id.iv_photo)
         val tv_name = cardView.findViewById<TextView>(R.id.tv_name)

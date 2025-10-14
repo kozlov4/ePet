@@ -11,15 +11,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.epet.R
 import com.example.epet.data.model.Message
-import com.example.epet.ui.messages.adapter.MessageAdapter
+import com.example.epet.ui.messages.adapter.MessageListAdapter
 
-class MessagesListFragment : Fragment() {
+class MessageListFragment : Fragment() {
 
     private lateinit var iv_to_back: ImageView
     private lateinit var rv_messages: RecyclerView
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_messages_list, container, false)
+        return inflater.inflate(R.layout.fragment_message_list, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -73,7 +73,7 @@ class MessagesListFragment : Fragment() {
 
     /** Налаштування RecyclerView **/
     private fun setupRecyclerView(messages: List<Message>) {
-        val adapter = MessageAdapter(messages)
+        val adapter = MessageListAdapter(messages)
         rv_messages.layoutManager = LinearLayoutManager(requireContext())
         rv_messages.adapter = adapter
     }

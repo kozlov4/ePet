@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.epet.R
 import com.example.epet.data.model.Vaccination
 
-class VaccinationAdapter(private val vaccinations: List<Vaccination>) : RecyclerView.Adapter<VaccinationAdapter.VaccinationViewHolder>() {
+class VaccinationInfoAdapter(private val vaccinations: List<Vaccination>) : RecyclerView.Adapter<VaccinationInfoAdapter.VaccinationViewHolder>() {
 
     class VaccinationViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val tv_name: TextView = itemView.findViewById(R.id.tv_name)

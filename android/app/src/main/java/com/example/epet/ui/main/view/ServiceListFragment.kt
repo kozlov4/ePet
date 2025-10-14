@@ -9,13 +9,13 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.epet.R
 
-class ServicesListFragment : Fragment() {
+class ServiceListFragment : Fragment() {
 
     private lateinit var card_to_shelter: CardView
     private lateinit var card_to_documents: CardView
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_services_list, container, false)
+        return inflater.inflate(R.layout.fragment_service_list, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
