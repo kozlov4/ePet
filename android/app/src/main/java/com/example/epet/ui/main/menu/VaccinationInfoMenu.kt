@@ -11,32 +11,16 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.example.epet.R
 import android.widget.TextView
-import android.widget.ImageView
+import androidx.recyclerview.widget.RecyclerView
+import com.example.epet.data.model.OutputVaccination
+import com.example.epet.ui.main.adapter.VaccinationInfoAdapter
+import androidx.recyclerview.widget.LinearLayoutManager
 
-class MenuPassportInfo(private val onClose: (() -> Unit)? = null) : BottomSheetDialogFragment() {
+class VaccinationInfoMenu(private val onClose: (() -> Unit)? = null) : BottomSheetDialogFragment() {
 
     private lateinit var sv_main: NestedScrollView
-    private lateinit var tv_passport_number: TextView
-    private lateinit var iv_copy_passport: ImageView
     private lateinit var tv_last_update: TextView
-    private lateinit var tv_name_ua: TextView
-    private lateinit var tv_name_en: TextView
-    private lateinit var iv_photo: ImageView
-    private lateinit var tv_birth_date: TextView
-    private lateinit var tv_breed_ua: TextView
-    private lateinit var tv_breed_en: TextView
-    private lateinit var tv_sex_ua: TextView
-    private lateinit var tv_sex_en: TextView
-    private lateinit var tv_color_ua: TextView
-    private lateinit var tv_color_en: TextView
-    private lateinit var tv_species_ua: TextView
-    private lateinit var tv_species_en: TextView
-    private lateinit var tv_owner_passport_number: TextView
-    private lateinit var tv_autority_number: TextView
-    private lateinit var tv_chip_location_ua: TextView
-    private lateinit var tv_chip_location_en: TextView
-    private lateinit var tv_chip_date: TextView
-    private lateinit var tv_chip_number: TextView
+    private lateinit var rv_vaccinations: RecyclerView
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return BottomSheetDialog(requireContext(), R.style.MenuPassportAnimation).apply {
@@ -68,7 +52,7 @@ class MenuPassportInfo(private val onClose: (() -> Unit)? = null) : BottomSheetD
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        return inflater.inflate(R.layout.menu_passport_info, container, false)
+        return inflater.inflate(R.layout.menu_vaccination_info, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -86,37 +70,41 @@ class MenuPassportInfo(private val onClose: (() -> Unit)? = null) : BottomSheetD
     /** Ініціалізація всіх елементів інтерфейсу **/
     private fun initViews(view: View) {
         sv_main = view.findViewById(R.id.sv_main)
-        tv_passport_number = view.findViewById(R.id.tv_passport_number)
-        iv_copy_passport = view.findViewById(R.id.iv_copy_passport)
         tv_last_update = view.findViewById(R.id.tv_last_update)
-        tv_name_ua = view.findViewById(R.id.tv_name_ua)
-        tv_name_en = view.findViewById(R.id.tv_name_en)
-        iv_photo = view.findViewById(R.id.iv_photo)
-        tv_birth_date = view.findViewById(R.id.tv_birth_date)
-        tv_breed_ua = view.findViewById(R.id.tv_breed_ua)
-        tv_breed_en = view.findViewById(R.id.tv_breed_en)
-        tv_sex_ua = view.findViewById(R.id.tv_sex_ua)
-        tv_sex_en = view.findViewById(R.id.tv_sex_en)
-        tv_color_ua = view.findViewById(R.id.tv_color_ua)
-        tv_color_en = view.findViewById(R.id.tv_color_en)
-        tv_species_ua = view.findViewById(R.id.tv_species_ua)
-        tv_species_en = view.findViewById(R.id.tv_species_en)
-        tv_owner_passport_number = view.findViewById(R.id.tv_owner_passport_number)
-        tv_autority_number = view.findViewById(R.id.tv_autority_number)
-        tv_chip_location_ua = view.findViewById(R.id.tv_chip_location_ua)
-        tv_chip_location_en = view.findViewById(R.id.tv_chip_location_en)
-        tv_chip_date = view.findViewById(R.id.tv_chip_date)
-        tv_chip_number = view.findViewById(R.id.tv_chip_number)
+        rv_vaccinations = view.findViewById(R.id.rv_vaccinations)
     }
 
-    /** Ініціалізація всіх кнопок інтерфейсу **/
+    /** Ініціалізація кнопок **/
     private fun initButtons() {
     }
 
     /** Заповнення даних **/
     private fun initInfo() {
-        val repeatedText = "Паспорт оновлено 01.10.2025 "
-        tv_last_update.text = repeatedText.repeat(100)
+        tv_last_update.text = getLastUpdateText()
         tv_last_update.isSelected = true
+
+        setupRecyclerView(getSampleVaccinations())
+    }
+
+    /** Повертає приклад тексту останнього оновлення **/
+    private fun getLastUpdateText(): String {
+        val repeatedText = "Паспорт оновлено 01.10.2025 "
+        return repeatedText.repeat(100)
+    }
+
+    /** Повертає приклад даних про вакцинації **/
+    private fun getSampleVaccinations(): List<OutputVaccination> = listOf(
+        OutputVaccination("Nobivac Rabies", "04.09.2024", "04.09.2025", "A452A01", "ЕкоЦентр"),
+        OutputVaccination("Nobivac DHPPi/L", "10.05.2023", "10.05.2024", "B123C45", "ЕкоЦентр"),
+        OutputVaccination("Nobivac Rabies", "04.09.2024", "04.09.2025", "A452A01", "ЕкоЦентр"),
+        OutputVaccination("Nobivac DHPPi/L", "10.05.2023", "10.05.2024", "B123C45", "ЕкоЦентр"),
+        OutputVaccination("Nobivac Lepto", "15.06.2025", "15.06.2026", "C987D65", "ЕкоЦентр")
+    )
+
+    /** Налаштування RecyclerView **/
+    private fun setupRecyclerView(outputVaccinations: List<OutputVaccination>) {
+        val adapter = VaccinationInfoAdapter(outputVaccinations)
+        rv_vaccinations.layoutManager = LinearLayoutManager(requireContext())
+        rv_vaccinations.adapter = adapter
     }
 }

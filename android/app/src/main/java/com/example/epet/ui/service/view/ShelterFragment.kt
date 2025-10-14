@@ -11,7 +11,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.epet.R
-import com.example.epet.data.model.PetShelter
+import com.example.epet.data.model.OutputPetShelter
 
 class ShelterFragment : Fragment() {
 
@@ -24,7 +24,7 @@ class ShelterFragment : Fragment() {
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_services_shelter, container, false)
+        return inflater.inflate(R.layout.fragment_shelter, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -59,21 +59,21 @@ class ShelterFragment : Fragment() {
     }
 
     /** Повертає приклад даних про повідомлення **/
-    private fun getPetShelterList(): List<PetShelter> = listOf(
-        PetShelter(R.drawable.icon_cat_test, "Донні", "Ч", "Метис", "24.02.2020"),
-        PetShelter(R.drawable.icon_cat_test, "Мурзік", "Ч", "Британський", "11.08.2019"),
-        PetShelter(R.drawable.icon_cat_test, "Луна", "Ж", "Сіамський", "03.05.2021"),
-        PetShelter(R.drawable.icon_cat_test, "Сніжок", "Ч", "Ангор", "17.12.2022"),
-        PetShelter(R.drawable.icon_cat_test, "Белла", "Ж", "Шотландський", "29.07.2020"),
-        PetShelter(R.drawable.icon_cat_test, "Барсік", "Ч", "Метис", "10.01.2018")
+    private fun getPetShelterList(): List<OutputPetShelter> = listOf(
+        OutputPetShelter(R.drawable.icon_cat_test, "Донні", "Ч", "Метис", "24.02.2020"),
+        OutputPetShelter(R.drawable.icon_cat_test, "Мурзік", "Ч", "Британський", "11.08.2019"),
+        OutputPetShelter(R.drawable.icon_cat_test, "Луна", "Ж", "Сіамський", "03.05.2021"),
+        OutputPetShelter(R.drawable.icon_cat_test, "Сніжок", "Ч", "Ангор", "17.12.2022"),
+        OutputPetShelter(R.drawable.icon_cat_test, "Белла", "Ж", "Шотландський", "29.07.2020"),
+        OutputPetShelter(R.drawable.icon_cat_test, "Барсік", "Ч", "Метис", "10.01.2018")
     )
 
     /** Показ наступної картки **/
-    private fun showNextCard(animated: Boolean = true, petList: List<PetShelter>) {
+    private fun showNextCard(animated: Boolean = true, petList: List<OutputPetShelter>) {
         if (currentIndex >= petList.size) return
 
         val pet = petList[currentIndex]
-        val cardView = layoutInflater.inflate(R.layout.item_shelter_pet, card_container, false)
+        val cardView = layoutInflater.inflate(R.layout.item_shelter, card_container, false)
 
         val iv_photo = cardView.findViewById<ImageView>(R.id.iv_photo)
         val tv_name = cardView.findViewById<TextView>(R.id.tv_name)

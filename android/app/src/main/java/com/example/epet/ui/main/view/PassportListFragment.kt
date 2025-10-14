@@ -10,18 +10,18 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.epet.R
-import com.example.epet.data.model.PetPassport
-import com.example.epet.ui.main.adapter.PassportAdapter
+import com.example.epet.data.model.OutputPassport
+import com.example.epet.ui.main.adapter.PassportListAdapter
 import kotlin.math.abs
-import MenuSelector
+import SelectorMenu
 
-class DocumentsFragment : Fragment() {
+class PassportListFragment : Fragment() {
 
     private lateinit var rvPassports: RecyclerView
     private lateinit var llIndicators: LinearLayout
 
     private lateinit var layoutManager: LinearLayoutManager
-    private lateinit var passportAdapter: PassportAdapter
+    private lateinit var passportListAdapter: PassportListAdapter
     private lateinit var snapHelper: LinearSnapHelper
 
     private val CARD_SCALE_MAX = 1.0f
@@ -32,7 +32,7 @@ class DocumentsFragment : Fragment() {
     private val INDICATOR_ALPHA_MIN = 0.3f
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_documents, container, false)
+        return inflater.inflate(R.layout.fragment_passport_list, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -54,19 +54,19 @@ class DocumentsFragment : Fragment() {
     }
 
     /** Повертає приклад даних паспортів **/
-    private fun getSamplePassports(): List<PetPassport> = listOf(
-        PetPassport("Мурчик", "Murczyk", "01.01.2021", "A1234567", "20.09.2025"),
-        PetPassport("Бімка", "Bimka", "15.05.2019", "B7654321", "18.09.2025"),
-        PetPassport("Пухнастик", "Pukhnastyk", "10.03.2022", "C2468101", "22.09.2025"),
-        PetPassport("Рекс", "Rex", "07.07.2020", "D1357911", "21.09.2025")
+    private fun getSamplePassports(): List<OutputPassport> = listOf(
+        OutputPassport("Мурчик", "Murczyk", "01.01.2021", "A1234567", "20.09.2025"),
+        OutputPassport("Бімка", "Bimka", "15.05.2019", "B7654321", "18.09.2025"),
+        OutputPassport("Пухнастик", "Pukhnastyk", "10.03.2022", "C2468101", "22.09.2025"),
+        OutputPassport("Рекс", "Rex", "07.07.2020", "D1357911", "21.09.2025")
     )
 
     /** Налаштування RecyclerView **/
-    private fun setupRecyclerView(passports: List<PetPassport>) {
-        passportAdapter = PassportAdapter(passports) {MenuSelector().show(parentFragmentManager, "MenuPassportAdapter")}
+    private fun setupRecyclerView(passports: List<OutputPassport>) {
+        passportListAdapter = PassportListAdapter(passports) {SelectorMenu().show(parentFragmentManager, "MenuPassportAdapter")}
         layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         rvPassports.layoutManager = layoutManager
-        rvPassports.adapter = passportAdapter
+        rvPassports.adapter = passportListAdapter
     }
 
     /** Налаштування SnapHelper для центрованої прокрутки **/
@@ -76,7 +76,7 @@ class DocumentsFragment : Fragment() {
                 val currentView = findSnapView(layoutManager) ?: return RecyclerView.NO_POSITION
                 val currentPos = layoutManager.getPosition(currentView)
                 return when {
-                    velocityX > 0 -> (currentPos + 1).coerceAtMost(passportAdapter.itemCount - 1)
+                    velocityX > 0 -> (currentPos + 1).coerceAtMost(passportListAdapter.itemCount - 1)
                     velocityX < 0 -> (currentPos - 1).coerceAtLeast(0)
                     else -> currentPos
                 }

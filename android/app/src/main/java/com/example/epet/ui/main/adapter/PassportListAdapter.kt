@@ -7,11 +7,11 @@ import androidx.cardview.widget.CardView
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.epet.R
-import com.example.epet.data.model.PetPassport
+import com.example.epet.data.model.OutputPassport
 
-class PassportAdapter(
-    private val passportList: List<PetPassport>,
-    private val onMenuClick: () -> Unit) : RecyclerView.Adapter<PassportAdapter.PassportViewHolder>() {
+class PassportListAdapter(
+    private val passportList: List<OutputPassport>,
+    private val onMenuClick: () -> Unit) : RecyclerView.Adapter<PassportListAdapter.PassportViewHolder>() {
 
     inner class PassportViewHolder(val card: CardView) : RecyclerView.ViewHolder(card) {
         val tv_name_ua: TextView = card.findViewById(R.id.tv_name_ua)

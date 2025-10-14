@@ -1,6 +1,6 @@
 package com.example.epet.data.model
 
-data class Message(
+data class OutputMessage(
     val main: String,
     val description: String
 )
