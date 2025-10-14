@@ -12,7 +12,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.example.epet.R
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.epet.data.model.Vaccination
+import com.example.epet.data.model.OutputVaccination
 import com.example.epet.ui.main.adapter.VaccinationInfoAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 
@@ -93,17 +93,17 @@ class VaccinationInfoMenu(private val onClose: (() -> Unit)? = null) : BottomShe
     }
 
     /** Повертає приклад даних про вакцинації **/
-    private fun getSampleVaccinations(): List<Vaccination> = listOf(
-        Vaccination("Nobivac Rabies", "04.09.2024", "04.09.2025", "A452A01", "ЕкоЦентр"),
-        Vaccination("Nobivac DHPPi/L", "10.05.2023", "10.05.2024", "B123C45", "ЕкоЦентр"),
-        Vaccination("Nobivac Rabies", "04.09.2024", "04.09.2025", "A452A01", "ЕкоЦентр"),
-        Vaccination("Nobivac DHPPi/L", "10.05.2023", "10.05.2024", "B123C45", "ЕкоЦентр"),
-        Vaccination("Nobivac Lepto", "15.06.2025", "15.06.2026", "C987D65", "ЕкоЦентр")
+    private fun getSampleVaccinations(): List<OutputVaccination> = listOf(
+        OutputVaccination("Nobivac Rabies", "04.09.2024", "04.09.2025", "A452A01", "ЕкоЦентр"),
+        OutputVaccination("Nobivac DHPPi/L", "10.05.2023", "10.05.2024", "B123C45", "ЕкоЦентр"),
+        OutputVaccination("Nobivac Rabies", "04.09.2024", "04.09.2025", "A452A01", "ЕкоЦентр"),
+        OutputVaccination("Nobivac DHPPi/L", "10.05.2023", "10.05.2024", "B123C45", "ЕкоЦентр"),
+        OutputVaccination("Nobivac Lepto", "15.06.2025", "15.06.2026", "C987D65", "ЕкоЦентр")
     )
 
     /** Налаштування RecyclerView **/
-    private fun setupRecyclerView(vaccinations: List<Vaccination>) {
-        val adapter = VaccinationInfoAdapter(vaccinations)
+    private fun setupRecyclerView(outputVaccinations: List<OutputVaccination>) {
+        val adapter = VaccinationInfoAdapter(outputVaccinations)
         rv_vaccinations.layoutManager = LinearLayoutManager(requireContext())
         rv_vaccinations.adapter = adapter
     }

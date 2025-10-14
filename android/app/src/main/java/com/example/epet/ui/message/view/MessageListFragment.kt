@@ -10,7 +10,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.epet.R
-import com.example.epet.data.model.Message
+import com.example.epet.data.model.OutputMessage
 import com.example.epet.ui.messages.adapter.MessageListAdapter
 
 class MessageListFragment : Fragment() {
@@ -48,32 +48,32 @@ class MessageListFragment : Fragment() {
     }
 
     /** Повертає приклад даних про повідомлення **/
-    private fun getSampleMessages(): List<Message> = listOf(
-        Message(
+    private fun getSampleMessages(): List<OutputMessage> = listOf(
+        OutputMessage(
             "Витяг сформовано!",
             "Документ про пухнастого буде надіслано вам найближчим часом на email"
         ),
-        Message(
+        OutputMessage(
             "Витяг сформовано!",
             "Документ про пухнастого буде надіслано вам найближчим часом на email"
         ),
-        Message(
+        OutputMessage(
             "Витяг сформовано!",
             "Документ про пухнастого буде надіслано вам найближчим часом на email"
         ),
-        Message(
+        OutputMessage(
             "Витяг сформовано!",
             "Документ про пухнастого буде надіслано вам найближчим часом на email"
         ),
-        Message(
+        OutputMessage(
             "Витяг сформовано!",
             "Документ про пухнастого буде надіслано вам найближчим часом на email"
         )
     )
 
     /** Налаштування RecyclerView **/
-    private fun setupRecyclerView(messages: List<Message>) {
-        val adapter = MessageListAdapter(messages)
+    private fun setupRecyclerView(outputMessages: List<OutputMessage>) {
+        val adapter = MessageListAdapter(outputMessages)
         rv_messages.layoutManager = LinearLayoutManager(requireContext())
         rv_messages.adapter = adapter
     }

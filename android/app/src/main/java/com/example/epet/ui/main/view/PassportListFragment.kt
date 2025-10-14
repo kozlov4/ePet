@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.epet.R
-import com.example.epet.data.model.PetPassport
+import com.example.epet.data.model.OutputPassport
 import com.example.epet.ui.main.adapter.PassportListAdapter
 import kotlin.math.abs
 import SelectorMenu
@@ -54,15 +54,15 @@ class PassportListFragment : Fragment() {
     }
 
     /** Повертає приклад даних паспортів **/
-    private fun getSamplePassports(): List<PetPassport> = listOf(
-        PetPassport("Мурчик", "Murczyk", "01.01.2021", "A1234567", "20.09.2025"),
-        PetPassport("Бімка", "Bimka", "15.05.2019", "B7654321", "18.09.2025"),
-        PetPassport("Пухнастик", "Pukhnastyk", "10.03.2022", "C2468101", "22.09.2025"),
-        PetPassport("Рекс", "Rex", "07.07.2020", "D1357911", "21.09.2025")
+    private fun getSamplePassports(): List<OutputPassport> = listOf(
+        OutputPassport("Мурчик", "Murczyk", "01.01.2021", "A1234567", "20.09.2025"),
+        OutputPassport("Бімка", "Bimka", "15.05.2019", "B7654321", "18.09.2025"),
+        OutputPassport("Пухнастик", "Pukhnastyk", "10.03.2022", "C2468101", "22.09.2025"),
+        OutputPassport("Рекс", "Rex", "07.07.2020", "D1357911", "21.09.2025")
     )
 
     /** Налаштування RecyclerView **/
-    private fun setupRecyclerView(passports: List<PetPassport>) {
+    private fun setupRecyclerView(passports: List<OutputPassport>) {
         passportListAdapter = PassportListAdapter(passports) {SelectorMenu().show(parentFragmentManager, "MenuPassportAdapter")}
         layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         rvPassports.layoutManager = layoutManager

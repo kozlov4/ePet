@@ -6,9 +6,9 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.epet.R
-import com.example.epet.data.model.Vaccination
+import com.example.epet.data.model.OutputVaccination
 
-class VaccinationInfoAdapter(private val vaccinations: List<Vaccination>) : RecyclerView.Adapter<VaccinationInfoAdapter.VaccinationViewHolder>() {
+class VaccinationInfoAdapter(private val outputVaccinations: List<OutputVaccination>) : RecyclerView.Adapter<VaccinationInfoAdapter.VaccinationViewHolder>() {
 
     class VaccinationViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val tv_name: TextView = itemView.findViewById(R.id.tv_name)
@@ -24,7 +24,7 @@ class VaccinationInfoAdapter(private val vaccinations: List<Vaccination>) : Recy
     }
 
     override fun onBindViewHolder(holder: VaccinationViewHolder, position: Int) {
-        val vaccination = vaccinations[position]
+        val vaccination = outputVaccinations[position]
         holder.tv_name.text = vaccination.name
         holder.tv_date_start.text = vaccination.dateStart
         holder.tv_date_end.text = "до ${vaccination.dateEnd}"
@@ -32,5 +32,5 @@ class VaccinationInfoAdapter(private val vaccinations: List<Vaccination>) : Recy
         holder.tv_vet.text = vaccination.vet
     }
 
-    override fun getItemCount(): Int = vaccinations.size
+    override fun getItemCount(): Int = outputVaccinations.size
 }
