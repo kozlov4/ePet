@@ -103,7 +103,6 @@ class RegistrationFragment : Fragment() {
         viewModel.outputRegisatration.observe(viewLifecycleOwner) { output ->
             when(output) {
                 is OutputAuth.Success -> {
-                    tv_message.text = ""
                     navigateToMainActivity()
                 }
 

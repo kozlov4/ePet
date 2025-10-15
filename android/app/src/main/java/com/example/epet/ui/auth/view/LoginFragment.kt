@@ -85,7 +85,6 @@ class LoginFragment : Fragment() {
         viewModel.outputLogin.observe(viewLifecycleOwner) { output ->
             when(output) {
                 is OutputAuth.Success -> {
-                    tv_message.visibility = View.GONE
                     navigateToMainActivity()
                 }
 

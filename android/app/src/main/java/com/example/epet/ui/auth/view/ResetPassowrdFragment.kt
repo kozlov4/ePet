@@ -76,8 +76,6 @@ class ResetPassowrdFragment : Fragment() {
                     email = et_email_address.text.toString()
                 )
                 findNavController().navigate(action)
-                tv_message.text = ""
-
             } else {
                 tv_message.text = output
             }
