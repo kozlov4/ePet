@@ -62,7 +62,7 @@ class MessageMainDetailFragment : Fragment() {
     /** Обробка системної кнопки "Назад" **/
     private fun initSystemBack() {
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-                findNavController().popBackStack()
+            findNavController().popBackStack()
         }
     }
 }
