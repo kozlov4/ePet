@@ -112,7 +112,7 @@
         android:layout_marginEnd="50dp"
         android:layout_marginTop="8dp"
         android:fontFamily="@font/e_ukraine_light"
-        android:text="@string/bth_to_registration"
+        android:text="@string/bth_to_login"
         android:textColor="@android:color/black"
         android:textSize="12sp"
         android:clickable="true"
