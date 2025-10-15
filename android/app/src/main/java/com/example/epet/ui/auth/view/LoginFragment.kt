@@ -2,7 +2,6 @@ package com.example.epet.ui.auth.view
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,9 +16,11 @@ import android.widget.EditText
 import com.example.epet.data.model.InputLogin
 import com.example.epet.data.model.OutputAuth
 import com.example.epet.ui.main.view.MainActivity
+import androidx.navigation.fragment.navArgs
 
 class LoginFragment : Fragment() {
 
+    private val args: LoginFragmentArgs by navArgs()
     private val viewModel: AuthViewModel by lazy { AuthViewModel(AuthRepository()) }
 
     private lateinit var tv_to_registration: TextView
@@ -39,6 +40,7 @@ class LoginFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initViews(view)
         initButtons()
+        initEmail()
         initLiveData()
     }
 
@@ -61,7 +63,9 @@ class LoginFragment : Fragment() {
         }
 
         tv_reset_password.setOnClickListener {
-            findNavController().navigate(R.id.action_login_to_reset_password)
+            val email = et_email_address.text.toString()
+            val action = LoginFragmentDirections.actionLoginToResetPassword(email)
+            findNavController().navigate(action)
         }
 
         bth_login.setOnClickListener {
@@ -71,12 +75,16 @@ class LoginFragment : Fragment() {
         }
     }
 
+    /** Ініціалізація пошти **/
+    private fun initEmail() {
+        et_email_address.setText(args.email)
+    }
+
     /** Ініціалізація LiveData **/
     private fun initLiveData() {
         viewModel.outputLogin.observe(viewLifecycleOwner) { output ->
             when(output) {
                 is OutputAuth.Success -> {
-                    tv_message.visibility = View.GONE
                     navigateToMainActivity()
                 }
 

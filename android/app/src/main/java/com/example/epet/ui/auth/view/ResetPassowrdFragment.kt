@@ -11,8 +11,14 @@ import com.example.epet.R
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatButton
 import androidx.navigation.fragment.findNavController
+import com.example.epet.data.repository.AuthRepository
+import com.example.epet.ui.auth.viewmodel.AuthViewModel
+import androidx.navigation.fragment.navArgs
 
 class ResetPassowrdFragment : Fragment() {
+
+    private val args: ResetPassowrdFragmentArgs by navArgs()
+    private val viewModel: AuthViewModel by lazy { AuthViewModel(AuthRepository()) }
 
     private lateinit var iv_to_back: ImageView
     private lateinit var et_email_address: EditText
@@ -27,6 +33,8 @@ class ResetPassowrdFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initViews(view)
         initButtons()
+        initEmail()
+        initLiveData()
     }
 
     /** Ініціалізація всіх елементів інтерфейсу **/
@@ -40,18 +48,37 @@ class ResetPassowrdFragment : Fragment() {
     /** Ініціалізація всіх кнопок інтерфейсу **/
     private fun initButtons() {
         iv_to_back.setOnClickListener {
-            findNavController().popBackStack()
+            val email = et_email_address.text.toString()
+            val action = ResetPassowrdFragmentDirections.actionResetPasswordToLogin(email)
+            findNavController().navigate(action)
         }
 
         bth_reset_password.setOnClickListener {
-            val action = ResetPassowrdFragmentDirections.actionResetPasswordToMessage(
-                tittletext = "Відновлення паролю",
-                emoji = "✅",
-                main = "Пароль скинуто!",
-                description = "Тимчасовий пароль буде надіслано вам найближчим часом на email"
-            )
+            val email = et_email_address.text.toString()
+            viewModel.reset_password(email)
+        }
+    }
 
-            findNavController().navigate(action)
+    /** Ініціалізація пошти **/
+    private fun initEmail() {
+        et_email_address.setText(args.email)
+    }
+
+    /** Ініціалізація LiveData **/
+    private fun initLiveData() {
+        viewModel.outputEmail.observe(viewLifecycleOwner) { output ->
+            if (output == "Тимчасовий пароль буде надіслано вам найближчим часом на email") {
+                val action = ResetPassowrdFragmentDirections.actionResetPasswordToMessage(
+                    tittletext = "Відновлення паролю",
+                    emoji = "✅",
+                    main = "Пароль скинуто!",
+                    description = output,
+                    email = et_email_address.text.toString()
+                )
+                findNavController().navigate(action)
+            } else {
+                tv_message.text = output
+            }
         }
     }
 }

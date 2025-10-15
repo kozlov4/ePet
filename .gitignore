@@ -38,3 +38,16 @@ Thumbs.db
 coverage/
 *.tgz
 *.zip
+
+.env
+env/
+venv/
+.venv/
+
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+dist/
+build/

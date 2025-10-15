@@ -1,13 +1,26 @@
-from fastapi import FastAPI, Depends
-from src.db.database import get_db
 
-app = FastAPI()
-
-@app.get("/check-db")
-def check_db(db=Depends(get_db)):
-    return {"message": "✅ Подключение к БД успешно!"}
+from fastapi import FastAPI, Depends, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+from src.api import users, organization
 
 
-@app.get("/test")
-def hello():
-    return {"message": "hello kozlov"}
+
+app = FastAPI(
+    title="ePet 🐶",
+    description="API для роботи з вет клініками цнап та юзерами",
+    version="1.0.0"
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"], 
+    allow_credentials=True,
+    allow_methods=["*"],  
+    allow_headers=["*"],  
+)
+
+app.include_router(users.router)
+app.include_router(organization.router)
+
+
+
