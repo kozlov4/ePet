@@ -19,8 +19,12 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
-    </fragment>
 
+        <argument
+            android:name="email"
+            app:argType="string"
+            android:defaultValue=""/>
+    </fragment>
 
     <fragment
         android:id="@+id/fragment_registration"
@@ -36,12 +40,25 @@
         android:name="com.example.epet.ui.auth.view.ResetPassowrdFragment">
 
         <action
+            android:id="@+id/action_reset_password_to_login"
+            app:destination="@id/fragment_login"
+            app:enterAnim="@anim/slide_in_left"
+            app:exitAnim="@anim/slide_out_right"
+            app:popEnterAnim="@anim/slide_in_right"
+            app:popExitAnim="@anim/slide_out_left"/>
+
+        <action
             android:id="@+id/action_reset_password_to_message"
             app:destination="@id/fragment_message_detail"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
+
+        <argument
+            android:name="email"
+            app:argType="string"
+            android:defaultValue=""/>
     </fragment>
 
     <fragment

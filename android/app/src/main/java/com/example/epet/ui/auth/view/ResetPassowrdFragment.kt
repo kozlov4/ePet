@@ -11,13 +11,13 @@ import com.example.epet.R
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatButton
 import androidx.navigation.fragment.findNavController
-import com.example.epet.data.model.InputLogin
-import com.example.epet.data.model.OutputAuth
 import com.example.epet.data.repository.AuthRepository
 import com.example.epet.ui.auth.viewmodel.AuthViewModel
+import androidx.navigation.fragment.navArgs
 
 class ResetPassowrdFragment : Fragment() {
 
+    private val args: ResetPassowrdFragmentArgs by navArgs()
     private val viewModel: AuthViewModel by lazy { AuthViewModel(AuthRepository()) }
 
     private lateinit var iv_to_back: ImageView
@@ -33,6 +33,7 @@ class ResetPassowrdFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initViews(view)
         initButtons()
+        initEmail()
         initLiveData()
     }
 
@@ -47,13 +48,20 @@ class ResetPassowrdFragment : Fragment() {
     /** Ініціалізація всіх кнопок інтерфейсу **/
     private fun initButtons() {
         iv_to_back.setOnClickListener {
-            findNavController().popBackStack()
+            val email = et_email_address.text.toString()
+            val action = ResetPassowrdFragmentDirections.actionResetPasswordToLogin(email)
+            findNavController().navigate(action)
         }
 
         bth_reset_password.setOnClickListener {
             val email = et_email_address.text.toString()
             viewModel.reset_password(email)
         }
+    }
+
+    /** Ініціалізація пошти **/
+    private fun initEmail() {
+        et_email_address.setText(args.email)
     }
 
     /** Ініціалізація LiveData **/

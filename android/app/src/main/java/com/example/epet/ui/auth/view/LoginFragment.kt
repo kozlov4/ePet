@@ -16,9 +16,11 @@ import android.widget.EditText
 import com.example.epet.data.model.InputLogin
 import com.example.epet.data.model.OutputAuth
 import com.example.epet.ui.main.view.MainActivity
+import androidx.navigation.fragment.navArgs
 
 class LoginFragment : Fragment() {
 
+    private val args: LoginFragmentArgs by navArgs()
     private val viewModel: AuthViewModel by lazy { AuthViewModel(AuthRepository()) }
 
     private lateinit var tv_to_registration: TextView
@@ -38,6 +40,7 @@ class LoginFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initViews(view)
         initButtons()
+        initEmail()
         initLiveData()
     }
 
@@ -60,7 +63,9 @@ class LoginFragment : Fragment() {
         }
 
         tv_reset_password.setOnClickListener {
-            findNavController().navigate(R.id.action_login_to_reset_password)
+            val email = et_email_address.text.toString()
+            val action = LoginFragmentDirections.actionLoginToResetPassword(email)
+            findNavController().navigate(action)
         }
 
         bth_login.setOnClickListener {
@@ -68,6 +73,11 @@ class LoginFragment : Fragment() {
             val password = et_password.text.toString()
             viewModel.login(InputLogin(email, password))
         }
+    }
+
+    /** Ініціалізація пошти **/
+    private fun initEmail() {
+        et_email_address.setText(args.email)
     }
 
     /** Ініціалізація LiveData **/
