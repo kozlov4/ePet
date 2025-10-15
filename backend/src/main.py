@@ -1,7 +1,7 @@
 
 from fastapi import FastAPI, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from src.api import users
+from src.api import users, organization
 
 
 
@@ -20,5 +20,7 @@ app.add_middleware(
 )
 
 app.include_router(users.router)
+app.include_router(organization.router)
+
 
 
