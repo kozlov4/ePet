@@ -1,7 +1,7 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Text
+from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Text, Boolean
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
-from database import Base
+from src.db.database import Base
 
 class Extracts(Base):
   __tablename__ = 'extracts'
@@ -69,7 +69,7 @@ class Pets(Base):
   color = Column(String(30), nullable=False)
   organization_id = Column(Integer, ForeignKey('organizations.organization_id'), nullable=False)
   user_id = Column(Integer, ForeignKey('users.user_id'), nullable=False)
-  sterilization = Column(bool, nullable=False, default=False)
+  sterilization = Column(Boolean, nullable=False, default=False)
 
   owner = relationship("Users", back_populates="pets") 
   organization = relationship("Organizations", back_populates="pets") 
@@ -101,8 +101,8 @@ class Users(Base):
   __tablename__ = 'users'
 
   user_id = Column(Integer, primary_key=True, index=True)
-  last_name = Column(String(100), nullable=False) # <--
-  first_name = Column(String(100), nullable=False) # <--
+  last_name = Column(String(100), nullable=False) 
+  first_name = Column(String(100), nullable=False) 
   patronymic = Column(String(100)) 
   passport_number = Column(String(20)) 
   password = Column(Text, nullable=False) 
