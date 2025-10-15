@@ -1,5 +1,6 @@
 package com.example.epet.ui.auth.view
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,8 +12,16 @@ import android.widget.TextView
 import android.widget.LinearLayout
 import androidx.appcompat.widget.AppCompatButton
 import androidx.navigation.fragment.findNavController
+import com.example.epet.data.model.InputLogin
+import com.example.epet.data.model.InputRegistration
+import com.example.epet.data.model.OutputAuth
+import com.example.epet.data.repository.AuthRepository
+import com.example.epet.ui.auth.viewmodel.AuthViewModel
+import com.example.epet.ui.main.view.MainActivity
 
 class RegistrationFragment : Fragment() {
+
+    private val viewModel: AuthViewModel by lazy { AuthViewModel(AuthRepository()) }
 
     private lateinit var tv_tittletext: TextView
     private lateinit var tv_message: TextView
@@ -42,6 +51,7 @@ class RegistrationFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initViews(view)
         initButtons()
+        initLiveData()
     }
 
     /** Ініціалізація всіх елементів інтерфейсу **/
@@ -72,5 +82,43 @@ class RegistrationFragment : Fragment() {
         tv_to_login.setOnClickListener {
             findNavController().navigate(R.id.action_registration_to_login)
         }
+
+        bth_registration.setOnClickListener {
+            val surname = et_surname.text.toString()
+            val name = et_name.text.toString()
+            val patronymic = et_patronymic.text.toString()
+            val passportNumber = et_passport_number.text.toString()
+            val address = et_address.text.toString()
+            val postalCode = et_postal_code.text.toString()
+            val emailAddress = et_email_address.text.toString()
+            val password = et_password.text.toString()
+
+            viewModel.registration(
+                InputRegistration(surname, name, patronymic, passportNumber, address, postalCode, emailAddress, password))
+        }
+    }
+
+    /** Ініціалізація LiveData **/
+    private fun initLiveData() {
+        viewModel.outputRegisatration.observe(viewLifecycleOwner) { output ->
+            when(output) {
+                is OutputAuth.Success -> {
+                    tv_message.text = ""
+                    navigateToMainActivity()
+                }
+
+                is OutputAuth.Error -> {
+                    tv_message.text = output.message
+                }
+            }
+        }
+    }
+
+    /** Переход на наступну активність **/
+    private fun navigateToMainActivity() {
+        val intent = Intent(requireContext(), MainActivity::class.java)
+        startActivity(intent)
+        requireActivity().overridePendingTransition(R.anim.slide_in_bottom, 0)
+        requireActivity().finish()
     }
 }

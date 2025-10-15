@@ -6,6 +6,7 @@ import com.example.epet.data.model.OutputAuth
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.LiveData
 import com.example.epet.data.model.InputLogin
+import com.example.epet.data.model.InputRegistration
 
 class AuthViewModel(private val repository: AuthRepository) : ViewModel() {
 
@@ -16,5 +17,14 @@ class AuthViewModel(private val repository: AuthRepository) : ViewModel() {
         val input = inputLogin
         val output = repository.login(input)
         _outputLogin.value = output
+    }
+
+    private val _outputRegisatration = MutableLiveData<OutputAuth>()
+    val outputRegisatration: LiveData<OutputAuth> get() = _outputRegisatration
+
+    fun registration(inputRegistration: InputRegistration) {
+        val input = inputRegistration
+        val output = repository.regisatration(input)
+        _outputRegisatration.value = output
     }
 }
