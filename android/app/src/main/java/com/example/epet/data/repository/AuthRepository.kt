@@ -35,4 +35,12 @@ class AuthRepository {
             name = "Захар"
         )
     }
+
+    fun reset_password(inputEmail: String): String {
+        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(inputEmail).matches()) {
+            return "Некорректний email"
+        }
+
+        return "Тимчасовий пароль буде надіслано вам найближчим часом на email"
+    }
 }

@@ -27,4 +27,13 @@ class AuthViewModel(private val repository: AuthRepository) : ViewModel() {
         val output = repository.regisatration(input)
         _outputRegisatration.value = output
     }
+
+    private val _outputEmail = MutableLiveData<String>()
+    val outputEmail: LiveData<String> get() = _outputEmail
+
+    fun reset_password(inputEmail: String) {
+        val input = inputEmail
+        val output = repository.reset_password(input)
+        _outputEmail.value = output
+    }
 }
