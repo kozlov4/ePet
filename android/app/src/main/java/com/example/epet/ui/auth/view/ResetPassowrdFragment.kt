@@ -72,7 +72,8 @@ class ResetPassowrdFragment : Fragment() {
                     tittletext = "Відновлення паролю",
                     emoji = "✅",
                     main = "Пароль скинуто!",
-                    description = output
+                    description = output,
+                    email = et_email_address.text.toString()
                 )
                 findNavController().navigate(action)
                 tv_message.text = ""

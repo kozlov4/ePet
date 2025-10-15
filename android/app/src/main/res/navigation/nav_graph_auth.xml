@@ -49,7 +49,7 @@
 
         <action
             android:id="@+id/action_reset_password_to_message"
-            app:destination="@id/fragment_message_detail"
+            app:destination="@id/fragment_message_auth_detail"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
@@ -62,8 +62,8 @@
     </fragment>
 
     <fragment
-        android:id="@+id/fragment_message_detail"
-        android:name="com.example.epet.ui.common.view.MessageDetailFragment" >
+        android:id="@+id/fragment_message_auth_detail"
+        android:name="com.example.epet.ui.common.view.MessageAuthDetailFragment" >
 
         <action
             android:id="@+id/action_message_to_login"
@@ -88,6 +88,10 @@
         <argument
             android:name="description"
             app:argType="string" />
-    </fragment>
 
+        <argument
+            android:name="email"
+            app:argType="string"
+            android:defaultValue=""/>
+    </fragment>
 </navigation>
