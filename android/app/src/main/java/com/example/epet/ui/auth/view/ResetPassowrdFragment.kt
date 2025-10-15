@@ -67,15 +67,10 @@ class ResetPassowrdFragment : Fragment() {
                     description = output
                 )
                 findNavController().navigate(action)
+                tv_message.text = ""
 
             } else {
-                val action = ResetPassowrdFragmentDirections.actionResetPasswordToMessage(
-                    tittletext = "Відновлення паролю",
-                    emoji = "⛔",
-                    main = "Помилка!",
-                    description = output
-                )
-                findNavController().navigate(action)
+                tv_message.text = output
             }
         }
     }
