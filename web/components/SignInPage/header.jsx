@@ -3,9 +3,9 @@ import UkraineIcon from "./Images/ukraineIcon";
 
 export function HeaderSignIn() {
   return (
-    <div className="w-full h-[12%] flex justify-end ">
-      <div className="flex w-[90%] h-full bg-[rgba(217,217,217,0.27)] backdrop-blur-[8.1px] shadow-[0_4px_21px_0_rgba(0,0,0,0.1)] border border-black rounded-b-[15px] justify-between items-center">
-        <div className="flex gap-10 w-[40%]  h-full items-center">
+    <div className="w-full h-[12%] flex justify-end absolute">
+      <div className="flex w-full h-full bg-[rgba(217,217,217,0.27)] backdrop-blur-[8.1px] shadow-[0_4px_21px_0_rgba(0,0,0,0.1)]  rounded-b-[15px] justify-between items-center">
+        <div className="flex gap-14 w-[40%]  h-full items-center">
           <div className="flex h-full  gap-4 items-center ml-[10%]">
             <div className="flex w-12 h-12 justify-center items-center bg-black rounded-lg">
               <CatIcon />
