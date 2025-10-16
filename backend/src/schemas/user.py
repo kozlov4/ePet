@@ -19,5 +19,5 @@ class UserCreateRequest(BaseModel):
     house_number: str = Field(min_length=1, max_length=20)
     postal_index:str = Field(min_length=1, max_length=10)
     email:EmailStr = Field(min_length=1, max_length=100)
-    password:str
+    password:str = Field(min_length=8, max_length=100)
 
