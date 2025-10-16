@@ -3,6 +3,9 @@ package com.example.epet.data.repository
 import com.example.epet.data.model.InputLogin
 import com.example.epet.data.model.InputRegistration
 import com.example.epet.data.model.OutputAuth
+import com.example.epet.data.network.RetrofitClient
+import com.example.epet.data.helper.ValidationHelper
+import com.google.gson.GsonBuilder
 
 class AuthRepository {
 
@@ -16,24 +19,29 @@ class AuthRepository {
         }
 
         return OutputAuth.Success(
-            token = "abc123token",
-            name = "Захар"
+            access_token = "test_token",
+            token_type = "test_token_type"
         )
     }
 
-    fun regisatration(inputRegistration: InputRegistration): OutputAuth {
-        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(inputRegistration.email).matches()) {
-            return OutputAuth.Error("Некорректний email")
+    suspend fun registration(inputRegistration: InputRegistration): OutputAuth {
+        ValidationHelper.validate_registration(inputRegistration)?.let {
+            return OutputAuth.Error(it)
         }
 
-        if (inputRegistration.password.length < 6) {
-            return OutputAuth.Error("Пароль має містити більше 6 символів")
-        }
+        return try {
+            val response = RetrofitClient.api.registration(inputRegistration)
 
-        return OutputAuth.Success(
-            token = "abc123token",
-            name = "Захар"
-        )
+            if (response.isSuccessful) {
+                response.body()!!
+            } else {
+                val errorJson = response.errorBody()?.string()
+                val errorObj = GsonBuilder().create().fromJson(errorJson, OutputAuth.Error::class.java)
+                errorObj ?: OutputAuth.Error("Невідома помилка, спробуйте ще раз")
+            }
+        } catch (e: Exception) {
+            OutputAuth.Error(e.localizedMessage ?: "Помилка мережі, спробуйте ще раз")
+        }
     }
 
     fun reset_password(inputEmail: String): String {
@@ -43,4 +51,5 @@ class AuthRepository {
 
         return "Тимчасовий пароль буде надіслано вам найближчим часом на email"
     }
+
 }

@@ -89,7 +89,7 @@ class LoginFragment : Fragment() {
                 }
 
                 is OutputAuth.Error -> {
-                    tv_message.text = output.message
+                    tv_message.text = output.detail
                     tv_message.visibility = View.VISIBLE
                 }
             }
