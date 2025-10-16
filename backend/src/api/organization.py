@@ -1,26 +1,16 @@
-import os
-from datetime import timedelta, datetime, timezone
 from typing import Annotated
+from datetime import timedelta
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
-from passlib.context import CryptContext
-from jose import jwt, JWTError
 from src.db.database import get_db
 from src.db.models import Organizations
 from src.schemas.token import TokenResponse
-
+from src.api.core import create_access_token, bcrypt_context
 
 router = APIRouter(tags=['Organizations 🏢'], prefix="/organizations")
 db_dependency = Annotated[Session, Depends(get_db)]
-bcrypt_context = CryptContext(schemes=['bcrypt'], deprecated='auto')
 
-
-def create_access_token(email: str, org_id: int, expires_delta: timedelta):
-    encode = {'sub': email, 'id': org_id}
-    expires = datetime.now(timezone.utc) + expires_delta
-    encode.update({'exp': expires})
-    return jwt.encode(encode, os.getenv("SECRET_KEY"), algorithm=os.getenv("ALGORITHM"))
 
 
 
@@ -36,8 +26,8 @@ async def login_for_organization(form_data: Annotated[OAuth2PasswordRequestForm,
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Incorrect password.")
 
     token = create_access_token(
-        email=organization.email, 
-        org_id=organization.organization_id, 
+        subject=organization.email, 
+        id=organization.organization_id, 
         expires_delta=timedelta(minutes=30) 
     )
 
