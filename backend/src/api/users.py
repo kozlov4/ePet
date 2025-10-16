@@ -47,4 +47,4 @@ async def create_user(db: db_dependency, create_user_request: UserCreateRequest)
         expires_delta=timedelta(minutes=30)
     )
 
-    return {"access_token": token, "token_type": "bearer"} 
+    return {"access_token": token, "token_type": "bearer", "user_name": create_user_model.first_name} 
