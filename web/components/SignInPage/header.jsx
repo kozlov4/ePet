@@ -11,14 +11,24 @@ export function HeaderSignIn() {
               <CatIcon />
             </div>
             <div className="flex w-12 h-12 justify-center items-center border-[2.5px] border-black rounded-lg">
-                <UkraineIcon/>
+              <UkraineIcon />
             </div>
           </div>
-          <span className="text-black text-sm font-medium">Головна</span>
-          <span className="text-black text-sm font-medium"> Питання та відповіді</span>
+          <a
+            href="#"
+            className="relative text-black text-sm font-medium transition-all duration-300 ease-in-out hover:text-[#1e88e5] after:content-[''] after:absolute after:left-0 after:bottom-[-2px] after:h-[2px] after:w-0 after:bg-[#1e88e5] after:transition-all after:duration-300 hover:after:w-full hover:-translate-y-[2px]"
+          >
+            Головна
+          </a>
+          <a
+            href="#"
+            className="relative text-black text-sm font-medium transition-all duration-300 ease-in-out hover:text-[#1e88e5] after:content-[''] after:absolute after:left-0 after:bottom-[-2px] after:h-[2px] after:w-0 after:bg-[#1e88e5] after:transition-all after:duration-300 hover:after:w-full hover:-translate-y-[2px]"
+          >
+            Питання та відповіді
+          </a>
         </div>
-        <button className="flex w-[14%] h-[50%] mr-[5%] bg-black rounded-3xl justify-center items-center ">
-            <span className="text-white">Увійти до кабінету</span>
+        <button className="flex w-[14%] h-[50%] mr-[5%] bg-black rounded-3xl justify-center items-center text-white font-medium text-[15px] transition-all duration-300 ease-in-out hover:bg-[#1e88e5] hover:shadow-[0_0_20px_#1e88e580] hover:scale-[1.05] active:scale-[0.98]">
+          Увійти до кабінету
         </button>
       </div>
     </div>
