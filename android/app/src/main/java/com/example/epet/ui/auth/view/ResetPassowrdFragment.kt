@@ -54,7 +54,7 @@ class ResetPassowrdFragment : Fragment() {
         }
 
         bth_reset_password.setOnClickListener {
-            val email = et_email_address.text.toString()
+            val email = et_email_address.text.toString().trimEnd()
             viewModel.reset_password(email)
         }
     }
@@ -67,7 +67,7 @@ class ResetPassowrdFragment : Fragment() {
     /** Ініціалізація LiveData **/
     private fun initLiveData() {
         viewModel.outputEmail.observe(viewLifecycleOwner) { output ->
-            if (output == "Тимчасовий пароль буде надіслано вам найближчим часом на email") {
+            if (output == "Інструкція на відновлення паролю буде надіслана найближчим часом на email") {
                 val action = ResetPassowrdFragmentDirections.actionResetPasswordToMessage(
                     tittletext = "Відновлення паролю",
                     emoji = "✅",

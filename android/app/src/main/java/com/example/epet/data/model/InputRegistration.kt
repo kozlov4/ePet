@@ -1,12 +1,14 @@
 package com.example.epet.data.model
 
 data class InputRegistration (
-    val surname: String,
-    val name: String,
+    val last_name: String,
+    val first_name: String,
     val patronymic: String,
-    val passportNumber: String,
-    val address: String,
-    val postalCode: String,
+    val passport_number: String,
+    val city: String,
+    val street: String,
+    val house_number: String,
+    val postal_index: String,
     val email: String,
     val password: String
 )

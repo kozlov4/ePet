@@ -10,7 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/e_ukraine_regular"
-        android:text="Привіт, Захар!"
+        android:text="Привіт, Null!"
         android:textColor="@android:color/black"
         android:textSize="32sp"
         app:layout_constraintStart_toStartOf="@+id/guideline_vertical_left"
