@@ -1,5 +1,6 @@
 package com.example.epet.ui.auth.view
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -69,8 +70,8 @@ class LoginFragment : Fragment() {
         }
 
         bth_login.setOnClickListener {
-            val email = et_email_address.text.toString()
-            val password = et_password.text.toString()
+            val email = et_email_address.text.toString().trimEnd()
+            val password = et_password.text.toString().trimEnd()
             viewModel.login(InputLogin(email, password))
         }
     }
@@ -85,6 +86,7 @@ class LoginFragment : Fragment() {
         viewModel.outputLogin.observe(viewLifecycleOwner) { output ->
             when(output) {
                 is OutputAuth.Success -> {
+                    saveUserInfo(requireContext(), output.access_token, output.user_name)
                     navigateToMainActivity()
                 }
 
@@ -93,6 +95,16 @@ class LoginFragment : Fragment() {
                     tv_message.visibility = View.VISIBLE
                 }
             }
+        }
+    }
+
+    /** Збереження даних користувача **/
+    fun saveUserInfo(context: Context, access_token: String, user_name: String) {
+        val sharedPref = context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+        with(sharedPref.edit()) {
+            putString("access_token", access_token)
+            putString("user_name", user_name)
+            apply()
         }
     }
 

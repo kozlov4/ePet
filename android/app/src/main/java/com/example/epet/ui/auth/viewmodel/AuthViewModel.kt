@@ -22,22 +22,26 @@ class AuthViewModel(private val repository: AuthRepository) : ViewModel() {
     val outputEmail: LiveData<String> get() = _outputEmail
 
     fun login(inputLogin: InputLogin) {
-        val input = inputLogin
-        val output = repository.login(input)
-        _outputLogin.value = output
+        viewModelScope.launch {
+            val input = inputLogin
+            val output = repository.login(input)
+            _outputLogin.value = output
+        }
     }
 
-    fun registration(inputRegistration: InputRegistration) {
+    fun registration(inputRegistration: InputRegistration, adress: String) {
         viewModelScope.launch {
             val input = inputRegistration
-            val output = repository.registration(input)
+            val output = repository.registration(input, adress)
             _outputRegisatration.value = output
         }
     }
 
     fun reset_password(inputEmail: String) {
-        val input = inputEmail
-        val output = repository.reset_password(input)
-        _outputEmail.value = output
+        viewModelScope.launch {
+            val input = inputEmail
+            val output = repository.reset_password(input)
+            _outputEmail.value = output
+        }
     }
 }

@@ -9,9 +9,9 @@ import com.google.gson.GsonBuilder
 
 class AuthRepository {
 
-    fun login(inputLogin: InputLogin): OutputAuth {
+    suspend fun login(inputLogin: InputLogin): OutputAuth {
         if (!android.util.Patterns.EMAIL_ADDRESS.matcher(inputLogin.email).matches()) {
-            return OutputAuth.Error("Некорректний email")
+            return OutputAuth.Error("Некоректний формат email")
         }
 
         if (inputLogin.password.length < 6) {
@@ -20,17 +20,26 @@ class AuthRepository {
 
         return OutputAuth.Success(
             access_token = "test_token",
-            token_type = "test_token_type"
+            token_type = "test_token_type",
+            user_name = "Захар",
         )
     }
 
-    suspend fun registration(inputRegistration: InputRegistration): OutputAuth {
-        ValidationHelper.validate_registration(inputRegistration)?.let {
+    suspend fun registration(inputRegistration: InputRegistration, address: String): OutputAuth {
+        val (city, street, house_number) = ValidationHelper.parse_address(address)
+
+        val inputRegistrationUpdate = inputRegistration.copy(
+            city = city,
+            street = street,
+            house_number = house_number
+        )
+
+        ValidationHelper.validate_registration(inputRegistrationUpdate)?.let {
             return OutputAuth.Error(it)
         }
 
         return try {
-            val response = RetrofitClient.api.registration(inputRegistration)
+            val response = RetrofitClient.api.registration(inputRegistrationUpdate)
 
             if (response.isSuccessful) {
                 response.body()!!
@@ -44,12 +53,12 @@ class AuthRepository {
         }
     }
 
-    fun reset_password(inputEmail: String): String {
+    suspend fun reset_password(inputEmail: String): String {
         if (!android.util.Patterns.EMAIL_ADDRESS.matcher(inputEmail).matches()) {
-            return "Некорректний email"
+            return "Некоректний формат email"
         }
 
-        return "Тимчасовий пароль буде надіслано вам найближчим часом на email"
+        return "Інструкція на відновлення паролю буде надіслана найближчим часом на email"
     }
 
 }

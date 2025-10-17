@@ -12,7 +12,7 @@ import android.widget.TextView
 import android.widget.LinearLayout
 import androidx.appcompat.widget.AppCompatButton
 import androidx.navigation.fragment.findNavController
-import com.example.epet.data.model.InputLogin
+import android.content.Context
 import com.example.epet.data.model.InputRegistration
 import com.example.epet.data.model.OutputAuth
 import com.example.epet.data.repository.AuthRepository
@@ -84,17 +84,17 @@ class RegistrationFragment : Fragment() {
         }
 
         bth_registration.setOnClickListener {
-            val last_name = et_last_name.text.toString()
-            val first_name = et_first_name.text.toString()
-            val patronymic = et_patronymic.text.toString()
-            val passport_number = et_passport_number.text.toString()
-            val address = et_address.text.toString()
-            val postal_index = et_postal_index.text.toString()
-            val email = et_email_address.text.toString()
-            val password = et_password.text.toString()
+            val last_name = et_last_name.text.toString().trimEnd()
+            val first_name = et_first_name.text.toString().trimEnd()
+            val patronymic = et_patronymic.text.toString().trimEnd()
+            val passport_number = et_passport_number.text.toString().trimEnd()
+            val address = et_address.text.toString().trimEnd()
+            val postal_index = et_postal_index.text.toString().trimEnd()
+            val email = et_email_address.text.toString().trimEnd()
+            val password = et_password.text.toString().trimEnd()
 
             viewModel.registration(
-                InputRegistration(last_name, first_name, patronymic, passport_number, "Харків", "Сумська", "1", postal_index, email, password))
+                InputRegistration(last_name, first_name, patronymic, passport_number, "", "", "", postal_index, email, password), address)
         }
     }
 
@@ -103,6 +103,7 @@ class RegistrationFragment : Fragment() {
         viewModel.outputRegisatration.observe(viewLifecycleOwner) { output ->
             when(output) {
                 is OutputAuth.Success -> {
+                    saveUserInfo(requireContext(), output.access_token, output.user_name)
                     navigateToMainActivity()
                 }
 
@@ -110,6 +111,16 @@ class RegistrationFragment : Fragment() {
                     tv_message.text = output.detail
                 }
             }
+        }
+    }
+
+    /** Збереження даних користувача **/
+    fun saveUserInfo(context: Context, access_token: String, user_name: String) {
+        val sharedPref = context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+        with(sharedPref.edit()) {
+            putString("access_token", access_token)
+            putString("user_name", user_name)
+            apply()
         }
     }
 
