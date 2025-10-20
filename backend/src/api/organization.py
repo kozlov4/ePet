@@ -31,4 +31,8 @@ async def login_for_organization(form_data: Annotated[OAuth2PasswordRequestForm,
         expires_delta=timedelta(minutes=30) 
     )
 
-    return {"access_token": token, "token_type": "bearer"}
+    return {
+        "access_token": token, 
+        "token_type": "bearer", 
+        "user_name": organization.organization_name # <-- Добавлено поле user_name
+    }
