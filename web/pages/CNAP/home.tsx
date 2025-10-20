@@ -10,7 +10,9 @@ export default function CNAPHome() {
             className="bg-cover bg-center w-screen h-screen">
 
             <HeaderCNAP cnapid={6329} />
-            <MainCNAP />
+            <main className="flex-grow">
+                <MainCNAP />
+            </main>
             <FooterCNAP />
         </div>
     )
