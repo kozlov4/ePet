@@ -15,10 +15,12 @@
   "type": "commonjs",
   "dependencies": {
     "@tailwindcss/postcss": "^4.1.14",
+    "framer-motion": "^12.23.24",
     "next": "^15.5.5",
     "postcss": "^8.5.6",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
+    "react-toastify": "^11.0.5",
     "tailwindcss": "^4.1.14"
   }
 }
