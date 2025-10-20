@@ -1,30 +1,30 @@
-// app/components/PetRegistrationPage.tsx
 'use client';
 
 import React, { useState, useRef } from 'react';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation'; // For back navigation
+import { useRouter } from 'next/navigation';
+import Copy from '../../assets/icons/copy';
+import ArrowBack from '../../assets/icons/arrowBack';
 
 export default function PetRegistrationPage() {
     const router = useRouter();
     const fileInputRef = useRef<HTMLInputElement>(null);
 
-    // State for form fields (initialize with empty strings or appropriate defaults)
     const [petData, setPetData] = useState({
-        name: '',       // Ім'я
-        gender: '',     // Стать
-        breed: '',      // Порода
-        type: '',       // Вид
-        coat: '',       // Масть (Assuming "Масть" for "Масть")
-        chipLocation: '', // Місцезнаходження чіпу
-        chipDate: '',   // Дата чіпування
-        chipNumber: '', // Номер чіпу
-        owner: '',      // Власник
-        issuingAuthority: '', // Орган що видав
+        name: '',
+        gender: '',
+        breed: '',
+        type: '',
+        coat: '',
+        chipLocation: '',
+        chipDate: '',
+        chipNumber: '',
+        owner: '',
+        issuingAuthority: '',
     });
 
     const [imagePreview, setImagePreview] = useState<string | null>(null);
-    const petId = 'UA AA 658199'; // This would typically come from a dynamic route or API
+    const petId = 'UA AA 658199';
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -58,60 +58,31 @@ export default function PetRegistrationPage() {
         console.log('Registering pet:', petData);
         console.log('Image:', imagePreview ? 'Image selected' : 'No image');
         alert('Pet registration data logged to console!');
-        // In a real app, you'd send this data to your API
     };
 
     return (
-        <div className="flex min-h-screen justify-center bg-gray-50 p-4 sm:p-8">
-            <div className="w-full max-w-4xl rounded-xl bg-white p-6 shadow-lg sm:p-8 lg:p-10">
-                {/* Top Navigation */}
-                <div className="mb-8 flex items-center">
-                    <button
-                        onClick={() => router.back()} // Go back to the previous page
-                        className="mr-4 rounded-full bg-gray-200 p-2 hover:bg-gray-300"
-                    >
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="h-6 w-6 text-gray-700"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                        >
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                        </svg>
-                    </button>
-                    <h1 className="text-xl font-semibold text-gray-800">Реєстрація домашнього улюбленця</h1>
-                </div>
+        <div className="min-h-screen justify-center w-full bg-gray-50 px-35 py-10">
+            <div className="mb-8 flex items-center">
+                <button
+                    onClick={() => router.back()}
+                    className="mr-4 rounded-full bg-black p-2 transition-[0.2s] cursor-pointer hover:bg-gray-300">
+                    <ArrowBack />
+                </button>
+                <h1 className="text-2xl font-semibold text-gray-800">Реєстрація домашнього улюбленця</h1>
+            </div>
 
-                {/* Pet ID */}
-                <div className="mb-8 flex items-center">
-                    <h2 className="text-2xl font-bold text-gray-900">{petId}</h2>
-                    <button
-                        onClick={handleCopyId}
-                        className="ml-2 p-1 text-gray-500 hover:text-gray-800"
-                        aria-label="Copy Pet ID"
-                    >
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="h-5 w-5"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                        >
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2.586m-4.414-4.414a1 1 0 01-.293-.707V8.586a1 1 0 01.293-.707l4.414-4.414a1 1 0 01.707-.293H15"
-                            />
-                        </svg>
-                    </button>
-                </div>
+            <div className="mb-8 flex items-center">
+                <h2 className="text-4xl font-bold text-gray-900">{petId}</h2>
+                <button
+                    onClick={handleCopyId}
+                    className="ml-2 p-1 text-gray-500 hover:text-gray-800 cursor-pointer"
+                    aria-label="Copy Pet ID">
+                    <Copy />
+                </button>
+            </div>
+            <div className="w-full max-w-4xl rounded-xl bg-[rgba(217,217,217,0.27)] p-6 shadow-lg sm:p-8 lg:p-10">
 
-                {/* Form Layout */}
                 <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-8 md:grid-cols-2">
-                    {/* Left Column: Image Upload */}
                     <div className="flex flex-col items-center">
                         <div
                             className="relative flex h-64 w-64 cursor-pointer items-center justify-center rounded-xl border-2 border-dashed border-gray-300 bg-gray-100 hover:bg-gray-200"
@@ -141,35 +112,29 @@ export default function PetRegistrationPage() {
                         </div>
                     </div>
 
-                    {/* Right Column: Form Fields */}
                     <div className="space-y-4">
-                        {/* Group 1: Name, Gender, Breed, Type, Coat */}
                         <div className="space-y-4 rounded-lg bg-gray-50 p-4">
                             <InputField label="Ім'я" name="name" value={petData.name} onChange={handleInputChange} />
                             <InputField label="Стать" name="gender" value={petData.gender} onChange={handleInputChange} />
+
+                        </div>
+                        <div className="space-y-4 rounded-lg bg-gray-50 p-4">
                             <InputField label="Порода" name="breed" value={petData.breed} onChange={handleInputChange} />
                             <InputField label="Вид" name="type" value={petData.type} onChange={handleInputChange} />
-                            <InputField label="Масть" name="coat" value={petData.coat} onChange={handleInputChange} /> {/* Assuming "Масть" for coat */}
+                            <InputField label="Масть" name="coat" value={petData.coat} onChange={handleInputChange} />
                         </div>
-
-                        {/* Group 2: Chip Details */}
                         <div className="space-y-4 rounded-lg bg-gray-50 p-4">
                             <InputField label="Місцезнаходження чіпу" name="chipLocation" value={petData.chipLocation} onChange={handleInputChange} />
                             <InputField label="Дата чіпування" name="chipDate" type="date" value={petData.chipDate} onChange={handleInputChange} />
                             <InputField label="Номер чіпу" name="chipNumber" value={petData.chipNumber} onChange={handleInputChange} />
                         </div>
-
-                        {/* Group 3: Owner Details */}
                         <div className="space-y-4 rounded-lg bg-gray-50 p-4">
                             <InputField label="Власник" name="owner" value={petData.owner} onChange={handleInputChange} />
                             <InputField label="Орган що видав" name="issuingAuthority" value={petData.issuingAuthority} onChange={handleInputChange} />
                         </div>
-
-                        {/* Register Button */}
                         <button
                             type="submit"
-                            className="mt-6 w-full rounded-xl bg-black px-6 py-3 text-lg font-semibold text-white shadow-md transition-colors hover:bg-gray-800"
-                        >
+                            className="mt-6 w-full rounded-[5em] bg-black px-6 py-3 text-lg font-semibold text-white shadow-md transition-colors hover:bg-gray-800">
                             Зареєструвати улюбленця
                         </button>
                     </div>

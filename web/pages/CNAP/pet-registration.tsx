@@ -6,7 +6,7 @@ export default function RegisterPet() {
         <div
             className="bg-cover bg-center w-screen h-screen">
 
-            <HeaderCNAP cnapid={123} />
+            <HeaderCNAP cnapid={6329} />
             <PetRegistrationPage />
         </div>
 
