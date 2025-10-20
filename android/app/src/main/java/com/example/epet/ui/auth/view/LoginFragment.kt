@@ -14,10 +14,14 @@ import androidx.navigation.fragment.findNavController
 import com.example.epet.data.repository.AuthRepository
 import com.example.epet.ui.auth.viewmodel.AuthViewModel
 import android.widget.EditText
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.example.epet.data.model.InputLogin
 import com.example.epet.data.model.OutputAuth
 import com.example.epet.ui.main.view.MainActivity
 import androidx.navigation.fragment.navArgs
+import kotlinx.coroutines.launch
 
 class LoginFragment : Fragment() {
 
@@ -42,7 +46,7 @@ class LoginFragment : Fragment() {
         initViews(view)
         initButtons()
         initEmail()
-        initLiveData()
+        initStateFlow()
     }
 
     /** Ініціалізація всіх елементів інтерфейсу **/
@@ -81,18 +85,21 @@ class LoginFragment : Fragment() {
         et_email_address.setText(args.email)
     }
 
-    /** Ініціалізація LiveData **/
-    private fun initLiveData() {
-        viewModel.outputLogin.observe(viewLifecycleOwner) { output ->
-            when(output) {
-                is OutputAuth.Success -> {
-                    saveUserInfo(requireContext(), output.access_token, output.user_name)
-                    navigateToMainActivity()
-                }
+    private fun initStateFlow() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.outputLogin.collect { state ->
+                    when(state) {
+                        is OutputAuth.Success -> {
+                            saveUserInfo(requireContext(), state.access_token, state.user_name)
+                            navigateToMainActivity()
+                        }
 
-                is OutputAuth.Error -> {
-                    tv_message.text = output.detail
-                    tv_message.visibility = View.VISIBLE
+                        is OutputAuth.Error -> {
+                            tv_message.text = state.detail
+                            tv_message.visibility = View.VISIBLE
+                        }
+                    }
                 }
             }
         }
