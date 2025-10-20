@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from typing import List
 
 class OwnerForCNAPResponse(BaseModel):
     passport_number: str | None = None
@@ -15,3 +16,10 @@ class AnimalForCNAPResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+class PaginatedAnimalResponse(BaseModel):
+    total_items: int
+    total_pages: int
+    page: int
+    size: int
+    items: List[AnimalForCNAPResponse]

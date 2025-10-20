@@ -34,5 +34,5 @@ async def login_for_organization(form_data: Annotated[OAuth2PasswordRequestForm,
     return {
         "access_token": token, 
         "token_type": "bearer", 
-        "user_name": organization.organization_name # <-- Добавлено поле user_name
+        "user_name": organization.organization_name
     }
