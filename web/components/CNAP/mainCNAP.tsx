@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 interface Pet {
@@ -44,10 +45,6 @@ export function MainCNAP() {
 
     };
 
-    const handleRegisterPetClick = () => {
-        alert('Navigating to pet registration form!');
-    };
-
     return (
         <div className="w-full bg-gray-50 px-35 py-10">
             <h1 className="mb-5 font-medium text-4xl">
@@ -75,11 +72,10 @@ export function MainCNAP() {
                         className="w-full border-0 bg-transparent text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-0"
                     />
                 </div>
-                <button
-                    onClick={handleRegisterPetClick}
+                <Link href="/CNAP/pet-registration"
                     className="w-full shrink-0 rounded-[10em] bg-white px-5 py-3 text-sm font-semibold ring transition-colors hover:bg-gray-100 sm:w-auto cursor-pointer">
                     Зареєструвати улюбленця
-                </button>
+                </Link>
             </div>
 
             <div className="hidden grid-cols-6 pb-2 text-sm font-bold text-gray-500 md:grid text-center px-[16px]">
