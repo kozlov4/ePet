@@ -77,7 +77,7 @@ class ResetPassowrdFragment : Fragment() {
                         val action = ResetPassowrdFragmentDirections.actionResetPasswordToMessage(
                             tittletext = "Відновлення паролю",
                             emoji = "✅",
-                            main = "Інструкцію надіслано!",
+                            main = "Успішно!",
                             description = state,
                             email = et_email_address.text.toString()
                         )
