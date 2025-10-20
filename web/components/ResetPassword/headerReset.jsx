@@ -11,7 +11,6 @@ export function HeaderReset() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1 }}
       >
-        {/* Ліва частина з логотипами та посиланнями */}
         <motion.div
           className="flex gap-14 w-[40%] h-full items-center ml-[5%]"
           initial={{ opacity: 0, x: -30 }}
@@ -52,7 +51,6 @@ export function HeaderReset() {
           </motion.a>
         </motion.div>
 
-        {/* Кнопка */}
         <motion.button
           className="flex w-[14%] h-[50%] mr-[5%] bg-black rounded-3xl cursor-pointer justify-center items-center text-white font-medium text-[15px] transition-all duration-300 ease-in-out hover:bg-[#1e88e5] hover:shadow-[0_0_20px_#1e88e580] hover:scale-[1.05] active:scale-[0.98]"
           initial={{ opacity: 0, scale: 0.8 }}

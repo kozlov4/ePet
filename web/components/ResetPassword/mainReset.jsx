@@ -5,7 +5,6 @@ export function MainReset() {
     <div className="w-[50%] h-full flex bg-white">
       <div className="w-full h-[50%] mt-[25%] mx-[8%]">
 
-        {/* Заголовок */}
         <motion.h1
           className="font-medium ml-[3%] text-5xl mb-6"
           initial={{ opacity: 0, y: -20 }}
@@ -15,7 +14,6 @@ export function MainReset() {
           Відновлення паролю
         </motion.h1>
 
-        {/* Форма */}
         <motion.div
           className="w-full h-[70%] flex flex-col justify-center items-center p-4 rounded-xl"
           initial={{ opacity: 0, y: 20 }}
@@ -29,7 +27,6 @@ export function MainReset() {
           />
         </motion.div>
 
-        {/* Пояснювальний текст */}
         <motion.span
           className="flex justify-center font-normal text-[15px] text-[#424242] mt-2"
           initial={{ opacity: 0, y: 10 }}
@@ -39,7 +36,6 @@ export function MainReset() {
           Новий пароль буде надіслано на вказану електронну адресу
         </motion.span>
 
-        {/* Кнопка */}
         <motion.button
           className="w-full h-[15%] mt-[1%] flex font-medium text-xl justify-center items-center rounded-4xl bg-black text-white"
           initial={{ opacity: 0, scale: 0.9 }}

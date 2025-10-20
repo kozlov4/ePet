@@ -53,7 +53,7 @@ export function MainSignIn() {
         const data = await response.json();
         console.log("Response:", data);
 
-        // Перевіряємо повідомлення від сервера
+
         if (data.detail === "Organization not found.") {
           toast.error("Організація не знайдена.", {
             position: "top-center",
@@ -66,9 +66,8 @@ export function MainSignIn() {
           });
         } else {
           toast.success("Успішний вхід!");
-          // Тут можна робити редірект або зберігати токен
+
         }
-        // Тут можна зберегти токен або зробити редірект
       } catch (error) {
         console.error("Error:", error);
       }
@@ -81,7 +80,6 @@ export function MainSignIn() {
   return (
     <div className="w-[50%] h-full flex bg-white">
       <div className="w-full h-[50%] mt-[25%] mx-[8%]">
-        {/* Заголовок */}
         <motion.h1
           className="font-medium ml-[3%] text-5xl mb-6"
           initial={{ opacity: 0, y: -20 }}
@@ -91,7 +89,7 @@ export function MainSignIn() {
           Увійти до кабінету
         </motion.h1>
 
-        {/* Форма */}
+
         <motion.div
           className="w-full h-[70%] flex flex-col justify-center items-start p-4 rounded-xl"
           initial={{ opacity: 0, y: 20 }}
@@ -149,7 +147,6 @@ export function MainSignIn() {
           </a>
         </motion.div>
 
-        {/* Кнопка */}
         <motion.button
           onClick={handleSubmit}
           disabled={!isFormValid}
