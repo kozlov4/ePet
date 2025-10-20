@@ -16,11 +16,28 @@ const samplePets: Pet[] = [
     { id: 'UA AA 658199', breed: 'Метис', gender: 'Ч', type: 'Кіт', ownerId: '009154744' },
     { id: 'UA AA 658199', breed: 'Метис', gender: 'Ж', type: 'Кіт', ownerId: '009154744' },
     { id: 'UA AA 658199', breed: 'Метис', gender: 'Ч', type: 'Собака', ownerId: '009154744' },
+    { id: 'UA AA 658199', breed: 'Метис', gender: 'Ч', type: 'Собака', ownerId: '009154744' },
+    { id: 'UA AA 658199', breed: 'Метис', gender: 'Ч', type: 'Собака', ownerId: '009154744' },
+    { id: 'UA AA 658199', breed: 'Метис', gender: 'Ч', type: 'Собака', ownerId: '009154744' },
+    { id: 'UA AA 658199', breed: 'Метис', gender: 'Ч', type: 'Собака', ownerId: '009154744' },
+    { id: 'UA AA 658199', breed: 'Метис', gender: 'Ч', type: 'Собака', ownerId: '009154744' },
 ];
 
 export function MainCNAP() {
     const [searchTerm, setSearchTerm] = useState('');
     const [pets, setPets] = useState<Pet[]>(samplePets);
+
+    const filteredPets = pets.filter((pet) => {
+        const lowerCaseSearchTerm = searchTerm.toLowerCase();
+
+        return (
+            pet.id.toLowerCase().includes(lowerCaseSearchTerm) ||
+            pet.breed.toLowerCase().includes(lowerCaseSearchTerm) ||
+            pet.gender.toLowerCase().includes(lowerCaseSearchTerm) ||
+            pet.type.toLowerCase().includes(lowerCaseSearchTerm) ||
+            pet.ownerId.toLowerCase().includes(lowerCaseSearchTerm)
+        );
+    });
 
     const handleFullInfoClick = (petId: string) => {
         alert(`Showing full information for pet: ${petId}`);
@@ -29,11 +46,10 @@ export function MainCNAP() {
 
     const handleRegisterPetClick = () => {
         alert('Navigating to pet registration form!');
-
     };
 
     return (
-        <div className="w-full h-[92vh] bg-gray-50 p-35">
+        <div className="w-full bg-gray-50 px-35 py-10">
             <h1 className="mb-5 font-medium text-4xl">
                 Паспорт домашнього улюбленця</h1>
             <div className="mb-8 flex flex-col items-center justify-between gap-4 sm:flex-row">
@@ -76,7 +92,7 @@ export function MainCNAP() {
             </div>
 
             <div className="flex flex-col bg-[rgba(217,217,217,0.27)] rounded-[2em] divide-y divide-gray-300">
-                {pets.map((pet, index) => (
+                {filteredPets.map((pet, index) => (
                     <div
                         key={index}
                         className="grid items-center p-4 md:grid-cols-6 text-center">
