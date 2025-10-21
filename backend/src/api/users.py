@@ -1,3 +1,4 @@
+import secrets
 from fastapi import APIRouter, Depends, HTTPException
 from typing import Annotated
 from datetime import timedelta
@@ -14,6 +15,8 @@ router = APIRouter(tags=['Users 🧑‍🦱'], prefix="/users")
 
 db_dependency = Annotated[Session, Depends(get_db)]
 
+def generate_reset_token(length: int = 32) -> str:
+    return secrets.token_urlsafe(length)
 
 @router.post('/register/', status_code=status.HTTP_201_CREATED, response_model=TokenResponse)
 async def create_user(db: db_dependency, create_user_request: UserCreateRequest):

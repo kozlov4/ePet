@@ -111,6 +111,7 @@ class Users(Base):
   street = Column(String(50))
   house_number = Column(String(10)) 
   email = Column(String(100), unique=True, nullable=False) 
+  reset_token = Column(String(255), nullable=True)
 
   pets = relationship("Pets", back_populates="owner") 
   requests = relationship("Requests", back_populates="user") 
