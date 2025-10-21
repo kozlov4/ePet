@@ -1,5 +1,6 @@
 package com.example.epet.data.repository
 
+import com.example.epet.data.helper.FunctionHelper
 import com.example.epet.data.model.InputLogin
 import com.example.epet.data.model.InputRegistration
 import com.example.epet.data.model.OutputAuth
@@ -26,7 +27,7 @@ class AuthRepository {
     }
 
     suspend fun registration(inputRegistration: InputRegistration, address: String): OutputAuth {
-        val (city, street, house_number) = ValidationHelper.parse_address(address)
+        val (city, street, house_number) = FunctionHelper.parseAddress(address)
 
         val inputRegistrationUpdate = inputRegistration.copy(
             city = city,
@@ -34,7 +35,7 @@ class AuthRepository {
             house_number = house_number
         )
 
-        ValidationHelper.validate_registration(inputRegistrationUpdate)?.let {
+        ValidationHelper.validateRegistration(inputRegistrationUpdate)?.let {
             return OutputAuth.Error(it)
         }
 
@@ -53,7 +54,7 @@ class AuthRepository {
         }
     }
 
-    suspend fun reset_password(inputEmail: String): String {
+    suspend fun resetPassword(inputEmail: String): String {
         if (!android.util.Patterns.EMAIL_ADDRESS.matcher(inputEmail).matches()) {
             return "Некоректний формат email"
         }

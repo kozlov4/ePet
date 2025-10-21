@@ -18,6 +18,10 @@ import com.example.epet.data.model.OutputAuth
 import com.example.epet.data.repository.AuthRepository
 import com.example.epet.ui.auth.viewmodel.AuthViewModel
 import com.example.epet.ui.main.view.MainActivity
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
+import androidx.lifecycle.repeatOnLifecycle
+import androidx.lifecycle.Lifecycle
 
 class RegistrationFragment : Fragment() {
 
@@ -51,7 +55,7 @@ class RegistrationFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initViews(view)
         initButtons()
-        initLiveData()
+        initStateFlow()
     }
 
     /** Ініціалізація всіх елементів інтерфейсу **/
@@ -98,24 +102,28 @@ class RegistrationFragment : Fragment() {
         }
     }
 
-    /** Ініціалізація LiveData **/
-    private fun initLiveData() {
-        viewModel.outputRegisatration.observe(viewLifecycleOwner) { output ->
-            when(output) {
-                is OutputAuth.Success -> {
-                    saveUserInfo(requireContext(), output.access_token, output.user_name)
-                    navigateToMainActivity()
-                }
+    /** Ініціалізація StateFlow **/
+    private fun initStateFlow() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.outputRegisatration.collect { state ->
+                    when (state) {
+                        is OutputAuth.Success -> {
+                            saveUserInfo(requireContext(), state.access_token, state.user_name)
+                            navigateToMainActivity()
+                        }
 
-                is OutputAuth.Error -> {
-                    tv_message.text = output.detail
+                        is OutputAuth.Error -> {
+                            tv_message.text = state.detail
+                        }
+                    }
                 }
             }
         }
     }
 
     /** Збереження даних користувача **/
-    fun saveUserInfo(context: Context, access_token: String, user_name: String) {
+    private fun saveUserInfo(context: Context, access_token: String, user_name: String) {
         val sharedPref = context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
         with(sharedPref.edit()) {
             putString("access_token", access_token)
