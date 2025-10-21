@@ -105,4 +105,22 @@ async def send_email(to: str, subject: str, body: str):
     except Exception as e:
         print(f"Помилка при надсиланні email: {e}")
 
+#Endpoint для зміни пароля
+@router.post("/reset-password/")
+async def reset_password(token: str, new_password: str, db: db_dependency):
+    
+    user = db.query(Users).filter(Users.reset_token == token).first()
+    if not user:
+        return {"msg": "Неправильний або використаний токен."}
 
+    # Перевірка прострочення токена (1 година)
+    if datetime.utcnow() - user.reset_token_created_at > timedelta(hours=1):
+        return {"msg": "Токен прострочено. Створіть новий запит на скидання пароля."}
+
+    # Хешування нового пароля
+    user.password = bcrypt_context.hash(new_password)
+    user.reset_token = None
+    user.reset_token_created_at = None
+    db.commit()
+
+    return {"msg": "Пароль успішно змінено."}
