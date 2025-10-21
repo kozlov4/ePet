@@ -10,10 +10,14 @@ import androidx.fragment.app.Fragment
 import com.example.epet.R
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatButton
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.example.epet.data.repository.AuthRepository
 import com.example.epet.ui.auth.viewmodel.AuthViewModel
 import androidx.navigation.fragment.navArgs
+import kotlinx.coroutines.launch
 
 class ResetPassowrdFragment : Fragment() {
 
@@ -34,7 +38,7 @@ class ResetPassowrdFragment : Fragment() {
         initViews(view)
         initButtons()
         initEmail()
-        initLiveData()
+        initStateFlow()
     }
 
     /** Ініціалізація всіх елементів інтерфейсу **/
@@ -54,8 +58,8 @@ class ResetPassowrdFragment : Fragment() {
         }
 
         bth_reset_password.setOnClickListener {
-            val email = et_email_address.text.toString()
-            viewModel.reset_password(email)
+            val email = et_email_address.text.toString().trimEnd()
+            viewModel.resetPassword(email)
         }
     }
 
@@ -64,20 +68,24 @@ class ResetPassowrdFragment : Fragment() {
         et_email_address.setText(args.email)
     }
 
-    /** Ініціалізація LiveData **/
-    private fun initLiveData() {
-        viewModel.outputEmail.observe(viewLifecycleOwner) { output ->
-            if (output == "Тимчасовий пароль буде надіслано вам найближчим часом на email") {
-                val action = ResetPassowrdFragmentDirections.actionResetPasswordToMessage(
-                    tittletext = "Відновлення паролю",
-                    emoji = "✅",
-                    main = "Пароль скинуто!",
-                    description = output,
-                    email = et_email_address.text.toString()
-                )
-                findNavController().navigate(action)
-            } else {
-                tv_message.text = output
+    /** Ініціалізація StateFlow **/
+    private fun initStateFlow() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.outputEmail.collect { state ->
+                    if (state == "Інструкція на відновлення паролю буде надіслана найближчим часом на email") {
+                        val action = ResetPassowrdFragmentDirections.actionResetPasswordToMessage(
+                            tittletext = "Відновлення паролю",
+                            emoji = "✅",
+                            main = "Успішно!",
+                            description = state,
+                            email = et_email_address.text.toString()
+                        )
+                        findNavController().navigate(action)
+                    } else {
+                        tv_message.text = state
+                    }
+                }
             }
         }
     }

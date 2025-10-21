@@ -3,37 +3,45 @@ package com.example.epet.ui.auth.viewmodel
 import com.example.epet.data.repository.AuthRepository
 import androidx.lifecycle.ViewModel
 import com.example.epet.data.model.OutputAuth
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.LiveData
 import com.example.epet.data.model.InputLogin
 import com.example.epet.data.model.InputRegistration
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.asSharedFlow
 
 class AuthViewModel(private val repository: AuthRepository) : ViewModel() {
 
-    private val _outputLogin = MutableLiveData<OutputAuth>()
-    val outputLogin: LiveData<OutputAuth> get() = _outputLogin
+    private val _outputLogin = MutableSharedFlow<OutputAuth>()
+    val outputLogin = _outputLogin.asSharedFlow()
+
+    private val _outputRegisatration = MutableSharedFlow<OutputAuth>()
+    val outputRegisatration = _outputRegisatration.asSharedFlow()
+
+    private val _outputEmail = MutableSharedFlow<String>()
+    val outputEmail = _outputEmail.asSharedFlow()
 
     fun login(inputLogin: InputLogin) {
-        val input = inputLogin
-        val output = repository.login(input)
-        _outputLogin.value = output
+        viewModelScope.launch {
+            val input = inputLogin
+            val output = repository.login(input)
+            _outputLogin.emit(output)
+        }
     }
 
-    private val _outputRegisatration = MutableLiveData<OutputAuth>()
-    val outputRegisatration: LiveData<OutputAuth> get() = _outputRegisatration
-
-    fun registration(inputRegistration: InputRegistration) {
-        val input = inputRegistration
-        val output = repository.regisatration(input)
-        _outputRegisatration.value = output
+    fun registration(inputRegistration: InputRegistration, adress: String) {
+        viewModelScope.launch {
+            val input = inputRegistration
+            val output = repository.registration(input, adress)
+            _outputRegisatration.emit(output)
+        }
     }
 
-    private val _outputEmail = MutableLiveData<String>()
-    val outputEmail: LiveData<String> get() = _outputEmail
-
-    fun reset_password(inputEmail: String) {
-        val input = inputEmail
-        val output = repository.reset_password(input)
-        _outputEmail.value = output
+    fun resetPassword(inputEmail: String) {
+        viewModelScope.launch {
+            val input = inputEmail
+            val output = repository.resetPassword(input)
+            _outputEmail.emit(output)
+        }
     }
 }

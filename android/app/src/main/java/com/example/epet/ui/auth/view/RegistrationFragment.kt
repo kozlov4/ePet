@@ -12,12 +12,16 @@ import android.widget.TextView
 import android.widget.LinearLayout
 import androidx.appcompat.widget.AppCompatButton
 import androidx.navigation.fragment.findNavController
-import com.example.epet.data.model.InputLogin
+import android.content.Context
 import com.example.epet.data.model.InputRegistration
 import com.example.epet.data.model.OutputAuth
 import com.example.epet.data.repository.AuthRepository
 import com.example.epet.ui.auth.viewmodel.AuthViewModel
 import com.example.epet.ui.main.view.MainActivity
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
+import androidx.lifecycle.repeatOnLifecycle
+import androidx.lifecycle.Lifecycle
 
 class RegistrationFragment : Fragment() {
 
@@ -32,12 +36,12 @@ class RegistrationFragment : Fragment() {
     private lateinit var ll_contact: LinearLayout
     private lateinit var ll_password: LinearLayout
 
-    private lateinit var et_surname: EditText
-    private lateinit var et_name: EditText
+    private lateinit var et_last_name: EditText
+    private lateinit var et_first_name: EditText
     private lateinit var et_patronymic: EditText
     private lateinit var et_passport_number: EditText
     private lateinit var et_address: EditText
-    private lateinit var et_postal_code: EditText
+    private lateinit var et_postal_index: EditText
     private lateinit var et_email_address: EditText
     private lateinit var et_password: EditText
 
@@ -51,7 +55,7 @@ class RegistrationFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initViews(view)
         initButtons()
-        initLiveData()
+        initStateFlow()
     }
 
     /** Ініціалізація всіх елементів інтерфейсу **/
@@ -65,12 +69,12 @@ class RegistrationFragment : Fragment() {
         ll_contact = view.findViewById(R.id.ll_contact)
         ll_password = view.findViewById(R.id.ll_password)
 
-        et_surname = view.findViewById(R.id.et_surname)
-        et_name = view.findViewById(R.id.et_name)
+        et_last_name = view.findViewById(R.id.et_last_name)
+        et_first_name = view.findViewById(R.id.et_first_name)
         et_patronymic = view.findViewById(R.id.et_patronymic)
         et_passport_number = view.findViewById(R.id.et_passport_number)
         et_address = view.findViewById(R.id.et_address)
-        et_postal_code = view.findViewById(R.id.et_postal_code)
+        et_postal_index = view.findViewById(R.id.et_postal_index)
         et_email_address = view.findViewById(R.id.et_email_address)
         et_password = view.findViewById(R.id.et_password)
 
@@ -84,32 +88,47 @@ class RegistrationFragment : Fragment() {
         }
 
         bth_registration.setOnClickListener {
-            val surname = et_surname.text.toString()
-            val name = et_name.text.toString()
-            val patronymic = et_patronymic.text.toString()
-            val passportNumber = et_passport_number.text.toString()
-            val address = et_address.text.toString()
-            val postalCode = et_postal_code.text.toString()
-            val emailAddress = et_email_address.text.toString()
-            val password = et_password.text.toString()
+            val last_name = et_last_name.text.toString().trimEnd()
+            val first_name = et_first_name.text.toString().trimEnd()
+            val patronymic = et_patronymic.text.toString().trimEnd()
+            val passport_number = et_passport_number.text.toString().trimEnd()
+            val address = et_address.text.toString().trimEnd()
+            val postal_index = et_postal_index.text.toString().trimEnd()
+            val email = et_email_address.text.toString().trimEnd()
+            val password = et_password.text.toString().trimEnd()
 
             viewModel.registration(
-                InputRegistration(surname, name, patronymic, passportNumber, address, postalCode, emailAddress, password))
+                InputRegistration(last_name, first_name, patronymic, passport_number, "", "", "", postal_index, email, password), address)
         }
     }
 
-    /** Ініціалізація LiveData **/
-    private fun initLiveData() {
-        viewModel.outputRegisatration.observe(viewLifecycleOwner) { output ->
-            when(output) {
-                is OutputAuth.Success -> {
-                    navigateToMainActivity()
-                }
+    /** Ініціалізація StateFlow **/
+    private fun initStateFlow() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.outputRegisatration.collect { state ->
+                    when (state) {
+                        is OutputAuth.Success -> {
+                            saveUserInfo(requireContext(), state.access_token, state.user_name)
+                            navigateToMainActivity()
+                        }
 
-                is OutputAuth.Error -> {
-                    tv_message.text = output.message
+                        is OutputAuth.Error -> {
+                            tv_message.text = state.detail
+                        }
+                    }
                 }
             }
+        }
+    }
+
+    /** Збереження даних користувача **/
+    private fun saveUserInfo(context: Context, access_token: String, user_name: String) {
+        val sharedPref = context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+        with(sharedPref.edit()) {
+            putString("access_token", access_token)
+            putString("user_name", user_name)
+            apply()
         }
     }
 

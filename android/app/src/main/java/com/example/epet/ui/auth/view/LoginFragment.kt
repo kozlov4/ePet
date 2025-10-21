@@ -1,5 +1,6 @@
 package com.example.epet.ui.auth.view
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,10 +14,14 @@ import androidx.navigation.fragment.findNavController
 import com.example.epet.data.repository.AuthRepository
 import com.example.epet.ui.auth.viewmodel.AuthViewModel
 import android.widget.EditText
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.example.epet.data.model.InputLogin
 import com.example.epet.data.model.OutputAuth
 import com.example.epet.ui.main.view.MainActivity
 import androidx.navigation.fragment.navArgs
+import kotlinx.coroutines.launch
 
 class LoginFragment : Fragment() {
 
@@ -41,7 +46,7 @@ class LoginFragment : Fragment() {
         initViews(view)
         initButtons()
         initEmail()
-        initLiveData()
+        initStateFlow()
     }
 
     /** Ініціалізація всіх елементів інтерфейсу **/
@@ -69,8 +74,8 @@ class LoginFragment : Fragment() {
         }
 
         bth_login.setOnClickListener {
-            val email = et_email_address.text.toString()
-            val password = et_password.text.toString()
+            val email = et_email_address.text.toString().trimEnd()
+            val password = et_password.text.toString().trimEnd()
             viewModel.login(InputLogin(email, password))
         }
     }
@@ -80,19 +85,33 @@ class LoginFragment : Fragment() {
         et_email_address.setText(args.email)
     }
 
-    /** Ініціалізація LiveData **/
-    private fun initLiveData() {
-        viewModel.outputLogin.observe(viewLifecycleOwner) { output ->
-            when(output) {
-                is OutputAuth.Success -> {
-                    navigateToMainActivity()
-                }
+    private fun initStateFlow() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.outputLogin.collect { state ->
+                    when(state) {
+                        is OutputAuth.Success -> {
+                            saveUserInfo(requireContext(), state.access_token, state.user_name)
+                            navigateToMainActivity()
+                        }
 
-                is OutputAuth.Error -> {
-                    tv_message.text = output.message
-                    tv_message.visibility = View.VISIBLE
+                        is OutputAuth.Error -> {
+                            tv_message.text = state.detail
+                            tv_message.visibility = View.VISIBLE
+                        }
+                    }
                 }
             }
+        }
+    }
+
+    /** Збереження даних користувача **/
+    fun saveUserInfo(context: Context, access_token: String, user_name: String) {
+        val sharedPref = context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+        with(sharedPref.edit()) {
+            putString("access_token", access_token)
+            putString("user_name", user_name)
+            apply()
         }
     }
 

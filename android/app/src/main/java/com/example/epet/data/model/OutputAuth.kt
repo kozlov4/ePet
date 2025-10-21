@@ -2,9 +2,10 @@ package com.example.epet.data.model
 
 sealed class OutputAuth {
     data class Success(
-        val token: String,
-        val name: String) : OutputAuth()
+        val access_token: String,
+        val token_type: String,
+        val user_name: String) : OutputAuth()
 
     data class Error(
-        val message: String) : OutputAuth()
+        val detail: String) : OutputAuth()
 }

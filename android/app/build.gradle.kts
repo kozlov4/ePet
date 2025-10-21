@@ -48,7 +48,6 @@ dependencies {
 
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.9.4")
     implementation("androidx.activity:activity-ktx:1.11.0")
-    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.9.4")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2")
     implementation("com.squareup.retrofit2:retrofit:3.0.0")
     implementation("com.squareup.retrofit2:converter-gson:3.0.0")
@@ -58,4 +57,5 @@ dependencies {
     implementation("androidx.navigation:navigation-fragment-ktx:2.9.5")
     implementation("androidx.navigation:navigation-ui-ktx:2.9.5")
     implementation("androidx.cardview:cardview:1.0.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.11")
 }
