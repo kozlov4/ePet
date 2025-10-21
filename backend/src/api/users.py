@@ -1,4 +1,6 @@
-import smtplib
+import aiosmtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from fastapi import APIRouter, Depends, HTTPException
@@ -77,6 +79,30 @@ async def forgot_password(email: str, db: db_dependency):
 
     return {"msg": "Якщо електронна адреса існує, посилання для скидання паролю було надіслано на пошту."}
 
+# Функція для email з посиланням на скидання пароля
+async def send_email(to: str, subject: str, body: str):
+    smtp_host = "smtp.gmail.com"
+    smtp_port = 587
+    smtp_user = "email@gmail.com"       
+    smtp_password = "app_password"      
 
+    msg = MIMEMultipart()
+    msg["From"] = smtp_user
+    msg["To"] = to
+    msg["Subject"] = subject
+    msg.attach(MIMEText(body, "plain"))
+
+    try:
+        await aiosmtplib.send(
+            msg,
+            hostname=smtp_host,
+            port=smtp_port,
+            start_tls=True,
+            username=smtp_user,
+            password=smtp_password,
+        )
+        print(f"Лист надіслано на {to}")
+    except Exception as e:
+        print(f"Помилка при надсиланні email: {e}")
 
 
