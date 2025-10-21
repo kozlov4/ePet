@@ -7,6 +7,7 @@ from sqlalchemy.orm import Session
 from starlette import status
 from src.db.database import get_db
 from src.db.models import Users
+from fastapi.security import OAuth2PasswordRequestForm
 from passlib.context import CryptContext
 from src.api.core import create_access_token, bcrypt_context
 
@@ -47,4 +48,31 @@ async def create_user(db: db_dependency, create_user_request: UserCreateRequest)
         expires_delta=timedelta(minutes=30)
     )
 
-    return {"access_token": token, "token_type": "bearer", "user_name": create_user_model.first_name} 
+    return {
+        "access_token": token, 
+        "token_type": "bearer", 
+        "user_name": create_user_model.first_name
+    } 
+
+@router.post('/login', response_model=TokenResponse)
+async def login_for_user(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db: db_dependency):
+    
+    user = db.query(Users).filter(Users.email == form_data.username).first()
+    
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found.")
+
+    if not bcrypt_context.verify(form_data.password, user.password):
+        raise HTTPException(status_code=401, detail="Incorrect password.")
+
+    token = create_access_token(
+        subject=user.email, 
+        id=user.user_id, 
+        expires_delta=timedelta(minutes=30)
+    )
+
+    return {
+        "access_token": token,
+        "token_type": "bearer",
+        "user_name": user.first_name
+    }
