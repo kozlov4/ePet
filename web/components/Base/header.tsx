@@ -1,8 +1,9 @@
 import { motion } from "framer-motion";
+import React from "react";
 import CatIcon from "./Images/catIcon";
 import UkraineIcon from "./Images/ukraineIcon";
 
-export function HeaderReset() {
+export const HeaderMain: React.FC = () => {
   return (
     <div className="w-full h-[12%] flex justify-end absolute">
       <motion.div
@@ -17,9 +18,10 @@ export function HeaderReset() {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 1, delay: 0.3 }}
         >
-          <motion.div className="flex h-full gap-4 items-center" 
-            initial={{ opacity: 0, scale: 0.8 }} 
-            animate={{ opacity: 1, scale: 1 }} 
+          <motion.div
+            className="flex h-full gap-4 items-center"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6, delay: 0.5 }}
           >
             <div className="flex w-12 h-12 justify-center items-center bg-black rounded-lg">
@@ -62,4 +64,4 @@ export function HeaderReset() {
       </motion.div>
     </div>
   );
-}
+};

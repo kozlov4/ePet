@@ -1,4 +1,6 @@
-const UkraineIcon = () => (
+import React from "react";
+
+const UkraineIcon: React.FC = () => (
   <svg
     width="19"
     height="35"

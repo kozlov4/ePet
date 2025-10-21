@@ -1,4 +1,4 @@
-import { HeaderSignIn } from "../components/SignInPage/header";
+import { HeaderMain } from "../components/Base/header";
 import { MainSignIn } from "../components/SignInPage/main";
 
 export default function SignIn() {
@@ -8,7 +8,7 @@ export default function SignIn() {
       style={{ backgroundImage: "url('/images/font.png')" }}
     >
       
-      <HeaderSignIn />
+      <HeaderMain />
       <MainSignIn/>
     </div>
   );
