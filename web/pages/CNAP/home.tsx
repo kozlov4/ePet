@@ -7,7 +7,7 @@ import { FooterCNAP } from "../../components/CNAP/footer";
 export default function CNAPHome() {
     return (
         <div
-            className="bg-cover bg-center w-screen h-screen">
+            className="flex min-h-screen w-screen flex-col bg-cover bg-center">
 
             <HeaderCNAP cnapid={6329} />
             <main className="flex-grow">
