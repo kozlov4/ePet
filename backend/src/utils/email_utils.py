@@ -9,7 +9,7 @@ load_dotenv()
 
 SENDGRID_API_KEY = os.getenv("SENDGRID_API_KEY")
 FROM_EMAIL = os.getenv("FROM_EMAIL", "no-reply@upcity.live")
-REPLY_TO_EMAIL = os.getenv("REPLY_TO_EMAIL", "your-real-email@gmail.com")
+REPLY_TO_EMAIL = os.getenv("REPLY_TO_EMAIL", "serge.kozlov.dev@gmail.com")
 
 # --- Функція відправки Email ---
 

@@ -11,15 +11,13 @@ from src.utils.email_utils import send_reset_email
 from src.schemas.password_schemas import ForgotPasswordPayload
 
 
-
-load_dotenv()
 router = APIRouter(tags=['Forgot password 🤔'])
 
+load_dotenv()
 
+FRONTEND_URL =  "https://upcity.live"
 
-FRONTEND_URL = os.getenv("FRONTEND_URL", "https://upcity.live")
 db_dependency = Annotated[Session, Depends(get_db)]
-
 
 
 # --- Запит на скидання пароля ---
