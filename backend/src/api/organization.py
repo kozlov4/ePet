@@ -7,9 +7,9 @@ from sqlalchemy.orm import Session, joinedload
 from sqlalchemy import func
 from src.db.database import get_db
 from src.db.models import Organizations, Pets
-from src.schemas.token import TokenResponse
+from src.schemas.token_schemas import TokenResponse
 from src.api.core import create_access_token, bcrypt_context, get_current_user
-from src.schemas.organization import AnimalForOrgResponse, OwnerForOrgResponse, PaginatedAnimalResponse
+from src.schemas.organization_schemas import AnimalForOrgResponse, OwnerForOrgResponse, PaginatedAnimalResponse
 
 
 
@@ -19,28 +19,6 @@ user_dependency = Annotated[dict, Depends(get_current_user)]
 
 
 
-@router.post('/login', response_model=TokenResponse)
-async def login_for_organization(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db: db_dependency):
-    
-    organization = db.query(Organizations).filter(Organizations.email == form_data.username).first()
-    
-    if not organization:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Organization not found.")
-
-    if not bcrypt_context.verify(form_data.password, organization.password):
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Incorrect password.")
-
-    token = create_access_token(
-        subject=organization.email, 
-        id=organization.organization_id, 
-        expires_delta=timedelta(minutes=30) 
-    )
-
-    return {
-        "access_token": token, 
-        "token_type": "bearer", 
-        "user_name": organization.organization_name
-    }
 
 
 # Функція-залежність перевіряє права доступу для organizations
@@ -65,7 +43,7 @@ async def get_current_organization(user: user_dependency, db: db_dependency) -> 
     return organization
 
 
-@router.get('/animals', response_model=PaginatedAnimalResponse)
+@router.get('/animals/', response_model=PaginatedAnimalResponse)
 async def get_animals_for_cnap(
     db: db_dependency, 
     # Ця залежність захищає ендпоінт і передає нам об'єкт залогіненої організації

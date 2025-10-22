@@ -1,19 +1,28 @@
-from fastapi import APIRouter, Depends, HTTPException
+from datetime import  timedelta
 from typing import Annotated
-from datetime import timedelta
-from src.schemas.user import UserResponse, UserCreateRequest
-from src.schemas.token import TokenResponse
+from dotenv import load_dotenv
+
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-from starlette import status
+
+from src.schemas.user_schemas import UserCreateRequest
+from src.schemas.token_schemas import TokenResponse
 from src.db.database import get_db
 from src.db.models import Users
-from passlib.context import CryptContext
 from src.api.core import create_access_token, bcrypt_context
+
+
+load_dotenv()
+
+# --- Налаштування ---
 
 router = APIRouter(tags=['Users 🧑‍🦱'], prefix="/users")
 
 db_dependency = Annotated[Session, Depends(get_db)]
 
+
+
+# --- Реєстрація ---
 
 @router.post('/register/', status_code=status.HTTP_201_CREATED, response_model=TokenResponse)
 async def create_user(db: db_dependency, create_user_request: UserCreateRequest):
@@ -26,11 +35,9 @@ async def create_user(db: db_dependency, create_user_request: UserCreateRequest)
         first_name=create_user_request.first_name,
         patronymic=create_user_request.patronymic,
         passport_number=create_user_request.passport_number,
-        
         city=create_user_request.city,
         street=create_user_request.street,
         house_number=create_user_request.house_number,
-        
         postal_index=create_user_request.postal_index,
         email=create_user_request.email,
         password=bcrypt_context.hash(create_user_request.password)
@@ -40,11 +47,17 @@ async def create_user(db: db_dependency, create_user_request: UserCreateRequest)
     db.commit()
     db.refresh(create_user_model)
 
-
     token = create_access_token(
         subject=create_user_model.email,
         id=create_user_model.user_id,
         expires_delta=timedelta(minutes=30)
     )
 
-    return {"access_token": token, "token_type": "bearer", "user_name": create_user_model.first_name} 
+    return {
+        "access_token": token, 
+        "token_type": "bearer", 
+        "user_name": create_user_model.first_name
+    }
+
+
+
