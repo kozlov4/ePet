@@ -22,10 +22,10 @@ async def reset_password(payload: ResetPasswordPayload, db: db_dependency):
 
     token_expired = True
     if user and user.reset_token_created_at:
-        token_age = datetime.now(timezone.utc) - user.reset_token_created_at
+        token_age = datetime.utcnow() - user.reset_token_created_at
+        print(token_age)
         if token_age <= timedelta(hours=1):
             token_expired = False
-
     if not user or token_expired:
         if user: 
             user.reset_token = None

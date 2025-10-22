@@ -11,9 +11,8 @@ SENDGRID_API_KEY = os.getenv("SENDGRID_API_KEY")
 FROM_EMAIL = os.getenv("FROM_EMAIL", "no-reply@upcity.live")
 REPLY_TO_EMAIL = os.getenv("REPLY_TO_EMAIL", "serge.kozlov.dev@gmail.com")
 
+
 # --- Функція відправки Email ---
-
-
 async def send_reset_email(to_email: str, reset_link: str):
     html_content = f"""
     <html><body>
