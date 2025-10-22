@@ -1,29 +1,38 @@
 package com.example.epet.data.repository
 
 import com.example.epet.data.helper.FunctionHelper
-import com.example.epet.data.model.InputLogin
-import com.example.epet.data.model.InputRegistration
-import com.example.epet.data.model.OutputAuth
+import com.example.epet.data.model.auth.InputLogin
+import com.example.epet.data.model.auth.InputRegistration
+import com.example.epet.data.model.auth.OutputAuth
 import com.example.epet.data.network.RetrofitClient
 import com.example.epet.data.helper.ValidationHelper
+import com.example.epet.data.model.auth.InputResetPassword
+import com.example.epet.data.model.auth.OutputResetPassword
 import com.google.gson.GsonBuilder
 
 class AuthRepository {
 
     suspend fun login(inputLogin: InputLogin): OutputAuth {
-        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(inputLogin.email).matches()) {
-            return OutputAuth.Error("Некоректний формат email")
+        ValidationHelper.validateLogin(inputLogin)?.let {
+            return OutputAuth.Error(it)
         }
 
-        if (inputLogin.password.length < 6) {
-            return OutputAuth.Error("Невірний пароль")
-        }
+        return try {
+            val response = RetrofitClient.api.login(
+                username = inputLogin.username,
+                password = inputLogin.password
+            )
 
-        return OutputAuth.Success(
-            access_token = "test_token",
-            token_type = "test_token_type",
-            user_name = "Захар",
-        )
+            if (response.isSuccessful) {
+                response.body()!!
+            } else {
+                val errorJson = response.errorBody()?.string()
+                val errorObj = GsonBuilder().create().fromJson(errorJson, OutputAuth.Error::class.java)
+                errorObj ?: OutputAuth.Error("Невідома помилка, спробуйте ще раз")
+            }
+        } catch (e: Exception) {
+            OutputAuth.Error(e.localizedMessage ?: "Помилка мережі, спробуйте ще раз")
+        }
     }
 
     suspend fun registration(inputRegistration: InputRegistration, address: String): OutputAuth {
@@ -54,12 +63,24 @@ class AuthRepository {
         }
     }
 
-    suspend fun resetPassword(inputEmail: String): String {
-        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(inputEmail).matches()) {
-            return "Некоректний формат email"
+    suspend fun resetPassword(inputResetPassword: InputResetPassword): OutputResetPassword {
+        ValidationHelper.validateResetPassword(inputResetPassword)?.let {
+            return OutputResetPassword(it)
         }
 
-        return "Інструкція на відновлення паролю буде надіслана найближчим часом на email"
-    }
+        return try {
+            val response = RetrofitClient.api.resetPassword(inputResetPassword)
 
+            if (response.isSuccessful) {
+                response.body()!!
+            } else {
+                val errorJson = response.errorBody()?.string()
+                val errorObj =
+                    GsonBuilder().create().fromJson(errorJson, OutputResetPassword::class.java)
+                errorObj ?: OutputResetPassword("Невідома помилка, спробуйте ще раз")
+            }
+        } catch (e: Exception) {
+            OutputResetPassword(e.localizedMessage ?: "Помилка мережі, спробуйте ще раз")
+        }
+    }
 }
