@@ -48,7 +48,6 @@ export function NewPassword(props: { token: string }) {
             setMessage('Помилка. Не вдалося створити новий пароль. Спробуйте ще раз.');
         } finally {
             setIsLoading(false);
-            router.push('/signIn');
         }
     };
 
