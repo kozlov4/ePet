@@ -75,6 +75,9 @@ class ResetPassowrdFragment : Fragment() {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.outputEmail.collect { state ->
                     if (state.msg == "Якщо електронна адреса існує, посилання для скидання паролю було надіслано на пошту.") {
+
+                        tv_message.text = ""
+
                         val action = ResetPassowrdFragmentDirections.actionResetPasswordToMessage(
                             tittletext = "Відновлення паролю",
                             emoji = "✅",

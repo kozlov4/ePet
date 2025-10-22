@@ -109,6 +109,7 @@ class RegistrationFragment : Fragment() {
                 viewModel.outputRegisatration.collect { state ->
                     when (state) {
                         is OutputAuth.Success -> {
+                            tv_message.text = ""
                             saveUserInfo(requireContext(), state.access_token, state.user_name)
                             navigateToMainActivity()
                         }

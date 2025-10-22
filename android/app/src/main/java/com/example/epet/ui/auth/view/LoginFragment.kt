@@ -91,6 +91,8 @@ class LoginFragment : Fragment() {
                 viewModel.outputLogin.collect { state ->
                     when(state) {
                         is OutputAuth.Success -> {
+                            tv_message.text = ""
+                            tv_message.visibility = View.GONE
                             saveUserInfo(requireContext(), state.access_token, state.user_name)
                             navigateToMainActivity()
                         }

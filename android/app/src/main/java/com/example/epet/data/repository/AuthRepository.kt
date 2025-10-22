@@ -9,6 +9,7 @@ import com.example.epet.data.helper.ValidationHelper
 import com.example.epet.data.model.auth.InputResetPassword
 import com.example.epet.data.model.auth.OutputResetPassword
 import com.google.gson.GsonBuilder
+import com.example.epet.data.network.RetrofitClient.gson
 
 class AuthRepository {
 
@@ -27,7 +28,7 @@ class AuthRepository {
                 response.body()!!
             } else {
                 val errorJson = response.errorBody()?.string()
-                val errorObj = GsonBuilder().create().fromJson(errorJson, OutputAuth.Error::class.java)
+                val errorObj = gson.fromJson(errorJson, OutputAuth.Error::class.java)
                 errorObj ?: OutputAuth.Error("Невідома помилка, спробуйте ще раз")
             }
         } catch (e: Exception) {
@@ -55,7 +56,7 @@ class AuthRepository {
                 response.body()!!
             } else {
                 val errorJson = response.errorBody()?.string()
-                val errorObj = GsonBuilder().create().fromJson(errorJson, OutputAuth.Error::class.java)
+                val errorObj = gson.fromJson(errorJson, OutputAuth.Error::class.java)
                 errorObj ?: OutputAuth.Error("Невідома помилка, спробуйте ще раз")
             }
         } catch (e: Exception) {
@@ -75,8 +76,7 @@ class AuthRepository {
                 response.body()!!
             } else {
                 val errorJson = response.errorBody()?.string()
-                val errorObj =
-                    GsonBuilder().create().fromJson(errorJson, OutputResetPassword::class.java)
+                val errorObj = gson.fromJson(errorJson, OutputResetPassword::class.java)
                 errorObj ?: OutputResetPassword("Невідома помилка, спробуйте ще раз")
             }
         } catch (e: Exception) {
