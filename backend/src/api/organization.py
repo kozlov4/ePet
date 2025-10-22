@@ -7,9 +7,9 @@ from sqlalchemy.orm import Session, joinedload
 from sqlalchemy import func
 from src.db.database import get_db
 from src.db.models import Organizations, Pets
-from src.schemas.token import TokenResponse
+from src.schemas.token_schemas import TokenResponse
 from src.api.core import create_access_token, bcrypt_context, get_current_user
-from src.schemas.organization import AnimalForOrgResponse, OwnerForOrgResponse, PaginatedAnimalResponse
+from src.schemas.organization_schemas import AnimalForOrgResponse, OwnerForOrgResponse, PaginatedAnimalResponse
 
 
 

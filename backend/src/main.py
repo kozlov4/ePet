@@ -1,7 +1,7 @@
 
-from fastapi import FastAPI, Depends, HTTPException
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from src.api import users, organization
+from src.api import users, organization, reset_password, forgot_password
 
 
 app = FastAPI(
@@ -20,5 +20,8 @@ app.add_middleware(
 
 app.include_router(users.router)
 app.include_router(organization.router)
+app.include_router(reset_password.router)
+app.include_router(forgot_password.router)
+
 
 
