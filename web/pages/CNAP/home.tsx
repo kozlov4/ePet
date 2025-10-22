@@ -1,6 +1,6 @@
-import { HeaderCNAP } from "../../components/CNAP/headerCNAP";
-import { MainCNAP } from "../../components/CNAP/mainCNAP";
-import { FooterCNAP } from "../../components/CNAP/footer";
+import { HeaderCNAP } from "../../components/CNAP/HeaderCNAP";
+import { MainCNAP } from "../../components/CNAP/MainCNAP";
+import { FooterCNAP } from "../../components/CNAP/Footer";
 
 
 

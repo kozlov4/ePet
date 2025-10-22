@@ -5,7 +5,7 @@ export default function SignIn() {
   return (
     <div
       className="bg-cover bg-center w-screen h-screen"
-      style={{ backgroundImage: "url('/images/font.png')" }}
+      style={{ backgroundImage: "url('./SignInBackground.png')" }}
     >
       
       <HeaderMain />

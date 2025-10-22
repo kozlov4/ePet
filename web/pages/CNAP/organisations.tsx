@@ -1,6 +1,6 @@
-import { HeaderCNAP } from "../../components/CNAP/headerCNAP";
-import { OrganisationsCNAP } from "../../components/CNAP/organisationsCNAP";
-import { FooterCNAP } from "../../components/CNAP/footer";
+import { HeaderCNAP } from "../../components/CNAP/HeaderCNAP";
+import { OrganisationsCNAP } from "../../components/CNAP/OrganisationsCNAP";
+import { FooterCNAP } from "../../components/CNAP/Footer";
 
 
 

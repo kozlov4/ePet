@@ -1,5 +1,5 @@
-import CatIcon from "../../assets/icons/catIcon";
-import UkraineIcon from "../../assets/icons/ukraineIcon";
+import CatIcon from "../../assets/images/icons/catIcon";
+import UkraineArmsIcon from "../../assets/images/icons/UkraineArmsIcon";
 import Link from 'next/link';
 
 export function HeaderCNAP(prop: { cnapid: number }) {
@@ -13,7 +13,7 @@ export function HeaderCNAP(prop: { cnapid: number }) {
                             <CatIcon />
                         </div>
                         <div className="flex w-12 h-12 justify-center items-center border-[2.5px] border-black rounded-lg">
-                            <UkraineIcon />
+                            <UkraineArmsIcon />
                         </div>
                     </Link>
                     <Link href={"home"} className="text-black text-sm font-medium cursor-pointer">Список улюбленців</Link>
