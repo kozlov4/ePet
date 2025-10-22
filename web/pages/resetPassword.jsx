@@ -1,5 +1,5 @@
 import { HeaderMain } from "../components/Base/header";
-import { MainSignIn } from "../components/SignInPage/main";
+import { MainReset } from "../components/ResetPassword/mainReset";
 
 export default function SignIn() {
   return (
@@ -7,9 +7,8 @@ export default function SignIn() {
       className="bg-cover bg-center w-screen h-screen"
       style={{ backgroundImage: "url('/images/font.png')" }}
     >
-      
       <HeaderMain />
-      <MainSignIn/>
+      <MainReset />
     </div>
   );
 }
