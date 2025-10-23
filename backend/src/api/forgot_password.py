@@ -15,7 +15,7 @@ router = APIRouter(tags=['Forgot password 🤔'])
 
 load_dotenv()
 
-FRONTEND_URL =  "https://upcity.live"
+FRONTEND_URL =  "https://e-pet-seven.vercel.app"
 
 db_dependency = Annotated[Session, Depends(get_db)]
 
