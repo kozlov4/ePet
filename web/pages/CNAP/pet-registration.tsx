@@ -1,4 +1,4 @@
-import { HeaderCNAP } from '../../components/CNAP/headerCNAP';
+import { HeaderCNAP } from '../../components/CNAP/HeaderCNAP';
 import PetRegistrationPage from '../../components/CNAP/petRegistrationPage';
 
 export default function RegisterPet() {

@@ -1,14 +1,14 @@
-'use client';
+'use client'
 
-import React, { useState, useRef } from 'react';
-import Image from 'next/image';
-import { useRouter } from 'next/navigation';
-import CopyIcon from '../../assets/icons/copy';
-import ArrowBack from '../../assets/icons/arrowBack';
+import React, { useState, useRef } from 'react'
+import Image from 'next/image'
+import { useRouter } from 'next/navigation'
+import ArrowBack from '../../assets/images/icons/ArrowBack'
+import CopyIcon from '../../assets/images/icons/CopyIcon'
 
 export default function PetRegistrationPage() {
-    const router = useRouter();
-    const fileInputRef = useRef<HTMLInputElement>(null);
+    const router = useRouter()
+    const fileInputRef = useRef<HTMLInputElement>(null)
 
     const [petData, setPetData] = useState({
         name: '',
@@ -21,54 +21,57 @@ export default function PetRegistrationPage() {
         chipNumber: '',
         owner: '',
         issuingAuthority: '',
-    });
+    })
 
-    const [imagePreview, setImagePreview] = useState<string | null>(null);
-    const petId = 'UA AA 658199';
+    const [imagePreview, setImagePreview] = useState<string | null>(null)
+    const petId = 'UA AA 658199'
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        setPetData((prevData) => ({ ...prevData, [name]: value }));
-    };
+        const { name, value } = e.target
+        setPetData((prevData) => ({ ...prevData, [name]: value }))
+    }
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
+        const file = e.target.files?.[0]
         if (file) {
-            const reader = new FileReader();
+            const reader = new FileReader()
             reader.onloadend = () => {
-                setImagePreview(reader.result as string);
-            };
-            reader.readAsDataURL(file);
+                setImagePreview(reader.result as string)
+            }
+            reader.readAsDataURL(file)
         } else {
-            setImagePreview(null);
+            setImagePreview(null)
         }
-    };
+    }
 
     const handleImagePlaceholderClick = () => {
-        fileInputRef.current?.click();
-    };
+        fileInputRef.current?.click()
+    }
 
     const handleCopyId = () => {
-        navigator.clipboard.writeText(petId);
-        alert('Pet ID copied to clipboard!');
-    };
+        navigator.clipboard.writeText(petId)
+        alert('Pet ID copied to clipboard!')
+    }
 
     const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        console.log('Registering pet:', petData);
-        console.log('Image:', imagePreview ? 'Image selected' : 'No image');
-        alert('Pet registration data logged to console!');
-    };
+        e.preventDefault()
+        console.log('Registering pet:', petData)
+        console.log('Image:', imagePreview ? 'Image selected' : 'No image')
+        alert('Pet registration data logged to console!')
+    }
 
     return (
         <div className="min-h-screen justify-center w-full bg-gray-50 px-35 py-10">
             <div className="mb-8 flex items-center">
                 <button
                     onClick={() => router.back()}
-                    className="mr-4 rounded-full bg-black p-2 transition-[0.2s] cursor-pointer hover:bg-gray-300">
+                    className="mr-4 rounded-full bg-black p-2 transition-[0.2s] cursor-pointer hover:bg-gray-300"
+                >
                     <ArrowBack />
                 </button>
-                <h1 className="text-2xl font-semibold text-gray-800">Реєстрація домашнього улюбленця</h1>
+                <h1 className="text-2xl font-semibold text-gray-800">
+                    Реєстрація домашнього улюбленця
+                </h1>
             </div>
 
             <div className="mb-8 flex items-center">
@@ -76,20 +79,29 @@ export default function PetRegistrationPage() {
                 <button
                     onClick={handleCopyId}
                     className="ml-2 p-1 text-gray-500 hover:text-gray-800 cursor-pointer"
-                    aria-label="Copy Pet ID">
+                    aria-label="Copy Pet ID"
+                >
                     <CopyIcon />
                 </button>
             </div>
             <div className="w-full max-w-4xl rounded-xl bg-[rgba(217,217,217,0.27)] p-6 shadow-lg sm:p-8 lg:p-10">
-
-                <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-8 md:grid-cols-2">
+                <form
+                    onSubmit={handleSubmit}
+                    className="grid grid-cols-1 gap-8 md:grid-cols-2"
+                >
                     <div className="flex flex-col items-center">
                         <div
                             className="relative flex h-64 w-64 cursor-pointer items-center justify-center rounded-xl border-2 border-dashed border-gray-300 bg-gray-100 hover:bg-gray-200"
                             onClick={handleImagePlaceholderClick}
                         >
                             {imagePreview ? (
-                                <Image src={imagePreview} alt="Pet Preview" layout="fill" objectFit="cover" className="rounded-xl" />
+                                <Image
+                                    src={imagePreview}
+                                    alt="Pet Preview"
+                                    layout="fill"
+                                    objectFit="cover"
+                                    className="rounded-xl"
+                                />
                             ) : (
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
@@ -99,7 +111,11 @@ export default function PetRegistrationPage() {
                                     stroke="currentColor"
                                     strokeWidth="2"
                                 >
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                                    />
                                 </svg>
                             )}
                             <input
@@ -114,46 +130,103 @@ export default function PetRegistrationPage() {
 
                     <div className="space-y-4">
                         <div className="space-y-4 rounded-lg bg-gray-50 p-4">
-                            <InputField label="Ім'я" name="name" value={petData.name} onChange={handleInputChange} />
-                            <InputField label="Стать" name="gender" value={petData.gender} onChange={handleInputChange} />
-
+                            <InputField
+                                label="Ім'я"
+                                name="name"
+                                value={petData.name}
+                                onChange={handleInputChange}
+                            />
+                            <InputField
+                                label="Стать"
+                                name="gender"
+                                value={petData.gender}
+                                onChange={handleInputChange}
+                            />
                         </div>
                         <div className="space-y-4 rounded-lg bg-gray-50 p-4">
-                            <InputField label="Порода" name="breed" value={petData.breed} onChange={handleInputChange} />
-                            <InputField label="Вид" name="type" value={petData.type} onChange={handleInputChange} />
-                            <InputField label="Масть" name="coat" value={petData.coat} onChange={handleInputChange} />
+                            <InputField
+                                label="Порода"
+                                name="breed"
+                                value={petData.breed}
+                                onChange={handleInputChange}
+                            />
+                            <InputField
+                                label="Вид"
+                                name="type"
+                                value={petData.type}
+                                onChange={handleInputChange}
+                            />
+                            <InputField
+                                label="Масть"
+                                name="coat"
+                                value={petData.coat}
+                                onChange={handleInputChange}
+                            />
                         </div>
                         <div className="space-y-4 rounded-lg bg-gray-50 p-4">
-                            <InputField label="Місцезнаходження чіпу" name="chipLocation" value={petData.chipLocation} onChange={handleInputChange} />
-                            <InputField label="Дата чіпування" name="chipDate" type="date" value={petData.chipDate} onChange={handleInputChange} />
-                            <InputField label="Номер чіпу" name="chipNumber" value={petData.chipNumber} onChange={handleInputChange} />
+                            <InputField
+                                label="Місцезнаходження чіпу"
+                                name="chipLocation"
+                                value={petData.chipLocation}
+                                onChange={handleInputChange}
+                            />
+                            <InputField
+                                label="Дата чіпування"
+                                name="chipDate"
+                                type="date"
+                                value={petData.chipDate}
+                                onChange={handleInputChange}
+                            />
+                            <InputField
+                                label="Номер чіпу"
+                                name="chipNumber"
+                                value={petData.chipNumber}
+                                onChange={handleInputChange}
+                            />
                         </div>
                         <div className="space-y-4 rounded-lg bg-gray-50 p-4">
-                            <InputField label="Власник" name="owner" value={petData.owner} onChange={handleInputChange} />
-                            <InputField label="Орган що видав" name="issuingAuthority" value={petData.issuingAuthority} onChange={handleInputChange} />
+                            <InputField
+                                label="Власник"
+                                name="owner"
+                                value={petData.owner}
+                                onChange={handleInputChange}
+                            />
+                            <InputField
+                                label="Орган що видав"
+                                name="issuingAuthority"
+                                value={petData.issuingAuthority}
+                                onChange={handleInputChange}
+                            />
                         </div>
                         <button
                             type="submit"
-                            className="mt-6 w-full rounded-[5em] bg-black px-6 py-3 text-lg font-semibold text-white shadow-md transition-colors hover:bg-gray-800">
+                            className="mt-6 w-full rounded-[5em] bg-black px-6 py-3 text-lg font-semibold text-white shadow-md transition-colors hover:bg-gray-800"
+                        >
                             Зареєструвати улюбленця
                         </button>
                     </div>
                 </form>
             </div>
         </div>
-    );
+    )
 }
 
 // Reusable Input Field Component
 interface InputFieldProps {
-    label: string;
-    name: string;
-    value: string;
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    type?: string; // Optional type prop for input (e.g., 'date', 'text')
+    label: string
+    name: string
+    value: string
+    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+    type?: string // Optional type prop for input (e.g., 'date', 'text')
 }
 
-const InputField: React.FC<InputFieldProps> = ({ label, name, value, onChange, type = 'text' }) => (
+const InputField: React.FC<InputFieldProps> = ({
+    label,
+    name,
+    value,
+    onChange,
+    type = 'text',
+}) => (
     <div className="relative">
         <input
             type={type}
@@ -171,4 +244,4 @@ const InputField: React.FC<InputFieldProps> = ({ label, name, value, onChange, t
             {label}
         </label>
     </div>
-);
+)
