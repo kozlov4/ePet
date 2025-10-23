@@ -15,7 +15,8 @@ app = FastAPI(
 origins = [
     "http://localhost:3000", 
     "https://upcity.live",    
-    "https://www.upcity.live" 
+    "https://www.upcity.live",
+    "https://e-pet-seven.vercel.app"
 ]
 
 app.add_middleware(
