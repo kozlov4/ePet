@@ -1,134 +1,156 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Text, Boolean
-from sqlalchemy.orm import relationship
-from sqlalchemy.sql import func
-from src.db.database import Base
-
-class Extracts(Base):
-  __tablename__ = 'extracts'
-
-  extract_id = Column(Integer, primary_key=True, index=True)
-  extract_date = Column(DateTime, nullable=False)
-  extract_name = Column(String(100), nullable=False)
-  pet_id = Column(Integer, ForeignKey('pets.pet_id'), nullable=False)
-
-  pet = relationship("Pets", back_populates="extracts") 
+from sqlalchemy import (
+ String, ForeignKey, DateTime, Text, VARCHAR, func
+)
+from sqlalchemy.orm import (
+    relationship, declared_attr, mapped_column, Mapped, DeclarativeBase
+)
+from typing_extensions import Annotated
+from typing import List, Optional
+from datetime import datetime
 
 
-class Identifiers(Base):
-  __tablename__ = 'identifiers'
+class Base(DeclarativeBase):
+    pass
 
-  identifiers_id = Column(Integer, primary_key=True, index=True)
-  identifier_number = Column(String(50), nullable=False)
-  identifier_type = Column(String(50), nullable=False)
-  date = Column(DateTime, nullable=False)
-  organization_id = Column(Integer, ForeignKey('organizations.organization_id'), nullable=False)
-  pet_id = Column(Integer, ForeignKey('pets.pet_id'), nullable=False)
+class TableNameMixin:
+    @declared_attr.directive
+    def __tablename__(cls) -> str:
+        return cls.__name__.lower()
 
-  organization = relationship("Organizations", back_populates="identifiers")
-  pet = relationship("Pets", back_populates="identifiers") 
+int_pk = Annotated[int, mapped_column(primary_key=True, index=True)]
+str_20_pk = Annotated[str, mapped_column(String(20), primary_key=True, index=True)]
 
-class Organizations(Base):
-  __tablename__ = 'organizations'
+str_10 = Annotated[str, mapped_column(String(10))]
+str_20 = Annotated[str, mapped_column(String(20))]
+str_30 = Annotated[str, mapped_column(String(30))]
+str_50 = Annotated[str, mapped_column(VARCHAR(50))]
+str_100 = Annotated[str, mapped_column(VARCHAR(100))]
+text_req = Annotated[str, mapped_column(Text)]
+str_100_uniq = Annotated[str, mapped_column(String(100), unique=True)]
 
-  organization_id = Column(Integer, primary_key=True, index=True)
-  organization_name = Column(String(100), nullable=False)
-  organization_type = Column(String(50), nullable=False)
-  city = Column(String(50), nullable=False)
-  street = Column(String(50), nullable=False)
-  building = Column(String(10))
-  phone_number = Column(String(20), nullable=False)
-  email = Column(String(100), nullable=False)
-  password = Column(Text, nullable=False)
+str_10_opt = Annotated[Optional[str], mapped_column(String(10))]
+str_20_opt = Annotated[Optional[str], mapped_column(String(20))]
+str_255_opt = Annotated[Optional[str], mapped_column(String(255))]
+text_opt = Annotated[Optional[str], mapped_column(Text)]
 
-  pets = relationship("Pets", back_populates="organization") 
-  requests = relationship("Requests", back_populates="organization") 
-  vaccinations = relationship("Vaccinations", back_populates="organization") 
-  identifiers = relationship("Identifiers", back_populates="organization") 
+datetime_req = Annotated[datetime, mapped_column(DateTime)]
+datetime_opt = Annotated[Optional[datetime], mapped_column(DateTime)]
+datetime_created = Annotated[datetime, mapped_column(DateTime, default=func.now())]
+datetime_updated = Annotated[Optional[datetime], mapped_column(DateTime, onupdate=func.now())]
 
-
-class Passports(Base):
-  __tablename__ = 'passports'
-
-  passport_number = Column(String(20), primary_key=True, index=True)
-  pet_id = Column(Integer, ForeignKey('pets.pet_id'), unique=True, nullable=False)
-
-  pet = relationship("Pets", back_populates="passport") 
+bool_req = Annotated[bool, mapped_column(default=False)]
 
 
+class Extracts(Base, TableNameMixin):
+    extract_id: Mapped[int_pk]
+    extract_date: Mapped[datetime_req]
+    extract_name: Mapped[str_100]
+    pet_id: Mapped[int] = mapped_column(ForeignKey('pets.pet_id'))
 
-class Pets(Base):
-  __tablename__ = 'pets'
-
-  pet_id = Column(Integer, primary_key=True, index=True)
-  img_url = Column(Text)
-  pet_name = Column(String(50), nullable=False)
-  species = Column(String(50), nullable=False)
-  breed = Column(String(50), nullable=False)
-  gender = Column(String(10), nullable=False)
-  date_of_birth = Column(DateTime, nullable=False)
-  color = Column(String(30), nullable=False)
-  organization_id = Column(Integer, ForeignKey('organizations.organization_id'), nullable=False)
-  user_id = Column(Integer, ForeignKey('users.user_id'), nullable=False)
-  sterilization = Column(Boolean, nullable=False, default=False)
-
-  owner = relationship("Users", back_populates="pets") 
-  organization = relationship("Organizations", back_populates="pets") 
-  passport = relationship("Passports", back_populates="pet", uselist=False) 
-  vaccinations = relationship("Vaccinations", back_populates="pet") 
-  extracts = relationship("Extracts", back_populates="pet") 
-  identifiers = relationship("Identifiers", back_populates="pet") 
-  requests = relationship("Requests", back_populates="pet") 
+    pet: Mapped["Pets"] = relationship(back_populates="extracts")
 
 
-class Requests(Base):
-  __tablename__ = 'requests'
+class Identifiers(Base, TableNameMixin):
+    identifiers_id: Mapped[int_pk]
+    identifier_number: Mapped[str_50]
+    identifier_type: Mapped[str_50]
+    date: Mapped[datetime_req]
+    organization_id: Mapped[int] = mapped_column(ForeignKey('organizations.organization_id'))
+    pet_id: Mapped[int] = mapped_column(ForeignKey('pets.pet_id'))
 
-  request_id = Column(Integer, primary_key=True, index=True)
-  status = Column(String(50), nullable=False)
-  request_type = Column(String(50), nullable=False)
-  creation_date = Column(DateTime, nullable=False, default=func.now())
-  update_date = Column(DateTime, onupdate=func.now())
-  organization_id = Column(Integer, ForeignKey('organizations.organization_id'), nullable=False)
-  user_id = Column(Integer, ForeignKey('users.user_id'), nullable=False)
-  pet_id = Column(Integer, ForeignKey('pets.pet_id'), nullable=False)
+    organization: Mapped["Organizations"] = relationship(back_populates="identifiers")
+    pet: Mapped["Pets"] = relationship(back_populates="identifiers")
 
-  organization = relationship("Organizations", back_populates="requests") 
-  user = relationship("Users", back_populates="requests") 
-  pet = relationship("Pets", back_populates="requests") 
+class Organizations(Base, TableNameMixin):
+    organization_id: Mapped[int_pk]
+    organization_name: Mapped[str_100]
+    organization_type: Mapped[str_50]
+    city: Mapped[str_50]
+    street: Mapped[str_50]
+    building: Mapped[str_10_opt]
+    phone_number: Mapped[str_20]
+    email: Mapped[str_100_uniq]
+    password: Mapped[text_req]
+
+    pets: Mapped[List["Pets"]] = relationship(back_populates="organization")
+    requests: Mapped[List["Requests"]] = relationship(back_populates="organization")
+    vaccinations: Mapped[List["Vaccinations"]] = relationship(back_populates="organization")
+    identifiers: Mapped[List["Identifiers"]] = relationship(back_populates="organization")
 
 
-class Users(Base):
-  __tablename__ = 'users'
+class Passports(Base, TableNameMixin):
+    passport_number: Mapped[str_20_pk]
+    pet_id: Mapped[int] = mapped_column(ForeignKey('pets.pet_id'), unique=True)
 
-  user_id = Column(Integer, primary_key=True, index=True)
-  last_name = Column(String(100), nullable=False) 
-  first_name = Column(String(100), nullable=False) 
-  patronymic = Column(String(100)) 
-  passport_number = Column(String(20)) 
-  password = Column(Text, nullable=False) 
-  postal_index = Column(String(10)) 
-  city = Column(String(50)) 
-  street = Column(String(50))
-  house_number = Column(String(10)) 
-  email = Column(String(100), unique=True, nullable=False) 
-  reset_token = Column(String(255), nullable=True)
-  reset_token_created_at = Column(DateTime, nullable=True)
+    pet: Mapped["Pets"] = relationship(back_populates="passport")
 
-  pets = relationship("Pets", back_populates="owner") 
-  requests = relationship("Requests", back_populates="user") 
 
-class Vaccinations(Base):
-  __tablename__ = 'vaccinations'
+class Pets(Base, TableNameMixin):
+    pet_id: Mapped[int_pk]
+    img_url: Mapped[text_opt]
+    pet_name: Mapped[str_50]
+    species: Mapped[str_50]
+    breed: Mapped[str_50]
+    gender: Mapped[str_10]
+    date_of_birth: Mapped[datetime_req]
+    color: Mapped[str_30]
+    organization_id: Mapped[int] = mapped_column(ForeignKey('organizations.organization_id'))
+    user_id: Mapped[int] = mapped_column(ForeignKey('users.user_id'))
+    sterilization: Mapped[bool_req]
 
-  vaccination_id = Column(Integer, primary_key=True, index=True)
-  manufacturer = Column(String(100), nullable=False) 
-  drug_name = Column(String(100), nullable=False) 
-  series_number = Column(String(50)) 
-  vaccination_date = Column(DateTime, nullable=False) 
-  valid_until = Column(DateTime, nullable=False) 
-  organization_id = Column(Integer, ForeignKey('organizations.organization_id'), nullable=False) 
-  pet_id = Column(Integer, ForeignKey('pets.pet_id'), nullable=False) 
+    owner: Mapped["Users"] = relationship(back_populates="pets")
+    organization: Mapped["Organizations"] = relationship(back_populates="pets")
+    passport: Mapped[Optional["Passports"]] = relationship(back_populates="pet", uselist=False)
+    vaccinations: Mapped[List["Vaccinations"]] = relationship(back_populates="pet")
+    extracts: Mapped[List["Extracts"]] = relationship(back_populates="pet")
+    identifiers: Mapped[List["Identifiers"]] = relationship(back_populates="pet")
+    requests: Mapped[List["Requests"]] = relationship(back_populates="pet")
 
-  organization = relationship("Organizations", back_populates="vaccinations") 
-  pet = relationship("Pets", back_populates="vaccinations") 
+
+class Requests(Base, TableNameMixin):
+    request_id: Mapped[int_pk]
+    status: Mapped[str_50]
+    request_type: Mapped[str_50]
+    creation_date: Mapped[datetime_created]
+    update_date: Mapped[datetime_updated]
+    organization_id: Mapped[int] = mapped_column(ForeignKey('organizations.organization_id'))
+    user_id: Mapped[int] = mapped_column(ForeignKey('users.user_id'))
+    pet_id: Mapped[int] = mapped_column(ForeignKey('pets.pet_id'))
+
+    organization: Mapped["Organizations"] = relationship(back_populates="requests")
+    user: Mapped["Users"] = relationship(back_populates="requests")
+    pet: Mapped["Pets"] = relationship(back_populates="requests")
+
+
+class Users(Base, TableNameMixin):
+    user_id: Mapped[int_pk]
+    last_name: Mapped[str_100]
+    first_name: Mapped[str_100]
+    patronymic: Mapped[str_100]
+    passport_number: Mapped[str_20_opt]
+    password: Mapped[text_req]
+    postal_index: Mapped[str_10_opt]
+    city: Mapped[str_50]
+    street: Mapped[str_50]
+    house_number: Mapped[str_10_opt]
+    email: Mapped[str_100_uniq]
+    reset_token: Mapped[str_255_opt]
+    reset_token_created_at: Mapped[datetime_opt]
+
+    pets: Mapped[List["Pets"]] = relationship(back_populates="owner")
+    requests: Mapped[List["Requests"]] = relationship(back_populates="user")
+
+
+class Vaccinations(Base, TableNameMixin):
+    vaccination_id: Mapped[int_pk]
+    manufacturer: Mapped[str_100]
+    drug_name: Mapped[str_100]
+    series_number: Mapped[str_50]
+    vaccination_date: Mapped[datetime_req]
+    valid_until: Mapped[datetime_req]
+    organization_id: Mapped[int] = mapped_column(ForeignKey('organizations.organization_id'))
+    pet_id: Mapped[int] = mapped_column(ForeignKey('pets.pet_id'))
+
+    organization: Mapped["Organizations"] = relationship(back_populates="vaccinations")
+    pet: Mapped["Pets"] = relationship(back_populates="vaccinations")
 
