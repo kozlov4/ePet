@@ -102,59 +102,6 @@ export function MainSignIn() {
         email &&
         password
 
-    const handleSubmit = async () => {
-        const emailErr = validateEmail(email)
-        const passwordErr = validatePassword(password)
-        setEmailError(emailErr)
-        setPasswordError(passwordErr)
-
-        if (!emailErr && !passwordErr) {
-            try {
-                const formBody = new URLSearchParams({
-                    username: email,
-                    password: password,
-                })
-
-                const response = await fetch(
-                    'https://upcity.live/organizations/login',
-                    {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded',
-                            Accept: 'application/json',
-                        },
-                        body: formBody.toString(),
-                    }
-                )
-
-                const data = await response.json()
-                console.log('Response:', data)
-
-                if (data.detail === 'Organization not found.') {
-                    toast.error('Організація не знайдена.', {
-                        position: 'top-center',
-                        autoClose: 2000,
-                        hideProgressBar: true,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                    })
-                } else {
-                    toast.success('Успішний вхід!')
-                }
-            } catch (error) {
-                console.error('Error:', error)
-            }
-        }
-    }
-
-    const isFormValid =
-        !validateEmail(email) &&
-        !validatePassword(password) &&
-        email &&
-        password
-
     return (
         <div className="w-[50%] h-full flex bg-white">
             <div className="w-full h-[50%] mt-[25%] mx-[8%]">
