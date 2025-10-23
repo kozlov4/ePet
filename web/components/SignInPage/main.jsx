@@ -160,7 +160,7 @@ export function MainSignIn() {
                         </p>
                     )}
                     <a
-                        href="/resetPassword"
+                        href="/reset-password"
                         className="
                       flex w-[90%] justify-end
                       font-medium text-[15px] underline decoration-slate-600 decoration-solid decoration-skip-ink-none text-[#606060]
