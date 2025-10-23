@@ -33,26 +33,25 @@ export function MainSignIn() {
 
     if (!emailErr && !passwordErr) {
       try {
-        const formBody = new URLSearchParams({
+        const formData = {
+          grant_type: "password",
           username: email,
-          password: password,
-        });
+          password: password
+        };
 
-        const response = await fetch(
-          "https://upcity.live/organizations/login",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/x-www-form-urlencoded",
-              Accept: "application/json",
-            },
-            body: formBody.toString(),
-          }
-        );
+        const formBody = new URLSearchParams(formData);
+
+        const response = await fetch("https://upcity.live/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            Accept: "application/json",
+          },
+          body: formBody.toString(),
+        });
 
         const data = await response.json();
         console.log("Response:", data);
-
 
         if (data.detail === "Organization not found.") {
           toast.error("Організація не знайдена.", {
@@ -62,18 +61,43 @@ export function MainSignIn() {
             closeOnClick: true,
             pauseOnHover: true,
             draggable: true,
-            progress: undefined,
           });
-        } else {
-          toast.success("Успішний вхід!");
+        } else if (data.access_token) {
+          toast.success("Успішний вхід!", {
+            position: "top-center",
+            autoClose: 2000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+          });
 
+          
+          localStorage.setItem("access_token", data.access_token);
+          localStorage.setItem("user_name", data.user_name);
+
+          
+          setTimeout(() => {
+            window.location.href = "/dashboard";
+          }, 2000);
+        } else {
+          toast.error("Помилка входу. Перевірте дані.", {
+            position: "top-center",
+            autoClose: 2000,
+            hideProgressBar: true,
+          });
         }
       } catch (error) {
         console.error("Error:", error);
+        toast.error("Помилка з'єднання з сервером.", {
+          position: "top-center",
+          autoClose: 2000,
+          hideProgressBar: true,
+        });
       }
     }
   };
-
+  
   const isFormValid =
     !validateEmail(email) && !validatePassword(password) && email && password;
 
