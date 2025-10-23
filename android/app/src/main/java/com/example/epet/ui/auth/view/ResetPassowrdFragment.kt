@@ -17,6 +17,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.epet.data.repository.AuthRepository
 import com.example.epet.ui.auth.viewmodel.AuthViewModel
 import androidx.navigation.fragment.navArgs
+import com.example.epet.data.model.auth.InputResetPassword
 import kotlinx.coroutines.launch
 
 class ResetPassowrdFragment : Fragment() {
@@ -59,7 +60,7 @@ class ResetPassowrdFragment : Fragment() {
 
         bth_reset_password.setOnClickListener {
             val email = et_email_address.text.toString().trimEnd()
-            viewModel.resetPassword(email)
+            viewModel.resetPassword(InputResetPassword(email))
         }
     }
 
@@ -73,17 +74,20 @@ class ResetPassowrdFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.outputEmail.collect { state ->
-                    if (state == "Інструкція на відновлення паролю буде надіслана найближчим часом на email") {
+                    if (state.msg == "Якщо електронна адреса існує, посилання для скидання паролю було надіслано на пошту.") {
+
+                        tv_message.text = ""
+
                         val action = ResetPassowrdFragmentDirections.actionResetPasswordToMessage(
                             tittletext = "Відновлення паролю",
                             emoji = "✅",
                             main = "Успішно!",
-                            description = state,
+                            description = "Посилання для скидання паролю було надіслано на пошту",
                             email = et_email_address.text.toString()
                         )
                         findNavController().navigate(action)
                     } else {
-                        tv_message.text = state
+                        tv_message.text = state.msg
                     }
                 }
             }

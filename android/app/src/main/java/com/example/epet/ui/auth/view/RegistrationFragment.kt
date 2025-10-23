@@ -13,8 +13,8 @@ import android.widget.LinearLayout
 import androidx.appcompat.widget.AppCompatButton
 import androidx.navigation.fragment.findNavController
 import android.content.Context
-import com.example.epet.data.model.InputRegistration
-import com.example.epet.data.model.OutputAuth
+import com.example.epet.data.model.auth.InputRegistration
+import com.example.epet.data.model.auth.OutputAuth
 import com.example.epet.data.repository.AuthRepository
 import com.example.epet.ui.auth.viewmodel.AuthViewModel
 import com.example.epet.ui.main.view.MainActivity
@@ -109,6 +109,7 @@ class RegistrationFragment : Fragment() {
                 viewModel.outputRegisatration.collect { state ->
                     when (state) {
                         is OutputAuth.Success -> {
+                            tv_message.text = ""
                             saveUserInfo(requireContext(), state.access_token, state.user_name)
                             navigateToMainActivity()
                         }
