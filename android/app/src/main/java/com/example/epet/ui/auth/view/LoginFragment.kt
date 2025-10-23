@@ -17,8 +17,8 @@ import android.widget.EditText
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.example.epet.data.model.InputLogin
-import com.example.epet.data.model.OutputAuth
+import com.example.epet.data.model.auth.InputLogin
+import com.example.epet.data.model.auth.OutputAuth
 import com.example.epet.ui.main.view.MainActivity
 import androidx.navigation.fragment.navArgs
 import kotlinx.coroutines.launch
@@ -91,6 +91,8 @@ class LoginFragment : Fragment() {
                 viewModel.outputLogin.collect { state ->
                     when(state) {
                         is OutputAuth.Success -> {
+                            tv_message.text = ""
+                            tv_message.visibility = View.GONE
                             saveUserInfo(requireContext(), state.access_token, state.user_name)
                             navigateToMainActivity()
                         }
