@@ -1,4 +1,4 @@
-import CatIcon from '../../assets/images/icons/catIcon'
+import CatIcon from '../../assets/images/icons/CatIcon'
 import UkraineArmsIcon from '../../assets/images/icons/UkraineArmsIcon'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
