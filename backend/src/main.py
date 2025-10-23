@@ -11,6 +11,21 @@ app = FastAPI(
 )
 
 
+
+origins = [
+    "http://localhost:3000", 
+    "https://upcity.live",    
+    "https://www.upcity.live" 
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,     
+    allow_credentials=True,   
+    allow_methods=["*"],       
+    allow_headers=["*"],       
+)
+
 app.include_router(users.router)
 app.include_router(organization.router)
 app.include_router(reset_password.router)
