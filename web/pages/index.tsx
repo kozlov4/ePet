@@ -1,7 +1,7 @@
 import ArrowFront from '../assets/images/icons/ArrowFront'
 import { BoneIcon } from '../assets/images/icons/BoneIcon'
 import { FooterCNAP } from '../components/CNAP/Footer'
-import { HeaderCNAP } from '../components/CNAP/HeaderCNAP'
+import { HeaderCNAP } from '../components/CNAP/headerCNAP'
 
 const Home = () => {
     return (
