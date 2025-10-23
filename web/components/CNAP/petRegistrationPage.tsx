@@ -3,7 +3,7 @@
 import React, { useState, useRef } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import Copy from '../../assets/icons/copy';
+import CopyIcon from '../../assets/icons/copy';
 import ArrowBack from '../../assets/icons/arrowBack';
 
 export default function PetRegistrationPage() {
@@ -77,7 +77,7 @@ export default function PetRegistrationPage() {
                     onClick={handleCopyId}
                     className="ml-2 p-1 text-gray-500 hover:text-gray-800 cursor-pointer"
                     aria-label="Copy Pet ID">
-                    <Copy />
+                    <CopyIcon />
                 </button>
             </div>
             <div className="w-full max-w-4xl rounded-xl bg-[rgba(217,217,217,0.27)] p-6 shadow-lg sm:p-8 lg:p-10">

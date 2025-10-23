@@ -46,7 +46,7 @@ export function MainCNAP() {
     };
 
     return (
-        <div className="w-full bg-gray-50 px-35 py-10">
+        <div className="w-full px-35 py-10">
             <h1 className="mb-5 font-medium text-4xl">
                 Паспорт домашнього улюбленця</h1>
             <div className="mb-8 flex flex-col items-center justify-between gap-4 sm:flex-row">
