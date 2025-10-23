@@ -1,4 +1,4 @@
-import { HeaderMain } from '../components/Base/Header'
+import { HeaderMain } from '../components/Base/header'
 import { NewPassword } from '../components/ResetPassword/newPassword'
 import { MainReset } from '../components/ResetPassword/mainReset'
 import { useSearchParams } from 'next/navigation'

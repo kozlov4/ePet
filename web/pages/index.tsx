@@ -1,6 +1,6 @@
 import ArrowFront from '../assets/images/icons/ArrowFront'
 import { BoneIcon } from '../assets/images/icons/BoneIcon'
-import { FooterCNAP } from '../components/CNAP/Footer'
+import { FooterCNAP } from '../components/CNAP/footer'
 import { HeaderCNAP } from '../components/CNAP/headerCNAP'
 
 const Home = () => {

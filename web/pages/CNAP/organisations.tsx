@@ -1,6 +1,6 @@
 import { HeaderCNAP } from '../../components/CNAP/headerCNAP'
 import { OrganisationsCNAP } from '../../components/CNAP/organisationsCNAP'
-import { FooterCNAP } from '../../components/CNAP/Footer'
+import { FooterCNAP } from '../../components/CNAP/footer'
 
 export default function CNAPOrganisations() {
     return (
