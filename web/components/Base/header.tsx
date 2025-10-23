@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import React from "react";
-import CatIcon from "./Images/catIcon";
-import UkraineIcon from "./Images/ukraineIcon";
+import CatIcon from "../../assets/images/icons/catIcon";
+import UkraineArmsIcon from "../../assets/images/icons/UkraineArmsIcon";
 
 export const HeaderMain: React.FC = () => {
   return (
@@ -28,7 +28,7 @@ export const HeaderMain: React.FC = () => {
               <CatIcon />
             </div>
             <div className="flex w-12 h-12 justify-center items-center border-[2.5px] border-black rounded-lg">
-              <UkraineIcon />
+              <UkraineArmsIcon />
             </div>
           </motion.div>
 
