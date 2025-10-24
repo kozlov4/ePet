@@ -1,54 +1,66 @@
 "use client";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { fetchAnimals } from "../../utils/fetchAnimals";
+import router from "next/router";
+import useInfiniteScroll from '../../hooks/useInfiniteScroll';
+import { Pet } from "../../types/api";
 
-interface Pet {
-    id: string;
-    breed: string;
-    gender: 'Ч' | 'Ж';
-    type: string;
-    ownerId: string;
-}
-
-const samplePets: Pet[] = [
-    { id: 'UA AA 658199', breed: 'Метис', gender: 'Ч', type: 'Кіт', ownerId: '009154744' },
-    { id: 'UA AA 658199', breed: 'Метис', gender: 'Ж', type: 'Кіт', ownerId: '009154744' },
-    { id: 'UA AA 658199', breed: 'Сфінкс', gender: 'Ч', type: 'Кіт', ownerId: '009154744' },
-    { id: 'UA AA 658199', breed: 'Метис', gender: 'Ч', type: 'Кіт', ownerId: '009154744' },
-    { id: 'UA AA 658199', breed: 'Метис', gender: 'Ж', type: 'Кіт', ownerId: '009154744' },
-    { id: 'UA AA 658199', breed: 'Метис', gender: 'Ч', type: 'Собака', ownerId: '009154744' },
-    { id: 'UA AA 658199', breed: 'Метис', gender: 'Ч', type: 'Собака', ownerId: '009154744' },
-    { id: 'UA AA 658199', breed: 'Метис', gender: 'Ч', type: 'Собака', ownerId: '009154744' },
-    { id: 'UA AA 658199', breed: 'Метис', gender: 'Ч', type: 'Собака', ownerId: '009154744' },
-    { id: 'UA AA 658199', breed: 'Метис', gender: 'Ч', type: 'Собака', ownerId: '009154744' },
-    { id: 'UA AA 658199', breed: 'Метис', gender: 'Ч', type: 'Собака', ownerId: '009154744' },
-];
 
 export function MainCNAP() {
-    const [searchTerm, setSearchTerm] = useState('');
-    const [pets, setPets] = useState<Pet[]>(samplePets);
+    const [items, setItems] = useState<Pet[]>([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+    const [currentQuery, setCurrentQuery] = useState('');
+    const [isLoadingInitial, setIsLoadingInitial] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+    const pageSize = 10;
 
-    const filteredPets = pets.filter((pet) => {
-        const lowerCaseSearchTerm = searchTerm.toLowerCase();
+    const executeFetch = useCallback(async (page: number, query: string, isNewSearch: boolean = false) => {
+        setError(null);
+        try {
+            const data = await fetchAnimals(page, pageSize, query);
 
-        return (
-            pet.id.toLowerCase().includes(lowerCaseSearchTerm) ||
-            pet.breed.toLowerCase().includes(lowerCaseSearchTerm) ||
-            pet.gender.toLowerCase().includes(lowerCaseSearchTerm) ||
-            pet.type.toLowerCase().includes(lowerCaseSearchTerm) ||
-            pet.ownerId.toLowerCase().includes(lowerCaseSearchTerm)
-        );
-    });
+            setItems(prevItems => isNewSearch ? data.items : [...prevItems, ...data.items]);
+            setCurrentPage(data.page);
+            setTotalPages(data.total_pages);
+
+        } catch (e) {
+            setError(e instanceof Error ? e.message : 'Помилка завантаження даних.');
+
+            if (e instanceof Error && e.message.includes('Авторизація')) {
+                router.push('/signIn');
+            }
+        } finally {
+            setIsLoadingInitial(false);
+        }
+    }, [pageSize]);
+
+    useEffect(() => {
+        executeFetch(1, currentQuery, true);
+    }, []);
+
+    const loadMore = useCallback(async () => {
+        if (currentPage >= totalPages) return;
+        await executeFetch(currentPage + 1, currentQuery);
+    }, [currentPage, totalPages, currentQuery, executeFetch]);
+
+    const observerRef = useRef<HTMLDivElement>(null);
+    const { loading: isLoadingMore } = useInfiniteScroll(observerRef, loadMore, currentPage < totalPages);
+
+    if (isLoadingInitial) {
+        return <div className="p-8 text-center text-xl">Завантаження даних...</div>;
+    }
 
     const handleFullInfoClick = (petId: string) => {
         alert(`Showing full information for pet: ${petId}`);
-
     };
 
     return (
         <div className="w-full px-35 py-10">
             <h1 className="mb-5 font-medium text-4xl">
                 Паспорт домашнього улюбленця</h1>
+            {error && <div className="mt-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg">{error}</div>}
             <div className="mb-8 flex flex-col items-center justify-between gap-4 sm:flex-row">
                 <div className="flex w-full items-center rounded-lg bg-white p-2 shadow-md/10 sm:max-w-b">
                     <svg
@@ -67,8 +79,8 @@ export function MainCNAP() {
                     <input
                         type="text"
                         placeholder="Пошук"
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
+                        value={currentQuery}
+                        // onChange={} 
                         className="w-full border-0 bg-transparent text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-0"
                     />
                 </div>
@@ -88,26 +100,35 @@ export function MainCNAP() {
             </div>
 
             <div className="flex flex-col bg-[rgba(217,217,217,0.27)] rounded-[2em] divide-y divide-gray-300">
-                {filteredPets.map((pet, index) => (
+                {items.map((pet, index) => (
                     <div
                         key={index}
                         className="grid items-center p-4 md:grid-cols-6 text-center">
-                        <div className="col-span-1 hidden font-medium md:block">{pet.id}</div>
+                        <div className="col-span-1 hidden font-medium md:block">{pet.animal_passport_number}</div>
                         <div className="col-span-1 hidden font-medium md:block">{pet.breed}</div>
                         <div className="col-span-1 hidden font-medium md:block">{pet.gender}</div>
-                        <div className="col-span-1 hidden font-medium md:block">{pet.type}</div>
-                        <div className="col-span-1 hidden font-medium md:block">{pet.ownerId}</div>
+                        <div className="col-span-1 hidden font-medium md:block">{pet.species}</div>
+                        <div className="col-span-1 hidden font-medium md:block">{pet.owner?.passport_number || ''}</div>
 
                         <div className="col-span-2 text-right md:col-span-1">
                             <button
-                                onClick={() => handleFullInfoClick(pet.id)}
+                                onClick={() => handleFullInfoClick(pet.animal_passport_number || '')}
                                 className="rounded-[10em] bg-black px-4 py-3 text-xs font-semibold text-white transition-colors hover:bg-gray-800 cursor-pointer">
                                 <span>Повна інформація</span>
                             </button>
                         </div>
                     </div>
                 ))}
+
+                {isLoadingMore && (
+                    <p className="text-center mt-6 text-lg text-blue-600">Завантаження...</p>
+                )}
+
+                <div ref={observerRef} className="h-1" />
             </div>
+            {!isLoadingMore && currentPage >= totalPages && items.length > 0 && (
+                <p className="text-center mt-6 text-gray-500">Кінець списку ({items.length} записів).</p>
+            )}
         </div>
     );
 }
