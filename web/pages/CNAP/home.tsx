@@ -4,6 +4,7 @@ import { MainCNAP } from '../../components/CNAP/mainCNAP'
 import { FooterCNAP } from '../../components/CNAP/footer'
 
 export default function CNAPHome() {
+    
     const [userName, setUserName] = useState('');
 
     useEffect(() => {
