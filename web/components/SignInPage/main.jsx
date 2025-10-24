@@ -18,10 +18,10 @@ export function MainSignIn() {
     }
 
     const validatePassword = (value) => {
-        if (!value) return ''
-        if (value.length < 8) return 'Пароль повинен містити мінімум 8 символів'
-        if (!/[A-Z]/.test(value))
-            return 'Пароль повинен містити хоча б одну велику літеру'
+        // if (!value) return ''
+        // if (value.length < 8) return 'Пароль повинен містити мінімум 8 символів'
+        // if (!/[A-Z]/.test(value))
+        //     return 'Пароль повинен містити хоча б одну велику літеру'
         return ''
     }
 
@@ -128,11 +128,10 @@ export function MainSignIn() {
                             setEmail(e.target.value)
                             setEmailError(validateEmail(e.target.value))
                         }}
-                        className={`w-full h-[30%] px-4 py-2 font-normal text-[20px] border rounded-xl focus:outline-none focus:ring-2 ${
-                            emailError
+                        className={`w-full h-[30%] px-4 py-2 font-normal text-[20px] border rounded-xl focus:outline-none focus:ring-2 ${emailError
                                 ? 'border-red-500 ring-red-500 text-red-500'
                                 : 'border-[#e6e6e6] ring-blue-500 text-black'
-                        }`}
+                            }`}
                     />
                     {emailError && (
                         <p className="text-red-500 text-sm mt-1 text-left">
@@ -148,11 +147,10 @@ export function MainSignIn() {
                             setPassword(e.target.value)
                             setPasswordError(validatePassword(e.target.value))
                         }}
-                        className={`w-full h-[30%] px-4 py-2 shadow-xl border rounded-xl font-normal text-[20px] focus:outline-none focus:ring-2 ${
-                            passwordError
+                        className={`w-full h-[30%] px-4 py-2 shadow-xl border rounded-xl font-normal text-[20px] focus:outline-none focus:ring-2 ${passwordError
                                 ? 'border-red-500 ring-red-500 text-red-500'
                                 : 'border-[#e6e6e6] ring-blue-500 text-black'
-                        }`}
+                            }`}
                     />
                     {passwordError && (
                         <p className="text-red-500 text-sm mt-1 text-left">
@@ -176,11 +174,10 @@ export function MainSignIn() {
                 <motion.button
                     onClick={handleSubmit}
                     disabled={!isFormValid}
-                    className={`w-full h-[15%] mt-[5%] flex font-medium text-xl cursor-pointer justify-center items-center rounded-3xl transition-all duration-300 ease-in-out ${
-                        isFormValid
+                    className={`w-full h-[15%] mt-[5%] flex font-medium text-xl cursor-pointer justify-center items-center rounded-3xl transition-all duration-300 ease-in-out ${isFormValid
                             ? 'bg-black text-white hover:bg-[#1e88e5] hover:shadow-lg hover:scale-[1.03] active:scale-[0.98]'
                             : 'bg-gray-700 text-gray-200 cursor-not-allowed'
-                    }`}
+                        }`}
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.8, delay: 0.6 }}

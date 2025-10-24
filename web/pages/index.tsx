@@ -1,12 +1,23 @@
+import { useEffect, useState } from 'react'
 import ArrowFront from '../assets/images/icons/ArrowFront'
 import { BoneIcon } from '../assets/images/icons/BoneIcon'
 import { FooterCNAP } from '../components/CNAP/footer'
 import { HeaderCNAP } from '../components/CNAP/headerCNAP'
 
 const Home = () => {
+    // TODO: MERGE DUPLICATE CODE SOMEWHERE (CNAP/home.tsx, CNAP/organisations.tsx, CNAP/pet-registration.tsx, index.tsx)
+    const [userName, setUserName] = useState('');
+
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            const storedUserName = localStorage.getItem('user_name') || '';
+            setUserName(storedUserName);
+        }
+    }, []);
+    // to here
     return (
         <>
-            <HeaderCNAP cnapid={1} />
+            <HeaderCNAP cnapid={userName} />
             <div className="flex flex-col max-w-[1342px] mx-auto">
                 <div
                     className="pt-12 pl-16 pr-9 pb-9 rounded-2xl flex justify-between w-[1342px]"
