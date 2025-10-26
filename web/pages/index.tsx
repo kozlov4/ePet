@@ -1,20 +1,12 @@
-import { useEffect, useState } from 'react'
 import ArrowFront from '../assets/images/icons/ArrowFront'
 import { BoneIcon } from '../assets/images/icons/BoneIcon'
 import { FooterCNAP } from '../components/CNAP/footer'
 import { HeaderCNAP } from '../components/CNAP/headerCNAP'
+import { useAuth } from '../hooks/useAuth'
 
 const Home = () => {
-    // TODO: MERGE DUPLICATE CODE SOMEWHERE (CNAP/home.tsx, CNAP/organisations.tsx, CNAP/pet-registration.tsx, index.tsx)
-    const [userName, setUserName] = useState('');
-
-    useEffect(() => {
-        if (typeof window !== 'undefined') {
-            const storedUserName = localStorage.getItem('user_name') || '';
-            setUserName(storedUserName);
-        }
-    }, []);
-    // to here
+    const { user } = useAuth()
+    const userName = user?.name || ''
     return (
         <>
             <HeaderCNAP cnapid={userName} />
