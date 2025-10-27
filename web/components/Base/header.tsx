@@ -13,8 +13,8 @@ export const HeaderMain: React.FC = () => {
 
     return (
         <div 
-            className={`w-full flex justify-end ${
-                isHome ? 'relative h-20' : 'absolute h-[10%]'
+            className={`w-full flex h-20 justify-end ${
+                isHome ? 'relative' : 'absolute'
             }`}
         >
             <motion.div
