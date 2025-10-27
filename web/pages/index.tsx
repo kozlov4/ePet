@@ -1,16 +1,17 @@
 import ArrowFront from '../assets/images/icons/ArrowFront'
 import { BoneIcon } from '../assets/images/icons/BoneIcon'
 import { FooterCNAP } from '../components/CNAP/footer'
-import { HeaderCNAP } from '../components/CNAP/headerCNAP'
-import { useAuth } from '../hooks/useAuth'
+import { HeaderMain } from '../components/Base/header'
+
+
 
 const Home = () => {
     const { user } = useAuth()
     const userName = user?.name || ''
     return (
         <>
-            <HeaderCNAP cnapid={userName} />
-            <div className="flex flex-col max-w-[1342px] mx-auto">
+            <HeaderMain/>
+            <div className="flex flex-col h-[70%] max-w-[1342px] mx-auto">
                 <div
                     className="pt-12 pl-16 pr-9 pb-9 rounded-2xl flex justify-between w-[1342px]"
                     style={{ backgroundImage: "url('./HomeBackground.png')" }}

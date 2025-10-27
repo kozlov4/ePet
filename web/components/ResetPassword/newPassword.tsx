@@ -1,60 +1,71 @@
-"use client";
-import { useState } from 'react';
-import { motion } from "framer-motion";
-import router from 'next/router';
+'use client'
+import { useState } from 'react'
+import { motion } from 'framer-motion'
+import router from 'next/router'
 
 export function NewPassword(props: { token: string }) {
-    const [newPassword, setNewPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
+    const [newPassword, setNewPassword] = useState('')
+    const [confirmPassword, setConfirmPassword] = useState('')
 
-    const [isLoading, setIsLoading] = useState(false);
-    const [message, setMessage] = useState('');
+    const [isLoading, setIsLoading] = useState(false)
+    const [message, setMessage] = useState('')
 
     const handleSetNewPassword = async (emailAddress) => {
-        setIsLoading(true);
-        setMessage('');
+        setIsLoading(true)
+        setMessage('')
 
         if (newPassword !== confirmPassword) {
-            setMessage('Паролі не співпадають.');
-            setIsLoading(false);
-            return;
+            setMessage('Паролі не співпадають.')
+            setIsLoading(false)
+            return
         }
 
         if (newPassword.length < 8) {
-            setMessage('Пароль має бути щонайменше 8 символів.');
-            setIsLoading(false);
-            return;
+            setMessage('Пароль має бути щонайменше 8 символів.')
+            setIsLoading(false)
+            return
         }
 
         try {
-            const response = await fetch('https://upcity.live/reset-password/', { // TODO: MOVE DOMAIN TO ENV VARIABLE
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    token: props.token,
-                    new_password: newPassword,
-                }),
-            });
+            const response = await fetch(
+                'https://upcity.live/reset-password/',
+                {
+                    // TODO: MOVE DOMAIN TO ENV VARIABLE
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        token: props.token,
+                        new_password: newPassword,
+                    }),
+                }
+            )
+
+            const data = await response.json()
 
             if (!response.ok) {
-                throw new Error('Network response was not ok');
+                throw new Error(data.detail || 'Network response was not ok')
             }
-            setMessage('Новий пароль встановлено!');
 
+            setMessage('Новий пароль встановлено!')
         } catch (error) {
-            console.error('Error during setting new password:', error);
-            setMessage('Помилка. Не вдалося створити новий пароль. Спробуйте ще раз.');
-        } finally {
-            setIsLoading(false);
+            console.error('Error during setting new password:', error)
+
+            if (
+                error instanceof Error &&
+                error.message === 'Недійсний або прострочений токен.'
+            ) {
+                setMessage('Недійсний або прострочений токен')
+            } else {
+                setMessage('Сталася помилка. Спробуйте пізніше.')
+            }
         }
-    };
+    }
 
     return (
         <div className="w-[50%] h-full flex bg-white">
             <div className="w-full h-[50%] mt-[25%] mx-[8%]">
-
                 <motion.h1
                     className="font-medium ml-[3%] text-5xl mb-6"
                     initial={{ opacity: 0, y: -20 }}
@@ -75,42 +86,39 @@ export function NewPassword(props: { token: string }) {
                         onChange={(e) => setNewPassword(e.target.value)}
                         type="password"
                         placeholder="Новий пароль"
-                        className="w-full h-[30%] px-4 py-2 font-normal text-[20px] text-[#b3b3b3] border border-[#e6e6e6] rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        className="w-full h-[30%] px-4 py-2 font-normal text-[20px] text-black border border-[#e6e6e6] rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     />
                     <input
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
                         type="password"
                         placeholder="Підтвердіть новий пароль"
-                        className="w-full h-[30%] px-4 py-2 mt-4 font-normal text-[20px] text-[#b3b3b3] border border-[#e6e6e6] rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" // Added mt-4 for spacing
+                        className="w-full h-[30%] px-4 py-2 mt-4 font-normal text-[20px] text-black border border-[#e6e6e6] rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" // Added mt-4 for spacing
                     />
                 </motion.div>
 
-                <motion.span
-                    className="flex justify-center font-normal text-[15px] text-[#424242] mt-2"
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.5 }}
-                >
-                    Пароль має містити щонайменше 8 символів.
-                </motion.span>
                 {message && (
-                    <span className="flex justify-center text-[14px] text-red-500 mt-2">
+                    <span
+                        className={`flex w-full justify-center text-center text-[14px] mt-2 ${
+                            message === 'Новий пароль встановлено!'
+                                ? 'text-green-400'
+                                : 'text-red-500'
+                        }`}
+                    >
                         {message}
                     </span>
                 )}
                 <motion.button
                     onClick={() => handleSetNewPassword(newPassword)}
                     disabled={isLoading}
-                    className="w-full h-[15%] mt-[1%] flex font-medium text-xl justify-center items-center rounded-4xl bg-black text-white"
+                    className="w-full h-[15%] mt-[1%] flex justify-center items-center font-medium text-xl rounded-3xl bg-black text-white cursor-pointer transition-all duration-300 ease-in-out hover:bg-[#1e88e5] hover:shadow-[0_0_20px_#1e88e580] hover:scale-[1.05] active:scale-[0.98]"
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.8, delay: 0.7 }}
                 >
                     {isLoading ? 'Збереження...' : 'Змінити пароль'}
                 </motion.button>
-
             </div>
         </div>
-    );
+    )
 }

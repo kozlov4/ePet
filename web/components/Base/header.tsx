@@ -1,11 +1,22 @@
 import { motion } from 'framer-motion'
+import { usePathname } from 'next/navigation'
 import React from 'react'
 import CatIcon from '../../assets/images/icons/CatIcon'
 import UkraineArmsIcon from '../../assets/images/icons/UkraineArmsIcon'
 
 export const HeaderMain: React.FC = () => {
+
+    const path = "https://e-pet-seven.vercel.app";
+    const pathname = usePathname()
+    const isHome = pathname === '/'
+    console.log(pathname)
+
     return (
-        <div className="w-full h-[12%] flex justify-end absolute">
+        <div 
+            className={`w-full flex justify-end ${
+                isHome ? 'relative h-20' : 'absolute h-[10%]'
+            }`}
+        >
             <motion.div
                 className="flex w-full h-full bg-[rgba(217,217,217,0.27)] backdrop-blur-[8.1px] shadow-[0_4px_21px_0_rgba(0,0,0,0.1)] rounded-b-[15px] justify-between items-center"
                 initial={{ opacity: 0, y: -20 }}
@@ -33,8 +44,8 @@ export const HeaderMain: React.FC = () => {
                     </motion.div>
 
                     <motion.a
-                        href="#"
-                        className="relative text-black text-sm font-medium transition-all duration-300 ease-in-out hover:text-[#1e88e5] after:content-[''] after:absolute after:left-0 after:bottom-[-2px] after:h-[2px] after:w-0 after:bg-[#1e88e5] after:transition-all after:duration-300 hover:after:w-full hover:-translate-y-[2px]"
+                        href={`${path}`}
+                        className="relative text-black text-md font-medium transition-all duration-300 ease-in-out hover:text-[#1e88e5] after:content-[''] after:absolute after:left-0 after:bottom-[-2px] after:h-[2px] after:w-0 after:bg-[#1e88e5] after:transition-all after:duration-300 hover:after:w-full hover:-translate-y-[2px]"
                         initial={{ opacity: 0, y: -10 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5, delay: 0.6 }}
@@ -44,7 +55,7 @@ export const HeaderMain: React.FC = () => {
 
                     <motion.a
                         href="#"
-                        className="relative text-black text-sm font-medium transition-all duration-300 ease-in-out hover:text-[#1e88e5] after:content-[''] after:absolute after:left-0 after:bottom-[-2px] after:h-[2px] after:w-0 after:bg-[#1e88e5] after:transition-all after:duration-300 hover:after:w-full hover:-translate-y-[2px]"
+                        className="relative text-black text-md font-medium transition-all duration-300 ease-in-out hover:text-[#1e88e5] after:content-[''] after:absolute after:left-0 after:bottom-[-2px] after:h-[2px] after:w-0 after:bg-[#1e88e5] after:transition-all after:duration-300 hover:after:w-full hover:-translate-y-[2px]"
                         initial={{ opacity: 0, y: -10 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5, delay: 0.7 }}
@@ -52,15 +63,16 @@ export const HeaderMain: React.FC = () => {
                         Питання та відповіді
                     </motion.a>
                 </motion.div>
-
+                    <a href={`${path}/signIn`} className='flex w-[14%] h-[70%] mr-[5%]'>
                 <motion.button
-                    className="flex w-[14%] h-[50%] mr-[5%] bg-black rounded-3xl cursor-pointer justify-center items-center text-white font-medium text-[15px] transition-all duration-300 ease-in-out hover:bg-[#1e88e5] hover:shadow-[0_0_20px_#1e88e580] hover:scale-[1.05] active:scale-[0.98]"
+                    className="flex w-full h-full bg-black rounded-3xl cursor-pointer justify-center items-center text-white font-medium text-[15px] transition-all duration-300 ease-in-out hover:bg-[#1e88e5] hover:shadow-[0_0_20px_#1e88e580] hover:scale-[1.05] active:scale-[0.98]"
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.6, delay: 0.8 }}
                 >
                     Увійти до кабінету
                 </motion.button>
+                </a>
             </motion.div>
         </div>
     )
