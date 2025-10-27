@@ -76,7 +76,7 @@ export function MainSignIn() {
                     localStorage.setItem('user_name', data.user_name)
 
                     setTimeout(() => {
-                        window.location.href = 'http://localhost:3000/CNAP/home'
+                        window.location.href = 'https://e-pet-seven.vercel.app/CNAP/home'
                     }, 2000)
                 } else {
                     toast.error('Помилка входу. Перевірте дані.', {
