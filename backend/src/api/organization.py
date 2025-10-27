@@ -6,7 +6,7 @@ from sqlalchemy import func
 from src.db.database import get_db
 from src.db.models import Organizations, Pets
 from src.api.core import  get_current_user
-from src.schemas.organization_schemas import AnimalForOrgResponse, OwnerForOrgResponse, PaginatedAnimalResponse
+from src.schemas.organization_schemas import AnimalForOrgResponse, OwnerForOrgResponse, PaginatedAnimalResponse, GetOrgInfo
 
 
 
@@ -29,7 +29,7 @@ async def get_current_organization(user: user_dependency, db: db_dependency) -> 
 
     organization = db.query(Organizations).filter(
         (Organizations.organization_id == user_id) &
-        (Organizations.organization_type.in_(['ЦНАП', 'ветклініка', 'притулок']))
+        (Organizations.organization_type.in_(['ЦНАП', 'Ветклініка', 'Притулок']))
     ).first()
     
     if not organization:
@@ -53,11 +53,11 @@ async def get_animals_for_cnap(
     base_query = db.query(Pets)
 
 
-    if org_type == 'притулок':
+    if org_type == 'Притулок':
         base_query = base_query.filter(Pets.organization_id == organization_user.organization_id)
 
     total_items = base_query.with_entities(func.count(Pets.pet_id)).scalar()
-
+       
     animals_from_db = base_query\
         .options(
             joinedload(Pets.owner),
@@ -73,7 +73,7 @@ async def get_animals_for_cnap(
         
         
         owner_data = None
-        if org_type != 'ветклініка' and pet.owner:
+        if org_type != 'Ветклініка' and pet.owner:
             owner_data = OwnerForOrgResponse(passport_number=pet.owner.passport_number)
         
         response_items.append(
@@ -92,4 +92,21 @@ async def get_animals_for_cnap(
         page=page,
         size=size,
         items=response_items
+    )
+
+
+@router.get("/info/", response_model=GetOrgInfo)
+async def get_info(db: db_dependency, 
+    organization_user: Annotated[Organizations, Depends(get_current_organization)]
+    ):
+    org = db.query(Organizations).filter(organization_user.organization_id == Organizations.organization_id).first()
+
+    return GetOrgInfo(
+        organization_name=org.organization_name,
+        organization_type=org.organization_type,
+        city=org.city,
+        street=org.street,
+        building=org.building,
+        phone_number=org.phone_number,
+        email=org.email
     )
