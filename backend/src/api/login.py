@@ -23,6 +23,7 @@ async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db: 
         user_model = org
         name = org.organization_name
         user_id = org.organization_id
+        role = org.organization_type
     else:
         user = db.query(Users).filter(Users.email == form_data.username).first()
         if not user:
@@ -30,6 +31,7 @@ async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db: 
         user_model = user
         name = user.first_name 
         user_id = user.user_id
+        role = "User"
 
     if not bcrypt_context.verify(form_data.password, user_model.password):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Неправильний пароль")
@@ -44,5 +46,6 @@ async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db: 
     return {
         "access_token": token,
         "token_type": "bearer",
-        "user_name": name
+        "user_name": name,
+        "organization_type": role
     }

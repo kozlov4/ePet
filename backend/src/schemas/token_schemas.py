@@ -4,3 +4,4 @@ class TokenResponse(BaseModel):
     access_token: str
     token_type: str
     user_name: str
+    organization_type:str

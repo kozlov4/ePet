@@ -1,10 +1,10 @@
-from typing import Annotated
+from typing import Annotated, Optional
 import math
 from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session, joinedload
 from sqlalchemy import func
 from src.db.database import get_db
-from src.db.models import Organizations, Pets
+from src.db.models import Organizations, Pets, Passports
 from src.api.core import  get_current_user
 from src.schemas.organization_schemas import AnimalForOrgResponse, OwnerForOrgResponse, PaginatedAnimalResponse, GetOrgInfo
 
@@ -45,7 +45,8 @@ async def get_animals_for_cnap(
     db: db_dependency, 
     organization_user: Annotated[Organizations, Depends(get_current_organization)],
     page: Annotated[int, Query(ge=1, description="Номер сторінки")] = 1,
-    size: Annotated[int, Query(ge=1, le=100, description="Кількість записів на сторінці")] = 6
+    size: Annotated[int, Query(ge=1, le=100, description="Кількість записів на сторінці")] = 6,
+    animal_passport_number: Optional[str] = Query(None, description="Номер паспорта тварини для пошуку")
 ):
 
     org_type = organization_user.organization_type
@@ -55,6 +56,14 @@ async def get_animals_for_cnap(
 
     if org_type == 'Притулок':
         base_query = base_query.filter(Pets.organization_id == organization_user.organization_id)
+
+    if animal_passport_number:
+        base_query = (
+            base_query
+            .join(Pets.passport, isouter=True)
+            .filter(Passports.passport_number == animal_passport_number)
+        )
+
 
     total_items = base_query.with_entities(func.count(Pets.pet_id)).scalar()
        
