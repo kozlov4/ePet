@@ -24,8 +24,12 @@ class AuthRepository {
                 password = inputLogin.password
             )
 
-            if (response.isSuccessful) {
+            if (response.isSuccessful && response.body()!!.organization_type == "User") {
                 response.body()!!
+
+            } else if (response.body()!!.organization_type != "User") {
+                OutputAuth.Error("Користувача не знайдено")
+
             } else {
                 val errorJson = response.errorBody()?.string()
                 val errorObj = gson.fromJson(errorJson, OutputAuth.Error::class.java)
