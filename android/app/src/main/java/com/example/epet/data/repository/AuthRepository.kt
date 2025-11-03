@@ -24,10 +24,10 @@ class AuthRepository {
                 password = inputLogin.password
             )
 
-            if (response.isSuccessful && response.body()!!.organization_type == "User") {
+            if (response.isSuccessful && response.body()!!.organization_type == null) {
                 response.body()!!
 
-            } else if (response.body()!!.organization_type != "User") {
+            } else if (response.body()!!.organization_type != null) {
                 OutputAuth.Error("Користувача не знайдено")
 
             } else {
