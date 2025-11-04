@@ -86,6 +86,7 @@ async def get_animals_for_cnap(
         
         response_items.append(
             AnimalForOrgResponse(
+                pet_id=pet.pet_id,
                 species=pet.species,
                 breed=pet.breed,
                 gender=pet.gender,
