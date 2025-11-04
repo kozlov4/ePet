@@ -1,14 +1,14 @@
 .gradle/
-build/
-**/build/
 android/.gradle/
+build/
 android/build/
+**/build/
 .kotlin/
-local.properties
 .idea/
 *.iml
 .cxx/
 .externalNativeBuild/
+local.properties
 captures/
 *.jks
 *.keystore
