@@ -14,9 +14,9 @@ class SelectorMenu(private val onClose: (() -> Unit)? = null) : BottomSheetDialo
 
     private lateinit var tv_passport_info: TextView
     private lateinit var tv_vaccination_info: TextView
-    private lateinit var tv_documents: TextView
-    private lateinit var tv_question: TextView
     private lateinit var tv_close: TextView
+
+    private var passportNumber: String? = null
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return BottomSheetDialog(requireContext(), R.style.MenuPassportAnimation).apply {
@@ -38,6 +38,8 @@ class SelectorMenu(private val onClose: (() -> Unit)? = null) : BottomSheetDialo
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        initArguments()
         initViews(view)
         initButtons()
     }
@@ -47,12 +49,15 @@ class SelectorMenu(private val onClose: (() -> Unit)? = null) : BottomSheetDialo
         onClose?.invoke()
     }
 
+    /** Приймання аргіментів **/
+    private fun initArguments() {
+        passportNumber = arguments?.getString("passportNumber")
+    }
+
     /** Ініціалізація всіх елементів інтерфейсу **/
     private fun initViews(view: View) {
         tv_passport_info = view.findViewById(R.id.tv_passport_info)
         tv_vaccination_info = view.findViewById(R.id.tv_vaccination_info)
-        tv_documents = view.findViewById(R.id.tv_documents)
-        tv_question = view.findViewById(R.id.tv_question)
         tv_close = view.findViewById(R.id.tv_close)
     }
 
@@ -61,12 +66,22 @@ class SelectorMenu(private val onClose: (() -> Unit)? = null) : BottomSheetDialo
 
         tv_passport_info.setOnClickListener {
             dismiss()
-            PassportInfoMenu().show(parentFragmentManager, "MenuPassportInfo")
+            val menu = PassportInfoMenu()
+            val bundle = Bundle().apply {
+                putString("passportNumber", passportNumber)
+            }
+            menu.arguments = bundle
+            menu.show(parentFragmentManager, "PassportInfoMenu")
         }
 
         tv_vaccination_info.setOnClickListener {
             dismiss()
-            VaccinationInfoMenu().show(parentFragmentManager, "MenuVaccinationInfo")
+            val menu = VaccinationInfoMenu()
+            val bundle = Bundle().apply {
+                putString("passportNumber", passportNumber)
+            }
+            menu.arguments = bundle
+            menu.show(parentFragmentManager, "VaccinationInfoMenu")
         }
 
         tv_close.setOnClickListener {

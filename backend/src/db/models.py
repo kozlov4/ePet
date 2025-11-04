@@ -51,7 +51,7 @@ class Extracts(Base, TableNameMixin):
 
 
 class Identifiers(Base, TableNameMixin):
-    identifiers_id: Mapped[int_pk]
+    identifier_id: Mapped[int_pk]
     identifier_number: Mapped[str_50]
     identifier_type: Mapped[str_50]
     date: Mapped[datetime_req]
@@ -76,13 +76,17 @@ class Organizations(Base, TableNameMixin):
     requests: Mapped[List["Requests"]] = relationship(back_populates="organization")
     vaccinations: Mapped[List["Vaccinations"]] = relationship(back_populates="organization")
     identifiers: Mapped[List["Identifiers"]] = relationship(back_populates="organization")
+    passports: Mapped[List["Passports"]] = relationship(back_populates="organization")
 
 
 class Passports(Base, TableNameMixin):
     passport_number: Mapped[str_20_pk]
     pet_id: Mapped[int] = mapped_column(ForeignKey('pets.pet_id'), unique=True)
+    organization_id: Mapped[int] = mapped_column(ForeignKey('organizations.organization_id'))
 
     pet: Mapped["Pets"] = relationship(back_populates="passport")
+    organization: Mapped["Organizations"] = relationship(back_populates="passports")
+
 
 
 class Pets(Base, TableNameMixin):
