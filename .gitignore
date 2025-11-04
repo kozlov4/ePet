@@ -52,34 +52,3 @@ __pycache__/
 dist/
 build/
 
-# Gradle
-.gradle/
-android/.gradle/
-build/
-android/build/
-**/build/
-
-# Kotlin compiler cache
-.kotlin/
-
-# Local configuration
-local.properties
-
-# Android Studio
-.idea/
-*.iml
-.cxx/
-.externalNativeBuild/
-captures/
-
-# Keystore files
-*.jks
-*.keystore
-
-# Log files
-*.log
-
-# Misc
-.DS_Store
-Thumbs.db
-

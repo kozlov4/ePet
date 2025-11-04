@@ -1,0 +1,23 @@
+# Gradle
+.gradle/
+build/
+**/build/
+android/.gradle/
+android/build/
+
+# Kotlin compiler cache
+.kotlin/
+
+# Local configuration
+local.properties
+
+# Android Studio
+.idea/
+*.iml
+.cxx/
+.externalNativeBuild/
+captures/
+
+# Keystore files
+*.jks
+*.keystore
