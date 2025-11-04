@@ -13,6 +13,7 @@ import com.example.epet.R
 import com.example.epet.data.model.OutputPassport
 import com.example.epet.ui.main.adapter.PassportListAdapter
 import kotlin.math.abs
+import SelectorMenu
 
 class PassportListFragment : Fragment() {
 
