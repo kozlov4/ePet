@@ -22,6 +22,8 @@ class VaccinationInfoMenu(private val onClose: (() -> Unit)? = null) : BottomShe
     private lateinit var tv_last_update: TextView
     private lateinit var rv_vaccinations: RecyclerView
 
+    private var passportNumber: String? = null
+
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return BottomSheetDialog(requireContext(), R.style.MenuPassportAnimation).apply {
             setOnShowListener { dialogInterface ->
@@ -57,6 +59,8 @@ class VaccinationInfoMenu(private val onClose: (() -> Unit)? = null) : BottomShe
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        initArguments()
         initViews(view)
         initButtons()
         initInfo()
@@ -65,6 +69,11 @@ class VaccinationInfoMenu(private val onClose: (() -> Unit)? = null) : BottomShe
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
         onClose?.invoke()
+    }
+
+    /** Приймання аргіментів **/
+    private fun initArguments() {
+        passportNumber = arguments?.getString("passportNumber")
     }
 
     /** Ініціалізація всіх елементів інтерфейсу **/
