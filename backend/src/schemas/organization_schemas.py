@@ -9,6 +9,7 @@ class OwnerForOrgResponse(BaseModel):
         from_attributes = True
 
 class AnimalForOrgResponse(BaseModel):
+    pet_id:int
     species: str
     breed: str
     gender: str
