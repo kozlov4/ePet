@@ -11,7 +11,7 @@ import com.example.epet.data.model.OutputPassport
 
 class PassportListAdapter(
     private val passportList: List<OutputPassport>,
-    private val onMenuClick: () -> Unit) : RecyclerView.Adapter<PassportListAdapter.PassportViewHolder>() {
+    private val onMenuClick: (passportNumber: String) -> Unit) : RecyclerView.Adapter<PassportListAdapter.PassportViewHolder>() {
 
     inner class PassportViewHolder(val card: CardView) : RecyclerView.ViewHolder(card) {
         val tv_name_ua: TextView = card.findViewById(R.id.tv_name_ua)
@@ -43,7 +43,7 @@ class PassportListAdapter(
         holder.tv_last_update.isSelected = true
 
         holder.iv_menu.setOnClickListener {
-            onMenuClick()
+            onMenuClick(passport.passportNumber)
         }
     }
 
