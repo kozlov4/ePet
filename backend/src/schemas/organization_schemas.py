@@ -1,5 +1,6 @@
 from pydantic import BaseModel
-from typing import List
+from typing import List, Optional
+from datetime import datetime
 
 class OwnerForOrgResponse(BaseModel):
     passport_number: str | None = None
@@ -33,3 +34,33 @@ class GetOrgInfo(BaseModel):
     building:str
     phone_number:str
     email:str
+
+
+class AnimalBase(BaseModel):
+    pet_id:int
+    passport_number:str
+    img_url:str
+    pet_name:str
+    pet_name_en: str
+    date_of_birth: datetime 
+    breed:str
+    gender:str
+    color:str
+    species:str
+
+
+
+class AnimaForlLintel(AnimalBase):
+    pass
+
+
+class AnimalForVeterinary(AnimalBase):
+    passport_number:str
+    organization_name:str
+    identifier_type:str
+    date: Optional[datetime] = None 
+    identifier_number:str
+
+class AnimaForCnap(AnimalForVeterinary):
+    pass
+
