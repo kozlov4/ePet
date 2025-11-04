@@ -38,6 +38,8 @@ class PassportInfoMenu(private val onClose: (() -> Unit)? = null) : BottomSheetD
     private lateinit var tv_chip_date: TextView
     private lateinit var tv_chip_number: TextView
 
+    private var passportNumber: String? = null
+
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return BottomSheetDialog(requireContext(), R.style.MenuPassportAnimation).apply {
             setOnShowListener { dialogInterface ->
@@ -73,6 +75,8 @@ class PassportInfoMenu(private val onClose: (() -> Unit)? = null) : BottomSheetD
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        initArguments()
         initViews(view)
         initButtons()
         initInfo()
@@ -81,6 +85,11 @@ class PassportInfoMenu(private val onClose: (() -> Unit)? = null) : BottomSheetD
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
         onClose?.invoke()
+    }
+
+    /** Приймання аргіментів **/
+    private fun initArguments() {
+        passportNumber = arguments?.getString("passportNumber")
     }
 
     /** Ініціалізація всіх елементів інтерфейсу **/
