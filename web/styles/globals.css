@@ -26,3 +26,6 @@ p,
 span {
     font-family: 'e-Ukraine' !important;
 }
+body {
+    overflow-x: hidden !important;
+}

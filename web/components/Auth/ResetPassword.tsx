@@ -1,27 +1,27 @@
-'use client'
-import { useState } from 'react'
-import { motion } from 'framer-motion'
+'use client';
+import { motion } from 'framer-motion';
+import { useState } from 'react';
 
-export function MainReset() {
-    const [email, setEmail] = useState('')
-    const [isLoading, setIsLoading] = useState(false)
-    const [message, setMessage] = useState('')
+export function ResetPasswordPage() {
+    const [email, setEmail] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+    const [message, setMessage] = useState('');
 
     const isValidEmail = (value) => {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-        return emailRegex.test(value)
-    }
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(value);
+    };
 
     const handleResetPassword = async (emailAddress) => {
-        setIsLoading(true)
-        setMessage('')
+        setIsLoading(true);
+        setMessage('');
 
         if (!isValidEmail(emailAddress)) {
             setMessage(
                 'Неправильний тип даних: введіть коректну електронну адресу'
-            )
-            setIsLoading(false)
-            return
+            );
+            setIsLoading(false);
+            return;
         }
 
         try {
@@ -35,22 +35,22 @@ export function MainReset() {
                     },
                     body: JSON.stringify({ email: emailAddress }),
                 }
-            )
+            );
 
             if (response.ok) {
                 setMessage(
                     'Якщо електронна адреса існує, посилання для скидання паролю було надіслано на пошту'
-                )
+                );
             } else {
-                throw new Error('Network response was not ok')
+                throw new Error('Network response was not ok');
             }
         } catch (error) {
-            console.error('Error during password reset:', error)
-            setMessage('Помилка. Не вдалося надіслати. Спробуйте ще раз.')
+            console.error('Error during password reset:', error);
+            setMessage('Помилка. Не вдалося надіслати. Спробуйте ще раз.');
         } finally {
-            setIsLoading(false)
+            setIsLoading(false);
         }
-    }
+    };
 
     return (
         <div className="w-[50%] h-full flex bg-white">
@@ -81,7 +81,8 @@ export function MainReset() {
                 {message && (
                     <span
                         className={`flex w-full justify-center text-center text-[14px] mt-2 ${
-                            message === 'Якщо електронна адреса існує, посилання для скидання паролю було надіслано на пошту'
+                            message ===
+                            'Якщо електронна адреса існує, посилання для скидання паролю було надіслано на пошту'
                                 ? 'text-green-400'
                                 : 'text-red-500'
                         }`}
@@ -101,5 +102,5 @@ export function MainReset() {
                 </motion.button>
             </div>
         </div>
-    )
+    );
 }

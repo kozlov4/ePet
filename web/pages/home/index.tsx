@@ -1,26 +1,22 @@
 import { useEffect, useState } from 'react'
-import ArrowFront from '../assets/images/icons/ArrowFront'
-import { BoneIcon } from '../assets/images/icons/BoneIcon'
-import { FooterCNAP } from '../components/CNAP/footer'
-import { HeaderMain } from '../components/Base/header'
+import ArrowFront from '../../assets/images/icons/ArrowFront'
+import { BoneIcon } from '../../assets/images/icons/BoneIcon'
 
 const Home = () => {
-    // TODO: MERGE DUPLICATE CODE SOMEWHERE (CNAP/home.tsx, CNAP/organisations.tsx, CNAP/pet-registration.tsx, index.tsx)
-    const [userName, setUserName] = useState('');
+    // TODO: MERGE DUPLICATE CODE SOMEWHERE (CNAP/favorite-list.tsx, CNAP/organisations.tsx, CNAP/pet-registration.tsx, index.tsx)
+    const [userName, setUserName] = useState('')
 
     useEffect(() => {
         if (typeof window !== 'undefined') {
-            const storedUserName = localStorage.getItem('user_name') || '';
-            setUserName(storedUserName);
+            const storedUserName = localStorage.getItem('user_name') || ''
+            setUserName(storedUserName)
         }
-    }, []);
+    }, [])
     // to here
     return (
-        <>
-            <HeaderMain/>
-            <div className="flex flex-col h-[70%] max-w-[1342px] mx-auto">
+        <div className="flex flex-col h-[70%] max-w-full mx-auto">
                 <div
-                    className="pt-12 pl-16 pr-9 pb-9 rounded-2xl flex justify-between w-[1342px]"
+                    className="pt-12 pl-16 pr-9 pb-9 rounded-2xl flex justify-between w-full"
                     style={{ backgroundImage: "url('./HomeBackground.png')" }}
                 >
                     <div className="flex flex-col justify-between">
@@ -114,9 +110,7 @@ const Home = () => {
                         </div>
                     </div>
                 </section>
-            </div>
-            <FooterCNAP />
-        </>
+        </div>
     )
 }
 

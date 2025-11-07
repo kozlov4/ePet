@@ -1,29 +1,28 @@
-'use client'
-import { useState } from 'react'
-import { motion } from 'framer-motion'
-import router from 'next/router'
+'use client';
+import { motion } from 'framer-motion';
+import { useState } from 'react';
 
-export function NewPassword(props: { token: string }) {
-    const [newPassword, setNewPassword] = useState('')
-    const [confirmPassword, setConfirmPassword] = useState('')
+export function NewPasswordPage(props: { token: string }) {
+    const [newPassword, setNewPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
 
-    const [isLoading, setIsLoading] = useState(false)
-    const [message, setMessage] = useState('')
+    const [isLoading, setIsLoading] = useState(false);
+    const [message, setMessage] = useState('');
 
     const handleSetNewPassword = async (emailAddress) => {
-        setIsLoading(true)
-        setMessage('')
+        setIsLoading(true);
+        setMessage('');
 
         if (newPassword !== confirmPassword) {
-            setMessage('Паролі не співпадають.')
-            setIsLoading(false)
-            return
+            setMessage('Паролі не співпадають.');
+            setIsLoading(false);
+            return;
         }
 
         if (newPassword.length < 8) {
-            setMessage('Пароль має бути щонайменше 8 символів.')
-            setIsLoading(false)
-            return
+            setMessage('Пароль має бути щонайменше 8 символів.');
+            setIsLoading(false);
+            return;
         }
 
         try {
@@ -40,28 +39,28 @@ export function NewPassword(props: { token: string }) {
                         new_password: newPassword,
                     }),
                 }
-            )
+            );
 
-            const data = await response.json()
+            const data = await response.json();
 
             if (!response.ok) {
-                throw new Error(data.detail || 'Network response was not ok')
+                throw new Error(data.detail || 'Network response was not ok');
             }
 
-            setMessage('Новий пароль встановлено!')
+            setMessage('Новий пароль встановлено!');
         } catch (error) {
-            console.error('Error during setting new password:', error)
+            console.error('Error during setting new password:', error);
 
             if (
                 error instanceof Error &&
                 error.message === 'Недійсний або прострочений токен.'
             ) {
-                setMessage('Недійсний або прострочений токен')
+                setMessage('Недійсний або прострочений токен');
             } else {
-                setMessage('Сталася помилка. Спробуйте пізніше.')
+                setMessage('Сталася помилка. Спробуйте пізніше.');
             }
         }
-    }
+    };
 
     return (
         <div className="w-[50%] h-full flex bg-white">
@@ -120,5 +119,5 @@ export function NewPassword(props: { token: string }) {
                 </motion.button>
             </div>
         </div>
-    )
+    );
 }
