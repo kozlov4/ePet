@@ -1,176 +1,186 @@
 'use client';
-import Link from 'next/link';
-import router from 'next/router';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import useInfiniteScroll from '../../hooks/useInfiniteScroll';
-import { Pet } from '../../types/api';
-import { fetchAnimals } from '../../utils/fetchAnimals';
+
+import { useCallback } from 'react';
+import { useRouter } from 'next/router';
+
+import { ReusableTable } from '../../components/Base/ReusableTable';
+import { fetchPaginatedData } from '../../utils/api';
+import {
+    ColumnDefinition,
+    Pet,
+    Organization,
+    PaginatedResponse,
+} from '../../types/api';
 
 export function FavoriteList() {
-    const [items, setItems] = useState<Pet[]>([]);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(1);
-    const [currentQuery, setCurrentQuery] = useState('');
-    const [isLoadingInitial, setIsLoadingInitial] = useState(true);
-    const [error, setError] = useState<string | null>(null);
-    const pageSize = 10;
+    const router = useRouter();
+    const activeView = (router.query.view as string) || 'animals';
 
-    const executeFetch = useCallback(
-        async (page: number, query: string, isNewSearch: boolean = false) => {
-            setError(null);
-            try {
-                const data = await fetchAnimals(page, pageSize, query);
+    const handleAction = (item: any, actionType: string) => {
+        const id = item.pet_id || item.id;
 
-                setItems((prevItems) =>
-                    isNewSearch ? data.items : [...prevItems, ...data.items]
-                );
-                setCurrentPage(data.page);
-                setTotalPages(data.total_pages);
-            } catch (e) {
-                setError(
-                    e instanceof Error
-                        ? e.message
-                        : 'Помилка завантаження даних.'
-                );
+        if (actionType === 'details') {
+            alert(`(MainCNAP) Повна інформація для ID: ${id}`);
+            console.log('Повна інформація:', item);
+        }
 
-                if (e instanceof Error && e.message.includes('Авторизація')) {
-                    router.push('/signIn');
-                }
-            } finally {
-                setIsLoadingInitial(false);
+        if (actionType === 'delete') {
+            if (
+                window.confirm(
+                    `(MainCNAP) Ви впевнені, що хочете видалити ID: ${id}?`
+                )
+            ) {
+                console.log('Видалення...', item);
+                alert(`Елемент ${id} видалено.`);
             }
-        },
-        [pageSize]
-    );
+        }
 
-    useEffect(() => {
-        executeFetch(1, currentQuery, true);
-    }, []);
-
-    const loadMore = useCallback(async () => {
-        if (currentPage >= totalPages) return;
-        await executeFetch(currentPage + 1, currentQuery);
-    }, [currentPage, totalPages, currentQuery, executeFetch]);
-
-    const observerRef = useRef<HTMLDivElement>(null);
-    const { loading: isLoadingMore } = useInfiniteScroll(
-        observerRef,
-        loadMore,
-        currentPage < totalPages
-    );
-
-    if (isLoadingInitial) {
-        return (
-            <div className="p-8 text-center text-xl">Завантаження даних...</div>
-        );
-    }
-
-    const handleFullInfoClick = (petId: string) => {
-        alert(`Showing full information for pet: ${petId}`);
+        if (actionType === 'edit') {
+            alert(`(MainCNAP) Редагування ID: ${id}`);
+            // router.push(`/admin/orgs/edit/${id}`)
+        }
     };
 
-    return (
-        <div className="w-full px-35 py-10">
-            <h1 className="mb-5 font-medium text-4xl">
-                Паспорт домашнього улюбленця
-            </h1>
-            {error && (
-                <div className="mt-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg">
-                    {error}
-                </div>
-            )}
-            <div className="mb-8 flex flex-col items-center justify-between gap-4 sm:flex-row">
-                <div className="flex w-full items-center rounded-lg bg-white p-2 shadow-md/10 sm:max-w-b">
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="20"
-                        height="20"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        className="mx-2 text-gray-400"
-                    >
-                        <circle cx="11" cy="11" r="8"></circle>
-                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                    </svg>
-                    <input
-                        type="text"
-                        placeholder="Пошук"
-                        value={currentQuery}
-                        // onChange={}
-                        className="w-full border-0 bg-transparent text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-0"
-                    />
-                </div>
-                <Link
-                    href="/CNAP/pet-registration"
-                    className="w-full shrink-0 rounded-[10em] bg-white px-5 py-3 text-sm font-semibold ring transition-colors hover:bg-gray-100 sm:w-auto cursor-pointer"
+    const animalColumns: ColumnDefinition<Pet>[] = [
+        {
+            accessor: 'animal_passport_number',
+            header: 'ID:',
+            cell: (pet) => pet.animal_passport_number || 'null',
+        },
+        { accessor: 'breed', header: 'Порода:' },
+        { accessor: 'gender', header: 'Стать:' },
+        { accessor: 'species', header: 'Вид:' },
+        {
+            accessor: 'pet_id',
+            header: '',
+            cell: (pet, onActionCallback) => (
+                <button
+                    onClick={() => onActionCallback(pet, 'details')}
+                    className="rounded-lg bg-black px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-gray-800 cursor-pointer"
                 >
-                    Зареєструвати улюбленця
-                </Link>
-            </div>
+                    Повна інформація
+                </button>
+            ),
+        },
+        {
+            accessor: 'owner',
+            header: '',
+            cell: (pet, onActionCallback) => (
+                <button
+                    onClick={() => onActionCallback(pet, 'delete')}
+                    className="rounded-lg bg-white border border-gray-300 px-4 py-2 text-xs font-semibold text-black transition-colors hover:bg-gray-100 cursor-pointer"
+                >
+                    Видалити
+                </button>
+            ),
+        },
+    ];
 
-            <div className="hidden grid-cols-6 pb-2 text-sm font-bold text-gray-500 md:grid text-center px-[16px]">
-                <div className="col-span-1">ID:</div>
-                <div className="col-span-1">Порода:</div>
-                <div className="col-span-1">Стать:</div>
-                <div className="col-span-1">Вид:</div>
-                <div className="col-span-1">Власник:</div>
-                <div className="col-span-1"></div>
-            </div>
-
-            <div className="flex flex-col bg-[rgba(217,217,217,0.27)] rounded-[2em] divide-y divide-gray-300">
-                {items.map((pet, index) => (
-                    <div
-                        key={index}
-                        className="grid items-center p-4 md:grid-cols-6 text-center"
+    const orgColumns: ColumnDefinition<Organization>[] = [
+        {
+            accessor: 'organization_name',
+            header: 'Назва',
+        },
+        {
+            accessor: 'street',
+            header: 'Адреса',
+        },
+        {
+            accessor: 'phone_number',
+            header: 'Телефон',
+        },
+        {
+            accessor: 'email',
+            header: 'Email',
+        },
+        {
+            accessor: 'id',
+            header: 'Дії',
+            cell: (org, onActionCallback) => (
+                <div className="flex gap-2">
+                    <button
+                        onClick={() => onActionCallback(org, 'edit')}
+                        className="rounded-lg bg-gray-200 px-4 py-2 ..."
                     >
-                        <div className="col-span-1 hidden font-medium md:block">
-                            {pet.animal_passport_number}
-                        </div>
-                        <div className="col-span-1 hidden font-medium md:block">
-                            {pet.breed}
-                        </div>
-                        <div className="col-span-1 hidden font-medium md:block">
-                            {pet.gender}
-                        </div>
-                        <div className="col-span-1 hidden font-medium md:block">
-                            {pet.species}
-                        </div>
-                        <div className="col-span-1 hidden font-medium md:block">
-                            {pet.owner?.passport_number || ''}
-                        </div>
+                        Редагувати
+                    </button>
+                    <button
+                        onClick={() => onActionCallback(org, 'delete')}
+                        className="rounded-lg bg-red-600 text-white px-4 py-2 ..."
+                    >
+                        Видалити
+                    </button>
+                </div>
+            ),
+        },
+    ];
 
-                        <div className="col-span-2 text-right md:col-span-1">
-                            <button
-                                onClick={() =>
-                                    handleFullInfoClick(
-                                        pet.animal_passport_number || ''
-                                    )
-                                }
-                                className="rounded-[10em] bg-black px-4 py-3 text-xs font-semibold text-white transition-colors hover:bg-gray-800 cursor-pointer"
-                            >
-                                <span>Повна інформація</span>
-                            </button>
-                        </div>
-                    </div>
-                ))}
+    interface ViewConfig {
+        endpoint: string;
+        queryParamName: string;
+        columns: ColumnDefinition<any>[];
+        title: string;
+        addNewLink: string;
+        addNewText: string;
+        searchPlaceholder: string;
+    }
 
-                {isLoadingMore && (
-                    <p className="text-center mt-6 text-lg text-blue-600">
-                        Завантаження...
-                    </p>
-                )}
+    const viewConfigs: Record<string, ViewConfig> = {
+        animals: {
+            endpoint: '/organizations/animals',
+            queryParamName: 'animal_passport_number',
+            columns: animalColumns,
+            title: 'Список тварин',
+            addNewLink: '/CNAP/pet-registration',
+            addNewText: 'Додати тварину',
+            searchPlaceholder: 'Пошук...',
+        },
+        orgs: {
+            endpoint: '/organizations',
+            queryParamName: 'organization_name',
+            columns: orgColumns,
+            title: 'Список організацій',
+            addNewLink: '/admin/org-registration',
+            addNewText: 'Додати організацію',
+            searchPlaceholder: 'Пошук за назвою...',
+        },
+    };
 
-                <div ref={observerRef} className="h-1" />
-            </div>
-            {!isLoadingMore &&
-                currentPage >= totalPages &&
-                items.length > 0 && (
-                    <p className="text-center mt-6 text-gray-500">
-                        Кінець списку ({items.length} записів).
-                    </p>
-                )}
-        </div>
+    const config = viewConfigs[activeView];
+
+    const fetchFunction = useCallback(
+        (
+            page: number,
+            size: number,
+            query: string
+        ): Promise<PaginatedResponse<any>> => {
+            if (!config) {
+                return Promise.reject(new Error('Конфігурація не знайдена'));
+            }
+            return fetchPaginatedData(config.endpoint, {
+                page,
+                size,
+                query,
+                queryParamName: config.queryParamName,
+            });
+        },
+        [config]
+    );
+
+    if (!config) {
+        return <div>Завантаження конфігурації або невірний URL...</div>;
+    }
+
+    return (
+        <ReusableTable
+            key={activeView}
+            columns={config.columns}
+            title={config.title}
+            addNewLink={config.addNewLink}
+            addNewText={config.addNewText}
+            searchPlaceholder={config.searchPlaceholder}
+            fetchFunction={fetchFunction}
+            onAction={handleAction}
+        />
     );
 }
