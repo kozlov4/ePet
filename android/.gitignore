@@ -1,0 +1,7 @@
+**/.gradle/
+**/.idea/
+**/.kotlin/
+**/local/
+Thumbs.db
+.DS_Store
+/local.properties

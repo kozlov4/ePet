@@ -31,7 +31,7 @@ async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db: 
         user_model = user
         name = user.first_name 
         user_id = user.user_id
-        role = "User"
+        role = None
 
     if not bcrypt_context.verify(form_data.password, user_model.password):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Неправильний пароль")

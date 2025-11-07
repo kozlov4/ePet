@@ -44,36 +44,6 @@
             android:focusable="true"
             android:textColorHint="@color/gray_hint_text"
             android:textSize="13sp" />
-
-        <TextView
-            android:id="@+id/tv_documents"
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:gravity="center_vertical"
-            android:background="@null"
-            android:fontFamily="@font/e_ukraine_regular"
-            android:text="Витяг про улюбленця"
-            android:paddingHorizontal="22dp"
-            android:textColor="@color/black"
-            android:clickable="true"
-            android:focusable="true"
-            android:textColorHint="@color/gray_hint_text"
-            android:textSize="13sp" />
-
-        <TextView
-            android:id="@+id/tv_question"
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:gravity="center_vertical"
-            android:background="@null"
-            android:fontFamily="@font/e_ukraine_regular"
-            android:text="Питання та відповіді"
-            android:paddingHorizontal="22dp"
-            android:textColor="@color/black"
-            android:clickable="true"
-            android:focusable="true"
-            android:textColorHint="@color/gray_hint_text"
-            android:textSize="13sp" />
     </LinearLayout>
 
     <LinearLayout
