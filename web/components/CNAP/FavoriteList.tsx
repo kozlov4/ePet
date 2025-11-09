@@ -27,7 +27,7 @@ export function FavoriteList() {
         if (actionType === 'delete') {
             if (
                 window.confirm(
-                    `(MainCNAP) Ви впевнені, що хочете видалити ID: ${id}?`
+                    `(MainCNAP) Ви впевнені, що хочете видалити ID: ${id}?`,
                 )
             ) {
                 console.log('Видалення...', item);
@@ -152,7 +152,7 @@ export function FavoriteList() {
         (
             page: number,
             size: number,
-            query: string
+            query: string,
         ): Promise<PaginatedResponse<any>> => {
             if (!config) {
                 return Promise.reject(new Error('Конфігурація не знайдена'));
@@ -164,7 +164,7 @@ export function FavoriteList() {
                 queryParamName: config.queryParamName,
             });
         },
-        [config]
+        [config],
     );
 
     if (!config) {

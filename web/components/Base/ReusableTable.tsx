@@ -4,10 +4,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { useInfiniteScroll } from '../../hooks/useInfiniteScroll';
-import {
-    ColumnDefinition,
-    PaginatedResponse
-} from '../../types/api';
+import { ColumnDefinition, PaginatedResponse } from '../../types/api';
 
 function useDebounce(value: string, delay: number) {
     const [debouncedValue, setDebouncedValue] = useState(value);
@@ -26,7 +23,11 @@ interface ReusableTableProps {
     addNewLink: string;
     addNewText: string;
     searchPlaceholder: string;
-    fetchFunction: (page: number, size: number, query: string) => Promise<PaginatedResponse<any>>;
+    fetchFunction: (
+        page: number,
+        size: number,
+        query: string,
+    ) => Promise<PaginatedResponse<any>>;
     onAction: (item: any, actionType: string) => void;
 }
 
@@ -37,9 +38,8 @@ export function ReusableTable({
     addNewText,
     searchPlaceholder,
     fetchFunction,
-    onAction
+    onAction,
 }: ReusableTableProps) {
-
     const router = useRouter();
 
     const [items, setItems] = useState<any[]>([]);
@@ -53,36 +53,43 @@ export function ReusableTable({
 
     const debouncedQuery = useDebounce(currentQuery, 500);
 
-    const executeFetch = useCallback(async (page: number, query: string, isNewSearch: boolean = false) => {
-        setError(null);
-        if (isNewSearch) setIsLoadingInitial(true);
+    const executeFetch = useCallback(
+        async (page: number, query: string, isNewSearch: boolean = false) => {
+            setError(null);
+            if (isNewSearch) setIsLoadingInitial(true);
 
-        try {
-            const data = await fetchFunction(page, pageSize, query);
+            try {
+                const data = await fetchFunction(page, pageSize, query);
 
-            let newItems = data.items;
-            if (title === 'Список організацій') {
-                newItems = data.items.map((org: any) => ({
-                    ...org,
-                    id: org.email || org.phone_number
-                }));
+                let newItems = data.items;
+                if (title === 'Список організацій') {
+                    newItems = data.items.map((org: any) => ({
+                        ...org,
+                        id: org.email || org.phone_number,
+                    }));
+                }
+
+                setItems((prevItems) =>
+                    isNewSearch ? newItems : [...prevItems, ...newItems],
+                );
+                setCurrentPage(data.page);
+                setTotalPages(data.total_pages);
+                setTotalItems(data.total_items);
+            } catch (e) {
+                const errorMsg =
+                    e instanceof Error
+                        ? e.message
+                        : 'Помилка завантаження даних.';
+                setError(errorMsg);
+                if (e instanceof Error && e.message.includes('Авторизація')) {
+                    router.push('/signIn');
+                }
+            } finally {
+                setIsLoadingInitial(false);
             }
-
-            setItems(prevItems => isNewSearch ? newItems : [...prevItems, ...newItems]);
-            setCurrentPage(data.page);
-            setTotalPages(data.total_pages);
-            setTotalItems(data.total_items);
-
-        } catch (e) {
-            const errorMsg = (e instanceof Error) ? e.message : 'Помилка завантаження даних.';
-            setError(errorMsg);
-            if (e instanceof Error && e.message.includes('Авторизація')) {
-                router.push('/signIn');
-            }
-        } finally {
-            setIsLoadingInitial(false);
-        }
-    }, [fetchFunction, pageSize, router, title]);
+        },
+        [fetchFunction, pageSize, router, title],
+    );
 
     useEffect(() => {
         executeFetch(1, debouncedQuery, true);
@@ -99,7 +106,7 @@ export function ReusableTable({
     const { loading: isLoadingMore } = useInfiniteScroll(
         observerRef,
         loadMore,
-        hasMore
+        hasMore,
     );
 
     const handleSearch = (query: string) => {
@@ -107,7 +114,9 @@ export function ReusableTable({
     };
 
     if (isLoadingInitial && items.length === 0) {
-        return <div className="p-8 text-center text-xl">Завантаження даних...</div>;
+        return (
+            <div className="p-8 text-center text-xl">Завантаження даних...</div>
+        );
     }
 
     const gridCols = columns.length;
@@ -115,7 +124,6 @@ export function ReusableTable({
 
     return (
         <div className="w-full px-4 md:px-10 py-10">
-
             <h1 className="mb-5 font-medium text-4xl">{title}</h1>
 
             {error && (
@@ -150,14 +158,14 @@ export function ReusableTable({
 
                 <Link
                     href={addNewLink}
-                    className="w-full md:w-auto shrink-0 rounded-lg border border-gray-700 px-5 py-3 text-sm font-semibold transition-colors hover:bg-gray-700 cursor-pointer text-center">
+                    className="w-full md:w-auto shrink-0 rounded-lg border border-gray-700 px-5 py-3 text-sm font-semibold transition-colors hover:bg-gray-700 cursor-pointer text-center"
+                >
                     {addNewText}
                 </Link>
             </div>
 
             <div className="rounded-lg bg-[rgba(217,217,217,0.1)] overflow-hidden">
                 <table className="min-w-full">
-
                     <thead>
                         <tr className="border-b border-gray-700">
                             {columns.map((col) => (
@@ -173,10 +181,13 @@ export function ReusableTable({
 
                     <tbody className="divide-y divide-gray-300">
                         {items.map((item) => {
-                            const key = item.pet_id ?? item.id ?? (Math.random());
+                            const key = item.pet_id ?? item.id ?? Math.random();
 
                             return (
-                                <tr key={key} className="hover:bg-[rgba(255,255,255,0.05)]">
+                                <tr
+                                    key={key}
+                                    className="hover:bg-[rgba(255,255,255,0.05)]"
+                                >
                                     {columns.map((col) => (
                                         <td
                                             key={String(col.accessor)}
@@ -184,7 +195,11 @@ export function ReusableTable({
                                         >
                                             {col.cell
                                                 ? col.cell(item, onAction)
-                                                : String((item as any)[col.accessor])}
+                                                : String(
+                                                      (item as any)[
+                                                          col.accessor
+                                                      ],
+                                                  )}
                                         </td>
                                     ))}
                                 </tr>
@@ -195,7 +210,9 @@ export function ReusableTable({
             </div>
 
             {isLoadingMore && (
-                <p className="text-center mt-6 text-lg text-blue-400">Завантаження...</p>
+                <p className="text-center mt-6 text-lg text-blue-400">
+                    Завантаження...
+                </p>
             )}
 
             <div ref={observerRef} className="h-1" />
