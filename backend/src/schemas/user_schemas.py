@@ -1,4 +1,5 @@
 from pydantic import BaseModel, EmailStr, Field
+from typing import List
 
 class UserResponse(BaseModel):
   user_id:int
@@ -21,3 +22,11 @@ class UserCreateRequest(BaseModel):
     email:EmailStr = Field(min_length=1, max_length=100)
     password:str = Field(min_length=8, max_length=100)
 
+class UserPetItem(BaseModel):
+    pet_id: str
+    img_url:str
+    passport_number: str
+    pet_name_ua: str
+    pet_name_en: str
+    date_of_birth: str
+    update_datetime: str
