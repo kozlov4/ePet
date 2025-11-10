@@ -66,6 +66,7 @@ async def get_pet_details(pet_id: int, db: Session = Depends(get_db)):
 
     response_data = {
         "passport_number": pet.passport.passport_number if pet.passport else None,
+        "img_url": pet.img_url,
         "pet_name": pet.pet_name,
         "pet_name_latin": pet_name_latin,
         "date_of_birth": pet.date_of_birth,

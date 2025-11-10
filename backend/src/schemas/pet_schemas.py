@@ -7,6 +7,8 @@ class PetDetailsResponse(BaseModel):
 
     passport_number: Optional[str] = None
     
+    img_url: Optional[str] = None
+
     pet_name: str
     pet_name_latin: str
     
