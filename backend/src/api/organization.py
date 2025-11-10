@@ -6,8 +6,7 @@ from sqlalchemy import func
 from src.db.database import get_db
 from src.db.models import Organizations, Pets, Passports
 from src.api.core import  get_current_user
-from src.schemas.organization_schemas import AnimalForOrgResponse, OwnerForOrgResponse, PaginatedAnimalResponse, GetOrgInfo, AnimaForlLintel, AnimalForVeterinary, AnimaForCnap
-from deep_translator import GoogleTranslator
+from src.schemas.pet_schemas import AnimalForOrgResponse, OwnerForOrgResponse, PaginatedAnimalResponse, GetOrgInfo
 
 
 
@@ -38,6 +37,20 @@ async def get_current_organization(user: user_dependency, db: db_dependency) -> 
         )
     return organization
 
+
+async def get_current_organization_optional(user: user_dependency, db: db_dependency) -> Optional[Organizations]:
+
+    user_id = user.get('user_id')
+    if user_id is None:
+
+        return None
+
+    organization = db.query(Organizations).filter(
+        (Organizations.organization_id == user_id) &
+        (Organizations.organization_type.in_(['ЦНАП', 'Ветклініка', 'Притулок']))
+    ).first()
+
+    return organization
 
 @router.get('/animals/', response_model=PaginatedAnimalResponse)
 async def get_animals_for_cnap(
@@ -120,73 +133,4 @@ async def get_info(db: db_dependency,
         email=org.email
     )
 
-@router.get("/pet/{pet_id}")
-async def get_pet_info(
-    pet_id: int,
-    db: db_dependency,
-    organization_user: Annotated[Organizations, Depends(get_current_organization)]
-):
-    pet = db.query(Pets).filter(Pets.pet_id == pet_id).first()
 
-    if pet is None:
-        raise HTTPException(status_code=404, detail="Тваринку не знайдено")
-
-    passport = pet.passport
-    organization = passport.organization if passport else None
-    identifier = pet.identifiers[0] if pet.identifiers else None
-    translation = GoogleTranslator(source='auto', target='en').translate(pet.pet_name)
-
-    org_type = organization_user.organization_type
-
-    if org_type == "Притулок":
-        return AnimaForlLintel(
-            pet_id=pet.pet_id,
-            passport_number=passport.passport_number if passport else "—",
-            img_url=pet.img_url,
-            pet_name=pet.pet_name,
-            pet_name_en=translation,
-            date_of_birth=pet.date_of_birth,
-            breed=pet.breed,
-            gender=pet.gender,
-            color=pet.color,
-            species=pet.species,
-        )
-
-    elif org_type == "Ветклініка":
-        return AnimalForVeterinary(
-            pet_id=pet.pet_id,
-            passport_number=passport.passport_number if passport else "—",
-            img_url=pet.img_url,
-            pet_name=pet.pet_name,
-            pet_name_en=translation,
-            date_of_birth=pet.date_of_birth,
-            breed=pet.breed,
-            gender=pet.gender,
-            color=pet.color,
-            species=pet.species,
-            organization_name=organization.organization_name if organization else "—",
-            identifier_type=identifier.identifier_type if identifier else "—",
-            date=identifier.date if identifier else None,
-            identifier_number=identifier.identifier_number if identifier else "—",
-        )
-
-    elif org_type == "ЦНАП":
-        return AnimaForCnap(
-            pet_id=pet.pet_id,
-            passport_number=passport.passport_number if passport else "—",
-            img_url=pet.img_url,
-            pet_name=pet.pet_name,
-            pet_name_en=translation,
-            date_of_birth=pet.date_of_birth,
-            breed=pet.breed,
-            gender=pet.gender,
-            color=pet.color,
-            species=pet.species,
-            organization_name=organization.organization_name if organization else "—",
-            identifier_type=identifier.identifier_type if identifier else "—",
-            date=identifier.date if identifier else None,
-            identifier_number=identifier.identifier_number if identifier else "—",
-        )
-
-    else:
-        raise HTTPException(status_code=403, detail="Немає доступу")

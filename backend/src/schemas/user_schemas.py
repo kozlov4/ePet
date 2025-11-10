@@ -24,6 +24,7 @@ class UserCreateRequest(BaseModel):
 
 class UserPetItem(BaseModel):
     pet_id: str
+    img_url:str
     passport_number: str
     pet_name_ua: str
     pet_name_en: str

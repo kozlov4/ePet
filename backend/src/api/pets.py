@@ -1,100 +1,145 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session, joinedload
 from sqlalchemy.future import select
-from transliterate import translit
 from deep_translator import GoogleTranslator
 from datetime import datetime
-from typing import List
 
 from src.db.database import get_db
-from src.schemas.pet_schemas import PetDetailsResponse
 from src.schemas.vaccination_schemas import VaccinationsListResponse
-from src.db.models import Pets, Identifiers, Users, Vaccinations
+from src.db.models import Pets, Vaccinations, Organizations
+from typing import Annotated
+from src.api.core import  get_current_user
+from src.api.organization import  get_current_organization_optional
+from src.schemas.pet_schemas import AnimaForCnap, AnimaForlLintel, AnimalForVeterinary, AnimalForUser
 
-router = APIRouter(prefix="/pets", tags=["Pets"])
+
+router = APIRouter(prefix="/pets", tags=["Pets 🐶"])
+db_dependency = Annotated[Session, Depends(get_db)]
+user_dependency = Annotated[dict, Depends(get_current_user)]
 
 def format_value(value, default="—"):
     if value is None or value == "":
         return default
     return str(value)
 
-def translate_text(text_to_translate: str) -> str:
-    if not text_to_translate:
-        return ""
-    try:
-        return GoogleTranslator(source='auto', target='en').translate(text_to_translate)
-    except Exception:
-        return text_to_translate
+def check_gender(gender):
+    if gender == "Ж":
+        return "F"
+    elif gender == "Ч":
+        return "M"
 
-@router.get("/{pet_id}", response_model=PetDetailsResponse)
-async def get_pet_details(pet_id: int, db: Session = Depends(get_db)):
-    query = (
-        select(Pets)
-        .where(Pets.pet_id == pet_id)
-        .options(
-            joinedload(Pets.passport),
-            joinedload(Pets.owner),
-            joinedload(Pets.organization),
-            joinedload(Pets.identifiers)
-        )
-    )
+@router.get("/{pet_id}")
+async def get_pet_info(
+    pet_id: int,
+    db: db_dependency,
+    organization_user: Annotated[Organizations, Depends(get_current_organization_optional)],
+    user: user_dependency
+):
+    pet = db.query(Pets).filter(Pets.pet_id == pet_id).first()
 
-    result = db.execute(query)
-    pet = result.unique().scalar_one_or_none()
-
-    if not pet:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Pet with id {pet_id} not found"
-        )
+    if pet is None:
+        raise HTTPException(status_code=404, detail="Тваринку не знайдено")
 
     passport = pet.passport
-    owner = pet.owner
-    organization = pet.organization
+    organization = passport.organization if passport else None
     identifier = pet.identifiers[0] if pet.identifiers else None
+    translation = GoogleTranslator(source='auto', target='en')
 
-    pet_name_latin = translit(pet.pet_name, 'uk', reversed=True)
+    org_type = organization_user.organization_type if organization_user else None
+    user_id = user.get('user_id')
 
-    gender_ua = pet.gender
-    gender_en = ""
-    if gender_ua.upper() == 'Ж':
-        gender_en = 'F'
-    elif gender_ua.upper() == 'Ч':
-        gender_en = 'M'
+    if org_type == "Притулок":
+        return AnimaForlLintel(
+            pet_id=pet.pet_id,
+            passport_number=passport.passport_number if passport else "—",
+            img_url=pet.img_url,
+            pet_name=pet.pet_name,
+            pet_name_en=translation.translate(pet.pet_name),
+            date_of_birth=pet.date_of_birth,
+            breed=pet.breed,
+            breed_en=translation.translate(pet.breed),
+            gender=pet.gender,
+            gender_en=translation.translate(check_gender(pet.gender)),
+            color=pet.color,
+            color_en=translation.translate(pet.color),
+            species=pet.species,
+            species_en=translation.translate(pet.species)
+        )
+
+    elif org_type == "Ветклініка":
+        return AnimalForVeterinary(
+            pet_id=pet.pet_id,
+            passport_number=passport.passport_number if passport else "—",
+            img_url=pet.img_url,
+            pet_name=pet.pet_name,
+            pet_name_en=translation.translate(pet.pet_name),
+            date_of_birth=pet.date_of_birth,
+            breed=pet.breed,
+            breed_en=translation.translate(pet.breed),
+            gender=pet.gender,
+            gender_en=translation.translate(check_gender(pet.gender)),
+            color=pet.color,
+            color_en=translation.translate(pet.color),
+            species=pet.species,
+            species_en=translation.translate(pet.species),
+            organization_name=organization.organization_name if organization else "—",
+            date=identifier.date if identifier else None,
+            identifier_type=identifier.identifier_type if identifier else "—",
+            identifier_type_en=translation.translate(identifier.identifier_type) if identifier else "—",
+            identifier_number=identifier.identifier_number if identifier else "—",
+            owner_passport_number=pet.owner.passport_number if pet.owner else "—",
+        )
+
+    elif org_type == "ЦНАП":
+        return AnimaForCnap(
+            pet_id=pet.pet_id,
+            passport_number=passport.passport_number if passport else "—",
+            img_url=pet.img_url,
+            pet_name=pet.pet_name,
+            pet_name_en=translation.translate(pet.pet_name),
+            date_of_birth=pet.date_of_birth,
+            breed=pet.breed,
+            breed_en=translation.translate(pet.breed),
+            gender=pet.gender,
+            gender_en=translation.translate(check_gender(pet.gender)),
+            color=pet.color,
+            color_en=translation.translate(pet.color),
+            species=pet.species,
+            species_en=translation.translate(pet.species),
+            organization_name=organization.organization_name if organization else "—",
+            date=identifier.date if identifier else None,
+            identifier_type=identifier.identifier_type if identifier else "—",
+            identifier_type_en=translation.translate(identifier.identifier_type) if identifier else "—",
+            identifier_number=identifier.identifier_number if identifier else "—",
+            owner_passport_number=pet.owner.passport_number if pet.owner else "—",
+        )
+
+    elif (org_type == None and user_id != None):
+        return AnimalForUser(
+            pet_id=pet.pet_id,
+            passport_number=passport.passport_number if passport else "—",
+            img_url=pet.img_url,
+            pet_name=pet.pet_name,
+            pet_name_en=translation.translate(pet.pet_name),
+            date_of_birth=pet.date_of_birth,
+            breed=pet.breed,
+            breed_en=translation.translate(pet.breed),
+            gender=pet.gender,
+            gender_en=translation.translate(check_gender(pet.gender)),
+            color=pet.color,
+            color_en=translation.translate(pet.color),
+            species=pet.species,
+            species_en=translation.translate(pet.species),
+            organization_name=organization.organization_name if organization else "—",
+            date=identifier.date if identifier else None,
+            identifier_type=identifier.identifier_type if identifier else "—",
+            identifier_type_en=translation.translate(identifier.identifier_type) if identifier else "—",
+            identifier_number=identifier.identifier_number if identifier else "—",
+            owner_passport_number=pet.owner.passport_number if pet.owner else "—",
+            update_datetime=datetime.now().strftime('%d.%m.%Y %H:%M')
+        )
     else:
-        gender_en = translate_text(gender_ua)
-
-    breed_en = translate_text(pet.breed)
-    color_en = translate_text(pet.color)
-    species_en = translate_text(pet.species)
-    identifier_type_en = translate_text(identifier.identifier_type if identifier else None)
-
-    formatted_update_time = datetime.now().strftime('%d.%m.%Y %H:%M')
-
-    response_data = {
-        "passport_number": format_value(passport.passport_number if passport else None),
-        "img_url": format_value(pet.img_url),
-        "pet_name": pet.pet_name,
-        "pet_name_latin": pet_name_latin,
-        "date_of_birth": pet.date_of_birth.strftime('%d.%m.%Y'),
-        "breed_ua": format_value(pet.breed),
-        "breed_en": format_value(breed_en),
-        "gender_ua": format_value(gender_ua),
-        "gender_en": format_value(gender_en),
-        "color_ua": format_value(pet.color),
-        "color_en": format_value(color_en),
-        "species_ua": format_value(pet.species),
-        "species_en": format_value(species_en),
-        "owner_passport_number": format_value(owner.passport_number if owner else None),
-        "organization_id": format_value(organization.organization_id if organization else None),
-        "identifier_number": format_value(identifier.identifier_number if identifier else None),
-        "identifier_date": format_value(identifier.date.strftime('%d.%m.%Y') if identifier and identifier.date else None),
-        "identifier_type_ua": format_value(identifier.identifier_type if identifier else None),
-        "identifier_type_en": format_value(identifier_type_en),
-        "update_datetime": formatted_update_time,
-    }
-
-    return PetDetailsResponse(**response_data)
+        raise HTTPException(status_code=403, detail="Немає доступу")
 
 
 @router.get("/{pet_id}/vaccinations", response_model=VaccinationsListResponse)

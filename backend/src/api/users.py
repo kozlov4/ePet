@@ -18,15 +18,12 @@ from src.db.models import Pets
 
 load_dotenv()
 
-# --- Налаштування ---
 
 router = APIRouter(tags=['Users 🧑‍🦱'], prefix="/users")
 
 db_dependency = Annotated[Session, Depends(get_db)]
 
 
-
-# --- Реєстрація ---
 
 @router.post('/register/', status_code=status.HTTP_201_CREATED, response_model=TokenResponse)
 async def create_user(db: db_dependency, create_user_request: UserCreateRequest):
@@ -108,6 +105,7 @@ async def get_my_pets(db: db_dependency, user: user_dependency):
         pet_name_en = translate_text(pet.pet_name)
         item = {
             "pet_id": str(pet.pet_id),
+            "img_url":str(pet.img_url),
             "passport_number": format_value(pet.passport.passport_number if pet.passport else None),
             "pet_name_ua": format_value(pet.pet_name),
             "pet_name_en": format_value(pet_name_en),
