@@ -107,6 +107,7 @@ async def get_my_pets(db: db_dependency, user: user_dependency):
     for pet in user_pets:
         pet_name_en = translate_text(pet.pet_name)
         item = {
+            "pet_id": str(pet.pet_id),
             "passport_number": format_value(pet.passport.passport_number if pet.passport else None),
             "pet_name_ua": format_value(pet.pet_name),
             "pet_name_en": format_value(pet_name_en),

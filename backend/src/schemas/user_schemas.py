@@ -23,6 +23,7 @@ class UserCreateRequest(BaseModel):
     password:str = Field(min_length=8, max_length=100)
 
 class UserPetItem(BaseModel):
+    pet_id: str
     update_datetime: str
     passport_number: str
     pet_name_ua: str
