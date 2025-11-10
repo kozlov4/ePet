@@ -11,6 +11,11 @@ from src.db.models import Pets, Identifiers, Users
 
 router = APIRouter(prefix="/pets", tags=["Pets"])
 
+def format_value(value, default="—"):
+    if value is None or value == "":
+        return default
+    return str(value)
+
 def translate_text(text_to_translate: str) -> str:
     if not text_to_translate:
         return ""
@@ -19,8 +24,7 @@ def translate_text(text_to_translate: str) -> str:
     except Exception:
         return text_to_translate
 
-
-@router.get("/full/{pet_id}", response_model=PetDetailsResponse)
+@router.get("/{pet_id}", response_model=PetDetailsResponse)
 async def get_pet_details(pet_id: int, db: Session = Depends(get_db)):
     query = (
         select(Pets)
@@ -29,7 +33,7 @@ async def get_pet_details(pet_id: int, db: Session = Depends(get_db)):
             joinedload(Pets.passport),
             joinedload(Pets.owner),
             joinedload(Pets.organization),
-            joinedload(Pets.identifiers) 
+            joinedload(Pets.identifiers)
         )
     )
 
@@ -42,11 +46,12 @@ async def get_pet_details(pet_id: int, db: Session = Depends(get_db)):
             detail=f"Pet with id {pet_id} not found"
         )
 
-    pet_name_latin = translit(pet.pet_name, 'ru', reversed=True)
+    passport = pet.passport
+    owner = pet.owner
+    organization = pet.organization
+    identifier = pet.identifiers[0] if pet.identifiers else None
 
-    identifier_type_ua = None
-    if pet.identifiers:
-        identifier_type_ua = pet.identifiers[0].identifier_type
+    pet_name_latin = translit(pet.pet_name, 'uk', reversed=True)
 
     gender_ua = pet.gender
     gender_en = ""
@@ -56,42 +61,34 @@ async def get_pet_details(pet_id: int, db: Session = Depends(get_db)):
         gender_en = 'M'
     else:
         gender_en = translate_text(gender_ua)
-        
+
     breed_en = translate_text(pet.breed)
     color_en = translate_text(pet.color)
     species_en = translate_text(pet.species)
-    identifier_type_en = translate_text(identifier_type_ua)
+    identifier_type_en = translate_text(identifier.identifier_type if identifier else None)
 
     formatted_update_time = datetime.now().strftime('%d/%m/%Y %H:%M')
 
     response_data = {
-        "passport_number": pet.passport.passport_number if pet.passport else None,
-        "img_url": pet.img_url,
+        "passport_number": format_value(passport.passport_number if passport else None),
+        "img_url": format_value(pet.img_url),
         "pet_name": pet.pet_name,
         "pet_name_latin": pet_name_latin,
-        "date_of_birth": pet.date_of_birth,
-        
-        "breed_ua": pet.breed,
-        "breed_en": breed_en,
-        
-        "gender_ua": gender_ua,
-        "gender_en": gender_en,
-        
-        "color_ua": pet.color,
-        "color_en": color_en,
-        
-        "species_ua": pet.species,
-        "species_en": species_en,
-        
-        "owner_passport_number": pet.owner.passport_number if pet.owner else None,
-        "organization_id": pet.organization.organization_id if pet.organization else None,
-        
-        "identifier_number": pet.identifiers[0].identifier_number if pet.identifiers else None,
-        "identifier_date": pet.identifiers[0].date if pet.identifiers else None,
-        
-        "identifier_type_ua": identifier_type_ua,
-        "identifier_type_en": identifier_type_en,
-        
+        "date_of_birth": pet.date_of_birth.strftime('%d/%m/%Y'),
+        "breed_ua": format_value(pet.breed),
+        "breed_en": format_value(breed_en),
+        "gender_ua": format_value(gender_ua),
+        "gender_en": format_value(gender_en),
+        "color_ua": format_value(pet.color),
+        "color_en": format_value(color_en),
+        "species_ua": format_value(pet.species),
+        "species_en": format_value(species_en),
+        "owner_passport_number": format_value(owner.passport_number if owner else None),
+        "organization_id": format_value(organization.organization_id if organization else None),
+        "identifier_number": format_value(identifier.identifier_number if identifier else None),
+        "identifier_date": format_value(identifier.date.strftime('%d/%m/%Y') if identifier and identifier.date else None),
+        "identifier_type_ua": format_value(identifier.identifier_type if identifier else None),
+        "identifier_type_en": format_value(identifier_type_en),
         "update_datetime": formatted_update_time,
     }
 
