@@ -45,7 +45,7 @@ class PassportInfoMenu(private val onClose: (() -> Unit)? = null) : BottomSheetD
     private lateinit var tv_identifier_date: TextView
     private lateinit var tv_identifier_number: TextView
 
-    private var passportNumber: String? = null
+    private var pet_id: String? = null
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return BottomSheetDialog(requireContext(), R.style.MenuPassportAnimation).apply {
@@ -88,7 +88,7 @@ class PassportInfoMenu(private val onClose: (() -> Unit)? = null) : BottomSheetD
         initButtons()
         initStateFlow()
 
-        viewModel.passportDetail(InputPetId(passportNumber))
+        viewModel.passportDetail(InputPetId(pet_id))
     }
 
     override fun onDismiss(dialog: DialogInterface) {
@@ -98,7 +98,7 @@ class PassportInfoMenu(private val onClose: (() -> Unit)? = null) : BottomSheetD
 
     /** Приймання аргіментів **/
     private fun initArguments() {
-        passportNumber = arguments?.getString("passportNumber")
+        pet_id = arguments?.getString("pet_id")
     }
 
     /** Ініціалізація всіх елементів інтерфейсу **/
@@ -135,28 +135,28 @@ class PassportInfoMenu(private val onClose: (() -> Unit)? = null) : BottomSheetD
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.outputPassportDetail.collect { state ->
-                        tv_passport_number.text = state.passport_number
-                        tv_pet_name.text = state.pet_name
-                        tv_pet_name_latin.text = state.pet_name_latin
-                        tv_date_of_birth.text = state.date_of_birth
-                        tv_breed_ua.text = state.breed_ua
-                        tv_breed_en.text = state.breed_en
-                        tv_gender_ua.text = state.gender_ua
-                        tv_gender_en.text = state.gender_en
-                        tv_color_ua.text = state.color_ua
-                        tv_color_en.text = state.color_en
-                        tv_species_ua.text = state.species_ua
-                        tv_species_en.text = state.species_en
-                        tv_owner_passport_number.text = state.owner_passport_number
-                        tv_organization_id.text = state.organization_id
-                        tv_identifier_type_ua.text = state.identifier_type_ua
-                        tv_identifier_type_en.text = state.identifier_type_en
-                        tv_identifier_date.text = state.identifier_date
-                        tv_identifier_number.text = state.identifier_number
+                    tv_passport_number.text = state.passport_number
+                    tv_pet_name.text = state.pet_name
+                    tv_pet_name_latin.text = state.pet_name_latin
+                    tv_date_of_birth.text = state.date_of_birth
+                    tv_breed_ua.text = state.breed_ua
+                    tv_breed_en.text = state.breed_en
+                    tv_gender_ua.text = state.gender_ua
+                    tv_gender_en.text = state.gender_en
+                    tv_color_ua.text = state.color_ua
+                    tv_color_en.text = state.color_en
+                    tv_species_ua.text = state.species_ua
+                    tv_species_en.text = state.species_en
+                    tv_owner_passport_number.text = state.owner_passport_number
+                    tv_organization_id.text = state.organization_id
+                    tv_identifier_type_ua.text = state.identifier_type_ua
+                    tv_identifier_type_en.text = state.identifier_type_en
+                    tv_identifier_date.text = state.identifier_date
+                    tv_identifier_number.text = state.identifier_number
 
-                        val repeatedText = "Паспорт оновлено ${state.update_datetime} "
-                        tv_update_datetime.text = repeatedText.repeat(100)
-                        tv_update_datetime.isSelected = true
+                    val repeatedText = "Паспорт оновлено ${state.update_datetime} "
+                    tv_update_datetime.text = repeatedText.repeat(100)
+                    tv_update_datetime.isSelected = true
                 }
             }
         }

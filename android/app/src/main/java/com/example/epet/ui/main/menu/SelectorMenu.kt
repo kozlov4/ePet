@@ -16,7 +16,7 @@ class SelectorMenu(private val onClose: (() -> Unit)? = null) : BottomSheetDialo
     private lateinit var tv_vaccination_info: TextView
     private lateinit var tv_close: TextView
 
-    private var passportNumber: String? = null
+    private var pet_id: String? = null
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return BottomSheetDialog(requireContext(), R.style.MenuPassportAnimation).apply {
@@ -51,7 +51,7 @@ class SelectorMenu(private val onClose: (() -> Unit)? = null) : BottomSheetDialo
 
     /** Приймання аргіментів **/
     private fun initArguments() {
-        passportNumber = arguments?.getString("passportNumber")
+        pet_id = arguments?.getString("pet_id")
     }
 
     /** Ініціалізація всіх елементів інтерфейсу **/
@@ -68,7 +68,7 @@ class SelectorMenu(private val onClose: (() -> Unit)? = null) : BottomSheetDialo
             dismiss()
             val menu = PassportInfoMenu()
             val bundle = Bundle().apply {
-                putString("passportNumber", passportNumber)
+                putString("pet_id", pet_id)
             }
             menu.arguments = bundle
             menu.show(parentFragmentManager, "PassportInfoMenu")
@@ -78,7 +78,7 @@ class SelectorMenu(private val onClose: (() -> Unit)? = null) : BottomSheetDialo
             dismiss()
             val menu = VaccinationInfoMenu()
             val bundle = Bundle().apply {
-                putString("passportNumber", passportNumber)
+                putString("pet_id", pet_id)
             }
             menu.arguments = bundle
             menu.show(parentFragmentManager, "VaccinationInfoMenu")

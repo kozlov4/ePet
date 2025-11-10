@@ -22,7 +22,7 @@ class VaccinationInfoMenu(private val onClose: (() -> Unit)? = null) : BottomShe
     private lateinit var tv_last_update: TextView
     private lateinit var rv_vaccinations: RecyclerView
 
-    private var passportNumber: String? = null
+    private var pet_id: String? = null
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return BottomSheetDialog(requireContext(), R.style.MenuPassportAnimation).apply {
@@ -73,7 +73,7 @@ class VaccinationInfoMenu(private val onClose: (() -> Unit)? = null) : BottomShe
 
     /** Приймання аргіментів **/
     private fun initArguments() {
-        passportNumber = arguments?.getString("passportNumber")
+        pet_id = arguments?.getString("pet_id")
     }
 
     /** Ініціалізація всіх елементів інтерфейсу **/

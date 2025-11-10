@@ -11,7 +11,7 @@ import com.example.epet.data.model.passport.OutputPetItem
 
 class PassportListAdapter(
     private val passportList: List<OutputPetItem>,
-    private val onMenuClick: (passportNumber: String) -> Unit) : RecyclerView.Adapter<PassportListAdapter.PassportViewHolder>() {
+    private val onMenuClick: (pet_id: String) -> Unit) : RecyclerView.Adapter<PassportListAdapter.PassportViewHolder>() {
 
     inner class PassportViewHolder(val card: CardView) : RecyclerView.ViewHolder(card) {
         val tv_pet_name_ua: TextView = card.findViewById(R.id.tv_pet_name_ua)

@@ -45,6 +45,7 @@ class PassportListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         initViews(view)
         initStateFlow()
         setupSnapHelper()
@@ -74,10 +75,10 @@ class PassportListFragment : Fragment() {
 
     /** Налаштування RecyclerView **/
     private fun setupRecyclerView(passports: List<OutputPetItem>) {
-        passportListAdapter = PassportListAdapter(passports) { passportNumber ->
+        passportListAdapter = PassportListAdapter(passports) { pet_id ->
             val menu = SelectorMenu()
             val bundle = Bundle().apply {
-                putString("passportNumber", passportNumber)
+                putString("pet_id", pet_id)
             }
             menu.arguments = bundle
             menu.show(parentFragmentManager, "SelectorMenu")
