@@ -79,7 +79,7 @@ class VaccinationInfoMenu(private val onClose: (() -> Unit)? = null) : BottomShe
     /** Ініціалізація всіх елементів інтерфейсу **/
     private fun initViews(view: View) {
         sv_main = view.findViewById(R.id.sv_main)
-        tv_last_update = view.findViewById(R.id.tv_last_update)
+        tv_last_update = view.findViewById(R.id.tv_update_datetime)
         rv_vaccinations = view.findViewById(R.id.rv_vaccinations)
     }
 

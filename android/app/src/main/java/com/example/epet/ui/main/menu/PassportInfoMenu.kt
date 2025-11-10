@@ -5,38 +5,46 @@ import android.view.View
 import android.view.ViewGroup
 import android.content.DialogInterface
 import android.graphics.Color
-import androidx.core.widget.NestedScrollView
+import android.util.Log
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.example.epet.R
 import android.widget.TextView
 import android.widget.ImageView
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import com.example.epet.data.model.passport.InputPetId
+import com.example.epet.data.repository.PassportRepository
+import com.example.epet.ui.main.viewmodel.PassportViewModel
+import kotlinx.coroutines.launch
 
 class PassportInfoMenu(private val onClose: (() -> Unit)? = null) : BottomSheetDialogFragment() {
 
-    private lateinit var sv_main: NestedScrollView
+    private val viewModel: PassportViewModel by lazy { PassportViewModel(PassportRepository()) }
+
     private lateinit var tv_passport_number: TextView
     private lateinit var iv_copy_passport: ImageView
-    private lateinit var tv_last_update: TextView
-    private lateinit var tv_name_ua: TextView
-    private lateinit var tv_name_en: TextView
+    private lateinit var tv_update_datetime: TextView
+    private lateinit var tv_pet_name: TextView
+    private lateinit var tv_pet_name_latin: TextView
     private lateinit var iv_photo: ImageView
-    private lateinit var tv_birth_date: TextView
+    private lateinit var tv_date_of_birth: TextView
     private lateinit var tv_breed_ua: TextView
     private lateinit var tv_breed_en: TextView
-    private lateinit var tv_sex_ua: TextView
-    private lateinit var tv_sex_en: TextView
+    private lateinit var tv_gender_ua: TextView
+    private lateinit var tv_gender_en: TextView
     private lateinit var tv_color_ua: TextView
     private lateinit var tv_color_en: TextView
     private lateinit var tv_species_ua: TextView
     private lateinit var tv_species_en: TextView
     private lateinit var tv_owner_passport_number: TextView
-    private lateinit var tv_autority_number: TextView
-    private lateinit var tv_chip_location_ua: TextView
-    private lateinit var tv_chip_location_en: TextView
-    private lateinit var tv_chip_date: TextView
-    private lateinit var tv_chip_number: TextView
+    private lateinit var tv_organization_id: TextView
+    private lateinit var tv_identifier_type_ua: TextView
+    private lateinit var tv_identifier_type_en: TextView
+    private lateinit var tv_identifier_date: TextView
+    private lateinit var tv_identifier_number: TextView
 
     private var passportNumber: String? = null
 
@@ -79,7 +87,9 @@ class PassportInfoMenu(private val onClose: (() -> Unit)? = null) : BottomSheetD
         initArguments()
         initViews(view)
         initButtons()
-        initInfo()
+        initStateFlow()
+
+        viewModel.getPassportDetail(InputPetId(passportNumber))
     }
 
     override fun onDismiss(dialog: DialogInterface) {
@@ -94,38 +104,65 @@ class PassportInfoMenu(private val onClose: (() -> Unit)? = null) : BottomSheetD
 
     /** Ініціалізація всіх елементів інтерфейсу **/
     private fun initViews(view: View) {
-        sv_main = view.findViewById(R.id.sv_main)
         tv_passport_number = view.findViewById(R.id.tv_passport_number)
         iv_copy_passport = view.findViewById(R.id.iv_copy_passport)
-        tv_last_update = view.findViewById(R.id.tv_last_update)
-        tv_name_ua = view.findViewById(R.id.tv_name_ua)
-        tv_name_en = view.findViewById(R.id.tv_name_en)
+        tv_update_datetime = view.findViewById(R.id.tv_update_datetime)
+        tv_pet_name = view.findViewById(R.id.tv_pet_name)
+        tv_pet_name_latin = view.findViewById(R.id.tv_pet_name_latin)
         iv_photo = view.findViewById(R.id.iv_photo)
-        tv_birth_date = view.findViewById(R.id.tv_birth_date)
+        tv_date_of_birth = view.findViewById(R.id.tv_date_of_birth)
         tv_breed_ua = view.findViewById(R.id.tv_breed_ua)
         tv_breed_en = view.findViewById(R.id.tv_breed_en)
-        tv_sex_ua = view.findViewById(R.id.tv_sex_ua)
-        tv_sex_en = view.findViewById(R.id.tv_sex_en)
+        tv_gender_ua = view.findViewById(R.id.tv_gender_ua)
+        tv_gender_en = view.findViewById(R.id.tv_gender_en)
         tv_color_ua = view.findViewById(R.id.tv_color_ua)
         tv_color_en = view.findViewById(R.id.tv_color_en)
         tv_species_ua = view.findViewById(R.id.tv_species_ua)
         tv_species_en = view.findViewById(R.id.tv_species_en)
         tv_owner_passport_number = view.findViewById(R.id.tv_owner_passport_number)
-        tv_autority_number = view.findViewById(R.id.tv_autority_number)
-        tv_chip_location_ua = view.findViewById(R.id.tv_chip_location_ua)
-        tv_chip_location_en = view.findViewById(R.id.tv_chip_location_en)
-        tv_chip_date = view.findViewById(R.id.tv_chip_date)
-        tv_chip_number = view.findViewById(R.id.tv_chip_number)
+        tv_organization_id = view.findViewById(R.id.tv_organization_id)
+        tv_identifier_type_ua = view.findViewById(R.id.tv_identifier_type_ua)
+        tv_identifier_type_en = view.findViewById(R.id.tv_identifier_type_en)
+        tv_identifier_date = view.findViewById(R.id.tv_identifier_date)
+        tv_identifier_number = view.findViewById(R.id.tv_identifier_number)
     }
 
     /** Ініціалізація всіх кнопок інтерфейсу **/
     private fun initButtons() {
     }
 
-    /** Заповнення даних **/
-    private fun initInfo() {
-        val repeatedText = "Паспорт оновлено 01.10.2025 "
-        tv_last_update.text = repeatedText.repeat(100)
-        tv_last_update.isSelected = true
+    /** Ініціалізація StateFlow **/
+    private fun initStateFlow() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.passportDetail.collect { state ->
+                    state?.let {
+                        Log.d("LOG123", it.toString())
+                        tv_passport_number.text = it.passport_number
+                        tv_pet_name.text = it.pet_name
+                        tv_pet_name_latin.text = it.pet_name_latin
+                        tv_date_of_birth.text = it.date_of_birth
+                        tv_breed_ua.text = it.breed_ua
+                        tv_breed_en.text = it.breed_en
+                        tv_gender_ua.text = it.gender_ua
+                        tv_gender_en.text = it.gender_en
+                        tv_color_ua.text = it.color_ua
+                        tv_color_en.text = it.color_en
+                        tv_species_ua.text = it.species_ua
+                        tv_species_en.text = it.species_en
+                        tv_owner_passport_number.text = it.owner_passport_number
+                        tv_organization_id.text = it.organization_id
+                        tv_identifier_type_ua.text = it.identifier_type_ua
+                        tv_identifier_type_en.text = it.identifier_type_en
+                        tv_identifier_date.text = it.identifier_date
+                        tv_identifier_number.text = it.identifier_number
+
+                        val repeatedText = "Паспорт оновлено ${it.update_datetime} "
+                        tv_update_datetime.text = repeatedText.repeat(100)
+                        tv_update_datetime.isSelected = true
+                    }
+                }
+            }
+        }
     }
 }
