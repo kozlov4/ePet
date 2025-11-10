@@ -102,7 +102,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/tv_update_datetime">
 
                 <TextView
-                    android:id="@+id/tv_pet_name"
+                    android:id="@+id/tv_pet_name_ua"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/e_ukraine_regular"
@@ -113,7 +113,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:id="@+id/tv_pet_name_latin"
+                    android:id="@+id/tv_pet_name_en"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/e_ukraine_regular"
@@ -121,7 +121,7 @@
                     android:textColor="@android:color/black"
                     android:textSize="13sp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_pet_name" />
+                    app:layout_constraintTop_toBottomOf="@+id/tv_pet_name_ua" />
 
                 <ImageView
                     android:id="@+id/iv_photo"
@@ -133,7 +133,7 @@
                     android:background="@drawable/bg_rounded"
                     android:clipToOutline="true"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_pet_name_latin" />
+                    app:layout_constraintTop_toBottomOf="@+id/tv_pet_name_en" />
 
                 <LinearLayout
                     android:id="@+id/ll_info"
@@ -144,7 +144,7 @@
                     app:layout_constraintBottom_toBottomOf="@+id/iv_photo"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@id/guideline_vertical_center1"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_pet_name">
+                    app:layout_constraintTop_toBottomOf="@+id/tv_pet_name_ua">
 
                     <TextView
                         android:layout_width="wrap_content"

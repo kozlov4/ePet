@@ -5,7 +5,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.content.DialogInterface
 import android.graphics.Color
-import android.util.Log
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -89,7 +88,7 @@ class PassportInfoMenu(private val onClose: (() -> Unit)? = null) : BottomSheetD
         initButtons()
         initStateFlow()
 
-        viewModel.getPassportDetail(InputPetId(passportNumber))
+        viewModel.passportDetail(InputPetId(passportNumber))
     }
 
     override fun onDismiss(dialog: DialogInterface) {
@@ -107,8 +106,8 @@ class PassportInfoMenu(private val onClose: (() -> Unit)? = null) : BottomSheetD
         tv_passport_number = view.findViewById(R.id.tv_passport_number)
         iv_copy_passport = view.findViewById(R.id.iv_copy_passport)
         tv_update_datetime = view.findViewById(R.id.tv_update_datetime)
-        tv_pet_name = view.findViewById(R.id.tv_pet_name)
-        tv_pet_name_latin = view.findViewById(R.id.tv_pet_name_latin)
+        tv_pet_name = view.findViewById(R.id.tv_pet_name_ua)
+        tv_pet_name_latin = view.findViewById(R.id.tv_pet_name_en)
         iv_photo = view.findViewById(R.id.iv_photo)
         tv_date_of_birth = view.findViewById(R.id.tv_date_of_birth)
         tv_breed_ua = view.findViewById(R.id.tv_breed_ua)
@@ -135,32 +134,29 @@ class PassportInfoMenu(private val onClose: (() -> Unit)? = null) : BottomSheetD
     private fun initStateFlow() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.passportDetail.collect { state ->
-                    state?.let {
-                        Log.d("LOG123", it.toString())
-                        tv_passport_number.text = it.passport_number
-                        tv_pet_name.text = it.pet_name
-                        tv_pet_name_latin.text = it.pet_name_latin
-                        tv_date_of_birth.text = it.date_of_birth
-                        tv_breed_ua.text = it.breed_ua
-                        tv_breed_en.text = it.breed_en
-                        tv_gender_ua.text = it.gender_ua
-                        tv_gender_en.text = it.gender_en
-                        tv_color_ua.text = it.color_ua
-                        tv_color_en.text = it.color_en
-                        tv_species_ua.text = it.species_ua
-                        tv_species_en.text = it.species_en
-                        tv_owner_passport_number.text = it.owner_passport_number
-                        tv_organization_id.text = it.organization_id
-                        tv_identifier_type_ua.text = it.identifier_type_ua
-                        tv_identifier_type_en.text = it.identifier_type_en
-                        tv_identifier_date.text = it.identifier_date
-                        tv_identifier_number.text = it.identifier_number
+                viewModel.outputPassportDetail.collect { state ->
+                        tv_passport_number.text = state.passport_number
+                        tv_pet_name.text = state.pet_name
+                        tv_pet_name_latin.text = state.pet_name_latin
+                        tv_date_of_birth.text = state.date_of_birth
+                        tv_breed_ua.text = state.breed_ua
+                        tv_breed_en.text = state.breed_en
+                        tv_gender_ua.text = state.gender_ua
+                        tv_gender_en.text = state.gender_en
+                        tv_color_ua.text = state.color_ua
+                        tv_color_en.text = state.color_en
+                        tv_species_ua.text = state.species_ua
+                        tv_species_en.text = state.species_en
+                        tv_owner_passport_number.text = state.owner_passport_number
+                        tv_organization_id.text = state.organization_id
+                        tv_identifier_type_ua.text = state.identifier_type_ua
+                        tv_identifier_type_en.text = state.identifier_type_en
+                        tv_identifier_date.text = state.identifier_date
+                        tv_identifier_number.text = state.identifier_number
 
-                        val repeatedText = "Паспорт оновлено ${it.update_datetime} "
+                        val repeatedText = "Паспорт оновлено ${state.update_datetime} "
                         tv_update_datetime.text = repeatedText.repeat(100)
                         tv_update_datetime.isSelected = true
-                    }
                 }
             }
         }

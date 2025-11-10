@@ -10,12 +10,20 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.epet.R
-import com.example.epet.data.model.OutputPassport
 import com.example.epet.ui.main.adapter.PassportListAdapter
 import kotlin.math.abs
 import SelectorMenu
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import com.example.epet.data.repository.PassportRepository
+import com.example.epet.ui.main.viewmodel.PassportViewModel
+import kotlinx.coroutines.launch
+import com.example.epet.data.model.passport.OutputPetItem
 
 class PassportListFragment : Fragment() {
+
+    private val viewModel: PassportViewModel by lazy { PassportViewModel(PassportRepository()) }
 
     private lateinit var rvPassports: RecyclerView
     private lateinit var llIndicators: LinearLayout
@@ -38,13 +46,12 @@ class PassportListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initViews(view)
-
-        val passports = getSamplePassports()
-        setupRecyclerView(passports)
+        initStateFlow()
         setupSnapHelper()
-        setupIndicators(passports.size)
         centerFirstCard()
         setupScrollListener()
+
+        viewModel.passportList()
     }
 
     /** Ініціалізація всіх елементів інтерфейсу **/
@@ -53,16 +60,20 @@ class PassportListFragment : Fragment() {
         llIndicators = view.findViewById(R.id.ll_indicators)
     }
 
-    /** Повертає приклад даних паспортів **/
-    private fun getSamplePassports(): List<OutputPassport> = listOf(
-        OutputPassport("Мурчик", "Murczyk", "01.01.2021", "A1234567", "20.09.2025"),
-        OutputPassport("Бімка", "Bimka", "15.05.2019", "B7654321", "18.09.2025"),
-        OutputPassport("Пухнастик", "Pukhnastyk", "10.03.2022", "C2468101", "22.09.2025"),
-        OutputPassport("Рекс", "Rex", "07.07.2020", "D1357911", "21.09.2025")
-    )
+    /** Ініціалізація StateFlow **/
+    private fun initStateFlow() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.outputPassportList.collect { state ->
+                    setupRecyclerView(state)
+                    setupIndicators(state.size)
+                }
+            }
+        }
+    }
 
     /** Налаштування RecyclerView **/
-    private fun setupRecyclerView(passports: List<OutputPassport>) {
+    private fun setupRecyclerView(passports: List<OutputPetItem>) {
         passportListAdapter = PassportListAdapter(passports) { passportNumber ->
             val menu = SelectorMenu()
             val bundle = Bundle().apply {

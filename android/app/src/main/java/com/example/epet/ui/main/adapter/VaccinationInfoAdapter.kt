@@ -11,7 +11,7 @@ import com.example.epet.data.model.OutputVaccination
 class VaccinationInfoAdapter(private val outputVaccinations: List<OutputVaccination>) : RecyclerView.Adapter<VaccinationInfoAdapter.VaccinationViewHolder>() {
 
     class VaccinationViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val tv_name: TextView = itemView.findViewById(R.id.tv_pet_name)
+        val tv_name: TextView = itemView.findViewById(R.id.tv_pet_name_ua)
         val tv_date_start: TextView = itemView.findViewById(R.id.tv_date_start)
         val tv_date_end: TextView = itemView.findViewById(R.id.tv_date_end)
         val tv_serial_number: TextView = itemView.findViewById(R.id.tv_serial_number)

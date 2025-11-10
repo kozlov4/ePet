@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.epet.data.model.passport.InputPetId
 import com.example.epet.data.model.passport.OutputPassportDetail
+import com.example.epet.data.model.passport.OutputPetItem
 import com.example.epet.data.repository.PassportRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -11,14 +12,24 @@ import kotlinx.coroutines.launch
 
 class PassportViewModel(private val repository: PassportRepository) : ViewModel() {
 
-    private val _passportDetail = MutableStateFlow(OutputPassportDetail())
-    val passportDetail = _passportDetail.asStateFlow()
+    private val _outputPassportList = MutableStateFlow<List<OutputPetItem>>(emptyList())
+    val outputPassportList = _outputPassportList.asStateFlow()
 
-    fun getPassportDetail(inputPetId: InputPetId) {
+    private val _outputPassportDetail = MutableStateFlow(OutputPassportDetail())
+    val outputPassportDetail = _outputPassportDetail.asStateFlow()
+
+    fun passportList() {
+        viewModelScope.launch {
+            val output = repository.passportList()
+            _outputPassportList.value = output
+        }
+    }
+
+    fun passportDetail(inputPetId: InputPetId) {
         viewModelScope.launch {
             val input = inputPetId
             val output = repository.passportDetail(input)
-            _passportDetail.value = output
+            _outputPassportDetail.value = output
         }
     }
 }
