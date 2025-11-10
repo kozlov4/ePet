@@ -5,21 +5,30 @@ import android.view.View
 import android.view.ViewGroup
 import android.content.DialogInterface
 import android.graphics.Color
-import androidx.core.widget.NestedScrollView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.example.epet.R
 import android.widget.TextView
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.RecyclerView
 import com.example.epet.data.model.OutputVaccination
 import com.example.epet.ui.main.adapter.VaccinationInfoAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.epet.data.model.passport.InputPetId
+import com.example.epet.data.model.passport.OutputVaccinationItem
+import com.example.epet.data.repository.PassportRepository
+import com.example.epet.ui.main.viewmodel.PassportViewModel
+import kotlinx.coroutines.launch
 
 class VaccinationInfoMenu(private val onClose: (() -> Unit)? = null) : BottomSheetDialogFragment() {
 
-    private lateinit var sv_main: NestedScrollView
-    private lateinit var tv_last_update: TextView
+    private val viewModel: PassportViewModel by lazy { PassportViewModel(PassportRepository()) }
+
+    private lateinit var tv_passport_number: TextView
+    private lateinit var tv_update_datetime: TextView
     private lateinit var rv_vaccinations: RecyclerView
 
     private var pet_id: String? = null
@@ -63,7 +72,9 @@ class VaccinationInfoMenu(private val onClose: (() -> Unit)? = null) : BottomShe
         initArguments()
         initViews(view)
         initButtons()
-        initInfo()
+        initStateFlow()
+
+        viewModel.vaccinationList(InputPetId(pet_id))
     }
 
     override fun onDismiss(dialog: DialogInterface) {
@@ -78,8 +89,8 @@ class VaccinationInfoMenu(private val onClose: (() -> Unit)? = null) : BottomShe
 
     /** Ініціалізація всіх елементів інтерфейсу **/
     private fun initViews(view: View) {
-        sv_main = view.findViewById(R.id.sv_main)
-        tv_last_update = view.findViewById(R.id.tv_update_datetime)
+        tv_passport_number = view.findViewById(R.id.tv_passport_number)
+        tv_update_datetime = view.findViewById(R.id.tv_update_datetime)
         rv_vaccinations = view.findViewById(R.id.rv_vaccinations)
     }
 
@@ -87,31 +98,25 @@ class VaccinationInfoMenu(private val onClose: (() -> Unit)? = null) : BottomShe
     private fun initButtons() {
     }
 
-    /** Заповнення даних **/
-    private fun initInfo() {
-        tv_last_update.text = getLastUpdateText()
-        tv_last_update.isSelected = true
+    /** Ініціалізація StateFlow **/
+    private fun initStateFlow() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.outputVaccinationList.collect { state ->
+                    tv_passport_number.text = state.passport_number
 
-        setupRecyclerView(getSampleVaccinations())
+                    val repeatedText = "Паспорт оновлено ${state.update_datetime} "
+                    tv_update_datetime.text = repeatedText.repeat(100)
+                    tv_update_datetime.isSelected = true
+
+                    setupRecyclerView(state.vaccinations)
+                }
+            }
+        }
     }
-
-    /** Повертає приклад тексту останнього оновлення **/
-    private fun getLastUpdateText(): String {
-        val repeatedText = "Паспорт оновлено 01.10.2025 "
-        return repeatedText.repeat(100)
-    }
-
-    /** Повертає приклад даних про вакцинації **/
-    private fun getSampleVaccinations(): List<OutputVaccination> = listOf(
-        OutputVaccination("Nobivac Rabies", "04.09.2024", "04.09.2025", "A452A01", "ЕкоЦентр"),
-        OutputVaccination("Nobivac DHPPi/L", "10.05.2023", "10.05.2024", "B123C45", "ЕкоЦентр"),
-        OutputVaccination("Nobivac Rabies", "04.09.2024", "04.09.2025", "A452A01", "ЕкоЦентр"),
-        OutputVaccination("Nobivac DHPPi/L", "10.05.2023", "10.05.2024", "B123C45", "ЕкоЦентр"),
-        OutputVaccination("Nobivac Lepto", "15.06.2025", "15.06.2026", "C987D65", "ЕкоЦентр")
-    )
 
     /** Налаштування RecyclerView **/
-    private fun setupRecyclerView(outputVaccinations: List<OutputVaccination>) {
+    private fun setupRecyclerView(outputVaccinations: List<OutputVaccinationItem>) {
         val adapter = VaccinationInfoAdapter(outputVaccinations)
         rv_vaccinations.layoutManager = LinearLayoutManager(requireContext())
         rv_vaccinations.adapter = adapter

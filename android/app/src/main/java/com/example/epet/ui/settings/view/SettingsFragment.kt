@@ -48,7 +48,7 @@ class SettingsFragment : Fragment() {
         tv_message = view.findViewById(R.id.tv_message)
 
         tv_surname = view.findViewById(R.id.tv_surname)
-        tv_name = view.findViewById(R.id.tv_pet_name_ua)
+        tv_name = view.findViewById(R.id.tv_drug_name)
         tv_patronymic = view.findViewById(R.id.tv_patronymic)
         tv_passport_number = view.findViewById(R.id.tv_passport_number)
         tv_address = view.findViewById(R.id.tv_address)

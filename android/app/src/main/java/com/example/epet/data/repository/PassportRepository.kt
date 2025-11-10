@@ -3,6 +3,8 @@ package com.example.epet.data.repository
 import com.example.epet.data.model.passport.InputPetId
 import com.example.epet.data.model.passport.OutputPassportDetail
 import com.example.epet.data.model.passport.OutputPetItem
+import com.example.epet.data.model.passport.OutputVaccinationsList
+import com.example.epet.data.model.passport.OutputVaccinationItem
 
 class PassportRepository {
 
@@ -57,5 +59,12 @@ class PassportRepository {
             "TEST",
             "TEST",
             "TEST")
+    }
+
+    suspend fun vaccinationsList(inputPetId: InputPetId): OutputVaccinationsList {
+        return OutputVaccinationsList("TEST", "TEST", listOf(
+            OutputVaccinationItem("TEST", "TEST", "TEST", "TEST", "TEST"),
+            OutputVaccinationItem("TEST", "TEST", "TEST", "TEST", "TEST"))
+        )
     }
 }

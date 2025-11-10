@@ -76,7 +76,7 @@ class ShelterFragment : Fragment() {
         val cardView = layoutInflater.inflate(R.layout.item_shelter, card_container, false)
 
         val iv_photo = cardView.findViewById<ImageView>(R.id.iv_photo)
-        val tv_name = cardView.findViewById<TextView>(R.id.tv_pet_name_ua)
+        val tv_name = cardView.findViewById<TextView>(R.id.tv_drug_name)
         val tv_sex = cardView.findViewById<TextView>(R.id.tv_sex)
         val tv_breed = cardView.findViewById<TextView>(R.id.tv_breed)
         val tv_birth_date = cardView.findViewById<TextView>(R.id.tv_breed)

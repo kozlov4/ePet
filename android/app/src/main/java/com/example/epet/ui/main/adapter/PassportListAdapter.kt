@@ -14,7 +14,7 @@ class PassportListAdapter(
     private val onMenuClick: (pet_id: String) -> Unit) : RecyclerView.Adapter<PassportListAdapter.PassportViewHolder>() {
 
     inner class PassportViewHolder(val card: CardView) : RecyclerView.ViewHolder(card) {
-        val tv_pet_name_ua: TextView = card.findViewById(R.id.tv_pet_name_ua)
+        val tv_pet_name_ua: TextView = card.findViewById(R.id.tv_drug_name)
         val tv_pet_name_en: TextView = card.findViewById(R.id.tv_pet_name_en)
         val tv_date_of_birth: TextView = card.findViewById(R.id.tv_date_of_birth)
         val tv_passport_number: TextView = card.findViewById(R.id.tv_passport_number)
