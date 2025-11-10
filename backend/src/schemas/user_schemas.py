@@ -24,11 +24,8 @@ class UserCreateRequest(BaseModel):
 
 class UserPetItem(BaseModel):
     pet_id: str
-    update_datetime: str
     passport_number: str
     pet_name_ua: str
     pet_name_en: str
     date_of_birth: str
-
-class UserPetsListResponse(BaseModel):
-    pets: List[UserPetItem]
+    update_datetime: str

@@ -8,7 +8,7 @@ from sqlalchemy import select
 from datetime import datetime
 from deep_translator import GoogleTranslator
 
-from src.schemas.user_schemas import UserCreateRequest, UserPetsListResponse
+from src.schemas.user_schemas import UserCreateRequest, UserPetItem
 from src.schemas.token_schemas import TokenResponse
 from src.db.database import get_db
 from src.db.models import Users
@@ -82,7 +82,7 @@ def translate_text(text_to_translate: str) -> str:
         return text_to_translate
 
 
-@router.get("/me/pets", response_model=UserPetsListResponse)
+@router.get("/me/pets", response_model=List[UserPetItem])
 async def get_my_pets(db: db_dependency, user: user_dependency):
     user_id = user.get('user_id')
     if user_id is None:
@@ -102,7 +102,7 @@ async def get_my_pets(db: db_dependency, user: user_dependency):
     user_pets = result.scalars().all()
 
     pet_items = []
-    formatted_update_time = datetime.now().strftime('%d.%m.%Y %H:%M')
+    formatted_update_time = datetime.now().strftime('%d/%m/%Y %H:%M')
 
     for pet in user_pets:
         pet_name_en = translate_text(pet.pet_name)
@@ -111,9 +111,9 @@ async def get_my_pets(db: db_dependency, user: user_dependency):
             "passport_number": format_value(pet.passport.passport_number if pet.passport else None),
             "pet_name_ua": format_value(pet.pet_name),
             "pet_name_en": format_value(pet_name_en),
-            "date_of_birth": format_value(pet.date_of_birth.strftime('%d.%m.%Y') if pet.date_of_birth else None),
+            "date_of_birth": format_value(pet.date_of_birth.strftime('%d/%m/%Y') if pet.date_of_birth else None),
             "update_datetime": formatted_update_time
         }
         pet_items.append(item)
 
-    return {"pets": pet_items}
+    return pet_items
