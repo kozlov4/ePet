@@ -65,3 +65,13 @@ class AnimalForVeterinary(AnimalBase):
 class AnimaForCnap(AnimalForVeterinary):
     pass
 
+class AddPetRequest(BaseModel):
+    img_url: str
+    pet_name: str
+    species: str
+    breed: Optional[str] = None
+    gender: str
+    date_of_birth: Optional[datetime] = None
+    color: str
+    sterilized: Optional[bool] = None           
+    owner_passport_number: Optional[str] = None  
