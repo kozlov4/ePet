@@ -20,6 +20,7 @@ import com.example.epet.data.repository.PassportRepository
 import com.example.epet.ui.main.viewmodel.PassportViewModel
 import kotlinx.coroutines.launch
 import com.example.epet.data.model.passport.OutputPetItem
+import android.content.Context
 
 class PassportListFragment : Fragment() {
 
@@ -51,8 +52,6 @@ class PassportListFragment : Fragment() {
         setupSnapHelper()
         centerFirstCard()
         setupScrollListener()
-
-        viewModel.passportList()
     }
 
     /** Ініціалізація всіх елементів інтерфейсу **/
@@ -63,6 +62,10 @@ class PassportListFragment : Fragment() {
 
     /** Ініціалізація StateFlow **/
     private fun initStateFlow() {
+        val sharedPref = requireContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+        val token = sharedPref.getString("access_token", null)
+        viewModel.passportList(token)
+
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.outputPassportList.collect { state ->

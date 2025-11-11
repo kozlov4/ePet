@@ -1,4 +1,5 @@
 import android.app.Dialog
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,10 +15,8 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.RecyclerView
-import com.example.epet.data.model.OutputVaccination
 import com.example.epet.ui.main.adapter.VaccinationInfoAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.epet.data.model.passport.InputPetId
 import com.example.epet.data.model.passport.OutputVaccinationItem
 import com.example.epet.data.repository.PassportRepository
 import com.example.epet.ui.main.viewmodel.PassportViewModel
@@ -73,8 +72,6 @@ class VaccinationInfoMenu(private val onClose: (() -> Unit)? = null) : BottomShe
         initViews(view)
         initButtons()
         initStateFlow()
-
-        viewModel.vaccinationList(InputPetId(pet_id))
     }
 
     override fun onDismiss(dialog: DialogInterface) {
@@ -100,6 +97,10 @@ class VaccinationInfoMenu(private val onClose: (() -> Unit)? = null) : BottomShe
 
     /** Ініціалізація StateFlow **/
     private fun initStateFlow() {
+        val sharedPref = requireContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+        val token = sharedPref.getString("access_token", null)
+        viewModel.vaccinationList(pet_id, token)
+
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.outputVaccinationList.collect { state ->

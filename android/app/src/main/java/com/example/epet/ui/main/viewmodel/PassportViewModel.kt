@@ -2,7 +2,6 @@ package com.example.epet.ui.main.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.epet.data.model.passport.InputPetId
 import com.example.epet.data.model.passport.OutputPassportDetail
 import com.example.epet.data.model.passport.OutputPetItem
 import com.example.epet.data.model.passport.OutputVaccinationsList
@@ -22,25 +21,25 @@ class PassportViewModel(private val repository: PassportRepository) : ViewModel(
     private val _outputVaccinationList = MutableStateFlow(OutputVaccinationsList())
     val outputVaccinationList = _outputVaccinationList.asStateFlow()
 
-    fun passportList() {
+    fun passportList(token: String?) {
         viewModelScope.launch {
-            val output = repository.passportList()
+            val output = repository.passportList(token)
             _outputPassportList.value = output
         }
     }
 
-    fun passportDetail(inputPetId: InputPetId) {
+    fun passportDetail(token: String?, pet_id: String?) {
         viewModelScope.launch {
-            val input = inputPetId
-            val output = repository.passportDetail(input)
+            val input = pet_id
+            val output = repository.passportDetail(token, input)
             _outputPassportDetail.value = output
         }
     }
 
-    fun vaccinationList(inputPetId: InputPetId) {
+    fun vaccinationList(token: String?, pet_id: String?) {
         viewModelScope.launch {
-            val input = inputPetId
-            val output = repository.vaccinationsList(input)
+            val input = pet_id
+            val output = repository.vaccinationsList(token, input)
             _outputVaccinationList.value = output
         }
     }

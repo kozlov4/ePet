@@ -1,4 +1,5 @@
 import android.app.Dialog
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,7 +15,6 @@ import android.widget.ImageView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.example.epet.data.model.passport.InputPetId
 import com.example.epet.data.repository.PassportRepository
 import com.example.epet.ui.main.viewmodel.PassportViewModel
 import kotlinx.coroutines.launch
@@ -87,8 +87,6 @@ class PassportInfoMenu(private val onClose: (() -> Unit)? = null) : BottomSheetD
         initViews(view)
         initButtons()
         initStateFlow()
-
-        viewModel.passportDetail(InputPetId(pet_id))
     }
 
     override fun onDismiss(dialog: DialogInterface) {
@@ -132,6 +130,10 @@ class PassportInfoMenu(private val onClose: (() -> Unit)? = null) : BottomSheetD
 
     /** Ініціалізація StateFlow **/
     private fun initStateFlow() {
+        val sharedPref = requireContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+        val token = sharedPref.getString("access_token", null)
+        viewModel.passportDetail(token, pet_id)
+
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.outputPassportDetail.collect { state ->

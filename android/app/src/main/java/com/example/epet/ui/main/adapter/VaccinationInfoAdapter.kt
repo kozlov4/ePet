@@ -6,7 +6,6 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.epet.R
-import com.example.epet.data.model.OutputVaccination
 import com.example.epet.data.model.passport.OutputVaccinationItem
 
 class VaccinationInfoAdapter(private val outputVaccinations: List<OutputVaccinationItem>) : RecyclerView.Adapter<VaccinationInfoAdapter.VaccinationViewHolder>() {
