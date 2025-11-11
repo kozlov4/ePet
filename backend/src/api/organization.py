@@ -4,9 +4,9 @@ from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session, joinedload
 from sqlalchemy import func
 from src.db.database import get_db
-from src.db.models import Organizations, Pets, Passports
+from src.db.models import Organizations, Pets, Passports, Users
 from src.api.core import  get_current_user
-from src.schemas.organization_schemas import AnimalForOrgResponse, OwnerForOrgResponse, PaginatedAnimalResponse, GetOrgInfo, AnimaForlLintel, AnimalForVeterinary, AnimaForCnap
+from src.schemas.organization_schemas import AnimalForOrgResponse, OwnerForOrgResponse, PaginatedAnimalResponse, GetOrgInfo, AnimaForlLintel, AnimalForVeterinary, AnimaForCnap, AddPetRequest
 from deep_translator import GoogleTranslator
 
 
@@ -190,3 +190,47 @@ async def get_pet_info(
 
     else:
         raise HTTPException(status_code=403, detail="Немає доступу")
+
+@router.post("/pets", status_code=201)
+async def add_pet(
+    pet_data: AddPetRequest,
+    db: db_dependency,
+    organization_user: Annotated[Organizations, Depends(get_current_organization)]
+):
+    org_type = organization_user.organization_type
+
+
+    if org_type not in ["Притулок", "ЦНАП"]:
+        raise HTTPException(status_code=403, detail="Додавати тварин можуть лише Притулок або ЦНАП")
+
+    user_id = None
+    if org_type == "ЦНАП":
+        if not pet_data.owner_passport_number:
+            raise HTTPException(status_code=400, detail="Потрібно вказати номер паспорта власника")
+        
+        user = db.query(Users).filter(Users.passport_number == pet_data.owner_passport_number).first()
+        if not user:
+            raise HTTPException(status_code=404, detail="Користувача з таким паспортом не знайдено")
+        user_id = user.user_id
+
+    new_pet = Pets(
+        img_url=pet_data.img_url,
+        pet_name=pet_data.pet_name,
+        species=pet_data.species,
+        breed=pet_data.breed,
+        gender=pet_data.gender,
+        date_of_birth=pet_data.date_of_birth,
+        color=pet_data.color,
+        organization_id=organization_user.organization_id,
+        user_id=user_id
+    )
+
+    db.add(new_pet)
+    db.commit()
+    db.refresh(new_pet)
+
+    return {
+        "message": "Тварину успішно додано",
+        "pet_id": new_pet.pet_id,
+        "organization": organization_user.organization_name
+    }
