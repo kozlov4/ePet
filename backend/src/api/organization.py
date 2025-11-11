@@ -63,7 +63,7 @@ async def get_current_organization_optional(user: user_dependency, db: db_depend
 
     organization = db.query(Organizations).filter(
         (Organizations.organization_id == user_id) &
-        (Organizations.organization_type.in_(['ЦНАП', 'Ветклініка', 'Притулок']))
+        (Organizations.organization_type.in_(['Ветклініка', 'Притулок']))
     ).first()
 
     return organization
@@ -72,6 +72,7 @@ async def get_current_organization_optional(user: user_dependency, db: db_depend
 async def get_animals_for_cnap(
     db: db_dependency, 
     organization_user: Annotated[Organizations, Depends(get_current_organization)],
+    cnap_user: Annotated[Optional[CNAP], Depends(get_current_cnap)] = None,
     page: Annotated[int, Query(ge=1, description="Номер сторінки")] = 1,
     size: Annotated[int, Query(ge=1, le=100, description="Кількість записів на сторінці")] = 6,
     animal_passport_number: Optional[str] = Query(None, description="Номер паспорта тварини для пошуку")
@@ -84,6 +85,9 @@ async def get_animals_for_cnap(
 
     if org_type == 'Притулок':
         base_query = base_query.filter(Pets.organization_id == organization_user.organization_id)
+    
+    elif cnap_user:
+        base_query = base_query.join(Organizations).filter(Organizations.cnap_id == cnap_user.cnap_id)
 
     if animal_passport_number:
         base_query = (
