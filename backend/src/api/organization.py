@@ -35,10 +35,7 @@ async def get_current_organization(user: user_dependency, db: db_dependency) -> 
     return organization
 
 
-async def get_current_cnap(
-    user: user_dependency,
-    db: db_dependency
-) -> CNAP:
+async def get_current_cnap(user: user_dependency, db: db_dependency) -> CNAP:
     user_id = user.get('user_id')
     if user_id is None:
         raise HTTPException(
@@ -153,5 +150,22 @@ async def get_info(db: db_dependency,
     )
     
   
+@router.get("/cnap/info", response_model=GetCnapInfo)
+async def get_cnap_info(
+    db: db_dependency,
+    cnap_user: CNAP = Depends(get_current_cnap)
+):
+    cnap = db.query(CNAP).filter(CNAP.cnap_id == cnap_user.cnap_id).first()
+    if not cnap:
+        raise HTTPException(status_code=404, detail="ЦНАП не знайдено.")
 
+    return GetCnapInfo(
+        name=cnap.name,
+        region=cnap.region,
+        city=cnap.city,
+        street=cnap.street,
+        building=cnap.building,
+        phone_number=cnap.phone_number,
+        email=cnap.email
+    )
 

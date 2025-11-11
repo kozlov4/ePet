@@ -88,6 +88,3 @@ class GetCnapInfo(BaseModel):
     building: Optional[str]
     phone_number: str
     email: str
-
-    class Config:
-        orm_mode = True
