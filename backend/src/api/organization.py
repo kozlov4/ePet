@@ -1,3 +1,4 @@
+from random import random
 from typing import Annotated, Optional
 import math
 from fastapi import APIRouter, Depends, HTTPException, status, Query
@@ -190,6 +191,14 @@ async def get_pet_info(
 
     else:
         raise HTTPException(status_code=403, detail="Немає доступу")
+    
+def generate_passport_number(db) -> str:
+    while True:
+        number = random.randint(1000, 999999)
+        passport_number = f"UA-AA-{number:06d}"
+        exists = db.query(Pets).filter(Pets.passport_number == passport_number).first()
+        if not exists:
+            return passport_number
 
 @router.post("/pets", status_code=201)
 async def add_pet(
