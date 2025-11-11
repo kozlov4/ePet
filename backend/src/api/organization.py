@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session, joinedload
 from sqlalchemy import func
 from src.db.database import get_db
-from src.db.models import Organizations, Pets, Passports, CNAP
+from src.db.models import Organizations, Pets, Passports, CNAP, Coordinator
 from src.api.core import  get_current_user
 from src.schemas.pet_schemas import AnimalForOrgResponse, OwnerForOrgResponse, PaginatedAnimalResponse, GetOrgInfo, GetCnapInfo
 
@@ -67,6 +67,24 @@ async def get_current_organization_optional(user: user_dependency, db: db_depend
     ).first()
 
     return organization
+
+async def get_current_coordinator(user: user_dependency, db: db_dependency) -> Coordinator:
+ 
+    user_id = user.get("user_id")
+    if not user_id:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Не вдалося витягти ID користувача з токена."
+        )
+
+    coordinator = db.query(Coordinator).filter(Coordinator.coordinator_id == user_id).first()
+    if not coordinator:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Користувач не є координатором або його не знайдено."
+        )
+
+    return coordinator
 
 @router.get('/animals/', response_model=PaginatedAnimalResponse)
 async def get_animals_for_cnap(
