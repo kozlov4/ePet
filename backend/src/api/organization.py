@@ -1,4 +1,4 @@
-from typing import Annotated, Optional, Union
+from typing import Annotated, Optional, Union, List
 import math
 from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session, joinedload
@@ -7,7 +7,7 @@ from src.db.database import get_db
 from src.db.models import Organizations, Pets, Passports, Cnap
 from src.api.core import  get_current_user
 from src.schemas.pet_schemas import AnimalForOrgResponse, OwnerForOrgResponse, PaginatedAnimalResponse, GetOrgInfo
-
+from src.schemas.organization_schemas import OrganizationsForCnap
 
 
 router = APIRouter(tags=['Organizations 🏢'], prefix="/organizations")
@@ -190,3 +190,25 @@ async def get_info(
     raise HTTPException(403, "Доступ тільки для організацій або ЦНАП.")
 
 
+@router.get("/organizations/", response_model=List[OrganizationsForCnap])
+async def get_all_organizations(
+    db: db_dependency,
+    cnap: Annotated[Cnap, Depends(get_current_cnap_optional)]
+):
+    if cnap is None:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="only cnap can gets organizations")
+    orgs = db.query(Organizations).filter(Organizations.cnap_id == cnap.cnap_id).all()
+
+    return [
+        OrganizationsForCnap(
+            organization_id=o.organization_id,
+            organization_name=o.organization_name,
+            organization_type=o.organization_type,
+            city=o.city,
+            street=o.street,
+            building=o.building,
+            phone_number=o.phone_number,
+            email=o.email
+        )
+        for o in orgs
+    ]
