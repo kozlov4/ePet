@@ -157,20 +157,49 @@ async def get_animals_for_cnap(
 
 @router.get("/info/", response_model=GetOrgInfo)
 async def get_info(db: db_dependency, 
-    organization_user: Annotated[Organizations, Depends(get_current_organization)]
+    organization_user: Annotated[Organizations, Depends(get_current_organization)] = None,
+    cnap_user: Annotated[CNAP, Depends(get_current_cnap)] = None
     ):
-    org = db.query(Organizations).filter(organization_user.organization_id == Organizations.organization_id).first()
-
-    return GetOrgInfo(
-        organization_name=org.organization_name,
-        organization_type=org.organization_type,
-        city=org.city,
-        street=org.street,
-        building=org.building,
-        phone_number=org.phone_number,
-        email=org.email
-    )
     
+    if organization_user:
+        org = db.query(Organizations).filter(
+            Organizations.organization_id == organization_user.organization_id
+        ).first()
+        if not org:
+            raise HTTPException(status_code=404, detail="Організацію не знайдено.") 
+
+        return GetOrgInfo(
+            organization_name=org.organization_name,
+            organization_type=org.organization_type,
+            city=org.city,
+            street=org.street,
+            building=org.building,
+            phone_number=org.phone_number,
+            email=org.email
+        )
+        
+    if cnap_user:
+        organizations = db.query(Organizations).filter(
+            Organizations.cnap_id == cnap_user.cnap_id
+        ).all()
+        if not organizations:
+            raise HTTPException(status_code=404, detail="Організації для цього ЦНАП не знайдено.")
+
+        return [
+            GetOrgInfo(
+                organization_name=org.organization_name,
+                organization_type=org.organization_type,
+                city=org.city,
+                street=org.street,
+                building=org.building,
+                phone_number=org.phone_number,
+                email=org.email
+            )
+            for org in organizations
+        ]
+
+    raise HTTPException(status_code=400, detail="Не передано користувача для отримання інформації.") 
+      
   
 @router.get("/cnap/info", response_model=List[GetCnapInfo])
 async def get_cnap_info(
