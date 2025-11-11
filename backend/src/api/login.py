@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from src.db.database import get_db
-from src.db.models import Organizations, Users
+from src.db.models import Organizations, Users, Cnap
 from src.schemas.token_schemas import TokenResponse
 from src.api.core import create_access_token, bcrypt_context
 
@@ -19,11 +19,19 @@ db_dependency = Annotated[Session, Depends(get_db)]
 async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db: db_dependency):
     
     org = db.query(Organizations).filter(Organizations.email == form_data.username).first()
+    cnap =db.query(Cnap).filter(Cnap.email == form_data.username).first()
+    
     if org:
         user_model = org
         name = org.organization_name
         user_id = org.organization_id
         role = org.organization_type
+    elif cnap:
+        user_model = cnap
+        name = cnap.name
+        user_id=cnap.cnap_id
+        role="ЦНАП"
+
     else:
         user = db.query(Users).filter(Users.email == form_data.username).first()
         if not user:

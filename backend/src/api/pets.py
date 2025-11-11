@@ -1,15 +1,16 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session, joinedload
+from typing import Union
 from sqlalchemy.future import select
 from deep_translator import GoogleTranslator
 from datetime import datetime
 
 from src.db.database import get_db
 from src.schemas.vaccination_schemas import VaccinationsListResponse
-from src.db.models import Pets, Vaccinations, Organizations
+from src.db.models import Pets, Vaccinations, Organizations, Cnap
 from typing import Annotated
 from src.api.core import  get_current_user
-from src.api.organization import  get_current_organization_optional
+from src.api.organization import  get_current_organization_optional, get_current_org_or_cnap
 from src.schemas.pet_schemas import AnimaForCnap, AnimaForlLintel, AnimalForVeterinary, AnimalForUser
 
 
@@ -32,7 +33,7 @@ def check_gender(gender):
 async def get_pet_info(
     pet_id: int,
     db: db_dependency,
-    organization_user: Annotated[Organizations, Depends(get_current_organization_optional)],
+    organization_user: Annotated[Union[Organizations, Cnap, None], Depends(get_current_org_or_cnap)],
     user: user_dependency
 ):
     pet = db.query(Pets).filter(Pets.pet_id == pet_id).first()
@@ -45,7 +46,16 @@ async def get_pet_info(
     identifier = pet.identifiers[0] if pet.identifiers else None
     translation = GoogleTranslator(source='auto', target='en')
 
-    org_type = organization_user.organization_type if organization_user else None
+    if isinstance(organization_user, Organizations):
+        org_type = organization_user.organization_type
+        org_name = organization_user.organization_name
+    elif isinstance(organization_user, Cnap):
+        org_type = "ЦНАП"
+        org_name = "ЦНАП"
+    else:
+        org_type = None
+        org_name = "—"
+
     user_id = user.get('user_id')
 
     if org_type == "Притулок":
@@ -82,7 +92,7 @@ async def get_pet_info(
             color_en=translation.translate(pet.color),
             species=pet.species,
             species_en=translation.translate(pet.species),
-            organization_name=organization.organization_name if organization else "—",
+            organization_name=org_name,
             date=identifier.date if identifier else None,
             identifier_type=identifier.identifier_type if identifier else "—",
             identifier_type_en=translation.translate(identifier.identifier_type) if identifier else "—",
@@ -106,7 +116,7 @@ async def get_pet_info(
             color_en=translation.translate(pet.color),
             species=pet.species,
             species_en=translation.translate(pet.species),
-            organization_name=organization.organization_name if organization else "—",
+            organization_name=org_name,  
             date=identifier.date if identifier else None,
             identifier_type=identifier.identifier_type if identifier else "—",
             identifier_type_en=translation.translate(identifier.identifier_type) if identifier else "—",
@@ -114,7 +124,7 @@ async def get_pet_info(
             owner_passport_number=pet.owner.passport_number if pet.owner else "—",
         )
 
-    elif (org_type == None and user_id != None):
+    elif org_type is None and user_id is not None:
         return AnimalForUser(
             pet_id=pet.pet_id,
             passport_number=passport.passport_number if passport else "—",
@@ -130,7 +140,7 @@ async def get_pet_info(
             color_en=translation.translate(pet.color),
             species=pet.species,
             species_en=translation.translate(pet.species),
-            organization_name=organization.organization_name if organization else "—",
+            organization_name=org_name,
             date=identifier.date if identifier else None,
             identifier_type=identifier.identifier_type if identifier else "—",
             identifier_type_en=translation.translate(identifier.identifier_type) if identifier else "—",
@@ -138,8 +148,10 @@ async def get_pet_info(
             owner_passport_number=pet.owner.passport_number if pet.owner else "—",
             update_datetime=datetime.now().strftime('%d.%m.%Y %H:%M')
         )
+
     else:
         raise HTTPException(status_code=403, detail="Немає доступу")
+
 
 
 @router.get("/{pet_id}/vaccinations", response_model=VaccinationsListResponse)
