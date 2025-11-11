@@ -79,3 +79,15 @@ class AnimalForUser(AnimalForVeterinary):
     model_config = ConfigDict(from_attributes=True)
 
     update_datetime: str
+    
+class GetCnapInfo(BaseModel):
+    name: str
+    region: str
+    city: str
+    street: str
+    building: Optional[str]
+    phone_number: str
+    email: str
+
+    class Config:
+        orm_mode = True
