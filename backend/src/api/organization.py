@@ -1,4 +1,4 @@
-from typing import Annotated, Optional
+from typing import Annotated, List, Optional
 import math
 from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session, joinedload
@@ -172,22 +172,26 @@ async def get_info(db: db_dependency,
     )
     
   
-@router.get("/cnap/info", response_model=GetCnapInfo)
+@router.get("/cnap/info", response_model=List[GetCnapInfo])
 async def get_cnap_info(
     db: db_dependency,
-    cnap_user: CNAP = Depends(get_current_cnap)
-):
-    cnap = db.query(CNAP).filter(CNAP.cnap_id == cnap_user.cnap_id).first()
-    if not cnap:
-        raise HTTPException(status_code=404, detail="ЦНАП не знайдено.")
+    coordinator_user: Coordinator = Depends(get_current_coordinator)):
+    cnaps = db.query(CNAP).filter(CNAP.coordinator_id == coordinator_user.coordinator_id).all()
+    if not cnaps:
+        raise HTTPException(status_code=404, detail="ЦНАПи не знайдено для цього координатора.")
 
-    return GetCnapInfo(
-        name=cnap.name,
-        region=cnap.region,
-        city=cnap.city,
-        street=cnap.street,
-        building=cnap.building,
-        phone_number=cnap.phone_number,
-        email=cnap.email
-    )
+    return [
+        GetCnapInfo(
+            name=cnap.name,
+            region=cnap.region,
+            city=cnap.city,
+            street=cnap.street,
+            building=cnap.building,
+            phone_number=cnap.phone_number,
+            email=cnap.email
+        )
+        for cnap in cnaps
+    ]
+    
+
 
