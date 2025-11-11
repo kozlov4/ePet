@@ -19,8 +19,6 @@ FRONTEND_URL =  "https://e-pet-seven.vercel.app"
 db_dependency = Annotated[Session, Depends(get_db)]
 
 
-# --- Запит на скидання пароля ---
-
 @router.post("/forgot-password/")
 async def forgot_password(payload: ForgotPasswordPayload, db: db_dependency):
     user = db.query(Users).filter(Users.email == payload.email).first()

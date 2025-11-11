@@ -21,7 +21,7 @@ def create_access_token(subject: str, id: int, expires_delta: timedelta):
 
 async def get_current_user(token: Annotated[str, Depends(oauth2_bearer)]):
     try:
-        payload = jwt.decode(token,  os.getenv("SECRET_KEY"), os.getenv("ALGORITHM"))
+        payload = jwt.decode(token, os.getenv("SECRET_KEY"), algorithms=[os.getenv("ALGORITHM")])
         username: str = payload.get('sub')
         user_id: int = payload.get('id')
         if username is None or user_id is None:
