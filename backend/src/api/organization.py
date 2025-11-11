@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session, joinedload
 from sqlalchemy import func
 from src.db.database import get_db
-from src.db.models import Organizations, Pets, Passports, Users
+from src.db.models import Organizations, Pets, Passports, Users, Identifiers
 from src.api.core import  get_current_user
 from src.schemas.organization_schemas import AnimalForOrgResponse, OwnerForOrgResponse, PaginatedAnimalResponse, GetOrgInfo, AnimaForlLintel, AnimalForVeterinary, AnimaForCnap, AddPetRequest
 from deep_translator import GoogleTranslator
@@ -244,7 +244,7 @@ async def add_pet(
             pet_id=new_pet.pet_id
         )
         db.add(new_passport)
-        db.commit()
+        db.commit() 
 
     return {
         "message": "Тварину успішно додано",

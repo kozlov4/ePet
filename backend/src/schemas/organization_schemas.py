@@ -75,3 +75,9 @@ class AddPetRequest(BaseModel):
     color: str
     sterilized: Optional[bool] = None           
     owner_passport_number: Optional[str] = None  
+
+class AddIdentifierRequest(BaseModel):
+    identifier_number: str         
+    identifier_type: str           
+    identifier_place: Optional[str] = None
+    identifier_date: Optional[datetime] = None
