@@ -25,6 +25,7 @@ str_20 = Annotated[str, mapped_column(String(20))]
 str_30 = Annotated[str, mapped_column(String(30))]
 str_50 = Annotated[str, mapped_column(VARCHAR(50))]
 str_100 = Annotated[str, mapped_column(VARCHAR(100))]
+str_150 = Annotated[str, mapped_column(VARCHAR(150))]
 text_req = Annotated[str, mapped_column(Text)]
 str_100_uniq = Annotated[str, mapped_column(String(100), unique=True)]
 
@@ -60,6 +61,16 @@ class Identifiers(Base, TableNameMixin):
 
     organization: Mapped["Organizations"] = relationship(back_populates="identifiers")
     pet: Mapped["Pets"] = relationship(back_populates="identifiers")
+    
+class Coordinator(Base, TableNameMixin):
+    coordinator_id: Mapped[int_pk]
+    name: Mapped[str_100]
+    type: Mapped[str_100]
+    region: Mapped[str_100]
+    email: Mapped[str_100_uniq]
+    password: Mapped[text_req]
+
+    cnaps: Mapped[List["CNAP"]] = relationship(back_populates="coordinator")
     
 class CNAP(Base, TableNameMixin):
     cnap_id: Mapped[int_pk]
