@@ -71,22 +71,45 @@ class Organizations(Base, TableNameMixin):
     phone_number: Mapped[str_20]
     email: Mapped[str_100_uniq]
     password: Mapped[text_req]
+    cnap_id:  Mapped[int] = mapped_column(ForeignKey('cnap.cnap_id'))
 
     pets: Mapped[List["Pets"]] = relationship(back_populates="organization")
     requests: Mapped[List["Requests"]] = relationship(back_populates="organization")
     vaccinations: Mapped[List["Vaccinations"]] = relationship(back_populates="organization")
     identifiers: Mapped[List["Identifiers"]] = relationship(back_populates="organization")
-    passports: Mapped[List["Passports"]] = relationship(back_populates="organization")
 
 
 class Passports(Base, TableNameMixin):
     passport_number: Mapped[str_20_pk]
     pet_id: Mapped[int] = mapped_column(ForeignKey('pets.pet_id'), unique=True)
-    organization_id: Mapped[int] = mapped_column(ForeignKey('organizations.organization_id'))
+    cnap_id: Mapped[int] = mapped_column(ForeignKey('cnap.cnap_id'))
 
     pet: Mapped["Pets"] = relationship(back_populates="passport")
-    organization: Mapped["Organizations"] = relationship(back_populates="passports")
+    organization: Mapped["Cnap"] = relationship(back_populates="passports")
 
+
+class Cnap(Base):
+    __tablename__ = "cnap"
+
+    cnap_id: Mapped[int_pk]
+    name: Mapped[Annotated[str, mapped_column(VARCHAR(150))]]
+    region: Mapped[str_100]
+    city: Mapped[str_100]
+    street: Mapped[str_100]
+    building: Mapped[Annotated[str, mapped_column(VARCHAR(20))]]
+    phone_number: Mapped[Annotated[str, mapped_column(VARCHAR(20))]]
+    email: Mapped[str_100]
+    password: Mapped[str_100]
+    coordinator_id: Mapped[Optional[int]] = mapped_column(
+        ForeignKey("coordinator.coordinator_id", ondelete="SET NULL"),
+        nullable=True
+    )
+
+    coordinator: Mapped[Optional["Coordinator"]] = relationship(
+        "Coordinator",
+        back_populates="cnaps"
+    )
+    passports: Mapped[List["Passports"]] = relationship(back_populates="organization")
 
 
 class Pets(Base, TableNameMixin):
@@ -158,3 +181,18 @@ class Vaccinations(Base, TableNameMixin):
     organization: Mapped["Organizations"] = relationship(back_populates="vaccinations")
     pet: Mapped["Pets"] = relationship(back_populates="vaccinations")
 
+class Coordinator(Base):
+    __tablename__ = "coordinator"
+
+    coordinator_id: Mapped[int_pk]
+    name: Mapped[str_100]
+    type: Mapped[str_100]
+    region: Mapped[str_100]
+    email: Mapped[str_100]
+    password: Mapped[str_100]
+
+    cnaps: Mapped[list["Cnap"]] = relationship(
+        "Cnap",
+        back_populates="coordinator",
+        cascade="all, delete-orphan"
+    )
