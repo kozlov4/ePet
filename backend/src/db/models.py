@@ -60,6 +60,23 @@ class Identifiers(Base, TableNameMixin):
 
     organization: Mapped["Organizations"] = relationship(back_populates="identifiers")
     pet: Mapped["Pets"] = relationship(back_populates="identifiers")
+    
+class CNAP(Base, TableNameMixin):
+    cnap_id: Mapped[int_pk]
+    name: Mapped[str_150]
+    region: Mapped[str_100]
+    city: Mapped[str_100]
+    street: Mapped[str_100]
+    building: Mapped[str_20_opt]
+    phone_number: Mapped[str_20]
+    email: Mapped[str_100_uniq]
+    password: Mapped[text_req]
+    coordinator_id: Mapped[int | None] = mapped_column(
+        ForeignKey('coordinator.coordinator_id', ondelete="SET NULL")
+    )
+
+    coordinator: Mapped["Coordinator"] = relationship(back_populates="cnaps")
+    passports: Mapped[List["Passports"]] = relationship(back_populates="cnap")
 
 class Organizations(Base, TableNameMixin):
     organization_id: Mapped[int_pk]
@@ -76,19 +93,15 @@ class Organizations(Base, TableNameMixin):
     requests: Mapped[List["Requests"]] = relationship(back_populates="organization")
     vaccinations: Mapped[List["Vaccinations"]] = relationship(back_populates="organization")
     identifiers: Mapped[List["Identifiers"]] = relationship(back_populates="organization")
-    passports: Mapped[List["Passports"]] = relationship(back_populates="organization")
-
+  
 
 class Passports(Base, TableNameMixin):
     passport_number: Mapped[str_20_pk]
     pet_id: Mapped[int] = mapped_column(ForeignKey('pets.pet_id'), unique=True)
-    organization_id: Mapped[int] = mapped_column(ForeignKey('organizations.organization_id'))
+    cnap_id: Mapped[int] = mapped_column(ForeignKey('cnap.cnap_id'))
 
     pet: Mapped["Pets"] = relationship(back_populates="passport")
-    organization: Mapped["Organizations"] = relationship(back_populates="passports")
-
-
-
+    cnap: Mapped["CNAP"] = relationship(back_populates="passports")
 class Pets(Base, TableNameMixin):
     pet_id: Mapped[int_pk]
     img_url: Mapped[text_opt]
@@ -157,4 +170,6 @@ class Vaccinations(Base, TableNameMixin):
 
     organization: Mapped["Organizations"] = relationship(back_populates="vaccinations")
     pet: Mapped["Pets"] = relationship(back_populates="vaccinations")
+
+
 
