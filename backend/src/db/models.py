@@ -82,10 +82,10 @@ class Organizations(Base, TableNameMixin):
 class Passports(Base, TableNameMixin):
     passport_number: Mapped[str_20_pk]
     pet_id: Mapped[int] = mapped_column(ForeignKey('pets.pet_id'), unique=True)
-    organization_id: Mapped[int] = mapped_column(ForeignKey('organizations.organization_id'))
+    cnap_id: Mapped[int] = mapped_column(ForeignKey('organizations.organization_id'))
 
     pet: Mapped["Pets"] = relationship(back_populates="passport")
-    organization: Mapped["Organizations"] = relationship(back_populates="passports")
+    organization: Mapped["Organizations"] = relationship(back_populates="passports", foreign_keys=[cnap_id])
 
 
 
