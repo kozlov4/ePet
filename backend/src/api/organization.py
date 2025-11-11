@@ -4,9 +4,9 @@ from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session, joinedload
 from sqlalchemy import func
 from src.db.database import get_db
-from src.db.models import Organizations, Pets, Passports
+from src.db.models import Organizations, Pets, Passports, CNAP
 from src.api.core import  get_current_user
-from src.schemas.pet_schemas import AnimalForOrgResponse, OwnerForOrgResponse, PaginatedAnimalResponse, GetOrgInfo
+from src.schemas.pet_schemas import AnimalForOrgResponse, OwnerForOrgResponse, PaginatedAnimalResponse, GetOrgInfo, GetCnapInfo
 
 
 router = APIRouter(tags=['Organizations 🏢'], prefix="/organizations")
@@ -24,15 +24,37 @@ async def get_current_organization(user: user_dependency, db: db_dependency) -> 
 
     organization = db.query(Organizations).filter(
         (Organizations.organization_id == user_id) &
-        (Organizations.organization_type.in_(['ЦНАП', 'Ветклініка', 'Притулок']))
+        (Organizations.organization_type.in_([ 'Ветклініка', 'Притулок']))
     ).first()
     
     if not organization:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail="Доступ дозволено тільки для організацій."
+            detail="Доступ дозволено тільки для ветклінік та притулків."
         )
     return organization
+
+
+async def get_current_cnap(
+    user: user_dependency,
+    db: db_dependency
+) -> CNAP:
+    user_id = user.get('user_id')
+    if user_id is None:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Не вдалося витягти ID користувача з токена."
+        )
+
+    cnap = db.query(CNAP).filter(CNAP.cnap_id == user_id).first()
+
+    if not cnap:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Доступ дозволено лише ЦНАПам."
+        )
+
+    return cnap
 
 
 async def get_current_organization_optional(user: user_dependency, db: db_dependency) -> Optional[Organizations]:
@@ -130,6 +152,6 @@ async def get_info(db: db_dependency,
         email=org.email
     )
     
-    
+  
 
 

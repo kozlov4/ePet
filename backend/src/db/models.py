@@ -104,7 +104,7 @@ class Organizations(Base, TableNameMixin):
     requests: Mapped[List["Requests"]] = relationship(back_populates="organization")
     vaccinations: Mapped[List["Vaccinations"]] = relationship(back_populates="organization")
     identifiers: Mapped[List["Identifiers"]] = relationship(back_populates="organization")
-  
+    cnap: Mapped["CNAP"] = relationship(back_populates="organization")
 
 class Passports(Base, TableNameMixin):
     passport_number: Mapped[str_20_pk]
