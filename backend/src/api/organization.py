@@ -216,7 +216,6 @@ async def add_pet(
     if org_type == "ЦНАП":
         if not pet_data.owner_passport_number:
             raise HTTPException(status_code=400, detail="Потрібно вказати номер паспорта власника")
-        
         user = db.query(Users).filter(Users.passport_number == pet_data.owner_passport_number).first()
         if not user:
             raise HTTPException(status_code=404, detail="Користувача з таким паспортом не знайдено")
@@ -237,6 +236,15 @@ async def add_pet(
     db.add(new_pet)
     db.commit()
     db.refresh(new_pet)
+    
+    if org_type == "ЦНАП":
+        passport_number = generate_passport_number(new_pet.pet_id)
+        new_passport = Passports(
+            passport_number=passport_number,
+            pet_id=new_pet.pet_id
+        )
+        db.add(new_passport)
+        db.commit()
 
     return {
         "message": "Тварину успішно додано",
