@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import date
 from random import random
 from typing import Annotated, Optional
 import math
@@ -8,7 +8,7 @@ from sqlalchemy import func
 from src.db.database import get_db
 from src.db.models import Organizations, Pets, Passports, Users, Identifiers
 from src.api.core import  get_current_user
-from src.schemas.organization_schemas import AnimalForOrgResponse, OwnerForOrgResponse, PaginatedAnimalResponse, GetOrgInfo, AnimaForlLintel, AnimalForVeterinary, AnimaForCnap, AddPetRequest, AddIdentifierRequest
+from src.schemas.organization_schemas import AnimalForOrgResponse, OwnerForOrgResponse, PaginatedAnimalResponse, GetOrgInfo, AnimaForlLintel, AnimalForVeterinary, AnimaForCnap, AddPetRequest, AddIdentifierRequest, IdentifierResponse 
 from deep_translator import GoogleTranslator
 
 
@@ -252,5 +252,48 @@ async def add_pet(
         "message": "Тварину успішно додано",
         "pet_id": new_pet.pet_id,
         "organization": organization_user.organization_name
+    }
+    
+    
+@router.post("/pets/{pet_id}/identifier", response_model=IdentifierResponse)
+async def add_pet_identifier(
+    pet_id: int,
+    request: AddIdentifierRequest,
+    db: Annotated[Session, Depends(get_db)],
+    organization_user: Annotated[Organizations, Depends(get_current_organization)]
+):
+
+    if organization_user.organization_type != "Ветклініка":
+        raise HTTPException(status_code=403, detail="Додавати ідентифікатори можуть лише ветклініки")
+
+    pet = db.query(Pets).filter(Pets.pet_id == pet_id).first()
+    if not pet:
+        raise HTTPException(status_code=404, detail="Тварина не знайдена")
+
+    if not request.identifier_number or not request.identifier_type:
+        raise HTTPException(status_code=400, detail="Необхідно вказати номер та тип ідентифікатора")
+
+    new_identifier = Identifiers(
+        identifier_number=request.identifier_number,
+        identifier_type=request.identifier_type,
+        identifier_place=request.identifier_place,
+        date=date.today(),
+        organization_id=organization_user.organization_id,
+        pet_id=pet.pet_id
+    )
+
+    db.add(new_identifier)
+    db.commit()
+    db.refresh(new_identifier)
+
+    passport = db.query(Passports).filter(Passports.pet_id == pet.pet_id).first()
+
+    return {
+        "pet_id": pet.pet_id,
+        "identifier_number": new_identifier.identifier_number,
+        "identifier_type": new_identifier.identifier_type,
+        "identifier_place": new_identifier.identifier_place,
+        "date": new_identifier.date,
+        "passport_number": passport.passport_number if passport else None
     }
     
