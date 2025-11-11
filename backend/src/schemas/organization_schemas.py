@@ -81,3 +81,11 @@ class AddIdentifierRequest(BaseModel):
     identifier_type: str           
     identifier_place: Optional[str] = None
     identifier_date: Optional[datetime] = None
+    
+class IdentifierResponse(BaseModel):
+    pet_id: int
+    identifier_number: str
+    identifier_type: str
+    identifier_place: Optional[str] = None
+    date: datetime
+    passport_number: Optional[str] = None    

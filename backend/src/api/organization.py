@@ -1,3 +1,4 @@
+from datetime import datetime
 from random import random
 from typing import Annotated, Optional
 import math
@@ -7,7 +8,7 @@ from sqlalchemy import func
 from src.db.database import get_db
 from src.db.models import Organizations, Pets, Passports, Users, Identifiers
 from src.api.core import  get_current_user
-from src.schemas.organization_schemas import AnimalForOrgResponse, OwnerForOrgResponse, PaginatedAnimalResponse, GetOrgInfo, AnimaForlLintel, AnimalForVeterinary, AnimaForCnap, AddPetRequest
+from src.schemas.organization_schemas import AnimalForOrgResponse, OwnerForOrgResponse, PaginatedAnimalResponse, GetOrgInfo, AnimaForlLintel, AnimalForVeterinary, AnimaForCnap, AddPetRequest, AddIdentifierRequest
 from deep_translator import GoogleTranslator
 
 
@@ -15,7 +16,6 @@ from deep_translator import GoogleTranslator
 router = APIRouter(tags=['Organizations 🏢'], prefix="/organizations")
 db_dependency = Annotated[Session, Depends(get_db)]
 user_dependency = Annotated[dict, Depends(get_current_user)]
-
 
 
 
@@ -121,6 +121,7 @@ async def get_info(db: db_dependency,
         email=org.email
     )
 
+
 @router.get("/pet/{pet_id}")
 async def get_pet_info(
     pet_id: int,
@@ -200,6 +201,7 @@ def generate_passport_number(db) -> str:
         if not exists:
             return passport_number
 
+
 @router.post("/pets", status_code=201)
 async def add_pet(
     pet_data: AddPetRequest,
@@ -251,3 +253,4 @@ async def add_pet(
         "pet_id": new_pet.pet_id,
         "organization": organization_user.organization_name
     }
+    
