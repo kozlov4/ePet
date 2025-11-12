@@ -1,5 +1,7 @@
 package com.example.epet.data.model.passport
 
+import com.google.gson.annotations.SerializedName
+
 data class OutputPassportDetail(
     val passport_number: String = "-",
     val img_url: String = "-",
@@ -26,6 +28,8 @@ data class OutputPassportDetail(
     val owner_passport_number: String = "-",
     val organization_id: String = "-",
     val identifier_number: String = "-",
+
+    @SerializedName("date")
     val identifier_date: String = "-",
 
     val update_datetime: String = "-"
