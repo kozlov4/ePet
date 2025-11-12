@@ -1,24 +1,22 @@
-import { useState, useEffect, RefObject } from 'react';
+'use client';
 
-/**
- * Хук для реалізації нескінченного скролу.
- * @param observerRef - Референс на елемент, який виступає "спостерігачем" (знаходиться внизу списку).
- * @param callback - Функція, яку потрібно викликати для завантаження наступної сторінки.
- * @param hasMore - Булеве значення: чи є ще сторінки для завантаження.
- */
-const useInfiniteScroll = (
-  observerRef: RefObject<HTMLElement>,
+import { useState, useEffect } from 'react';
+
+export function useInfiniteScroll(
+  ref: React.RefObject<HTMLElement>,
   callback: () => Promise<void>,
   hasMore: boolean
-) => {
+) {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (!observerRef.current || loading || !hasMore) return;
+    const element = ref.current;
+    if (!element) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting && hasMore) {
+        const firstEntry = entries[0];
+        if (firstEntry.isIntersecting && !loading && hasMore) {
           setLoading(true);
           callback().finally(() => {
             setLoading(false);
@@ -28,17 +26,12 @@ const useInfiniteScroll = (
       { threshold: 1.0 }
     );
 
-    const currentRef = observerRef.current;
-    observer.observe(currentRef);
+    observer.observe(element);
 
     return () => {
-      if (currentRef) {
-        observer.unobserve(currentRef);
-      }
+      observer.disconnect();
     };
-  }, [observerRef, callback, hasMore]);
+  }, [ref, callback, hasMore, loading]);
 
   return { loading };
-};
-
-export default useInfiniteScroll;
+}
