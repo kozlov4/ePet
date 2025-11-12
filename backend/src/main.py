@@ -10,7 +10,7 @@ app = FastAPI(
     description="API для роботи з вет клініками цнап та юзерами",
     version="1.0.0"
 )
-app.mount("/uploads", StaticFiles(directory="/project/uploads"), name="uploads")
+app.mount("/uploads", StaticFiles(directory="/root/project/uploads"), name="uploads")
 
 
 origins = [
