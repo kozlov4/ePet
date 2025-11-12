@@ -1,5 +1,4 @@
 import android.app.Dialog
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -15,13 +14,14 @@ import android.widget.ImageView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.example.epet.data.repository.PassportRepository
 import com.example.epet.ui.main.viewmodel.PassportViewModel
 import kotlinx.coroutines.launch
+import kotlin.getValue
+import android.content.Context
 
 class PassportInfoMenu(private val onClose: (() -> Unit)? = null) : BottomSheetDialogFragment() {
 
-    private val viewModel: PassportViewModel by lazy { PassportViewModel(PassportRepository()) }
+    private val viewModel: PassportViewModel by lazy { PassportViewModel() }
 
     private lateinit var tv_passport_number: TextView
     private lateinit var iv_copy_passport: ImageView

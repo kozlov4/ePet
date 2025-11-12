@@ -10,7 +10,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class PassportViewModel(private val repository: PassportRepository) : ViewModel() {
+class PassportViewModel() : ViewModel() {
+
+    val repository = PassportRepository()
 
     private val _outputPassportList = MutableStateFlow<List<OutputPetItem>>(emptyList())
     val outputPassportList = _outputPassportList.asStateFlow()

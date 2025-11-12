@@ -8,8 +8,13 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.example.epet.R
 import android.content.Context
+import androidx.fragment.app.activityViewModels
+import com.example.epet.ui.main.viewmodel.PassportViewModel
+import kotlin.getValue
 
 class AdFragment : Fragment() {
+
+    private val viewModel: PassportViewModel by activityViewModels()
 
     private lateinit var tv_tittletext: TextView
     
@@ -19,8 +24,10 @@ class AdFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         initViews(view)
         setUserName(requireContext())
+        initStateFlow()
     }
 
     /** Ініціалізація всіх елементів інтерфейсу **/
@@ -34,5 +41,12 @@ class AdFragment : Fragment() {
         val user_name = sharedPref.getString("user_name", "Null")
 
         tv_tittletext.text = "Привіт, $user_name \uD83D\uDC4B"
+    }
+
+    /** Ініціалізація StateFlow **/
+    private fun initStateFlow() {
+        val sharedPref = requireContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+        val token = sharedPref.getString("access_token", null)
+        viewModel.passportList(token)
     }
 }

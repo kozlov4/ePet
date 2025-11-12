@@ -18,13 +18,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.epet.ui.main.adapter.VaccinationInfoAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.epet.data.model.passport.OutputVaccinationItem
-import com.example.epet.data.repository.PassportRepository
 import com.example.epet.ui.main.viewmodel.PassportViewModel
 import kotlinx.coroutines.launch
 
 class VaccinationInfoMenu(private val onClose: (() -> Unit)? = null) : BottomSheetDialogFragment() {
 
-    private val viewModel: PassportViewModel by lazy { PassportViewModel(PassportRepository()) }
+    private val viewModel: PassportViewModel by lazy { PassportViewModel() }
 
     private lateinit var tv_passport_number: TextView
     private lateinit var tv_update_datetime: TextView
@@ -99,7 +98,7 @@ class VaccinationInfoMenu(private val onClose: (() -> Unit)? = null) : BottomShe
     private fun initStateFlow() {
         val sharedPref = requireContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
         val token = sharedPref.getString("access_token", null)
-        viewModel.vaccinationList(pet_id, token)
+        viewModel.vaccinationList(token, pet_id)
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
