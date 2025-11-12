@@ -171,7 +171,7 @@ export function ReusableTable({
                             {columns.map((col) => (
                                 <th
                                     key={String(col.accessor)}
-                                    className="px-6 py-4 text-left text-sm font-medium"
+                                    className="px-6 py-4 text-left text-xl font-medium"
                                 >
                                     {col.header}
                                 </th>
@@ -191,7 +191,7 @@ export function ReusableTable({
                                     {columns.map((col) => (
                                         <td
                                             key={String(col.accessor)}
-                                            className="px-6 py-4 whitespace-nowrap text-sm font-medium"
+                                            className="px-4 py-4 whitespace-nowrap text-xl font-medium"
                                         >
                                             {col.cell
                                                 ? col.cell(item, onAction)

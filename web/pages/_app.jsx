@@ -36,7 +36,7 @@ export default function App({ Component, pageProps }) {
             accountName: userName,
             buttonProps: {
                 label: 'Меню',
-                href: '/CNAP/favorite-list/3',
+                href: '/CNAP/menu',
             },
         };
     }

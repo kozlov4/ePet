@@ -76,7 +76,12 @@ export function Login() {
 
                     localStorage.setItem('access_token', data.access_token);
                     localStorage.setItem('user_name', data.user_name);
+                    if (data.organization_type === "Ветклініка")
                     router.push('/CNAP/favorite-list');
+                    else if(data.organization_type == "ЦНАП")
+                        router.push('/CNAP/favorite-list')
+                    else if(data.organization_type == "Притулок")
+                        router.push('/Alley/pet-list')
                 } else {
                     toast.error('Помилка входу. Перевірте дані.', {
                         position: 'top-center',
