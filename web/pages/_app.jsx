@@ -18,7 +18,7 @@ export default function App({ Component, pageProps }) {
     const { headerProps, showHeader, customHeader, ...restPageProps } =
         pageProps;
 
-    const isCNAPPage = router.pathname.startsWith('/CNAP');
+    const isCNAPPage = router.pathname.startsWith('/CNAP' || '/Alley');
 
     let finalHeaderProps = headerProps;
     let finalShowHeader = showHeader !== false;
