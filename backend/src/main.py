@@ -1,5 +1,6 @@
 
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from src.api import users, organization, reset_password, forgot_password, login, pets
 
@@ -9,7 +10,7 @@ app = FastAPI(
     description="API для роботи з вет клініками цнап та юзерами",
     version="1.0.0"
 )
-
+app.mount("/uploads", StaticFiles(directory="/root/project/uploads"), name="uploads")
 
 
 origins = [

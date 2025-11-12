@@ -1,18 +1,17 @@
-import { motion } from 'framer-motion'
-import { usePathname } from 'next/navigation'
-import React from 'react'
-import CatIcon from '../../assets/images/icons/CatIcon'
-import UkraineArmsIcon from '../../assets/images/icons/UkraineArmsIcon'
+import { motion } from 'framer-motion';
+import { usePathname } from 'next/navigation';
+import React from 'react';
+import CatIcon from '../../assets/images/icons/CatIcon';
+import UkraineArmsIcon from '../../assets/images/icons/UkraineArmsIcon';
 
 export const HeaderMain: React.FC = () => {
-
-    const path = "https://e-pet-seven.vercel.app";
-    const pathname = usePathname()
-    const isHome = pathname === '/'
-    console.log(pathname)
+    const path = 'https://e-pet-seven.vercel.app';
+    const pathname = usePathname();
+    const isHome = pathname === '/';
+    console.log(pathname);
 
     return (
-        <div 
+        <div
             className={`w-full flex h-20 justify-end ${
                 isHome ? 'relative' : 'absolute'
             }`}
@@ -63,17 +62,20 @@ export const HeaderMain: React.FC = () => {
                         Питання та відповіді
                     </motion.a>
                 </motion.div>
-                    <a href={`${path}/signIn`} className='flex w-[14%] h-[70%] mr-[5%]'>
-                <motion.button
-                    className="flex w-full h-full bg-black rounded-3xl cursor-pointer justify-center items-center text-white font-medium text-[15px] transition-all duration-300 ease-in-out hover:bg-[#1e88e5] hover:shadow-[0_0_20px_#1e88e580] hover:scale-[1.05] active:scale-[0.98]"
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.6, delay: 0.8 }}
+                <a
+                    href={`${path}/signIn`}
+                    className="flex w-[14%] h-[70%] mr-[5%]"
                 >
-                    Увійти до кабінету
-                </motion.button>
+                    <motion.button
+                        className="flex w-full h-full bg-black rounded-3xl cursor-pointer justify-center items-center text-white font-medium text-[15px] transition-all duration-300 ease-in-out hover:bg-[#1e88e5] hover:shadow-[0_0_20px_#1e88e580] hover:scale-[1.05] active:scale-[0.98]"
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.6, delay: 0.8 }}
+                    >
+                        Увійти до кабінету
+                    </motion.button>
                 </a>
             </motion.div>
         </div>
-    )
-}
+    );
+};

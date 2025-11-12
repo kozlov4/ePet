@@ -14,7 +14,6 @@ router = APIRouter(tags=['Reset password 🔄'])
 db_dependency = Annotated[Session, Depends(get_db)]
 
 
-# --- Встановлення нового пароля ---
 
 @router.post("/reset-password/")
 async def reset_password(payload: ResetPasswordPayload, db: db_dependency):
