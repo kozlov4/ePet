@@ -214,7 +214,7 @@
                         android:textSize="13sp" />
 
                     <TextView
-                        android:id="@+id/tv_breed_ua"
+                        android:id="@+id/tv_breed"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -272,7 +272,7 @@
                         android:textSize="13sp" />
 
                     <TextView
-                        android:id="@+id/tv_gender_ua"
+                        android:id="@+id/tv_gender"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -345,7 +345,7 @@
                         android:textSize="13sp" />
 
                     <TextView
-                        android:id="@+id/tv_color_ua"
+                        android:id="@+id/tv_color"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -403,7 +403,7 @@
                         android:textSize="13sp" />
 
                     <TextView
-                        android:id="@+id/tv_species_ua"
+                        android:id="@+id/tv_species"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -587,7 +587,7 @@
                         android:textSize="13sp" />
 
                     <TextView
-                        android:id="@+id/tv_identifier_type_ua"
+                        android:id="@+id/tv_identifier_type"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"

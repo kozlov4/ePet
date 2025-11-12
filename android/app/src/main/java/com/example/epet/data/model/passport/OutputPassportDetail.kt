@@ -5,22 +5,22 @@ data class OutputPassportDetail(
     val img_url: String = "-",
 
     val pet_name: String = "-",
-    val pet_name_latin: String = "-",
+    val pet_name_en: String = "-",
     val date_of_birth: String = "-",
 
-    val breed_ua: String = "-",
+    val breed: String = "-",
     val breed_en: String = "-",
 
-    val gender_ua: String = "-",
+    val gender: String = "-",
     val gender_en: String = "-",
 
-    val color_ua: String = "-",
+    val color: String = "-",
     val color_en: String = "-",
 
-    val species_ua: String = "-",
+    val species: String = "-",
     val species_en: String = "-",
 
-    val identifier_type_ua: String = "-",
+    val identifier_type: String = "-",
     val identifier_type_en: String = "-",
 
     val owner_passport_number: String = "-",

@@ -27,20 +27,20 @@ class PassportInfoMenu(private val onClose: (() -> Unit)? = null) : BottomSheetD
     private lateinit var iv_copy_passport: ImageView
     private lateinit var tv_update_datetime: TextView
     private lateinit var tv_pet_name: TextView
-    private lateinit var tv_pet_name_latin: TextView
+    private lateinit var tv_pet_name_en: TextView
     private lateinit var iv_photo: ImageView
     private lateinit var tv_date_of_birth: TextView
-    private lateinit var tv_breed_ua: TextView
+    private lateinit var tv_breed: TextView
     private lateinit var tv_breed_en: TextView
-    private lateinit var tv_gender_ua: TextView
+    private lateinit var tv_gender: TextView
     private lateinit var tv_gender_en: TextView
-    private lateinit var tv_color_ua: TextView
+    private lateinit var tv_color: TextView
     private lateinit var tv_color_en: TextView
-    private lateinit var tv_species_ua: TextView
+    private lateinit var tv_species: TextView
     private lateinit var tv_species_en: TextView
     private lateinit var tv_owner_passport_number: TextView
     private lateinit var tv_organization_id: TextView
-    private lateinit var tv_identifier_type_ua: TextView
+    private lateinit var tv_identifier_type: TextView
     private lateinit var tv_identifier_type_en: TextView
     private lateinit var tv_identifier_date: TextView
     private lateinit var tv_identifier_number: TextView
@@ -105,20 +105,20 @@ class PassportInfoMenu(private val onClose: (() -> Unit)? = null) : BottomSheetD
         iv_copy_passport = view.findViewById(R.id.iv_copy_passport)
         tv_update_datetime = view.findViewById(R.id.tv_update_datetime)
         tv_pet_name = view.findViewById(R.id.tv_drug_name)
-        tv_pet_name_latin = view.findViewById(R.id.tv_pet_name_en)
+        tv_pet_name_en = view.findViewById(R.id.tv_pet_name_en)
         iv_photo = view.findViewById(R.id.iv_photo)
         tv_date_of_birth = view.findViewById(R.id.tv_date_of_birth)
-        tv_breed_ua = view.findViewById(R.id.tv_breed_ua)
+        tv_breed = view.findViewById(R.id.tv_breed)
         tv_breed_en = view.findViewById(R.id.tv_breed_en)
-        tv_gender_ua = view.findViewById(R.id.tv_gender_ua)
+        tv_gender = view.findViewById(R.id.tv_gender)
         tv_gender_en = view.findViewById(R.id.tv_gender_en)
-        tv_color_ua = view.findViewById(R.id.tv_color_ua)
+        tv_color = view.findViewById(R.id.tv_color)
         tv_color_en = view.findViewById(R.id.tv_color_en)
-        tv_species_ua = view.findViewById(R.id.tv_species_ua)
+        tv_species = view.findViewById(R.id.tv_species)
         tv_species_en = view.findViewById(R.id.tv_species_en)
         tv_owner_passport_number = view.findViewById(R.id.tv_owner_passport_number)
         tv_organization_id = view.findViewById(R.id.tv_organization_id)
-        tv_identifier_type_ua = view.findViewById(R.id.tv_identifier_type_ua)
+        tv_identifier_type = view.findViewById(R.id.tv_identifier_type)
         tv_identifier_type_en = view.findViewById(R.id.tv_identifier_type_en)
         tv_identifier_date = view.findViewById(R.id.tv_identifier_date)
         tv_identifier_number = view.findViewById(R.id.tv_identifier_number)
@@ -139,19 +139,19 @@ class PassportInfoMenu(private val onClose: (() -> Unit)? = null) : BottomSheetD
                 viewModel.outputPassportDetail.collect { state ->
                     tv_passport_number.text = state.passport_number
                     tv_pet_name.text = state.pet_name
-                    tv_pet_name_latin.text = state.pet_name_latin
+                    tv_pet_name_en.text = state.pet_name_en
                     tv_date_of_birth.text = state.date_of_birth
-                    tv_breed_ua.text = state.breed_ua
+                    tv_breed.text = state.breed
                     tv_breed_en.text = state.breed_en
-                    tv_gender_ua.text = state.gender_ua
+                    tv_gender.text = state.gender
                     tv_gender_en.text = state.gender_en
-                    tv_color_ua.text = state.color_ua
+                    tv_color.text = state.color
                     tv_color_en.text = state.color_en
-                    tv_species_ua.text = state.species_ua
+                    tv_species.text = state.species
                     tv_species_en.text = state.species_en
                     tv_owner_passport_number.text = state.owner_passport_number
                     tv_organization_id.text = state.organization_id
-                    tv_identifier_type_ua.text = state.identifier_type_ua
+                    tv_identifier_type.text = state.identifier_type
                     tv_identifier_type_en.text = state.identifier_type_en
                     tv_identifier_date.text = state.identifier_date
                     tv_identifier_number.text = state.identifier_number
