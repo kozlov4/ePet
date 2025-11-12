@@ -19,6 +19,7 @@ export default function App({ Component, pageProps }) {
         pageProps;
 
     const isCNAPPage = router.pathname.startsWith('/CNAP');
+    const isAllay = router.pathname.startsWith('/Alley');
 
     let finalHeaderProps = headerProps;
     let finalShowHeader = showHeader !== false;
@@ -36,7 +37,22 @@ export default function App({ Component, pageProps }) {
             accountName: userName,
             buttonProps: {
                 label: 'Меню',
-                href: '/CNAP/favorite-list/3',
+                href: '/CNAP/menu',
+            },
+        };
+    }else if(isAllay && !headerProps && !customHeader){
+        finalHeaderProps = {
+            navProps: [
+                { label: 'Список тварин', href: '/CNAP/favorite-list' },
+                {
+                    label: 'Повідомлення',
+                    href: '/CNAP/organisations',
+                },
+            ],
+            accountName: userName,
+            buttonProps: {
+                label: 'Меню',
+                href: '/CNAP/menu',
             },
         };
     }
