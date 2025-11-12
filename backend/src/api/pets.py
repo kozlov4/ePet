@@ -1,4 +1,4 @@
-from random import random
+from random import randint
 from enum import Enum
 from fastapi import APIRouter, Depends, HTTPException, status,  UploadFile, Form
 from sqlalchemy.orm import Session, joinedload
@@ -30,6 +30,7 @@ def check_gender(gender):
         return "F"
     elif gender == "Ч":
         return "M"
+    
 
 @router.get("/{pet_id}")
 async def get_pet_info(
@@ -193,12 +194,11 @@ async def get_pet_vaccinations(pet_id: int, db: Session = Depends(get_db)):
 
 def generate_passport_number(db) -> str:
     while True:
-        number = random.randint(1000, 999999)
+        number = randint(1000, 999999)
         passport_number = f"UA-AA-{number:06d}"
-        exists = db.query(Pets).filter(Pets.passport_number == passport_number).first()
+        exists = db.query(Passports).filter(Passports.passport_number == passport_number).first()
         if not exists:
             return passport_number
-
 
 class GenderEnum(str, Enum):
     male = "Ч"
@@ -212,6 +212,7 @@ async def add_pet(
     breed: str = Form(..., min_length=3, max_length=50),
     species: str = Form(..., min_length=3, max_length=50),
     color: str = Form(..., min_length=3, max_length=30),
+    date_of_birth:date = Form(...),
     identifier_type: str = Form(..., min_length=3, max_length=50),
     identifier_number: str = Form(..., min_length=3, max_length=50),
     chip_date: date = Form(...),
@@ -226,6 +227,7 @@ async def add_pet(
     if not user:
         raise HTTPException(status_code=404, detail="Користувача з таким паспортом не знайдено")
 
+    passport_number = generate_passport_number(db)
     img_url: str = upload_image(file)  
 
     new_pet = Pets(
@@ -234,7 +236,7 @@ async def add_pet(
         species=species,
         breed=breed,
         gender=gender.value, 
-        date_of_birth=datetime.utcnow(),
+        date_of_birth=date_of_birth,
         color=color,
         organization_id=cnap.cnap_id,
         user_id=user.user_id,
@@ -261,6 +263,15 @@ async def add_pet(
         pet_id=new_pet.pet_id
     )
     db.add(identifier)
+    db.commit()
+
+    passport = Passports(
+        passport_number=passport_number,
+        pet_id=new_pet.pet_id,
+        cnap_id=cnap.cnap_id
+    )
+
+    db.add(passport)
     db.commit()
 
     return {
