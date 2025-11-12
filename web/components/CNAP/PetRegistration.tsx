@@ -1,14 +1,14 @@
-'use client'
+'use client';
 
-import React, { useState, useRef } from 'react'
-import Image from 'next/image'
-import { useRouter } from 'next/navigation'
-import ArrowBack from '../../assets/images/icons/ArrowBack'
-import CopyIcon from '../../assets/images/icons/CopyIcon'
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import React, { useRef, useState } from 'react';
+import ArrowBack from '../../assets/images/icons/ArrowBack';
+import CopyIcon from '../../assets/images/icons/CopyIcon';
 
-export default function PetRegistrationPage() {
-    const router = useRouter()
-    const fileInputRef = useRef<HTMLInputElement>(null)
+export default function PetRegistration() {
+    const router = useRouter();
+    const fileInputRef = useRef<HTMLInputElement>(null);
 
     const [petData, setPetData] = useState({
         name: '',
@@ -21,44 +21,44 @@ export default function PetRegistrationPage() {
         chipNumber: '',
         owner: '',
         issuingAuthority: '',
-    })
+    });
 
-    const [imagePreview, setImagePreview] = useState<string | null>(null)
-    const petId = 'UA AA 658199'
+    const [imagePreview, setImagePreview] = useState<string | null>(null);
+    const petId = 'UA AA 658199';
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target
-        setPetData((prevData) => ({ ...prevData, [name]: value }))
-    }
+        const { name, value } = e.target;
+        setPetData((prevData) => ({ ...prevData, [name]: value }));
+    };
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0]
+        const file = e.target.files?.[0];
         if (file) {
-            const reader = new FileReader()
+            const reader = new FileReader();
             reader.onloadend = () => {
-                setImagePreview(reader.result as string)
-            }
-            reader.readAsDataURL(file)
+                setImagePreview(reader.result as string);
+            };
+            reader.readAsDataURL(file);
         } else {
-            setImagePreview(null)
+            setImagePreview(null);
         }
-    }
+    };
 
     const handleImagePlaceholderClick = () => {
-        fileInputRef.current?.click()
-    }
+        fileInputRef.current?.click();
+    };
 
     const handleCopyId = () => {
-        navigator.clipboard.writeText(petId)
-        alert('Pet ID copied to clipboard!')
-    }
+        navigator.clipboard.writeText(petId);
+        alert('Pet ID copied to clipboard!');
+    };
 
     const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault()
-        console.log('Registering pet:', petData)
-        console.log('Image:', imagePreview ? 'Image selected' : 'No image')
-        alert('Pet registration data logged to console!')
-    }
+        e.preventDefault();
+        console.log('Registering pet:', petData);
+        console.log('Image:', imagePreview ? 'Image selected' : 'No image');
+        alert('Pet registration data logged to console!');
+    };
 
     return (
         <div className="min-h-screen justify-center w-full bg-gray-50 px-35 py-10">
@@ -208,16 +208,16 @@ export default function PetRegistrationPage() {
                 </form>
             </div>
         </div>
-    )
+    );
 }
 
 // Reusable Input Field Component
 interface InputFieldProps {
-    label: string
-    name: string
-    value: string
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
-    type?: string // Optional type prop for input (e.g., 'date', 'text')
+    label: string;
+    name: string;
+    value: string;
+    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    type?: string; // Optional type prop for input (e.g., 'date', 'text')
 }
 
 const InputField: React.FC<InputFieldProps> = ({
@@ -244,4 +244,4 @@ const InputField: React.FC<InputFieldProps> = ({
             {label}
         </label>
     </div>
-)
+);

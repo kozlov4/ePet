@@ -1,4 +1,4 @@
-export function FooterCNAP() {
+export const Footer: React.FC = () => {
     return (
         <footer className="w-full">
             <div className="flex w-full bg-black justify-between items-center py-4">
