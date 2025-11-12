@@ -1,7 +1,7 @@
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 from pydantic import BaseModel
 from typing import List, Optional
-from datetime import datetime
+from datetime import datetime, date
 
 
 class OwnerForOrgResponse(BaseModel):
@@ -64,7 +64,7 @@ class AnimaForlLintel(AnimalBase):
 
 class AnimalForVeterinary(AnimalBase):
     passport_number:str
-    organization_name:str
+    organization_id: Optional[int]
     owner_passport_number: str
     identifier_type:str
     identifier_type_en: str
@@ -79,3 +79,15 @@ class AnimalForUser(AnimalForVeterinary):
     model_config = ConfigDict(from_attributes=True)
 
     update_datetime: str
+
+class AddPetRequest(BaseModel):
+    img_url: str
+    pet_name: str = Field(min_length=3, max_length=100)
+    gender: str = Field(min_length=1, max_length=10)
+    breed: str = Field(min_length=3, max_length=50)
+    species: str = Field(min_length=3, max_length=50)
+    color: str = Field(min_length=3, max_length=30)
+    identifier_type:str = Field(min_length=3, max_length=500)
+    date:date
+    identifier_number:str = Field(min_length=3, max_length=50)
+    owner_passport_number: str  = Field(min_length=3, max_length=20)
