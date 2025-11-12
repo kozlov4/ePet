@@ -61,13 +61,7 @@ export function ReusableTable({
             try {
                 const data = await fetchFunction(page, pageSize, query);
 
-                let newItems = data.items;
-                if (title === 'Список організацій') {
-                    newItems = data.items.map((org: any) => ({
-                        ...org,
-                        id: org.email || org.phone_number,
-                    }));
-                }
+                let newItems = Array.isArray(data) ? data : data.items;
 
                 setItems((prevItems) =>
                     isNewSearch ? newItems : [...prevItems, ...newItems],
@@ -124,7 +118,7 @@ export function ReusableTable({
 
     return (
         <div className="w-full px-4 md:px-10 py-10">
-            <h1 className="mb-5 font-medium text-4xl">{title}</h1>
+            <h1 className="mb-5 font-medium text-[40px]">{title}</h1>
 
             {error && (
                 <div className="mt-4 p-4 bg-red-800 border border-red-600 text-red-100 rounded-lg">
@@ -132,8 +126,8 @@ export function ReusableTable({
                 </div>
             )}
 
-            <div className="mb-8 flex flex-col md:flex-row items-center justify-between gap-4">
-                <div className="flex w-full md:max-w-md items-center rounded-lg border border-gray-700 p-2.5 shadow-sm">
+            <div className="mb-8 flex flex-col w-full md:flex-row gap-1">
+                <div className="flex-1 flex w-full rounded-xl border border-gray-300 bg-white p-2.5 shadow-[0_0_10px_rgba(0,0,0,0.1)] focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500 mr-50 text-[13px]">
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="20"
@@ -148,30 +142,31 @@ export function ReusableTable({
                         <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                     </svg>
                     <input
+                        id="0"
                         type="text"
                         placeholder={searchPlaceholder}
                         value={currentQuery}
                         onChange={(e) => handleSearch(e.target.value)}
-                        className="w-full border-0 bg-transparent text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-0"
+                        className="w-full border-0 bg-transparent text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-0 text-[13px]"
                     />
                 </div>
 
                 <Link
                     href={addNewLink}
-                    className="w-full md:w-auto shrink-0 rounded-lg border border-gray-700 px-5 py-3 text-sm font-semibold transition-colors hover:bg-gray-700 cursor-pointer text-center"
+                    className="text-[15px] w-full flex-shrink-0 md:w-auto shrink-0 rounded-[10em] border border-gray-700 px-10 py-3 text-sm font-semibold transition-colors hover:bg-gray-700 cursor-pointer text-center"
                 >
                     {addNewText}
                 </Link>
             </div>
 
-            <div className="rounded-lg bg-[rgba(217,217,217,0.1)] overflow-hidden">
-                <table className="min-w-full">
+            <div className="overflow-hidden">
+                <table className="min-w-full border-collapse">
                     <thead>
-                        <tr className="border-b border-gray-700">
+                        <tr className="">
                             {columns.map((col) => (
                                 <th
                                     key={String(col.accessor)}
-                                    className="px-6 py-4 text-left text-sm font-medium"
+                                    className="px-6 py-4 text-left text-sm font-medium text-[20px]"
                                 >
                                     {col.header}
                                 </th>
@@ -179,9 +174,12 @@ export function ReusableTable({
                         </tr>
                     </thead>
 
-                    <tbody className="divide-y divide-gray-300">
+                    <tbody className="ReusableTable divide-y overflow-hidden divide-gray-300">
                         {items.map((item) => {
-                            const key = item.pet_id ?? item.id ?? Math.random();
+                            const key =
+                                item.pet_id ??
+                                item.organization_id ??
+                                Math.random();
 
                             return (
                                 <tr
@@ -191,7 +189,7 @@ export function ReusableTable({
                                     {columns.map((col) => (
                                         <td
                                             key={String(col.accessor)}
-                                            className="px-6 py-4 whitespace-nowrap text-sm font-medium"
+                                            className="px-6 py-4 whitespace-nowrap text-sm font-medium text-[24px]"
                                         >
                                             {col.cell
                                                 ? col.cell(item, onAction)
@@ -217,7 +215,7 @@ export function ReusableTable({
 
             <div ref={observerRef} className="h-1" />
 
-            {!isLoadingMore && !hasMore && items.length > 0 && (
+            {!isLoadingMore && !hasMore && items?.length > 0 && (
                 <p className="text-center mt-6 text-gray-400">
                     Кінець списку ({totalItems} записів).
                 </p>
