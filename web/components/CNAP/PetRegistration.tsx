@@ -4,29 +4,40 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import React, { useRef, useState } from 'react';
 import ArrowBack from '../../assets/images/icons/ArrowBack';
-import CopyIcon from '../../assets/images/icons/CopyIcon';
+import { AnimatePresence, motion } from 'framer-motion';
+
+type ModalState = {
+    message: string;
+    type: 'success' | 'error';
+    onClose?: () => void;
+};
 
 export default function PetRegistration() {
     const router = useRouter();
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const [petData, setPetData] = useState({
-        name: '',
+        pet_name: '',
         gender: '',
         breed: '',
-        type: '',
-        coat: '',
-        chipLocation: '',
-        chipDate: '',
-        chipNumber: '',
-        owner: '',
-        issuingAuthority: '',
+        species: '',
+        color: '',
+        date_of_birth: '',
+        identifier_type: '',
+        identifier_number: '',
+        chip_date: '',
+        owner_passport_number: '',
     });
 
+    const [petFile, setPetFile] = useState<File | null>(null);
     const [imagePreview, setImagePreview] = useState<string | null>(null);
-    const petId = 'UA AA 658199';
+    const [loading, setLoading] = useState(false);
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const [modalState, setModalState] = useState<ModalState | null>(null);
+
+    const handleInputChange = (
+        e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+    ) => {
         const { name, value } = e.target;
         setPetData((prevData) => ({ ...prevData, [name]: value }));
     };
@@ -34,6 +45,7 @@ export default function PetRegistration() {
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
+            setPetFile(file);
             const reader = new FileReader();
             reader.onloadend = () => {
                 setImagePreview(reader.result as string);
@@ -48,20 +60,134 @@ export default function PetRegistration() {
         fileInputRef.current?.click();
     };
 
-    const handleCopyId = () => {
-        navigator.clipboard.writeText(petId);
-        alert('Pet ID copied to clipboard!');
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setLoading(true);
+
+        if (!petFile) {
+            setModalState({
+                message: 'Будь ласка, завантажте фото улюбленця.',
+                type: 'error',
+            });
+            setLoading(false);
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('file', petFile);
+
+        Object.keys(petData).forEach((key) => {
+            formData.append(key, petData[key]);
+        });
+
+        console.log('Registering pet with data:');
+        for (let [key, value] of formData.entries()) {
+            console.log(key, value);
+        }
+
+        try {
+            const token = localStorage.getItem('access_token');
+            if (!token) {
+                setModalState({
+                    message:
+                        'Помилка автентифікації. Будь ласка, увійдіть знову.',
+                    type: 'error',
+                    onClose: () => router.push('/login'),
+                });
+                return;
+            }
+
+            const response = await fetch(`https://upcity.live/pets/pets`, {
+                method: 'POST',
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+                body: formData,
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(
+                    data.detail || 'Не вдалося зареєструвати улюбленця.',
+                );
+            }
+
+            if (data.detail === 'Could not validate user') {
+                setModalState({
+                    message: data.detail,
+                    type: 'error',
+                });
+                return;
+            }
+
+            setModalState({
+                message: 'Улюбленець успішно зареєстрований!',
+                type: 'success',
+                onClose: () => router.push('/CNAP/favorite-list'),
+            });
+        } catch (error) {
+            console.error('Error registering pet:', error);
+            setModalState({
+                message: error.message || "Помилка з'єднання з сервером.",
+                type: 'error',
+            });
+        } finally {
+            setLoading(false);
+        }
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        console.log('Registering pet:', petData);
-        console.log('Image:', imagePreview ? 'Image selected' : 'No image');
-        alert('Pet registration data logged to console!');
+    const closeModal = () => {
+        if (modalState?.onClose) {
+            modalState.onClose();
+        }
+        setModalState(null);
     };
 
     return (
         <div className="min-h-screen justify-center w-full bg-gray-50 px-35 py-10">
+            <AnimatePresence>
+                {modalState && (
+                    <motion.div
+                        className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.2 }}
+                    >
+                        <motion.div
+                            className="bg-white rounded-lg shadow-xl p-6 w-full max-w-md mx-4"
+                            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                            transition={{ duration: 0.2 }}
+                        >
+                            <h3
+                                className={`text-xl font-semibold ${
+                                    modalState.type === 'success'
+                                        ? 'text-green-600'
+                                        : 'text-red-600'
+                                }`}
+                            >
+                                {modalState.type === 'success'
+                                    ? 'Успіх!'
+                                    : 'Помилка'}
+                            </h3>
+                            <p className="mt-3 text-gray-700">
+                                {modalState.message}
+                            </p>
+                            <div className="mt-6 flex justify-end">
+                                <button
+                                    onClick={closeModal}
+                                    className="px-5 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors"
+                                >
+                                    OK
+                                </button>
+                            </div>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
             <div className="mb-8 flex items-center">
                 <button
                     onClick={() => router.back()}
@@ -74,16 +200,6 @@ export default function PetRegistration() {
                 </h1>
             </div>
 
-            <div className="mb-8 flex items-center">
-                <h2 className="text-4xl font-bold text-gray-900">{petId}</h2>
-                <button
-                    onClick={handleCopyId}
-                    className="ml-2 p-1 text-gray-500 hover:text-gray-800 cursor-pointer"
-                    aria-label="Copy Pet ID"
-                >
-                    <CopyIcon />
-                </button>
-            </div>
             <div className="w-full max-w-4xl rounded-xl bg-[rgba(217,217,217,0.27)] p-6 shadow-lg sm:p-8 lg:p-10">
                 <form
                     onSubmit={handleSubmit}
@@ -132,14 +248,38 @@ export default function PetRegistration() {
                         <div className="space-y-4 rounded-lg bg-gray-50 p-4">
                             <InputField
                                 label="Ім'я"
-                                name="name"
-                                value={petData.name}
+                                name="pet_name"
+                                value={petData.pet_name}
                                 onChange={handleInputChange}
                             />
+                            <div className="relative">
+                                <label
+                                    htmlFor="gender"
+                                    className={`absolute left-1 top-2 z-10 origin-[0] transform bg-gray-50 px-2 text-sm text-gray-500 duration-300 ${
+                                        petData.gender
+                                            ? 'scale-75 -translate-y-4' // Стан "зміщено вгору"
+                                            : 'scale-100 -translate-y-1/2 top-1/2' // Стан "по центру"
+                                    } peer-focus:top-2 peer-focus:-translate-y-4 peer-focus:scale-75 peer-focus:px-2 peer-focus:text-blue-600`}
+                                >
+                                    Стать
+                                </label>
+                                <select
+                                    id="gender"
+                                    name="gender"
+                                    value={petData.gender}
+                                    onChange={handleInputChange}
+                                    className="peer block w-full appearance-none rounded-lg border border-gray-300 bg-transparent px-2.5 pb-2.5 pt-4 text-sm text-gray-900 focus:border-blue-600 focus:outline-none focus:ring-0"
+                                >
+                                    <option value="">Оберіть стать</option>
+                                    <option value="Ч">Ч (Чоловіча)</option>
+                                    <option value="Ж">Ж (Жіноча)</option>
+                                </select>
+                            </div>
                             <InputField
-                                label="Стать"
-                                name="gender"
-                                value={petData.gender}
+                                label="Дата народження"
+                                name="date_of_birth"
+                                type="date"
+                                value={petData.date_of_birth}
                                 onChange={handleInputChange}
                             />
                         </div>
@@ -152,57 +292,54 @@ export default function PetRegistration() {
                             />
                             <InputField
                                 label="Вид"
-                                name="type"
-                                value={petData.type}
+                                name="species"
+                                value={petData.species}
                                 onChange={handleInputChange}
                             />
                             <InputField
-                                label="Масть"
-                                name="coat"
-                                value={petData.coat}
+                                label="Масть (Колір)"
+                                name="color"
+                                value={petData.color}
                                 onChange={handleInputChange}
                             />
                         </div>
                         <div className="space-y-4 rounded-lg bg-gray-50 p-4">
                             <InputField
-                                label="Місцезнаходження чіпу"
-                                name="chipLocation"
-                                value={petData.chipLocation}
+                                label="Тип ідентифікатора (чіп, тату, ...)"
+                                name="identifier_type"
+                                value={petData.identifier_type}
+                                onChange={handleInputChange}
+                            />
+                            <InputField
+                                label="Номер ідентифікатора (ном. чіпу)"
+                                name="identifier_number"
+                                value={petData.identifier_number}
                                 onChange={handleInputChange}
                             />
                             <InputField
                                 label="Дата чіпування"
-                                name="chipDate"
+                                name="chip_date"
                                 type="date"
-                                value={petData.chipDate}
-                                onChange={handleInputChange}
-                            />
-                            <InputField
-                                label="Номер чіпу"
-                                name="chipNumber"
-                                value={petData.chipNumber}
+                                value={petData.chip_date}
                                 onChange={handleInputChange}
                             />
                         </div>
                         <div className="space-y-4 rounded-lg bg-gray-50 p-4">
                             <InputField
-                                label="Власник"
-                                name="owner"
-                                value={petData.owner}
-                                onChange={handleInputChange}
-                            />
-                            <InputField
-                                label="Орган що видав"
-                                name="issuingAuthority"
-                                value={petData.issuingAuthority}
+                                label="Номер паспорта власника"
+                                name="owner_passport_number"
+                                value={petData.owner_passport_number}
                                 onChange={handleInputChange}
                             />
                         </div>
                         <button
                             type="submit"
-                            className="mt-6 w-full rounded-[5em] bg-black px-6 py-3 text-lg font-semibold text-white shadow-md transition-colors hover:bg-gray-800"
+                            disabled={loading}
+                            className="mt-6 w-full rounded-[5em] bg-black px-6 py-3 text-lg font-semibold text-white shadow-md transition-colors hover:bg-gray-800 disabled:bg-gray-400 cursor-pointer"
                         >
-                            Зареєструвати улюбленця
+                            {loading
+                                ? 'Реєстрація...'
+                                : 'Зареєструвати улюбленця'}
                         </button>
                     </div>
                 </form>
