@@ -17,12 +17,12 @@ export const Header: React.FC<HeaderProps> = ({
 
     return (
         <div
-            className={`w-full h-20 bg-[rgba(217,217,217,0.27)] backdrop-blur-[8.1px] shadow-[0_4px_21px_0_rgba(0,0,0,0.1)] rounded-b-[15px]  ${
+            className={`w-full  h-20 bg-[rgba(217,217,217,0.27)] backdrop-blur-[8.1px] shadow-[0_4px_21px_0_rgba(0,0,0,0.1)] rounded-b-[15px]  ${
                 isAuthPage ? 'absolute' : 'relative'
             }`}
         >
             <motion.div
-                className="flex max-w-[1340px] mx-auto w-full h-full justify-between items-center"
+                className="flex mx-12 py-4 justify-between items-center"
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 1 }}
