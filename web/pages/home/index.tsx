@@ -101,7 +101,7 @@ const Home = () => {
                 />
             </section>
 
-            <section className="my-48">
+            <section className="my-48" id="faq">
                 <motion.h1
                     className="text-4xl text-black mb-8"
                     initial={{ opacity: 0, y: -10 }}
