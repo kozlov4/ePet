@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
+import { motion } from 'framer-motion';
 import { useInfiniteScroll } from '../../hooks/useInfiniteScroll';
 import { ColumnDefinition, PaginatedResponse } from '../../types/api';
 
@@ -17,20 +18,6 @@ function useDebounce(value: string, delay: number) {
     return debouncedValue;
 }
 
-interface ReusableTableProps {
-    columns: ColumnDefinition<any>[];
-    title: string;
-    addNewLink: string;
-    addNewText: string;
-    searchPlaceholder: string;
-    fetchFunction: (
-        page: number,
-        size: number,
-        query: string,
-    ) => Promise<PaginatedResponse<any>>;
-    onAction: (item: any, actionType: string) => void;
-}
-
 export function ReusableTable({
     columns,
     title,
@@ -39,32 +26,30 @@ export function ReusableTable({
     searchPlaceholder,
     fetchFunction,
     onAction,
-}: ReusableTableProps) {
+}) {
     const router = useRouter();
-
-    const [items, setItems] = useState<any[]>([]);
+    const [items, setItems] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const [totalItems, setTotalItems] = useState(0);
     const [currentQuery, setCurrentQuery] = useState('');
     const [isLoadingInitial, setIsLoadingInitial] = useState(true);
-    const [error, setError] = useState<string | null>(null);
+    const [error, setError] = useState(null);
     const pageSize = 10;
 
     const debouncedQuery = useDebounce(currentQuery, 500);
 
     const executeFetch = useCallback(
-        async (page: number, query: string, isNewSearch: boolean = false) => {
+        async (page, query, isNewSearch = false) => {
             setError(null);
             if (isNewSearch) setIsLoadingInitial(true);
 
             try {
                 const data = await fetchFunction(page, pageSize, query);
-
                 let newItems = Array.isArray(data) ? data : data.items;
 
-                setItems((prevItems) =>
-                    isNewSearch ? newItems : [...prevItems, ...newItems],
+                setItems((prev) =>
+                    isNewSearch ? newItems : [...prev, ...newItems],
                 );
                 setCurrentPage(data.page);
                 setTotalPages(data.total_pages);
@@ -82,7 +67,7 @@ export function ReusableTable({
                 setIsLoadingInitial(false);
             }
         },
-        [fetchFunction, pageSize, router, title],
+        [fetchFunction, pageSize, router],
     );
 
     useEffect(() => {
@@ -96,16 +81,14 @@ export function ReusableTable({
 
     const hasMore = currentPage < totalPages;
 
-    const observerRef = useRef<HTMLDivElement>(null);
+    const observerRef = useRef(null);
     const { loading: isLoadingMore } = useInfiniteScroll(
         observerRef,
         loadMore,
         hasMore,
     );
 
-    const handleSearch = (query: string) => {
-        setCurrentQuery(query);
-    };
+    const handleSearch = (query) => setCurrentQuery(query);
 
     if (isLoadingInitial && items.length === 0) {
         return (
@@ -113,20 +96,40 @@ export function ReusableTable({
         );
     }
 
-    const gridCols = columns.length;
-    const gridColsClass = `md:grid-cols-${gridCols}`;
+    const gridColsClass = `md:grid-cols-${columns.length}`;
 
     return (
-        <div className="w-full px-4 md:px-10 py-10">
-            <h1 className="mb-5 font-medium text-[40px]">{title}</h1>
+        <motion.div
+            className="w-full px-4 md:px-10 py-10"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: 'easeOut' }}
+        >
+            <motion.h1
+                className="mb-5 font-medium text-[40px]"
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+            >
+                {title}
+            </motion.h1>
 
             {error && (
-                <div className="mt-4 p-4 bg-red-800 border border-red-600 text-red-100 rounded-lg">
+                <motion.div
+                    className="mt-4 p-4 bg-red-800 border border-red-600 text-red-100 rounded-lg"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                >
                     {error}
-                </div>
+                </motion.div>
             )}
 
-            <div className="mb-8 flex flex-col w-full md:flex-row gap-1">
+            <motion.div
+                className="mb-8 flex flex-col w-full md:flex-row gap-1"
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+            >
                 <div className="flex-1 flex w-full rounded-xl border border-gray-300 bg-white p-2.5 shadow-[0_0_10px_rgba(0,0,0,0.1)] focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500 mr-50 text-[13px]">
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -142,7 +145,6 @@ export function ReusableTable({
                         <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                     </svg>
                     <input
-                        id="0"
                         type="text"
                         placeholder={searchPlaceholder}
                         value={currentQuery}
@@ -151,18 +153,29 @@ export function ReusableTable({
                     />
                 </div>
 
-                <Link
-                    href={addNewLink}
-                    className="text-[15px] w-full flex-shrink-0 md:w-auto shrink-0 rounded-[10em] border border-gray-700 px-10 py-3 text-sm font-semibold transition-colors hover:bg-gray-700 cursor-pointer text-center"
+                <motion.div
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.97 }}
+                    transition={{ type: 'spring', stiffness: 300 }}
                 >
-                    {addNewText}
-                </Link>
-            </div>
+                    <Link
+                        href={addNewLink}
+                        className="text-[15px] w-full md:w-auto flex-shrink-0 rounded-[10em] border-2 border-black bg-white px-10 py-3 font-semibold text-black text-center cursor-pointer transition-all duration-300 hover:bg-black hover:text-white hover:shadow-lg"
+                    >
+                        {addNewText}
+                    </Link>
+                </motion.div>
+            </motion.div>
 
-            <div className="overflow-hidden">
+            <motion.div
+                className="overflow-hidden"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.5 }}
+            >
                 <table className="min-w-full border-collapse">
                     <thead>
-                        <tr className="">
+                        <tr>
                             {columns.map((col) => (
                                 <th
                                     key={String(col.accessor)}
@@ -175,16 +188,16 @@ export function ReusableTable({
                     </thead>
 
                     <tbody className="ReusableTable divide-y overflow-hidden divide-gray-300">
-                        {items.map((item) => {
+                        {items.map((item, i) => {
                             const key =
-                                item.pet_id ??
-                                item.organization_id ??
-                                Math.random();
-
+                                item.pet_id ?? item.organization_id ?? i;
                             return (
-                                <tr
+                                <motion.tr
                                     key={key}
                                     className="hover:bg-[rgba(255,255,255,0.05)]"
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: 0.05 * i }}
                                 >
                                     {columns.map((col) => (
                                         <td
@@ -193,19 +206,15 @@ export function ReusableTable({
                                         >
                                             {col.cell
                                                 ? col.cell(item, onAction)
-                                                : String(
-                                                      (item as any)[
-                                                          col.accessor
-                                                      ],
-                                                  )}
+                                                : String(item[col.accessor])}
                                         </td>
                                     ))}
-                                </tr>
+                                </motion.tr>
                             );
                         })}
                     </tbody>
                 </table>
-            </div>
+            </motion.div>
 
             {isLoadingMore && (
                 <p className="text-center mt-6 text-lg text-blue-400">
@@ -220,6 +229,6 @@ export function ReusableTable({
                     Кінець списку ({totalItems} записів).
                 </p>
             )}
-        </div>
+        </motion.div>
     );
 }

@@ -108,7 +108,7 @@ export function Menu() {
                         },
                     }}
                 >
-                    {/* Block template */}
+                    
                     {[
                         {
                             label: 'Тип організації',
@@ -166,21 +166,33 @@ export function Menu() {
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ delay: 1.1 }}
                     >
-                        <button className="flex items-center border-black border-[1px] px-4 py-2 rounded-[30px] font-medium text-[12px] text-black">
+                        <button
+                            className="
+                            flex items-center justify-center
+                            border-black border-[1px]
+                            px-5 py-2 rounded-[30px]
+                            font-medium text-[12px] text-black
+                            bg-white cursor-pointer
+                            transition-all duration-300 ease-out
+                            hover:bg-black hover:text-white hover:shadow-[0_0_15px_rgba(0,0,0,0.3)]
+                            active:scale-[0.97]
+                        "
+                        onClick={() => router.push('/reset-password')}
+                        >
                             Забув пароль
                         </button>
                     </motion.div>
 
                     <motion.div
                         className="
-                            w-[100%] h-10 mt-[5%] flex justify-center items-center
-                            rounded-3xl cursor-pointer font-medium text-white
-                            bg-gradient-to-r from-black to-gray-800
-                            transition-all duration-300 ease-out
-                            hover:shadow-[0_0_20px_rgba(0,0,0,0.45)]
-                            hover:bg-gradient-to-r hover:from-gray-900 hover:to-black
-                            hover:text-gray-200
-                        "
+                        w-full h-10 mt-[5%] flex justify-center items-center
+                        rounded-3xl cursor-pointer font-medium text-white
+                        bg-black from-black
+                        border-2 border-transparent
+                        transition-all duration-300 ease-out
+                        hover:bg-white hover:text-black hover:border-black
+                        hover:shadow-[0_0_15px_rgba(0,0,0,0.25)]
+                    "
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 1.3 }}

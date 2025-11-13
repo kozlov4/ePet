@@ -56,7 +56,7 @@ export function PetList() {
             cell: (pet, onActionCallback) => (
                 <button
                     onClick={() => onActionCallback(pet, 'details')}
-                    className=" rounded-lg bg-black px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-gray-800 cursor-pointer"
+                    className="rounded-[10em] w-[70%] ml-[30%] bg-black px-4 py-2 text-[15px] font-semibold cursor-pointer text-white transition-all duration-300 hover:bg-white hover:text-black hover:border-1 hover:border-black"
                 >
                     Повна інформація
                 </button>
@@ -68,15 +68,13 @@ export function PetList() {
             cell: (pet, onActionCallback) => (
                 <button
                     onClick={() => onActionCallback(pet, 'delete')}
-                    className="rounded-lg bg-white border border-gray-300 px-4 py-2 text-xs font-semibold text-black transition-colors hover:bg-gray-100 cursor-pointer"
+                    className="rounded-[10em] bg-white border-2  border-black px-4 py-2 text-[15px] font-semibold text-black transition-all duration-300 hover:bg-black hover:text-white cursor-pointer"
                 >
                     Видалити
                 </button>
             ),
         },
     ];
-
-   
 
     interface ViewConfig {
         endpoint: string;
@@ -98,7 +96,6 @@ export function PetList() {
             addNewText: 'Додати тварину',
             searchPlaceholder: 'Пошук...',
         },
-       
     };
 
     const config = viewConfigs[activeView];
