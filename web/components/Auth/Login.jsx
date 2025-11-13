@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useAuth } from '../../hooks/useAuth';
 
 export function Login() {
     const [email, setEmail] = useState('');
@@ -10,6 +11,7 @@ export function Login() {
     const [emailError, setEmailError] = useState('');
     const [passwordError, setPasswordError] = useState('');
     const router = useRouter();
+    const { login } = useAuth();
 
     const validateEmail = (value) => {
         if (!value) return '';
@@ -74,8 +76,7 @@ export function Login() {
                         draggable: true,
                     });
 
-                    localStorage.setItem('access_token', data.access_token);
-                    localStorage.setItem('user_name', data.user_name);
+                    login({ name: data.user_name }, data.access_token);
                     if (data.organization_type === "Ветклініка")
                     router.push('/CNAP/favorite-list');
                     else if(data.organization_type == "ЦНАП")

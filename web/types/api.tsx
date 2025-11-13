@@ -1,3 +1,5 @@
+import { ReactNode } from "react";
+
 interface Owner {
     passport_number: string;
 }
@@ -30,11 +32,14 @@ export interface PaginatedResponse<T> {
     items: T[];
 }
 
+
+
 export interface ColumnDefinition<T> {
     accessor: keyof T;
     header: string;
     cell?: (item: T, onAction: (item: T, actionType: string) => void) => React.ReactNode;
 }
+
 export interface ViewConfig {
     endpoint: string;
     queryParamName: string;
@@ -43,4 +48,22 @@ export interface ViewConfig {
     addNewLink: string;
     addNewText: string;
     searchPlaceholder: string;
+}
+
+
+
+export interface User {
+    name: string;
+}
+
+export interface AuthContextType {
+    user: User | null;
+    loading: boolean;
+    isAuthenticated: boolean;
+    login: (userData: User, token: string) => void;
+    logout: () => void;
+}
+
+export interface AuthProviderProps {
+    children: ReactNode;
 }

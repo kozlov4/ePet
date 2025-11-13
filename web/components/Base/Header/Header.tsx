@@ -22,7 +22,7 @@ export const Header: React.FC<HeaderProps> = ({
             }`}
         >
             <motion.div
-                className="flex max-w-[1340px] mx-auto w-full h-full justify-between items-center"
+                className="flex mx-[5%] h-full justify-between items-center"
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 1 }}
