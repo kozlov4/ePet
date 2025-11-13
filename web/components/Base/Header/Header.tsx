@@ -35,16 +35,36 @@ export const Header: React.FC<HeaderProps> = ({
                 >
                     <motion.div
                         className="flex h-full gap-4 items-center"
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        animate={{ opacity: 1, scale: 1 }}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
                         transition={{ duration: 0.6, delay: 0.5 }}
                     >
-                        <div className="flex w-12 h-12 justify-center items-center bg-black rounded-lg">
+                        <motion.div
+                            className="flex w-12 h-12 justify-center items-center bg-black rounded-lg"
+                            initial={{ opacity: 0, scale: 0.6, rotate: -10 }}
+                            animate={{ opacity: 1, scale: 1, rotate: 0 }}
+                            transition={{
+                                duration: 0.6,
+                                delay: 0.6,
+                                type: 'spring',
+                                stiffness: 150,
+                            }}
+                        >
                             <CatIcon />
-                        </div>
-                        <div className="flex w-12 h-12 justify-center items-center border-[2.5px] border-black rounded-lg">
+                        </motion.div>
+                        <motion.div
+                            className="flex w-12 h-12 justify-center items-center border-[2.5px] border-black rounded-lg"
+                            initial={{ opacity: 0, scale: 0.6, rotate: 10 }}
+                            animate={{ opacity: 1, scale: 1, rotate: 0 }}
+                            transition={{
+                                duration: 0.6,
+                                delay: 0.8,
+                                type: 'spring',
+                                stiffness: 150,
+                            }}
+                        >
                             <UkraineArmsIcon />
-                        </div>
+                        </motion.div>
                     </motion.div>
 
                     {navProps.map((e) => (

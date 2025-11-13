@@ -45,7 +45,7 @@ export function FavoriteList() {
             cell: (pet, onActionCallback) => (
                 <button
                     onClick={() => onActionCallback(pet, 'details')}
-                    className="rounded-[10em] bg-black px-4 py-2 text-[15px] font-semibold text-white transition-colors hover:bg-gray-800 cursor-pointer"
+                    className="rounded-[10em] bg-black px-4 py-2 text-[15px] font-semibold cursor-pointer text-white transition-all duration-300 hover:bg-white hover:text-black hover:border-1 hover:border-black"
                 >
                     Повна інформація
                 </button>
