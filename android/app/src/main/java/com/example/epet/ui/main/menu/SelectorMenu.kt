@@ -9,14 +9,19 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.example.epet.R
+import android.content.Context
+import androidx.fragment.app.activityViewModels
+import com.example.epet.ui.main.viewmodel.PassportViewModel
 
 class SelectorMenu(private val onClose: (() -> Unit)? = null) : BottomSheetDialogFragment() {
+
+    val viewModel: PassportViewModel by activityViewModels()
 
     private lateinit var tv_passport_info: TextView
     private lateinit var tv_vaccination_info: TextView
     private lateinit var tv_close: TextView
 
-    private var passportNumber: String? = null
+    private var pet_id: String? = null
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return BottomSheetDialog(requireContext(), R.style.MenuPassportAnimation).apply {
@@ -42,6 +47,7 @@ class SelectorMenu(private val onClose: (() -> Unit)? = null) : BottomSheetDialo
         initArguments()
         initViews(view)
         initButtons()
+        initStateFlow()
     }
 
     override fun onDismiss(dialog: DialogInterface) {
@@ -51,7 +57,7 @@ class SelectorMenu(private val onClose: (() -> Unit)? = null) : BottomSheetDialo
 
     /** Приймання аргіментів **/
     private fun initArguments() {
-        passportNumber = arguments?.getString("passportNumber")
+        pet_id = arguments?.getString("pet_id")
     }
 
     /** Ініціалізація всіх елементів інтерфейсу **/
@@ -68,7 +74,7 @@ class SelectorMenu(private val onClose: (() -> Unit)? = null) : BottomSheetDialo
             dismiss()
             val menu = PassportInfoMenu()
             val bundle = Bundle().apply {
-                putString("passportNumber", passportNumber)
+                putString("pet_id", pet_id)
             }
             menu.arguments = bundle
             menu.show(parentFragmentManager, "PassportInfoMenu")
@@ -78,7 +84,7 @@ class SelectorMenu(private val onClose: (() -> Unit)? = null) : BottomSheetDialo
             dismiss()
             val menu = VaccinationInfoMenu()
             val bundle = Bundle().apply {
-                putString("passportNumber", passportNumber)
+                putString("pet_id", pet_id)
             }
             menu.arguments = bundle
             menu.show(parentFragmentManager, "VaccinationInfoMenu")
@@ -87,5 +93,13 @@ class SelectorMenu(private val onClose: (() -> Unit)? = null) : BottomSheetDialo
         tv_close.setOnClickListener {
             dismiss()
         }
+    }
+
+    /** Ініціалізація StateFlow **/
+    private fun initStateFlow() {
+        val sharedPref = requireContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+        val token = sharedPref.getString("access_token", null)
+        viewModel.passportDetail(token, pet_id)
+        viewModel.vaccinationList(token, pet_id)
     }
 }
