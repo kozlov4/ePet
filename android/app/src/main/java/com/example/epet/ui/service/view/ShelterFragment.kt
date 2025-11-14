@@ -60,12 +60,12 @@ class ShelterFragment : Fragment() {
 
     /** Повертає приклад даних про повідомлення **/
     private fun getPetShelterList(): List<OutputPetShelter> = listOf(
-        OutputPetShelter(R.drawable.icon_cat_test, "Донні", "Ч", "Метис", "24.02.2020"),
-        OutputPetShelter(R.drawable.icon_cat_test, "Мурзік", "Ч", "Британський", "11.08.2019"),
-        OutputPetShelter(R.drawable.icon_cat_test, "Луна", "Ж", "Сіамський", "03.05.2021"),
-        OutputPetShelter(R.drawable.icon_cat_test, "Сніжок", "Ч", "Ангор", "17.12.2022"),
-        OutputPetShelter(R.drawable.icon_cat_test, "Белла", "Ж", "Шотландський", "29.07.2020"),
-        OutputPetShelter(R.drawable.icon_cat_test, "Барсік", "Ч", "Метис", "10.01.2018")
+        OutputPetShelter(R.drawable.icon_empty_image, "Донні", "Ч", "Метис", "24.02.2020"),
+        OutputPetShelter(R.drawable.icon_empty_image, "Мурзік", "Ч", "Британський", "11.08.2019"),
+        OutputPetShelter(R.drawable.icon_empty_image, "Луна", "Ж", "Сіамський", "03.05.2021"),
+        OutputPetShelter(R.drawable.icon_empty_image, "Сніжок", "Ч", "Ангор", "17.12.2022"),
+        OutputPetShelter(R.drawable.icon_empty_image, "Белла", "Ж", "Шотландський", "29.07.2020"),
+        OutputPetShelter(R.drawable.icon_empty_image, "Барсік", "Ч", "Метис", "10.01.2018")
     )
 
     /** Показ наступної картки **/
@@ -76,7 +76,7 @@ class ShelterFragment : Fragment() {
         val cardView = layoutInflater.inflate(R.layout.item_shelter, card_container, false)
 
         val iv_photo = cardView.findViewById<ImageView>(R.id.iv_photo)
-        val tv_name = cardView.findViewById<TextView>(R.id.tv_name)
+        val tv_name = cardView.findViewById<TextView>(R.id.tv_drug_name)
         val tv_sex = cardView.findViewById<TextView>(R.id.tv_sex)
         val tv_breed = cardView.findViewById<TextView>(R.id.tv_breed)
         val tv_birth_date = cardView.findViewById<TextView>(R.id.tv_breed)

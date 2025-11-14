@@ -5,40 +5,49 @@ import android.view.View
 import android.view.ViewGroup
 import android.content.DialogInterface
 import android.graphics.Color
-import androidx.core.widget.NestedScrollView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.example.epet.R
 import android.widget.TextView
 import android.widget.ImageView
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import com.example.epet.ui.main.viewmodel.PassportViewModel
+import kotlinx.coroutines.launch
+import kotlin.getValue
+import android.content.Context
+import androidx.fragment.app.activityViewModels
+import com.bumptech.glide.Glide
 
 class PassportInfoMenu(private val onClose: (() -> Unit)? = null) : BottomSheetDialogFragment() {
 
-    private lateinit var sv_main: NestedScrollView
+    val viewModel: PassportViewModel by activityViewModels()
+
     private lateinit var tv_passport_number: TextView
     private lateinit var iv_copy_passport: ImageView
-    private lateinit var tv_last_update: TextView
-    private lateinit var tv_name_ua: TextView
-    private lateinit var tv_name_en: TextView
+    private lateinit var tv_update_datetime: TextView
+    private lateinit var tv_pet_name: TextView
+    private lateinit var tv_pet_name_en: TextView
     private lateinit var iv_photo: ImageView
-    private lateinit var tv_birth_date: TextView
-    private lateinit var tv_breed_ua: TextView
+    private lateinit var tv_date_of_birth: TextView
+    private lateinit var tv_breed: TextView
     private lateinit var tv_breed_en: TextView
-    private lateinit var tv_sex_ua: TextView
-    private lateinit var tv_sex_en: TextView
-    private lateinit var tv_color_ua: TextView
+    private lateinit var tv_gender: TextView
+    private lateinit var tv_gender_en: TextView
+    private lateinit var tv_color: TextView
     private lateinit var tv_color_en: TextView
-    private lateinit var tv_species_ua: TextView
+    private lateinit var tv_species: TextView
     private lateinit var tv_species_en: TextView
     private lateinit var tv_owner_passport_number: TextView
-    private lateinit var tv_autority_number: TextView
-    private lateinit var tv_chip_location_ua: TextView
-    private lateinit var tv_chip_location_en: TextView
-    private lateinit var tv_chip_date: TextView
-    private lateinit var tv_chip_number: TextView
+    private lateinit var tv_organization_id: TextView
+    private lateinit var tv_identifier_type: TextView
+    private lateinit var tv_identifier_type_en: TextView
+    private lateinit var tv_identifier_date: TextView
+    private lateinit var tv_identifier_number: TextView
 
-    private var passportNumber: String? = null
+    private var pet_id: String? = null
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return BottomSheetDialog(requireContext(), R.style.MenuPassportAnimation).apply {
@@ -79,7 +88,7 @@ class PassportInfoMenu(private val onClose: (() -> Unit)? = null) : BottomSheetD
         initArguments()
         initViews(view)
         initButtons()
-        initInfo()
+        initStateFlow()
     }
 
     override fun onDismiss(dialog: DialogInterface) {
@@ -89,43 +98,90 @@ class PassportInfoMenu(private val onClose: (() -> Unit)? = null) : BottomSheetD
 
     /** Приймання аргіментів **/
     private fun initArguments() {
-        passportNumber = arguments?.getString("passportNumber")
+        pet_id = arguments?.getString("pet_id")
     }
 
     /** Ініціалізація всіх елементів інтерфейсу **/
     private fun initViews(view: View) {
-        sv_main = view.findViewById(R.id.sv_main)
         tv_passport_number = view.findViewById(R.id.tv_passport_number)
         iv_copy_passport = view.findViewById(R.id.iv_copy_passport)
-        tv_last_update = view.findViewById(R.id.tv_last_update)
-        tv_name_ua = view.findViewById(R.id.tv_name_ua)
-        tv_name_en = view.findViewById(R.id.tv_name_en)
+        tv_update_datetime = view.findViewById(R.id.tv_update_datetime)
+        tv_pet_name = view.findViewById(R.id.tv_drug_name)
+        tv_pet_name_en = view.findViewById(R.id.tv_pet_name_en)
         iv_photo = view.findViewById(R.id.iv_photo)
-        tv_birth_date = view.findViewById(R.id.tv_birth_date)
-        tv_breed_ua = view.findViewById(R.id.tv_breed_ua)
+        tv_date_of_birth = view.findViewById(R.id.tv_date_of_birth)
+        tv_breed = view.findViewById(R.id.tv_breed)
         tv_breed_en = view.findViewById(R.id.tv_breed_en)
-        tv_sex_ua = view.findViewById(R.id.tv_sex_ua)
-        tv_sex_en = view.findViewById(R.id.tv_sex_en)
-        tv_color_ua = view.findViewById(R.id.tv_color_ua)
+        tv_gender = view.findViewById(R.id.tv_gender)
+        tv_gender_en = view.findViewById(R.id.tv_gender_en)
+        tv_color = view.findViewById(R.id.tv_color)
         tv_color_en = view.findViewById(R.id.tv_color_en)
-        tv_species_ua = view.findViewById(R.id.tv_species_ua)
+        tv_species = view.findViewById(R.id.tv_species)
         tv_species_en = view.findViewById(R.id.tv_species_en)
         tv_owner_passport_number = view.findViewById(R.id.tv_owner_passport_number)
-        tv_autority_number = view.findViewById(R.id.tv_autority_number)
-        tv_chip_location_ua = view.findViewById(R.id.tv_chip_location_ua)
-        tv_chip_location_en = view.findViewById(R.id.tv_chip_location_en)
-        tv_chip_date = view.findViewById(R.id.tv_chip_date)
-        tv_chip_number = view.findViewById(R.id.tv_chip_number)
+        tv_organization_id = view.findViewById(R.id.tv_organization_id)
+        tv_identifier_type = view.findViewById(R.id.tv_identifier_type)
+        tv_identifier_type_en = view.findViewById(R.id.tv_identifier_type_en)
+        tv_identifier_date = view.findViewById(R.id.tv_identifier_date)
+        tv_identifier_number = view.findViewById(R.id.tv_identifier_number)
     }
 
     /** Ініціалізація всіх кнопок інтерфейсу **/
     private fun initButtons() {
     }
 
-    /** Заповнення даних **/
-    private fun initInfo() {
-        val repeatedText = "Паспорт оновлено 01.10.2025 "
-        tv_last_update.text = repeatedText.repeat(100)
-        tv_last_update.isSelected = true
+    /** Ініціалізація StateFlow **/
+    private fun initStateFlow() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.outputPassportDetail.collect { state ->
+                    tv_passport_number.text = state.passport_number
+                    tv_pet_name.text = state.pet_name
+                    tv_pet_name_en.text = state.pet_name_en
+                    tv_date_of_birth.text = state.date_of_birth
+                    tv_breed.text = state.breed
+                    tv_breed_en.text = state.breed_en
+                    tv_gender.text = state.gender
+                    tv_gender_en.text = state.gender_en
+                    tv_color.text = state.color
+                    tv_color_en.text = state.color_en
+                    tv_species.text = state.species
+                    tv_species_en.text = state.species_en
+                    tv_owner_passport_number.text = state.owner_passport_number
+                    tv_organization_id.text = state.organization_id
+                    tv_identifier_type.text = state.identifier_type
+                    tv_identifier_type_en.text = state.identifier_type_en
+                    tv_identifier_date.text = state.identifier_date
+                    tv_identifier_number.text = state.identifier_number
+
+                    setUpdateDatetime(state.update_datetime)
+                    setImage(state.img_url)
+                }
+            }
+        }
+    }
+
+    /** Встановлення часу оновлення паспорта **/
+    private fun setUpdateDatetime(update_datetime: String) {
+        val repeatedText = "Паспорт оновлено ${update_datetime} "
+        tv_update_datetime.text = repeatedText.repeat(100)
+        tv_update_datetime.isSelected = true
+    }
+
+    /** Встановлення фото паспорта **/
+    private fun setImage(img_url: String) {
+        try {
+            if (img_url.isNotBlank() && img_url != "https://") {
+                Glide.with(requireContext())
+                    .load(img_url)
+                    .error(R.drawable.icon_empty_image)
+                    .into(iv_photo)
+            } else {
+                iv_photo.setImageResource(R.drawable.icon_empty_image)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            iv_photo.setImageResource(R.drawable.icon_empty_image)
+        }
     }
 }
