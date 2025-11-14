@@ -11,7 +11,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:scaleType="centerCrop"
-        android:src="@drawable/icon_cat_test"
+        android:src="@drawable/icon_empty_image"
         android:background="@drawable/bg_rounded_max"
         android:clipToOutline="true"
         app:layout_constraintTop_toTopOf="parent"

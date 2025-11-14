@@ -29,7 +29,7 @@
             android:layout_width="148dp"
             android:layout_height="195dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/icon_cat_test"
+            android:src="@drawable/icon_empty_image"
             android:background="@drawable/bg_rounded"
             android:clipToOutline="true"
             card_view:layout_constraintStart_toStartOf="@+id/guideline_vertical_left"

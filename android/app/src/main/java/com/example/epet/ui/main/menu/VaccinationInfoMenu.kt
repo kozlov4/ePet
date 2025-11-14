@@ -103,14 +103,19 @@ class VaccinationInfoMenu(private val onClose: (() -> Unit)? = null) : BottomShe
                 viewModel.outputVaccinationList.collect { state ->
                     tv_passport_number.text = state.passport_number
 
-                    val repeatedText = "Паспорт оновлено ${state.update_datetime} "
-                    tv_update_datetime.text = repeatedText.repeat(100)
-                    tv_update_datetime.isSelected = true
+                    setUpdateDatetime(state.update_datetime)
 
                     setupRecyclerView(state.vaccinations)
                 }
             }
         }
+    }
+
+    /** Встановлення часу оновлення паспорта **/
+    private fun setUpdateDatetime(update_datetime: String) {
+        val repeatedText = "Паспорт оновлено ${update_datetime} "
+        tv_update_datetime.text = repeatedText.repeat(100)
+        tv_update_datetime.isSelected = true
     }
 
     /** Налаштування RecyclerView **/

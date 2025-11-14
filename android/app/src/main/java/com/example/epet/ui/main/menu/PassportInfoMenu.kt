@@ -19,6 +19,7 @@ import kotlinx.coroutines.launch
 import kotlin.getValue
 import android.content.Context
 import androidx.fragment.app.activityViewModels
+import com.bumptech.glide.Glide
 
 class PassportInfoMenu(private val onClose: (() -> Unit)? = null) : BottomSheetDialogFragment() {
 
@@ -153,11 +154,34 @@ class PassportInfoMenu(private val onClose: (() -> Unit)? = null) : BottomSheetD
                     tv_identifier_date.text = state.identifier_date
                     tv_identifier_number.text = state.identifier_number
 
-                    val repeatedText = "Паспорт оновлено ${state.update_datetime} "
-                    tv_update_datetime.text = repeatedText.repeat(100)
-                    tv_update_datetime.isSelected = true
+                    setUpdateDatetime(state.update_datetime)
+                    setImage(state.img_url)
                 }
             }
+        }
+    }
+
+    /** Встановлення часу оновлення паспорта **/
+    private fun setUpdateDatetime(update_datetime: String) {
+        val repeatedText = "Паспорт оновлено ${update_datetime} "
+        tv_update_datetime.text = repeatedText.repeat(100)
+        tv_update_datetime.isSelected = true
+    }
+
+    /** Встановлення фото паспорта **/
+    private fun setImage(img_url: String) {
+        try {
+            if (img_url.isNotBlank() && img_url != "https://") {
+                Glide.with(requireContext())
+                    .load(img_url)
+                    .error(R.drawable.icon_empty_image)
+                    .into(iv_photo)
+            } else {
+                iv_photo.setImageResource(R.drawable.icon_empty_image)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            iv_photo.setImageResource(R.drawable.icon_empty_image)
         }
     }
 }
