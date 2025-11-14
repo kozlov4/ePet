@@ -307,7 +307,7 @@ async def delete_pet(
     if not pet:
         raise HTTPException(status_code=404, detail="Тваринку не знайдено")
 
-    if org_type != "ЦНАП" and pet.organization_id != org_id:
+    if org_type == "Притулок" and pet.organization_id != org_id:
         raise HTTPException(status_code=403, detail="Недостатньо прав для видалення")
 
     db.delete(pet)
