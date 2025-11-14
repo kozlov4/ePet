@@ -10,7 +10,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.epet.R
-import com.example.epet.data.model.OutputMessage
+import com.example.epet.data.model.common.OutputMessage
 import com.example.epet.ui.messages.adapter.MessageListAdapter
 
 class MessageListFragment : Fragment() {

@@ -29,7 +29,7 @@
             android:layout_width="148dp"
             android:layout_height="195dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/icon_cat_test"
+            android:src="@drawable/icon_empty_image"
             android:background="@drawable/bg_rounded"
             android:clipToOutline="true"
             card_view:layout_constraintStart_toStartOf="@+id/guideline_vertical_left"
@@ -56,7 +56,7 @@
                 android:textSize="13sp" />
 
             <TextView
-                android:id="@+id/tv_birth_date"
+                android:id="@+id/tv_date_of_birth"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/e_ukraine_regular"
@@ -87,7 +87,7 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/tv_last_update"
+            android:id="@+id/tv_update_datetime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/e_ukraine_regular"
@@ -107,7 +107,7 @@
             card_view:layout_constraintBottom_toTopOf="@+id/guideline_horizontal_marquee" />
 
         <TextView
-            android:id="@+id/tv_name_ua"
+            android:id="@+id/tv_drug_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/e_ukraine_regular"
@@ -118,7 +118,7 @@
             card_view:layout_constraintTop_toTopOf="@+id/guideline_horizontal_name" />
 
         <TextView
-            android:id="@+id/tv_name_en"
+            android:id="@+id/tv_pet_name_en"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/e_ukraine_regular"
@@ -126,7 +126,7 @@
             android:textColor="@android:color/black"
             android:textSize="13sp"
             card_view:layout_constraintStart_toStartOf="@+id/guideline_vertical_left"
-            card_view:layout_constraintTop_toBottomOf="@+id/tv_name_ua" />
+            card_view:layout_constraintTop_toBottomOf="@+id/tv_drug_name" />
 
         <ImageView
             android:id="@+id/iv_menu"
@@ -137,7 +137,7 @@
             android:clickable="true"
             android:focusable="true"
             card_view:layout_constraintEnd_toStartOf="@+id/guideline_vertical_right"
-            card_view:layout_constraintTop_toBottomOf="@+id/tv_name_ua" />
+            card_view:layout_constraintTop_toBottomOf="@+id/tv_drug_name" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline_horizontal_tittletext"

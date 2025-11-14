@@ -66,7 +66,7 @@
                 app:layout_constraintTop_toTopOf="@+id/tv_passport_number" />
 
             <TextView
-                android:id="@+id/tv_last_update"
+                android:id="@+id/tv_update_datetime"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/bg_marquee"
@@ -99,10 +99,10 @@
                 android:paddingRight="12dp"
                 app:layout_constraintEnd_toEndOf="@+id/guideline_vertical_right"
                 app:layout_constraintStart_toStartOf="@+id/guideline_vertical_left"
-                app:layout_constraintTop_toBottomOf="@+id/tv_last_update">
+                app:layout_constraintTop_toBottomOf="@+id/tv_update_datetime">
 
                 <TextView
-                    android:id="@+id/tv_name_ua"
+                    android:id="@+id/tv_drug_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/e_ukraine_regular"
@@ -113,7 +113,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:id="@+id/tv_name_en"
+                    android:id="@+id/tv_pet_name_en"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/e_ukraine_regular"
@@ -121,7 +121,7 @@
                     android:textColor="@android:color/black"
                     android:textSize="13sp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_name_ua" />
+                    app:layout_constraintTop_toBottomOf="@+id/tv_drug_name" />
 
                 <ImageView
                     android:id="@+id/iv_photo"
@@ -129,11 +129,11 @@
                     android:layout_height="143dp"
                     android:layout_marginTop="9dp"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/icon_cat_test"
+                    android:src="@drawable/icon_empty_image"
                     android:background="@drawable/bg_rounded"
                     android:clipToOutline="true"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_name_en" />
+                    app:layout_constraintTop_toBottomOf="@+id/tv_pet_name_en" />
 
                 <LinearLayout
                     android:id="@+id/ll_info"
@@ -144,7 +144,7 @@
                     app:layout_constraintBottom_toBottomOf="@+id/iv_photo"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@id/guideline_vertical_center1"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_name_ua">
+                    app:layout_constraintTop_toBottomOf="@+id/tv_drug_name">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -163,7 +163,7 @@
                         android:textSize="10sp" />
 
                     <TextView
-                        android:id="@+id/tv_birth_date"
+                        android:id="@+id/tv_date_of_birth"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="7dp"
@@ -214,7 +214,7 @@
                         android:textSize="13sp" />
 
                     <TextView
-                        android:id="@+id/tv_breed_ua"
+                        android:id="@+id/tv_breed"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -272,7 +272,7 @@
                         android:textSize="13sp" />
 
                     <TextView
-                        android:id="@+id/tv_sex_ua"
+                        android:id="@+id/tv_gender"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -301,7 +301,7 @@
                         android:textSize="10sp" />
 
                     <TextView
-                        android:id="@+id/tv_sex_en"
+                        android:id="@+id/tv_gender_en"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -345,7 +345,7 @@
                         android:textSize="13sp" />
 
                     <TextView
-                        android:id="@+id/tv_color_ua"
+                        android:id="@+id/tv_color"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -403,7 +403,7 @@
                         android:textSize="13sp" />
 
                     <TextView
-                        android:id="@+id/tv_species_ua"
+                        android:id="@+id/tv_species"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -524,7 +524,7 @@
                         android:textSize="13sp" />
 
                     <TextView
-                        android:id="@+id/tv_autority_number"
+                        android:id="@+id/tv_organization_id"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -587,7 +587,7 @@
                         android:textSize="13sp" />
 
                     <TextView
-                        android:id="@+id/tv_chip_location_ua"
+                        android:id="@+id/tv_identifier_type"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -616,7 +616,7 @@
                         android:textSize="10sp" />
 
                     <TextView
-                        android:id="@+id/tv_chip_location_en"
+                        android:id="@+id/tv_identifier_type_en"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -645,7 +645,7 @@
                         android:textSize="13sp" />
 
                     <TextView
-                        android:id="@+id/tv_chip_date"
+                        android:id="@+id/tv_identifier_date"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -693,7 +693,7 @@
                         android:textSize="13sp" />
 
                     <TextView
-                        android:id="@+id/tv_chip_number"
+                        android:id="@+id/tv_identifier_number"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"

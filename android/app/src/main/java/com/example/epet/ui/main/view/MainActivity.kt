@@ -14,8 +14,12 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.NavOptions
 import androidx.navigation.NavController
+import com.example.epet.ui.main.viewmodel.PassportViewModel
+import androidx.activity.viewModels
 
 class MainActivity : AppCompatActivity() {
+
+    val viewModel: PassportViewModel by viewModels()
 
     private var lastBackPressedTime = 0L
     private val backPressThreshold = 2000L
@@ -44,6 +48,7 @@ class MainActivity : AppCompatActivity() {
         initNavigationBar()
         initButtons()
         setupBackPressed()
+        initStateFlow()
     }
 
     /** Ініціалізація всіх елементів інтерфейсу **/
@@ -59,6 +64,13 @@ class MainActivity : AppCompatActivity() {
         iv_icon_menu = findViewById(R.id.iv_icon_menu)
 
         v_fake_bar = findViewById(R.id.v_fake_bar)
+    }
+
+    /** Ініціалізація StateFlow **/
+    private fun initStateFlow() {
+        val sharedPref = getSharedPreferences("UserPrefs", MODE_PRIVATE)
+        val token = sharedPref.getString("access_token", null)
+        viewModel.passportList(token)
     }
 
     /** Ініціалізація всіх кнопок інтерфейсу **/
