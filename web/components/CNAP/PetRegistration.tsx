@@ -393,8 +393,8 @@ export default function PetRegistration() {
                                     htmlFor="gender"
                                     className={`absolute left-1 top-2 z-10 origin-[0] transform bg-gray-50 px-2 text-sm text-gray-500 duration-300 ${
                                         petData.gender
-                                            ? 'scale-75 -translate-y-4' // Стан "зміщено вгору"
-                                            : 'scale-100 -translate-y-1/2 top-1/2' // Стан "по центру"
+                                            ? 'scale-75 -translate-y-4'
+                                            : 'scale-100 -translate-y-1/2 top-1/2'
                                     } peer-focus:top-2 peer-focus:-translate-y-4 peer-focus:scale-75 peer-focus:px-2 peer-focus:text-blue-600`}
                                 >
                                     Стать
@@ -441,7 +441,7 @@ export default function PetRegistration() {
                         </div>
                         <div className="space-y-4 rounded-lg bg-gray-50 p-4">
                             <InputField
-                                label="Тип ідентифікатора (чіп, тату, ...)"
+                                label="Місце знаходження ідентифікатора"
                                 name="identifier_type"
                                 value={petData.identifier_type}
                                 onChange={handleInputChange}
@@ -508,7 +508,7 @@ const InputField: React.FC<InputFieldProps> = ({
             value={value}
             onChange={onChange}
             className="peer block w-full appearance-none rounded-lg border border-gray-300 bg-transparent px-2.5 pb-2.5 pt-4 text-sm text-gray-900 focus:border-blue-600 focus:outline-none focus:ring-0"
-            placeholder=" " 
+            placeholder=" "
         />
         <label
             htmlFor={name}

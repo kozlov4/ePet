@@ -33,9 +33,7 @@ export const Layout: React.FC<LayoutProps> = ({
     return (
         <div className="w-screen min-h-screen">
             {showHeader && (customHeader || <Header {...finalHeaderProps} />)}
-            <main className="px-12 flex-grow overflow-x-hidden">
-                {children}
-            </main>
+            <main className="flex-grow">{children}</main>
             <Footer />
         </div>
     );
