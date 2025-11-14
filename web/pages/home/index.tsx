@@ -15,7 +15,7 @@ const Home = () => {
     }, []);
 
     return (
-        <div className="flex flex-col h-[70%] max-w-full mx-auto">
+        <div className="px-12 flex flex-col h-[70%] max-w-full mx-auto">
             <motion.div
                 className="pt-12 pl-16 pr-9 pb-9 rounded-2xl flex justify-between w-full bg-cover"
                 style={{ backgroundImage: "url('./HomeBackground.png')" }}

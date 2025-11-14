@@ -441,7 +441,7 @@ export default function PetRegistration() {
                         </div>
                         <div className="space-y-4 rounded-lg bg-gray-50 p-4">
                             <InputField
-                                label="Місце знаходження ідентифікатора"
+                                label="Місце розташування ідентифікатора"
                                 name="identifier_type"
                                 value={petData.identifier_type}
                                 onChange={handleInputChange}
