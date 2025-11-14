@@ -6,6 +6,15 @@ import React, { useRef, useState } from 'react';
 import ArrowBack from '../../assets/images/icons/ArrowBack';
 import { AnimatePresence, motion } from 'framer-motion';
 
+import ReactCrop, {
+    type Crop,
+    type PixelCrop,
+    centerCrop,
+    makeAspectCrop,
+} from 'react-image-crop';
+import 'react-image-crop/dist/ReactCrop.css';
+import { getCroppedImg } from '../../utils/getCroppedImg';
+
 type ModalState = {
     message: string;
     type: 'success' | 'error';
@@ -32,8 +41,13 @@ export default function PetRegistration() {
     const [petFile, setPetFile] = useState<File | null>(null);
     const [imagePreview, setImagePreview] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
-
     const [modalState, setModalState] = useState<ModalState | null>(null);
+
+    const imgRef = useRef<HTMLImageElement>(null);
+    const [imgSrc, setImgSrc] = useState<string>('');
+    const [isCropping, setIsCropping] = useState(false);
+    const [crop, setCrop] = useState<Crop>();
+    const [completedCrop, setCompletedCrop] = useState<PixelCrop>();
 
     const handleInputChange = (
         e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
@@ -45,14 +59,15 @@ export default function PetRegistration() {
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
-            setPetFile(file);
             const reader = new FileReader();
             reader.onloadend = () => {
-                setImagePreview(reader.result as string);
+                setImgSrc(reader.result as string);
+                setIsCropping(true);
             };
             reader.readAsDataURL(file);
-        } else {
-            setImagePreview(null);
+        }
+        if (e.target) {
+            e.target.value = '';
         }
     };
 
@@ -94,6 +109,7 @@ export default function PetRegistration() {
                     type: 'error',
                     onClose: () => router.push('/login'),
                 });
+                setLoading(false);
                 return;
             }
 
@@ -118,6 +134,7 @@ export default function PetRegistration() {
                     message: data.detail,
                     type: 'error',
                 });
+                setLoading(false);
                 return;
             }
 
@@ -144,12 +161,69 @@ export default function PetRegistration() {
         setModalState(null);
     };
 
+    function onImageLoad(e: React.SyntheticEvent<HTMLImageElement>) {
+        const { width, height } = e.currentTarget;
+        const crop = centerCrop(
+            makeAspectCrop(
+                {
+                    unit: '%',
+                    width: 90,
+                },
+                3 / 4,
+                width,
+                height,
+            ),
+            width,
+            height,
+        );
+        setCrop(crop);
+    }
+
+    const onCropCancel = () => {
+        setIsCropping(false);
+        setImgSrc('');
+        setCrop(undefined);
+        setCompletedCrop(undefined);
+    };
+
+    const onCropSave = async () => {
+        if (completedCrop && imgRef.current) {
+            try {
+                const originalFileName =
+                    fileInputRef.current?.files?.[0]?.name ||
+                    'cropped-image.jpg';
+
+                const croppedFile = await getCroppedImg(
+                    imgRef.current,
+                    completedCrop,
+                    originalFileName,
+                );
+
+                setPetFile(croppedFile);
+
+                if (imagePreview) {
+                    URL.revokeObjectURL(imagePreview);
+                }
+                setImagePreview(URL.createObjectURL(croppedFile));
+
+                onCropCancel();
+            } catch (e) {
+                console.error('Помилка при обрізці фото:', e);
+                onCropCancel();
+                setModalState({
+                    message: 'Не вдалося обрізати фото. Спробуйте інше.',
+                    type: 'error',
+                });
+            }
+        }
+    };
+
     return (
         <div className="min-h-screen justify-center w-full bg-gray-50 px-35 py-10">
             <AnimatePresence>
                 {modalState && (
                     <motion.div
-                        className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm"
+                        className="fixed inset-0 z-[60] flex items-center justify-center bg-black/50 backdrop-blur-sm"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
@@ -188,6 +262,68 @@ export default function PetRegistration() {
                     </motion.div>
                 )}
             </AnimatePresence>
+
+            <AnimatePresence>
+                {isCropping && (
+                    <motion.div
+                        className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.2 }}
+                    >
+                        <motion.div
+                            className="bg-white rounded-lg shadow-xl p-6 w-full max-w-md mx-4"
+                            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                            transition={{ duration: 0.2 }}
+                        >
+                            <h3 className="text-xl font-semibold text-gray-900 mb-4">
+                                Обріжте фото (3x4)
+                            </h3>
+                            <div className="max-h-[60vh] overflow-auto">
+                                <ReactCrop
+                                    crop={crop}
+                                    onChange={(c, percentCrop) =>
+                                        setCrop(percentCrop)
+                                    }
+                                    onComplete={(c) => setCompletedCrop(c)}
+                                    aspect={3 / 4}
+                                >
+                                    <img
+                                        ref={imgRef}
+                                        src={imgSrc}
+                                        alt="Crop me"
+                                        style={{
+                                            maxHeight: '60vh',
+                                            width: 'auto',
+                                        }}
+                                        onLoad={onImageLoad}
+                                    />
+                                </ReactCrop>
+                            </div>
+                            <div className="mt-6 flex justify-end gap-4">
+                                <button
+                                    type="button"
+                                    onClick={onCropCancel}
+                                    className="px-5 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors"
+                                >
+                                    Скасувати
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={onCropSave}
+                                    className="px-5 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors"
+                                >
+                                    Зберегти
+                                </button>
+                            </div>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
             <div className="mb-8 flex items-center">
                 <button
                     onClick={() => router.back()}
@@ -207,7 +343,7 @@ export default function PetRegistration() {
                 >
                     <div className="flex flex-col items-center">
                         <div
-                            className="relative flex h-64 w-64 cursor-pointer items-center justify-center rounded-xl border-2 border-dashed border-gray-300 bg-gray-100 hover:bg-gray-200"
+                            className="relative flex w-full max-w-[240px] aspect-[3/4] cursor-pointer items-center justify-center rounded-xl border-2 border-dashed border-gray-300 bg-gray-100 hover:bg-gray-200"
                             onClick={handleImagePlaceholderClick}
                         >
                             {imagePreview ? (

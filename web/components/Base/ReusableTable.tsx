@@ -51,7 +51,7 @@ export function ReusableTable({
     const [error, setError] = useState<string | null>(null);
     const pageSize = 10;
 
-    const debouncedQuery = useDebounce(currentQuery, 500);
+    const debouncedQuery = useDebounce(currentQuery, 2000);
 
     const executeFetch = useCallback(
         async (page: number, query: string, isNewSearch: boolean = false) => {
