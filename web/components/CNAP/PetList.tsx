@@ -1,16 +1,11 @@
 'use client';
 
-import { useCallback } from 'react';
 import { useRouter } from 'next/router';
+import { useCallback } from 'react';
 
 import { ReusableTable } from '../../components/Base/ReusableTable';
+import { ColumnDefinition, PaginatedResponse, Pet } from '../../types/api';
 import { fetchPaginatedData } from '../../utils/api';
-import {
-    ColumnDefinition,
-    Pet,
-    Organization,
-    PaginatedResponse,
-} from '../../types/api';
 
 export function PetList() {
     const router = useRouter();
@@ -20,8 +15,7 @@ export function PetList() {
         const id = item.pet_id || item.id;
 
         if (actionType === 'details') {
-            alert(`(MainCNAP) Повна інформація для ID: ${id}`);
-            console.log('Повна інформація:', item);
+            router.push(`/CNAP/pet-passport/${id}`);
         }
 
         if (actionType === 'delete') {

@@ -1,17 +1,16 @@
 'use client';
 
-import { useCallback } from 'react';
 import { useRouter } from 'next/router';
+import { useCallback } from 'react';
 
 import { ReusableTable } from '../../components/Base/ReusableTable';
-import { fetchPaginatedData } from '../../utils/api';
 import {
     ColumnDefinition,
-    Pet,
-    Organization,
     PaginatedResponse,
+    Pet,
     ViewConfig,
 } from '../../types/api';
+import { fetchPaginatedData } from '../../utils/api';
 
 export function FavoriteList() {
     const router = useRouter();
@@ -21,7 +20,7 @@ export function FavoriteList() {
         const id = item.pet_id || item.id;
 
         if (actionType === 'details') {
-            alert(`(MainCNAP) Повна інформація для ID: ${id}`);
+            router.push(`/CNAP/pet-passport/${id}`);
         }
     };
 
