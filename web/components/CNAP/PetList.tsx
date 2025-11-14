@@ -4,23 +4,34 @@ import { useRouter } from 'next/router';
 import { useCallback } from 'react';
 
 import { ReusableTable } from '../../components/Base/ReusableTable';
-import {
-    ColumnDefinition,
-    PaginatedResponse,
-    Pet,
-    ViewConfig,
-} from '../../types/api';
+import { ColumnDefinition, PaginatedResponse, Pet } from '../../types/api';
 import { fetchPaginatedData } from '../../utils/api';
 
-export function FavoriteList() {
+export function PetList() {
     const router = useRouter();
-    const activeView = 'animals';
+    const activeView = (router.query.view as string) || 'animals';
 
     const handleAction = (item: any, actionType: string) => {
         const id = item.pet_id || item.id;
 
         if (actionType === 'details') {
             router.push(`/CNAP/pet-passport/${id}`);
+        }
+
+        if (actionType === 'delete') {
+            if (
+                window.confirm(
+                    `(MainCNAP) Ви впевнені, що хочете видалити ID: ${id}?`,
+                )
+            ) {
+                console.log('Видалення...', item);
+                alert(`Елемент ${id} видалено.`);
+            }
+        }
+
+        if (actionType === 'edit') {
+            alert(`(MainCNAP) Редагування ID: ${id}`);
+            // router.push(`/admin/orgs/edit/${id}`)
         }
     };
 
@@ -34,32 +45,49 @@ export function FavoriteList() {
         { accessor: 'gender', header: 'Стать:' },
         { accessor: 'species', header: 'Вид:' },
         {
-            accessor: 'owner',
-            header: 'Власник:',
-            cell: (pet) => pet.owner?.passport_number || 'null',
-        },
-        {
             accessor: 'pet_id',
             header: '',
             cell: (pet, onActionCallback) => (
                 <button
                     onClick={() => onActionCallback(pet, 'details')}
-                    className="rounded-[10em] bg-black px-4 py-2 text-[15px] font-semibold cursor-pointer text-white transition-all duration-300 hover:bg-white hover:text-black hover:border-1 hover:border-black"
+                    className="rounded-[10em] w-[70%] ml-[30%] bg-black px-4 py-2 text-[15px] font-semibold cursor-pointer text-white transition-all duration-300 hover:bg-white hover:text-black hover:border-1 hover:border-black"
                 >
                     Повна інформація
                 </button>
             ),
         },
+        {
+            accessor: 'owner',
+            header: '',
+            cell: (pet, onActionCallback) => (
+                <button
+                    onClick={() => onActionCallback(pet, 'delete')}
+                    className="rounded-[10em] bg-white border-2  border-black px-4 py-2 text-[15px] font-semibold text-black transition-all duration-300 hover:bg-black hover:text-white cursor-pointer"
+                >
+                    Видалити
+                </button>
+            ),
+        },
     ];
+
+    interface ViewConfig {
+        endpoint: string;
+        queryParamName: string;
+        columns: ColumnDefinition<any>[];
+        title: string;
+        addNewLink: string;
+        addNewText: string;
+        searchPlaceholder: string;
+    }
 
     const viewConfigs: Record<string, ViewConfig> = {
         animals: {
             endpoint: '/organizations/animals',
             queryParamName: 'animal_passport_number',
             columns: animalColumns,
-            title: 'Паспорт домашнього улюбленця',
+            title: 'Список тварин',
             addNewLink: '/CNAP/pet-registration',
-            addNewText: 'Зареєструвати улюбленця',
+            addNewText: 'Додати тварину',
             searchPlaceholder: 'Пошук...',
         },
     };
