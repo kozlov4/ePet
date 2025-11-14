@@ -15,14 +15,13 @@ import {
 
 export function FavoriteList() {
     const router = useRouter();
-    const pathname = router.pathname;
     const activeView = 'animals';
 
     const handleAction = (item: any, actionType: string) => {
         const id = item.pet_id || item.id;
 
         if (actionType === 'details') {
-            router.push(`${pathname}/${id}`);
+            router.push(`/CNAP/pet-passport/${id}`);
         }
     };
 
