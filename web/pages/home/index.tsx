@@ -1,6 +1,6 @@
 'use client';
-import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
+import { useEffect, useState } from 'react';
 import ArrowFront from '../../assets/images/icons/ArrowFront';
 import { BoneIcon } from '../../assets/images/icons/BoneIcon';
 
@@ -17,7 +17,7 @@ const Home = () => {
     return (
         <div className="flex flex-col h-[70%] max-w-full mx-auto">
             <motion.div
-                className="pt-12 pl-16 pr-9 pb-9 rounded-2xl flex justify-between w-full"
+                className="pt-12 pl-16 pr-9 pb-9 rounded-2xl flex justify-between w-full bg-cover"
                 style={{ backgroundImage: "url('./HomeBackground.png')" }}
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -38,7 +38,7 @@ const Home = () => {
                         єПрихисток
                     </motion.h1>
                     <motion.p
-                        className="text-white text-xl"
+                        className="text-white text-base"
                         initial={{ opacity: 0, y: -10 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8, delay: 0.7 }}
@@ -101,7 +101,7 @@ const Home = () => {
                 />
             </section>
 
-            <section className="my-48">
+            <section className="my-48" id="faq">
                 <motion.h1
                     className="text-4xl text-black mb-8"
                     initial={{ opacity: 0, y: -10 }}

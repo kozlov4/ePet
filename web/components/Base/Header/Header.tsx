@@ -17,12 +17,12 @@ export const Header: React.FC<HeaderProps> = ({
 
     return (
         <div
-            className={`w-full h-20 bg-[rgba(217,217,217,0.27)] backdrop-blur-[8.1px] shadow-[0_4px_21px_0_rgba(0,0,0,0.1)] rounded-b-[15px]  ${
+            className={`w-full  h-20 bg-[rgba(217,217,217,0.27)] backdrop-blur-[8.1px] shadow-[0_4px_21px_0_rgba(0,0,0,0.1)] rounded-b-[15px]  ${
                 isAuthPage ? 'absolute' : 'relative'
             }`}
         >
             <motion.div
-                className="flex mx-[5%] h-full justify-between items-center"
+                className="flex mx-12 py-4 justify-between items-center"
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 1 }}
@@ -70,7 +70,7 @@ export const Header: React.FC<HeaderProps> = ({
                     {navProps.map((e) => (
                         <Link href={e.href} key={e.label} passHref>
                             <motion.div
-                                className="relative text-black text-md font-medium transition-all duration-300 ease-in-out hover:text-[#1e88e5] after:content-[''] after:absolute after:left-0 after:bottom-[-2px] after:h-[2px] after:w-0 after:bg-[#1e88e5] after:transition-all after:duration-300 hover:after:w-full hover:-translate-y-[2px]"
+                                className="whitespace-nowrap relative text-black text-md font-medium transition-all duration-300 ease-in-out hover:text-[#1e88e5] after:content-[''] after:absolute after:left-0 after:bottom-[-2px] after:h-[2px] after:w-0 after:bg-[#1e88e5] after:transition-all after:duration-300 hover:after:w-full hover:-translate-y-[2px]"
                                 initial={{ opacity: 0, y: -10 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.5, delay: 0.6 }}
