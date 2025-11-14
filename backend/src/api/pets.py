@@ -293,12 +293,13 @@ async def delete_pet(
     db: db_dependency
 ):
 
+    # Определяем пользователя
     if isinstance(org_or_cnap, Organizations):
         org_type = org_or_cnap.organization_type
         org_id = org_or_cnap.organization_id
     elif isinstance(org_or_cnap, Cnap):
         org_type = "ЦНАП"
-        org_id = org_or_cnap.cnap_id
+        org_id = None  
     else:
         raise HTTPException(status_code=403, detail="Недостатньо прав")
 
@@ -307,6 +308,9 @@ async def delete_pet(
     if not pet:
         raise HTTPException(status_code=404, detail="Тваринку не знайдено")
 
+    if org_type == "Ветклініка":
+        raise HTTPException(status_code=403, detail="Недостатньо прав для видалення")
+
     if org_type == "Притулок" and pet.organization_id != org_id:
         raise HTTPException(status_code=403, detail="Недостатньо прав для видалення")
 
@@ -314,4 +318,3 @@ async def delete_pet(
     db.commit()
 
     return {"message": "Успішне видалення"}
-
