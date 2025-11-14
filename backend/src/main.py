@@ -1,7 +1,8 @@
 
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
-from src.api import users, organization, reset_password, forgot_password, login
+from src.api import users, organization, reset_password, forgot_password, login, pets
 
 
 app = FastAPI(
@@ -10,7 +11,8 @@ app = FastAPI(
     version="1.0.0"
 )
 
-
+app.mount("/uploads", StaticFiles(directory="/root/project/uploads"), name="uploads")
+#app.mount("/uploads", StaticFiles(directory="/home/hapy/uploads"), name="uploads")
 
 origins = [
     "http://localhost:3000", 
@@ -32,7 +34,7 @@ app.include_router(organization.router)
 app.include_router(reset_password.router)
 app.include_router(forgot_password.router)
 app.include_router(login.router)
-
+app.include_router(pets.router)
 
 
 
