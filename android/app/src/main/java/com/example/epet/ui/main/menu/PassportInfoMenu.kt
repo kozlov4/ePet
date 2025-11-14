@@ -18,10 +18,11 @@ import com.example.epet.ui.main.viewmodel.PassportViewModel
 import kotlinx.coroutines.launch
 import kotlin.getValue
 import android.content.Context
+import androidx.fragment.app.activityViewModels
 
 class PassportInfoMenu(private val onClose: (() -> Unit)? = null) : BottomSheetDialogFragment() {
 
-    private val viewModel: PassportViewModel by lazy { PassportViewModel() }
+    val viewModel: PassportViewModel by activityViewModels()
 
     private lateinit var tv_passport_number: TextView
     private lateinit var iv_copy_passport: ImageView
@@ -130,10 +131,6 @@ class PassportInfoMenu(private val onClose: (() -> Unit)? = null) : BottomSheetD
 
     /** Ініціалізація StateFlow **/
     private fun initStateFlow() {
-        val sharedPref = requireContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
-        val token = sharedPref.getString("access_token", null)
-        viewModel.passportDetail(token, pet_id)
-
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.outputPassportDetail.collect { state ->

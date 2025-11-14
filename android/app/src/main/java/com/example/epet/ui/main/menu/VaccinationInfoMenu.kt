@@ -11,6 +11,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.example.epet.R
 import android.widget.TextView
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -20,10 +21,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.epet.data.model.passport.OutputVaccinationItem
 import com.example.epet.ui.main.viewmodel.PassportViewModel
 import kotlinx.coroutines.launch
+import kotlin.getValue
 
 class VaccinationInfoMenu(private val onClose: (() -> Unit)? = null) : BottomSheetDialogFragment() {
 
-    private val viewModel: PassportViewModel by lazy { PassportViewModel() }
+    val viewModel: PassportViewModel by activityViewModels()
 
     private lateinit var tv_passport_number: TextView
     private lateinit var tv_update_datetime: TextView
@@ -96,10 +98,6 @@ class VaccinationInfoMenu(private val onClose: (() -> Unit)? = null) : BottomShe
 
     /** Ініціалізація StateFlow **/
     private fun initStateFlow() {
-        val sharedPref = requireContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
-        val token = sharedPref.getString("access_token", null)
-        viewModel.vaccinationList(token, pet_id)
-
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.outputVaccinationList.collect { state ->
