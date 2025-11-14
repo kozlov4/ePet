@@ -225,7 +225,7 @@ export default function PetPassport() {
                         />
                     </div>
                 </div>
-                {petData.organization_id != undefined && (
+                {petData.owner_passport_number != undefined && (
                     <div className="flex justify-between">
                         <InfoField
                             fields={[
