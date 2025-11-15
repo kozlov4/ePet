@@ -77,6 +77,61 @@ export default function PetRegistration() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        if (!petFile) {
+            setModalState({
+                message: 'Будь ласка, завантажте фото улюбленця.',
+                type: 'error',
+            });
+            return;
+        }
+
+        const validationRules = [
+            { key: 'pet_name', min: 3, label: "Ім'я" },
+            { key: 'gender', min: 1, label: 'Стать' },
+            { key: 'breed', min: 3, label: 'Порода' },
+            { key: 'species', min: 3, label: 'Вид' },
+            { key: 'color', min: 3, label: 'Масть (Колір)' },
+            { key: 'date_of_birth', min: 1, label: 'Дата народження' },
+            {
+                key: 'identifier_type',
+                min: 3,
+                label: 'Місце розташування ідентифікатора',
+            },
+            {
+                key: 'identifier_number',
+                min: 3,
+                label: 'Номер ідентифікатора',
+            },
+            { key: 'chip_date', min: 1, label: 'Дата чіпування' },
+            {
+                key: 'owner_passport_number',
+                min: 3,
+                label: 'Номер паспорта власника',
+            },
+        ];
+
+        for (const rule of validationRules) {
+            const value =
+                petData[rule.key as keyof typeof petData]?.trim() || '';
+
+            if (rule.min >= 1 && value.length === 0) {
+                setModalState({
+                    message: 'Будь ласка, заповніть поле "${rule.label}".',
+                    type: 'error',
+                });
+                return;
+            }
+
+            if (value.length > 0 && value.length < rule.min) {
+                setModalState({
+                    message: 'Поле "${rule.label}" має містити щонайменше ${rule.min} символів.',
+                    type: 'error',
+                });
+                return;
+            }
+        }
+
         setLoading(true);
 
         if (!petFile) {
@@ -129,7 +184,7 @@ export default function PetRegistration() {
                 );
             }
 
-            if (data.detail === 'Could not validate user') {
+            if (data.detail === 'Не вдалося знайти власника з вказаним паспортом.') {
                 setModalState({
                     message: data.detail,
                     type: 'error',
@@ -393,8 +448,8 @@ export default function PetRegistration() {
                                     htmlFor="gender"
                                     className={`absolute left-1 top-2 z-10 origin-[0] transform bg-gray-50 px-2 text-sm text-gray-500 duration-300 ${
                                         petData.gender
-                                            ? 'scale-75 -translate-y-4' // Стан "зміщено вгору"
-                                            : 'scale-100 -translate-y-1/2 top-1/2' // Стан "по центру"
+                                            ? 'scale-75 -translate-y-4' 
+                                            : 'scale-100 -translate-y-1/2 top-1/2' 
                                     } peer-focus:top-2 peer-focus:-translate-y-4 peer-focus:scale-75 peer-focus:px-2 peer-focus:text-blue-600`}
                                 >
                                     Стать
@@ -441,7 +496,7 @@ export default function PetRegistration() {
                         </div>
                         <div className="space-y-4 rounded-lg bg-gray-50 p-4">
                             <InputField
-                                label="Тип ідентифікатора (чіп, тату, ...)"
+                                label="Місце розташування ідентифікатора"
                                 name="identifier_type"
                                 value={petData.identifier_type}
                                 onChange={handleInputChange}
@@ -491,6 +546,9 @@ interface InputFieldProps {
     value: string;
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     type?: string; // Optional type prop for input (e.g., 'date', 'text')
+    minLength?: number;    
+    maxLength?: number;    
+    required?: boolean;
 }
 
 const InputField: React.FC<InputFieldProps> = ({
@@ -499,6 +557,9 @@ const InputField: React.FC<InputFieldProps> = ({
     value,
     onChange,
     type = 'text',
+    minLength,    
+    maxLength,    
+    required = false,
 }) => (
     <div className="relative">
         <input
@@ -508,7 +569,10 @@ const InputField: React.FC<InputFieldProps> = ({
             value={value}
             onChange={onChange}
             className="peer block w-full appearance-none rounded-lg border border-gray-300 bg-transparent px-2.5 pb-2.5 pt-4 text-sm text-gray-900 focus:border-blue-600 focus:outline-none focus:ring-0"
-            placeholder=" " 
+            placeholder=" "            
+            minLength={minLength}            
+            maxLength={maxLength}            
+            required={required}
         />
         <label
             htmlFor={name}
