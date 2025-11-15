@@ -78,7 +78,7 @@ export function Login() {
 
                     login({ name: data.user_name }, data.access_token);
                     if (data.organization_type === "Ветклініка")
-                    router.push('/CNAP/favorite-list');
+                    router.push('/Vet-Clinic/favorite-list');
                     else if(data.organization_type == "ЦНАП")
                         router.push('/CNAP/favorite-list')
                     else if(data.organization_type == "Притулок")
