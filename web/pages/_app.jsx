@@ -5,69 +5,6 @@ import { useAuth } from '../hooks/useAuth';
 import '../styles/globals.css';
 import { AuthProvider } from '../hooks/AuthProvider';
 
-// export default function App({ Component, pageProps }) {
-//     const router = useRouter();
-//     const { user } = useAuth();
-//     const [userName, setUserName] = useState('');
-
-//     useEffect(() => {
-//         if (user?.name) {
-//             setUserName(user.name);
-//         }
-//     }, [user]);
-
-//     const { headerProps, showHeader, customHeader, ...restPageProps } =
-//         pageProps;
-
-//     const isCNAPPage = router.pathname.startsWith('/CNAP');
-//     const isAllay = router.pathname.startsWith('/Alley');
-
-//     let finalHeaderProps = headerProps;
-//     let finalShowHeader = showHeader !== false;
-
-//     // Для CNAP страниц используем специальные пропсы для Header
-//     if (isCNAPPage && !headerProps && !customHeader) {
-//         finalHeaderProps = {
-//             navProps: [
-//                 { label: 'Список улюбленців', href: '/CNAP/favorite-list' },
-//                 {
-//                     label: 'Список організацій',
-//                     href: '/CNAP/organisations',
-//                 },
-//             ],
-//             accountName: userName,
-//             buttonProps: {
-//                 label: 'Меню',
-//                 href: '/CNAP/menu',
-//             },
-//         };
-//     }else if(isAllay && !headerProps && !customHeader){
-//         finalHeaderProps = {
-//             navProps: [
-//                 { label: 'Список тварин', href: '/CNAP/favorite-list' },
-//                 {
-//                     label: 'Повідомлення',
-//                     href: '/CNAP/organisations',
-//                 },
-//             ],
-//             accountName: userName,
-//             buttonProps: {
-//                 label: 'Меню',
-//                 href: '/CNAP/menu',
-//             },
-//         };
-//     }
-
-//     return (
-//         <Layout
-//             headerProps={finalHeaderProps}
-//             showHeader={finalShowHeader}
-//             customHeader={customHeader}
-//         >
-//             <Component {...restPageProps} />
-//         </Layout>
-//     );
-// }
 
 export default function App({ Component, pageProps }) {
     return (
