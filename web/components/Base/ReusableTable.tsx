@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { useInfiniteScroll } from '../../hooks/useInfiniteScroll';
@@ -37,7 +37,7 @@ export function ReusableTable({
     const [error, setError] = useState(null);
     const pageSize = 10;
 
-    const debouncedQuery = useDebounce(currentQuery, 2000);
+    const debouncedQuery = useDebounce(currentQuery, 500);
 
     const executeFetch = useCallback(
         async (page, query, isNewSearch = false) => {
@@ -89,12 +89,6 @@ export function ReusableTable({
     );
 
     const handleSearch = (query) => setCurrentQuery(query);
-
-    if (isLoadingInitial && items.length === 0) {
-        return (
-            <div className="p-8 text-center text-xl">Завантаження даних...</div>
-        );
-    }
 
     const gridColsClass = `md:grid-cols-${columns.length}`;
 
