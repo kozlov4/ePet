@@ -12,7 +12,7 @@ from src.schemas.vaccination_schemas import VaccinationsListResponse
 from src.db.models import Pets, Vaccinations, Organizations, Cnap, Passports, Identifiers, Users
 from typing import Annotated
 from src.api.core import  get_current_user
-from src.api.organization import  get_current_organization_optional, get_current_org_or_cnap,get_current_organization, get_current_cnap_optional
+from src.api.organization import   get_current_org_or_cnap
 from src.schemas.pet_schemas import AnimaForCnap, AnimaForlLintel, AnimalForVeterinary, AnimalForUser
 
 
@@ -218,7 +218,7 @@ async def add_pet(
     chip_date: date = Form(...),
     owner_passport_number: str = Form(..., min_length=3, max_length=20),
     db: Session = Depends(get_db),
-    cnap: Annotated[Union[Cnap, None], Depends(get_current_cnap_optional)] = None,
+    cnap: Annotated[Union[Cnap, None], Depends(get_current_org_or_cnap)] = None,
 ):
     if cnap is None:
         raise HTTPException(status_code=403, detail="Додавати тварин можуть лише ЦНАП")
