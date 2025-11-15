@@ -16,56 +16,6 @@ user_dependency = Annotated[dict, Depends(get_current_user)]
 
 
 
-async def get_current_organization(user: user_dependency, db: db_dependency) -> Organizations:
-
-    email = user.get("username")
-
- 
-    if email is None:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED, 
-            detail="Не вдалося витягти email користувача з токена."
-        )
- 
-    organization = db.query(Organizations).filter(
-        Organizations.email == email
-    ).first()
-
-    if organization and organization.organization_type in ['Ветклініка', 'Притулок']:
-        return organization
-
-    raise HTTPException(
-        status_code=status.HTTP_403_FORBIDDEN,
-        detail="Доступ дозволено тільки для Організацій ('Ветклініка', 'Притулок')."
-    )
-
-
-
-async def get_current_cnap_optional(user: user_dependency, db: db_dependency) -> Optional[Cnap]:
-
-    email = user.get("username") 
-    if email is None:
-        return None
-
-    cnap = db.query(Cnap).filter(Cnap.email == email).first()
-    return cnap
-
-
-async def get_current_organization_optional(user: user_dependency, db: db_dependency) -> Optional[Organizations]:
-
-    email = user.get("username") 
-    if email is None:
-        return None
-
-    organization = db.query(Organizations).filter(
-        (Organizations.email == email) &
-        (Organizations.organization_type.in_(['Ветклініка', 'Притулок']))
-    ).first()
-
-    return organization
-
-
-
 async def get_current_org_or_cnap(
     user: user_dependency, 
     db: db_dependency
@@ -117,6 +67,13 @@ async def get_animals_for_org(
             .filter(Passports.passport_number == animal_passport_number)
         )
 
+    if org_type in ["ЦНАП", "Ветклініка"]:
+        base_query = (
+        base_query
+        .join(Pets.organization)
+        .filter(Organizations.organization_type != "Притулок")
+    )
+        
     total_items = base_query.with_entities(func.count(Pets.pet_id)).scalar()
 
     animals_from_db = (
@@ -193,7 +150,7 @@ async def get_info(
 @router.get("/organizations/", response_model=List[OrganizationsForCnap])
 async def get_all_organizations(
     db: db_dependency,
-    cnap: Annotated[Cnap, Depends(get_current_cnap_optional)]
+    cnap: Annotated[Cnap, Depends(get_current_org_or_cnap)]
 ):
     if cnap is None:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="only cnap can gets organizations")
