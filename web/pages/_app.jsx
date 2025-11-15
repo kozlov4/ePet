@@ -87,6 +87,7 @@ function AppContent({ Component, pageProps }) {
 
     const isCNAPPage = router.pathname.startsWith('/CNAP');
     const isAllay = router.pathname.startsWith('/Alley');
+    const isVet = router.pathname.startsWith('/Vet-Clinic');
 
     let finalHeaderProps = headerProps;
     let finalShowHeader = showHeader !== false;
@@ -109,7 +110,7 @@ function AppContent({ Component, pageProps }) {
     } else if (isAllay && !headerProps && !customHeader) {
         finalHeaderProps = {
             navProps: [
-                { label: 'Список тварин', href: '/CNAP/favorite-list' },
+                { label: 'Список тварин', href: '/Alley/pet-list' },
                 {
                     label: 'Повідомлення',
                     href: '/CNAP/organisations',
@@ -118,7 +119,19 @@ function AppContent({ Component, pageProps }) {
             accountName: user?.name || '',
             buttonProps: {
                 label: 'Меню',
-                href: '/CNAP/menu',
+                href: '/Alley/menu',
+            },
+        };
+    } else if (isVet && !headerProps && !customHeader) {
+        finalHeaderProps = {
+            navProps: [
+                { label: 'Список улюбленців', href: '/Vet-Clinic/favorite-list' },
+                
+            ],
+            accountName: user?.name || '',
+            buttonProps: {
+                label: 'Меню',
+                href: '/Vet-Clinic/menu',
             },
         };
     }

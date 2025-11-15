@@ -15,13 +15,18 @@ import { fetchPaginatedData } from '../../utils/api';
 export function FavoriteList() {
     const router = useRouter();
     const activeView = 'animals';
+     const currentPath = router.pathname;
 
     const handleAction = (item: any, actionType: string) => {
         const id = item.pet_id || item.id;
 
         if (actionType === 'details') {
+        if (currentPath.includes('/CNAP')) {
             router.push(`/CNAP/pet-passport/${id}`);
+        } else if (currentPath.includes('/Vet-Clinic')) {
+            router.push(`/Vet-Clinic/pet-passport/${id}`);
         }
+    }
     };
 
     const animalColumns: ColumnDefinition<Pet>[] = [
@@ -44,7 +49,7 @@ export function FavoriteList() {
             cell: (pet, onActionCallback) => (
                 <button
                     onClick={() => onActionCallback(pet, 'details')}
-                    className="rounded-[10em] bg-black px-4 py-2 text-[15px] font-semibold cursor-pointer text-white transition-all duration-300 hover:bg-white hover:text-black hover:border-1 hover:border-black"
+                    className="rounded-[10em] bg-black px-4 py-2 text-[15px] font-semibold cursor-pointer text-white transition-all duration-300 hover:bg-white hover:text-black border-1 hover:border-black"
                 >
                     Повна інформація
                 </button>
