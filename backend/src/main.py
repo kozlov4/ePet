@@ -11,8 +11,8 @@ app = FastAPI(
     version="1.0.0"
 )
 
-#app.mount("/uploads", StaticFiles(directory="/root/project/uploads"), name="uploads")
-app.mount("/uploads", StaticFiles(directory="/home/hapy/uploads"), name="uploads")
+app.mount("/uploads", StaticFiles(directory="/root/project/uploads"), name="uploads")
+#app.mount("/uploads", StaticFiles(directory="/home/hapy/uploads"), name="uploads")
 
 origins = [
     "http://localhost:3000", 
