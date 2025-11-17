@@ -1,3 +1,4 @@
+import os
 
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
@@ -10,6 +11,9 @@ app = FastAPI(
     description="API для роботи з вет клініками цнап та юзерами",
     version="1.0.0"
 )
+
+#uploads_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "uploads")
+#app.mount("/uploads", StaticFiles(directory=uploads_path), name="uploads")
 
 app.mount("/uploads", StaticFiles(directory="/root/project/uploads"), name="uploads")
 #app.mount("/uploads", StaticFiles(directory="/home/hapy/uploads"), name="uploads")
