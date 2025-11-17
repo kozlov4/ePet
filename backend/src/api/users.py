@@ -99,7 +99,7 @@ async def get_my_pets(db: db_dependency, user: user_dependency):
     user_pets = result.scalars().all()
 
     pet_items = []
-    formatted_update_time = datetime.now().strftime('%d.%m.%Y %H:%M')
+    formatted_update_time = datetime.now().strftime('%d.%m.%Y')
 
     for pet in user_pets:
         pet_name_en = translate_text(pet.pet_name)
