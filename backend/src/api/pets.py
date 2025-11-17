@@ -66,7 +66,7 @@ async def get_pet_info(
             img_url=pet.img_url,
             pet_name=pet.pet_name,
             pet_name_en=translation.translate(pet.pet_name),
-            date_of_birth=pet.date_of_birth,
+            date_of_birth=pet.date_of_birth.strftime('%d.%m.%Y'),
             breed=pet.breed,
             breed_en=translation.translate(pet.breed),
             gender=pet.gender,
@@ -84,7 +84,7 @@ async def get_pet_info(
             img_url=pet.img_url,
             pet_name=pet.pet_name,
             pet_name_en=translation.translate(pet.pet_name),
-            date_of_birth=pet.date_of_birth,
+            date_of_birth=pet.date_of_birth.strftime('%d.%m.%Y'),
             breed=pet.breed,
             breed_en=translation.translate(pet.breed),
             gender=pet.gender,
@@ -94,7 +94,7 @@ async def get_pet_info(
             species=pet.species,
             species_en=translation.translate(pet.species),
             organization_id=org_id,
-            date=identifier.date if identifier else None,
+            date=identifier.date.strftime('%d.%m.%Y') if identifier and identifier.date else "—",
             identifier_type=identifier.identifier_type if identifier else "—",
             identifier_type_en=translation.translate(identifier.identifier_type) if identifier else "—",
             identifier_number=identifier.identifier_number if identifier else "—",
@@ -108,7 +108,7 @@ async def get_pet_info(
             img_url=pet.img_url,
             pet_name=pet.pet_name,
             pet_name_en=translation.translate(pet.pet_name),
-            date_of_birth=pet.date_of_birth,
+            date_of_birth=pet.date_of_birth.strftime('%d.%m.%Y'),
             breed=pet.breed,
             breed_en=translation.translate(pet.breed),
             gender=pet.gender,
@@ -117,8 +117,8 @@ async def get_pet_info(
             color_en=translation.translate(pet.color),
             species=pet.species,
             species_en=translation.translate(pet.species),
-            organization_id=org_id,  
-            date=identifier.date if identifier else None,
+            organization_id=org_id,               
+            date=identifier.date.strftime('%d.%m.%Y') if identifier and identifier.date else "—",
             identifier_type=identifier.identifier_type if identifier else "—",
             identifier_type_en=translation.translate(identifier.identifier_type) if identifier else "—",
             identifier_number=identifier.identifier_number if identifier else "—",
@@ -132,7 +132,7 @@ async def get_pet_info(
             img_url=pet.img_url,
             pet_name=pet.pet_name,
             pet_name_en=translation.translate(pet.pet_name),
-            date_of_birth=pet.date_of_birth,
+            date_of_birth=pet.date_of_birth.strftime('%d.%m.%Y'),
             breed=pet.breed,
             breed_en=translation.translate(pet.breed),
             gender=pet.gender,
@@ -142,12 +142,12 @@ async def get_pet_info(
             species=pet.species,
             species_en=translation.translate(pet.species),
             organization_id=org_id,
-            date=identifier.date if identifier else None,
+            date=identifier.date.strftime('%d.%m.%Y') if identifier and identifier.date else "—",
             identifier_type=identifier.identifier_type if identifier else "—",
             identifier_type_en=translation.translate(identifier.identifier_type) if identifier else "—",
             identifier_number=identifier.identifier_number if identifier else "—",
             owner_passport_number=pet.owner.passport_number if pet.owner else "—",
-            update_datetime=datetime.now().strftime('%d.%m.%Y %H:%M')
+            update_datetime=datetime.now().strftime('%d.%m.%Y')
         )
 
     else:
@@ -187,7 +187,7 @@ async def get_pet_vaccinations(pet_id: int, db: Session = Depends(get_db)):
 
     return {
         "passport_number": format_value(pet.passport.passport_number if pet.passport else None),
-        "update_datetime": datetime.now().strftime('%d.%m.%Y %H:%M'),
+        "update_datetime": datetime.now().strftime('%d.%m.%Y'),
         "vaccinations": vaccination_items
     }
 
