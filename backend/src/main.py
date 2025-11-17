@@ -1,3 +1,4 @@
+import os
 
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
@@ -11,7 +12,10 @@ app = FastAPI(
     version="1.0.0"
 )
 
-app.mount("/uploads", StaticFiles(directory="/root/project/uploads"), name="uploads")
+uploads_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "uploads")
+app.mount("/uploads", StaticFiles(directory=uploads_path), name="uploads")
+
+#app.mount("/uploads", StaticFiles(directory="/root/project/uploads"), name="uploads")
 #app.mount("/uploads", StaticFiles(directory="/home/hapy/uploads"), name="uploads")
 
 origins = [
