@@ -16,6 +16,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.example.epet.R
+import com.example.epet.data.model.settings.OutputUserDetail
 import com.example.epet.ui.settings.viewmodel.SettingsViewModel
 import kotlinx.coroutines.launch
 import kotlin.getValue
@@ -23,6 +24,8 @@ import kotlin.getValue
 class SettingsFragment : Fragment() {
 
     val viewModel: SettingsViewModel by activityViewModels()
+
+    private var outputUserDetail: OutputUserDetail = OutputUserDetail()
 
     private lateinit var iv_to_back: ImageView
     private lateinit var tv_tittletext: TextView
@@ -78,8 +81,11 @@ class SettingsFragment : Fragment() {
         bth_edit.setOnClickListener {
             if (bth_edit.text.toString() == "Редагувати")
                 changeToEdit()
-            else if (bth_edit.text.toString() == "Зберегти зміни")
+
+            else if (bth_edit.text.toString() == "Зберегти зміни") {
                 changeToStatic()
+                updateData(outputUserDetail) // ПРОВЕРИТЬ ПОСЛЕ ПОДКЛЮЧЕНИЕ К БЕКЕНДУ
+            }
         }
     }
 
@@ -88,18 +94,24 @@ class SettingsFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.outputUserDetail.collect { state ->
-                    tv_last_name.text = state.last_name
-                    tv_first_name.text = state.first_name
-                    tv_patronymic.text = state.patronymic
-                    tv_passport_number.text = state.passport_number
-                    tv_address.text = "${state.city}, ${state.street} ${state.house_number}"
-                    tv_postal_code.text = state.postal_index
-
-                    et_email_address.setText(state.email)
-                    et_password.setText(state.password)
+                    outputUserDetail = state
+                    updateData(state)
                 }
             }
         }
+    }
+
+    /** Отчистка полів **/
+    private fun updateData(input: OutputUserDetail) {
+        tv_last_name.text = input.last_name
+        tv_first_name.text = input.first_name
+        tv_patronymic.text = input.patronymic
+        tv_passport_number.text = input.passport_number
+        tv_address.text = input.adsress
+        tv_postal_code.text = input.postal_index
+
+        et_email_address.setText(input.email)
+        et_password.setText(input.password)
     }
 
     /** Зміна на редагування **/

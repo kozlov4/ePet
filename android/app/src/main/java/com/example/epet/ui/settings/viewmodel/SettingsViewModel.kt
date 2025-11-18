@@ -15,10 +15,10 @@ class SettingsViewModel : ViewModel() {
     private val _outputUserDetail = MutableStateFlow(OutputUserDetail())
     val outputUserDetail = _outputUserDetail.asStateFlow()
 
-    fun outputUserDetail(token: String?) {
+    fun userDetail(token: String?) {
         viewModelScope.launch {
             val output = repository.userDetail(token)
-            _outputUserDetail.value = output
+            _outputUserDetail.value = output.copy()
         }
     }
 }

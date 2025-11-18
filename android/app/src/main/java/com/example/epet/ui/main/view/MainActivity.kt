@@ -73,7 +73,7 @@ class MainActivity : AppCompatActivity() {
         val sharedPref = getSharedPreferences("UserPrefs", MODE_PRIVATE)
         val token = sharedPref.getString("access_token", null)
         passportViewModel.passportList(token)
-        settingsViewModel.outputUserDetail(token)
+        settingsViewModel.userDetail(token)
     }
 
     /** Ініціалізація всіх кнопок інтерфейсу **/
