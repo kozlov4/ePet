@@ -1,4 +1,4 @@
-package com.example.epet.data.model
+package com.example.epet.data.model.service
 
 data class OutputPetShelter(
     val image: Int,

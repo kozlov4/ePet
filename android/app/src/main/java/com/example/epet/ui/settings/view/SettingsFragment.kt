@@ -19,8 +19,8 @@ class SettingsFragment : Fragment() {
     private lateinit var tv_tittletext: TextView
 
     private lateinit var tv_message: TextView
-    private lateinit var tv_surname: TextView
-    private lateinit var tv_name: TextView
+    private lateinit var tv_last_name: TextView
+    private lateinit var tv_first_name: TextView
     private lateinit var tv_patronymic: TextView
     private lateinit var tv_passport_number: TextView
     private lateinit var tv_address: TextView
@@ -47,8 +47,8 @@ class SettingsFragment : Fragment() {
         tv_tittletext = view.findViewById(R.id.tv_tittletext)
         tv_message = view.findViewById(R.id.tv_message)
 
-        tv_surname = view.findViewById(R.id.tv_surname)
-        tv_name = view.findViewById(R.id.tv_drug_name)
+        tv_last_name = view.findViewById(R.id.tv_last_name)
+        tv_first_name = view.findViewById(R.id.tv_first_name)
         tv_patronymic = view.findViewById(R.id.tv_patronymic)
         tv_passport_number = view.findViewById(R.id.tv_passport_number)
         tv_address = view.findViewById(R.id.tv_address)
@@ -75,8 +75,8 @@ class SettingsFragment : Fragment() {
 
     /** Зміна на редагування **/
     private fun changeToEdit() {
-        tv_surname.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray_hint_text))
-        tv_name.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray_hint_text))
+        tv_last_name.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray_hint_text))
+        tv_first_name.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray_hint_text))
         tv_patronymic.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray_hint_text))
         tv_passport_number.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray_hint_text))
         tv_address.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray_hint_text))
@@ -95,8 +95,8 @@ class SettingsFragment : Fragment() {
 
     /** Зміна на статичне **/
     private fun changeToStatic() {
-        tv_surname.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
-        tv_name.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
+        tv_last_name.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
+        tv_first_name.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
         tv_patronymic.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
         tv_passport_number.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
         tv_address.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
