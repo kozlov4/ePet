@@ -11,6 +11,8 @@ import androidx.appcompat.widget.AppCompatButton
 import android.content.Intent
 import android.net.Uri
 import androidx.navigation.fragment.findNavController
+import android.content.Context
+import com.example.epet.ui.auth.view.AuthActivity
 
 class MenuFragment : Fragment() {
 
@@ -62,5 +64,27 @@ class MenuFragment : Fragment() {
                 )
             }
         }
+
+        bth_exit.setOnClickListener {
+            clearUserInfo(requireContext())
+            navigateToAuthActivity()
+        }
+    }
+    /** Збереження даних користувача **/
+    private fun clearUserInfo(context: Context) {
+        val sharedPref = context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+        with(sharedPref.edit()) {
+            putString("access_token", null)
+            putString("user_name", null)
+            apply()
+        }
+    }
+
+    /** Перехід на auth активність **/
+    private fun navigateToAuthActivity() {
+        val intent = Intent(requireContext(), AuthActivity::class.java)
+        startActivity(intent)
+        requireActivity().overridePendingTransition(R.anim.slide_in_bottom, 0)
+        requireActivity().finish()
     }
 }

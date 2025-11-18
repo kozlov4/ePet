@@ -117,7 +117,7 @@ class LoginFragment : Fragment() {
         }
     }
 
-    /** Переход на наступну активність **/
+    /** Перехід на наступну активність **/
     private fun navigateToMainActivity() {
         val intent = Intent(requireContext(), MainActivity::class.java)
         startActivity(intent)
