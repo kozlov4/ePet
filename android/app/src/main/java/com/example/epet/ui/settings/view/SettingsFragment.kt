@@ -10,10 +10,19 @@ import android.widget.TextView
 import androidx.appcompat.widget.AppCompatButton
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.example.epet.R
+import com.example.epet.ui.settings.viewmodel.SettingsViewModel
+import kotlinx.coroutines.launch
+import kotlin.getValue
 
 class SettingsFragment : Fragment() {
+
+    val viewModel: SettingsViewModel by activityViewModels()
 
     private lateinit var iv_to_back: ImageView
     private lateinit var tv_tittletext: TextView
@@ -39,6 +48,7 @@ class SettingsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initViews(view)
         initButtons()
+        initStateFlow()
     }
 
     /** Ініціалізація всіх елементів інтерфейсу **/
@@ -70,6 +80,25 @@ class SettingsFragment : Fragment() {
                 changeToEdit()
             else if (bth_edit.text.toString() == "Зберегти зміни")
                 changeToStatic()
+        }
+    }
+
+    /** Ініціалізація StateFlow **/
+    private fun initStateFlow() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.outputUserDetail.collect { state ->
+                    tv_last_name.text = state.last_name
+                    tv_first_name.text = state.first_name
+                    tv_patronymic.text = state.patronymic
+                    tv_passport_number.text = state.passport_number
+                    tv_address.text = "${state.city}, ${state.street} ${state.house_number}"
+                    tv_postal_code.text = state.postal_index
+
+                    et_email_address.setText(state.email)
+                    et_password.setText(state.password)
+                }
+            }
         }
     }
 
@@ -110,5 +139,4 @@ class SettingsFragment : Fragment() {
 
         bth_edit.setText("Редагувати")
     }
-
 }
