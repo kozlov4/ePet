@@ -49,7 +49,7 @@
         app:layout_constraintTop_toTopOf="@+id/guideline_horizontal_menu">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/сс_to_documents"
+            android:id="@+id/cc_to_extract_pet_register"
             android:layout_width="match_parent"
             android:layout_height="45dp"
             android:clickable="true"
@@ -61,7 +61,7 @@
                 android:background="@null"
                 android:fontFamily="@font/e_ukraine_regular"
                 android:gravity="center_vertical"
-                android:text="Витяг про улюбленця"
+                android:text="Витяг з реєстру домашніх тварин"
                 android:textColor="@color/black"
                 android:textSize="13sp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -80,6 +80,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cc_to_extract_pet_passport"
             android:layout_width="match_parent"
             android:layout_height="45dp"
             android:clickable="true"
@@ -91,7 +92,7 @@
                 android:background="@null"
                 android:fontFamily="@font/e_ukraine_regular"
                 android:gravity="center_vertical"
-                android:text="Питання та відповіді"
+                android:text="Витяг за паспортом тварини"
                 android:textColor="@color/black"
                 android:textSize="13sp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -110,6 +111,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cc_to_extract_pet_vaccinations"
             android:layout_width="match_parent"
             android:layout_height="45dp"
             android:clickable="true"
@@ -121,7 +123,7 @@
                 android:background="@null"
                 android:fontFamily="@font/e_ukraine_regular"
                 android:gravity="center_vertical"
-                android:text="Питання та відповіді"
+                android:text="Витяг про щеплення тварини"
                 android:textColor="@color/black"
                 android:textSize="13sp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -140,6 +142,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cc_to_extract_pet_identifier"
             android:layout_width="match_parent"
             android:layout_height="45dp"
             android:clickable="true"
@@ -151,7 +154,7 @@
                 android:background="@null"
                 android:fontFamily="@font/e_ukraine_regular"
                 android:gravity="center_vertical"
-                android:text="Питання та відповіді"
+                android:text="Витяг за ідентифікатором"
                 android:textColor="@color/black"
                 android:textSize="13sp"
                 app:layout_constraintBottom_toBottomOf="parent"
