@@ -1,5 +1,6 @@
 package com.example.epet.ui.services.view
 
+import SelectorMenu
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,18 +9,42 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.example.epet.R
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearSnapHelper
+import androidx.recyclerview.widget.RecyclerView
+import com.example.epet.data.model.passport.OutputPetItem
+import com.example.epet.ui.main.viewmodel.PassportViewModel
+import com.example.epet.ui.service.adapter.PetListAdapter
+import kotlinx.coroutines.launch
+import kotlin.getValue
+import kotlin.math.abs
 
 class ExtractPetFragment : Fragment() {
 
+    private val passportViewModel: PassportViewModel by activityViewModels()
+
     private val args: ExtractPetFragmentArgs by navArgs()
+
+    private lateinit var layoutManager: LinearLayoutManager
+    private lateinit var snapHelper: LinearSnapHelper
+    private lateinit var petListAdapter: PetListAdapter
 
     private lateinit var iv_to_back: ImageView
     private lateinit var tv_tittletext: TextView
     private lateinit var tv_description: TextView
+    private lateinit var rv_pets: RecyclerView
     private lateinit var bth_create_extract: AppCompatButton
+
+    private val CARD_SCALE_MAX = 1.0f
+    private val CARD_SCALE_MIN = 0.7f
+    private val CARD_WIDTH_RATIO = 0.6f
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_extract_pet, container, false)
@@ -30,6 +55,11 @@ class ExtractPetFragment : Fragment() {
         initViews(view)
         initExtractInfo()
         initButtons()
+        initStateFlow()
+
+        setupSnapHelper()
+        centerFirstCard()
+        setupScrollListener()
     }
 
     /** Ініціалізація всіх елементів інтерфейсу **/
@@ -37,6 +67,7 @@ class ExtractPetFragment : Fragment() {
         iv_to_back = view.findViewById(R.id.iv_to_back)
         tv_tittletext = view.findViewById(R.id.tv_tittletext)
         tv_description = view.findViewById(R.id.tv_description)
+        rv_pets = view.findViewById(R.id.rv_pets)
         bth_create_extract = view.findViewById(R.id.bth_create_extract)
     }
 
@@ -60,6 +91,8 @@ class ExtractPetFragment : Fragment() {
         }
 
         bth_create_extract.setOnClickListener {
+            val selectedPetId = getCenteredPetId()
+
             val action = ExtractPetFragmentDirections.actionExtractPetToMessage(
                 tittletext = "Витяг про улюбленця",
                 emoji = "✅",
@@ -69,5 +102,107 @@ class ExtractPetFragment : Fragment() {
 
             findNavController().navigate(action)
         }
+    }
+
+    /** Ініціалізація StateFlow **/
+    private fun initStateFlow() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                passportViewModel.outputPassportList.collect { state ->
+                    setupRecyclerView(state)
+                }
+            }
+        }
+    }
+
+    /** Налаштування RecyclerView **/
+    private fun setupRecyclerView(passports: List<OutputPetItem>) {
+        petListAdapter = PetListAdapter(passports)
+        layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+
+        rv_pets.layoutManager = layoutManager
+        rv_pets.adapter = petListAdapter
+    }
+
+
+    /** Налаштування SnapHelper для центрованої прокрутки **/
+    private fun setupSnapHelper() {
+        snapHelper = object : LinearSnapHelper() {
+            override fun findTargetSnapPosition(layoutManager: RecyclerView.LayoutManager, velocityX: Int, velocityY: Int): Int {
+                val currentView = findSnapView(layoutManager) ?: return RecyclerView.NO_POSITION
+                val currentPos = layoutManager.getPosition(currentView)
+                return when {
+                    velocityX > 0 -> (currentPos + 1).coerceAtMost(petListAdapter.itemCount - 1)
+                    velocityX < 0 -> (currentPos - 1).coerceAtLeast(0)
+                    else -> currentPos
+                }
+            }
+        }
+        snapHelper.attachToRecyclerView(rv_pets)
+    }
+
+    /** Центрування першої карточки та налаштування padding **/
+    private fun centerFirstCard() {
+        rv_pets.post {
+            val screenWidth = resources.displayMetrics.widthPixels
+            val cardWidth = (screenWidth * CARD_WIDTH_RATIO).toInt()
+            val sidePadding = (screenWidth - cardWidth) / 2
+
+            rv_pets.setPadding(sidePadding, 0, sidePadding, 0)
+            rv_pets.clipToPadding = false
+            rv_pets.overScrollMode = RecyclerView.OVER_SCROLL_NEVER
+            layoutManager.scrollToPositionWithOffset(0, sidePadding)
+            rv_pets.post { scaleChildren() }
+        }
+    }
+
+    /** Слушатель прокрутки для масштабування карток **/
+    private fun setupScrollListener() {
+        rv_pets.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                scaleChildren()
+            }
+        })
+    }
+
+    /** Масштабування карток **/
+    private fun scaleChildren() {
+        val center = rv_pets.width / 4
+        val childCount = rv_pets.childCount
+
+        for (i in 0 until childCount) {
+            val child = rv_pets.getChildAt(i)
+            val childCenter = (child.left + child.right) / 4
+            val distance = abs(center - childCenter)
+
+            val scale = CARD_SCALE_MAX - (distance.toFloat() / rv_pets.width) * (CARD_SCALE_MAX - CARD_SCALE_MIN)
+            child.scaleX = scale
+            child.scaleY = scale
+        }
+    }
+
+    /** Знаходження pet_id **/
+    private fun getCenteredPetId(): String? {
+        val center = rv_pets.width / 2
+        var closestChild: View? = null
+        var minDistance = Int.MAX_VALUE
+
+        for (i in 0 until rv_pets.childCount) {
+            val child = rv_pets.getChildAt(i)
+            val childCenter = (child.left + child.right) / 2
+            val distance = abs(center - childCenter)
+
+            if (distance < minDistance) {
+                minDistance = distance
+                closestChild = child
+            }
+        }
+
+        closestChild ?: return null
+
+        val position = rv_pets.getChildAdapterPosition(closestChild)
+        if (position == RecyclerView.NO_POSITION) return null
+
+        return petListAdapter.getItem(position).pet_id
     }
 }
