@@ -35,7 +35,7 @@ function AppContent({ Component, pageProps }) {
                 { label: 'Список улюбленців', href: '/CNAP/favorite-list' },
                 {
                     label: 'Список організацій',
-                    href: '/CNAP/organisations',
+                    href: '/CNAP/organizations',
                 },
             ],
             accountName: user?.name || '',
@@ -50,7 +50,7 @@ function AppContent({ Component, pageProps }) {
                 { label: 'Список тварин', href: '/Alley/pet-list' },
                 {
                     label: 'Повідомлення',
-                    href: '/CNAP/organisations',
+                    href: '/CNAP/organizations',
                 },
             ],
             accountName: user?.name || '',
