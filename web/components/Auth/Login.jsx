@@ -5,6 +5,8 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useAuth } from '../../hooks/useAuth';
 
+const API_BASE = process.env.NEXT_PUBLIC_API_DOMAIN || '';
+
 export function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -45,7 +47,7 @@ export function Login() {
 
                 const formBody = new URLSearchParams(formData);
 
-                const response = await fetch('https://upcity.live/login', {
+                const response = await fetch(`${API_BASE}/login`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded',

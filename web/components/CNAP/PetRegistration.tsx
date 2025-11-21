@@ -15,6 +15,8 @@ import ReactCrop, {
 import 'react-image-crop/dist/ReactCrop.css';
 import { getCroppedImg } from '../../utils/getCroppedImg';
 
+const API_BASE = process.env.NEXT_PUBLIC_API_DOMAIN || '';
+
 type ModalState = {
     message: string;
     type: 'success' | 'error';
@@ -168,7 +170,7 @@ export default function PetRegistration() {
                 return;
             }
 
-            const response = await fetch(`https://upcity.live/pets/pets`, {
+            const response = await fetch(`${API_BASE}/pets/pets`, {
                 method: 'POST',
                 headers: {
                     Authorization: `Bearer ${token}`,
