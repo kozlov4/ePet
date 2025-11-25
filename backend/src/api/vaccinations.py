@@ -1,14 +1,9 @@
 from typing import Annotated, Union
-from fastapi import APIRouter, Depends, HTTPException, status,  UploadFile, Form
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session, joinedload
-from sqlalchemy.future import select
-from deep_translator import GoogleTranslator
-from datetime import datetime, date
-from src.api.image import upload_image
 from src.db.database import get_db
 from src.schemas.vaccination_schemas import VaccinationItem
-from src.db.models import Pets, Vaccinations, Organizations, Cnap, Passports, Identifiers, Users
-from typing import Annotated
+from src.db.models import Pets, Vaccinations, Organizations, Cnap
 from src.api.core import  get_current_user
 from src.api.organization import   get_current_org_or_cnap
 
@@ -56,3 +51,36 @@ async def add_vaccination(
         valid_until=vaccination.valid_until.strftime("%d.%m.%Y"),
         organization_name=org_user.organization_name
     )
+    
+@router.get("/all", response_model=list[VaccinationItem])
+async def get_all_vaccinations_for_vet(
+    db: db_dependency,
+    org_user: Annotated[Union[Organizations, Cnap, None], Depends(get_current_org_or_cnap)]
+):
+    
+    if not isinstance(org_user, Organizations) or org_user.organization_type != "Ветклініка":
+        raise HTTPException(
+            status_code=403,
+            detail="Перегляд всіх вакцинацій доступний лише ветклінікам"
+        )
+
+    vaccinations = (
+        db.query(Vaccinations)
+        .options(joinedload(Vaccinations.organization))
+        .filter(Vaccinations.organization_id == org_user.organization_id)
+        .order_by(Vaccinations.vaccination_date.desc())
+        .all()
+    )
+
+    result = [
+        VaccinationItem(
+            drug_name=v.drug_name,
+            series_number=v.series_number,
+            vaccination_date=v.vaccination_date.strftime("%d.%m.%Y"),
+            valid_until=v.valid_until.strftime("%d.%m.%Y"),
+            organization_name=v.organization.organization_name
+        )
+        for v in vaccinations
+    ]
+
+    return result
