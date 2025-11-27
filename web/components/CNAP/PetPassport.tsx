@@ -7,6 +7,8 @@ import { useEffect, useState } from 'react';
 import ArrowBack from '../../assets/images/icons/ArrowBack';
 import CopyIcon from '../../assets/images/icons/CopyIcon';
 
+const API_BASE = process.env.NEXT_PUBLIC_API_DOMAIN || '';
+
 interface PetPassportData {
     pet_id: number;
     passport_number: string;
@@ -52,7 +54,7 @@ export  function PetPassport({
                     throw new Error('Токен авторизації відсутній');
                 }
 
-                const response = await fetch(`https://upcity.live/pets/${id}`, {
+                const response = await fetch(`${API_BASE}/pets/${id}`, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                         'Content-Type': 'application/json',
@@ -169,7 +171,7 @@ export  function PetPassport({
             return;
         }
 
-        const response = await fetch(`https://upcity.live/pets/delete/${petId}`, {
+        const response = await fetch(`${API_BASE}/pets/delete/${petId}`, {
             method: "DELETE",
             headers: {
                 "Authorization": `Bearer ${token}`,
