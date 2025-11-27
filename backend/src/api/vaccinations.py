@@ -47,11 +47,12 @@ async def add_vaccination(
     return VaccinationItem(
         drug_name=vaccination.drug_name,
         series_number=vaccination.series_number,
-        vaccination_date=vaccination.vaccination_date.strftime("%d.%m.%Y"),
-        valid_until=vaccination.valid_until.strftime("%d.%m.%Y"),
+        vaccination_date=vaccination.vaccination_date,
+        valid_until=vaccination.valid_until,
         organization_name=org_user.organization_name
     )
-    
+
+
 @router.get("/all", response_model=list[VaccinationItem])
 async def get_all_vaccinations_for_vet(
     db: db_dependency,
