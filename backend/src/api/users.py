@@ -8,7 +8,7 @@ from sqlalchemy import select
 from datetime import datetime
 from deep_translator import GoogleTranslator
 
-from src.schemas.user_schemas import UserCreateRequest, UserPetItem, ChangeEmailRequest, ChangePasswordRequest
+from src.schemas.user_schemas import UserCreateRequest, UserPetItem, ChangeEmailRequest, ChangePasswordRequest, UserResponse
 from src.schemas.token_schemas import TokenResponse
 from src.db.database import get_db
 from src.db.models import Users
@@ -20,7 +20,6 @@ load_dotenv()
 
 
 router = APIRouter(tags=['Users 🧑‍🦱'], prefix="/users")
-
 db_dependency = Annotated[Session, Depends(get_db)]
 
 
@@ -167,3 +166,29 @@ async def change_password(
     db.commit()
 
     return {"message": "Password updated successfully"}
+
+@router.get("/me", response_model=UserResponse, status_code=200)
+async def get_my_profile(
+    db: db_dependency,
+    current_user: user_dependency
+):
+    user_id = current_user.get("user_id")
+    if user_id is None:
+        raise HTTPException(
+            status_code=401,
+            detail="Could not validate credentials"
+        )
+
+    user = db.query(Users).filter(Users.user_id == user_id).first()
+    if not user:
+        raise HTTPException(404, "User not found")
+
+    return {
+        "user_id": user.user_id,
+        "last_name": user.last_name,
+        "first_name": user.first_name,
+        "patronymic": user.patronymic,
+        "passport_number": user.passport_number,
+        "postal_index": user.postal_index,
+        "email": user.email,
+    }
