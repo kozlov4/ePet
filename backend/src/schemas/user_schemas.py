@@ -30,3 +30,7 @@ class UserPetItem(BaseModel):
     pet_name_en: str
     date_of_birth: str
     update_datetime: str
+    
+class ChangeEmailRequest(BaseModel):
+    new_email: EmailStr = Field(min_length=1, max_length=100)
+
