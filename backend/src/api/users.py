@@ -8,7 +8,7 @@ from sqlalchemy import select
 from datetime import datetime
 from deep_translator import GoogleTranslator
 
-from src.schemas.user_schemas import UserCreateRequest, UserPetItem, ChangeEmailRequest
+from src.schemas.user_schemas import UserCreateRequest, UserPetItem, ChangeEmailRequest, ChangePasswordRequest
 from src.schemas.token_schemas import TokenResponse
 from src.db.database import get_db
 from src.db.models import Users
@@ -147,3 +147,23 @@ async def change_email(
         "access_token": token,
         "token_type": "bearer"
     }
+
+@router.put("/me/change-password", status_code=200)
+async def change_password(
+    data: ChangePasswordRequest,
+    db: db_dependency,
+    current_user: user_dependency
+):
+    user_id = current_user.get("user_id")
+    if user_id is None:
+        raise HTTPException(401, "Unauthorized")
+
+    user = db.query(Users).filter(Users.user_id == user_id).first()
+
+    if not bcrypt_context.verify(data.old_password, user.password):
+        raise HTTPException(400, "Old password is incorrect")
+
+    user.password = bcrypt_context.hash(data.new_password)
+    db.commit()
+
+    return {"message": "Password updated successfully"}
