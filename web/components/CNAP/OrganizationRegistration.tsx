@@ -1,10 +1,10 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft, ChevronDown } from 'lucide-react';
 import { Organization } from '../../types/api';
 import { useRouter, useParams, useSearchParams } from 'next/navigation';
+import ArrowBack from '../../assets/images/icons/ArrowBack';
 
-const ORGANIZATION_TYPES = ['Ветклініка', 'Притулок', 'Інше'];
+const ORGANIZATION_TYPES = ['Ветклініка', 'Притулок'];
 const API_BASE = process.env.NEXT_PUBLIC_API_DOMAIN || '';
 
 interface OrganizationPageProps {
@@ -103,26 +103,25 @@ export default function OrganizationPage({
     };
 
     return (
-        <div className="min-h-screen bg-white font-sans text-gray-900 flex flex-col items-center pt-8 sm:pt-12">
-            <div className="w-full max-w-md px-6 mb-6 flex items-center relative">
+        <div className="min-h-screen justify-center w-full bg-gray-50 px-35 py-10">
+            <div className="mb-8 flex items-center">
                 <button
                     onClick={() => router.back()}
-                    className="absolute left-6 p-2 -ml-2 hover:bg-gray-100 rounded-full transition-colors"
-                    aria-label="Go back"
+                    className="mr-4 rounded-full bg-black p-2 transition-[0.2s] cursor-pointer hover:bg-gray-300"
                 >
-                    <ArrowLeft className="w-6 h-6 text-black" />
+                    <ArrowBack />
                 </button>
-                <h1 className="w-full text-center text-lg font-bold">
+                <h1 className="text-2xl font-semibold text-gray-800">
                     {isEditMode
                         ? 'Редагування організації'
                         : 'Реєстрація організації'}
                 </h1>
             </div>
 
-            <div className="w-full max-w-md px-4">
+            <div className="w-full max-w-4xl rounded-xl bg-[rgba(217,217,217,0.27)] p-6 shadow-lg sm:p-8 lg:p-10">
                 <form
                     onSubmit={handleSubmit}
-                    className="bg-gray-50 rounded-3xl p-6 sm:p-8 shadow-sm"
+                    className="rounded-3xl p-6 sm:p-8"
                 >
                     <div className="space-y-4">
                         {error && (
@@ -131,7 +130,7 @@ export default function OrganizationPage({
                             </div>
                         )}
 
-                        <div className="space-y-3">
+                        <div className="">
                             <div className="bg-white rounded-xl overflow-hidden shadow-sm border border-transparent focus-within:border-gray-300 transition-colors">
                                 <input
                                     type="text"
@@ -142,9 +141,6 @@ export default function OrganizationPage({
                                     className="w-full px-4 py-3.5 outline-none text-gray-700 placeholder-gray-400 text-sm bg-transparent"
                                     required
                                 />
-                            </div>
-
-                            <div className="relative bg-white rounded-xl overflow-hidden shadow-sm border border-transparent focus-within:border-gray-300 transition-colors">
                                 <select
                                     name="organization_type"
                                     value={formData.organization_type}
@@ -165,15 +161,12 @@ export default function OrganizationPage({
                                         </option>
                                     ))}
                                 </select>
-                                <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
-                                    <ChevronDown className="w-4 h-4" />
-                                </div>
                             </div>
                         </div>
 
                         <div className="space-y-3 pt-2">
-                            <div className="bg-white rounded-xl overflow-hidden shadow-sm border border-transparent focus-within:border-gray-300 transition-colors">
-                                <div className="grid grid-cols-1 divide-y divide-gray-100">
+                            <div className="bg-white rounded-xl overflow-hidden shadow-sm border border-transparent focus-within:border-gray-300 transition-colors аду">
+                                <div className="flex divide-y divide-gray-100">
                                     <input
                                         type="text"
                                         name="city"
@@ -216,9 +209,6 @@ export default function OrganizationPage({
                                     className="w-full px-4 py-3.5 outline-none text-gray-700 placeholder-gray-400 text-sm bg-transparent"
                                     required
                                 />
-                            </div>
-
-                            <div className="bg-white rounded-xl overflow-hidden shadow-sm border border-transparent focus-within:border-gray-300 transition-colors">
                                 <input
                                     type="email"
                                     name="email"
