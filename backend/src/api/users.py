@@ -8,7 +8,7 @@ from sqlalchemy import select
 from datetime import datetime
 from deep_translator import GoogleTranslator
 
-from src.schemas.user_schemas import UserCreateRequest, UserPetItem
+from src.schemas.user_schemas import UserCreateRequest, UserPetItem, ChangeEmailRequest
 from src.schemas.token_schemas import TokenResponse
 from src.db.database import get_db
 from src.db.models import Users
@@ -115,3 +115,35 @@ async def get_my_pets(db: db_dependency, user: user_dependency):
         pet_items.append(item)
 
     return pet_items
+
+@router.put("/me/change-email", status_code=200)
+async def change_email(
+    data: ChangeEmailRequest,
+    db: db_dependency,
+    current_user: user_dependency
+):
+    user_id = current_user.get("user_id")
+    if user_id is None:
+        raise HTTPException(401, "Unauthorized")
+
+    existing = db.query(Users).filter(Users.email == data.new_email).first()
+    if existing:
+        raise HTTPException(409, "Email already in use")
+
+    user = db.query(Users).filter(Users.user_id == user_id).first()
+    user.email = data.new_email
+
+    db.commit()
+    db.refresh(user)
+
+    token = create_access_token(
+        subject=user.email,
+        id=user.user_id,
+        expires_delta=timedelta(minutes=30)
+    )
+
+    return {
+        "message": "Email updated successfully",
+        "access_token": token,
+        "token_type": "bearer"
+    }
