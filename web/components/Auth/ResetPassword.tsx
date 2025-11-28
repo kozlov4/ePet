@@ -2,6 +2,8 @@
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 
+const API_BASE = process.env.NEXT_PUBLIC_API_DOMAIN || '';
+
 export function ResetPasswordPage() {
     const [email, setEmail] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -26,7 +28,7 @@ export function ResetPasswordPage() {
 
         try {
             const response = await fetch(
-                'https://upcity.live/forgot-password/',
+                `${API_BASE}/forgot-password/`,
                 {
                     // MOVE DOMAIN TO ENV VARIABLE
                     method: 'POST',
