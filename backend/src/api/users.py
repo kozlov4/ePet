@@ -123,11 +123,11 @@ async def change_email(
 ):
     user_id = current_user.get("user_id")
     if user_id is None:
-        raise HTTPException(401, "Unauthorized")
+        raise HTTPException(401, "Не вдалося виконати автентифікацію.")
 
     existing = db.query(Users).filter(Users.email == data.new_email).first()
     if existing:
-        raise HTTPException(409, "Email already in use")
+        raise HTTPException(409, "Цей email вже використовується іншим користувачем.")
 
     user = db.query(Users).filter(Users.user_id == user_id).first()
     user.email = data.new_email
@@ -142,7 +142,7 @@ async def change_email(
     )
 
     return {
-        "message": "Email updated successfully",
+        "message": "Email успішно оновлено",
         "access_token": token,
         "token_type": "bearer"
     }
@@ -155,17 +155,21 @@ async def change_password(
 ):
     user_id = current_user.get("user_id")
     if user_id is None:
-        raise HTTPException(401, "Unauthorized")
+        raise HTTPException(401, "Не вдалося виконати автентифікацію.")
 
     user = db.query(Users).filter(Users.user_id == user_id).first()
 
-    if not bcrypt_context.verify(data.old_password, user.password):
-        raise HTTPException(400, "Old password is incorrect")
+    if bcrypt_context.verify(data.new_password, user.password):
+        raise HTTPException(
+            status_code=400,
+            detail="Новий пароль не може збігатися з поточним."
+        )
 
     user.password = bcrypt_context.hash(data.new_password)
     db.commit()
+    db.refresh(user)
 
-    return {"message": "Password updated successfully"}
+    return {"message": "Пароль успішно оновлено."}
 
 @router.get("/me", response_model=UserResponse, status_code=200)
 async def get_my_profile(
@@ -176,12 +180,12 @@ async def get_my_profile(
     if user_id is None:
         raise HTTPException(
             status_code=401,
-            detail="Could not validate credentials"
+            detail="Не вдалося виконати автентифікацію."
         )
 
     user = db.query(Users).filter(Users.user_id == user_id).first()
     if not user:
-        raise HTTPException(404, "User not found")
+        raise HTTPException(404, "Користувача не знайдено.")
 
     return {
         "user_id": user.user_id,
@@ -193,6 +197,5 @@ async def get_my_profile(
         "street": user.street,
         "house_number": user.house_number,
         "postal_index": user.postal_index,
-        "email": user.email,
-        "password": user.password
+        "email": user.email
     }
