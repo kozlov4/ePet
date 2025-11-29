@@ -189,6 +189,10 @@ async def get_my_profile(
         "first_name": user.first_name,
         "patronymic": user.patronymic,
         "passport_number": user.passport_number,
+        "city": user.city,
+        "street": user.street,
+        "house_number": user.house_number,
         "postal_index": user.postal_index,
         "email": user.email,
+        "password": user.password
     }
