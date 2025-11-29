@@ -14,7 +14,9 @@ from typing import Annotated
 from src.api.core import  get_current_user
 from src.api.organization import   get_current_org_or_cnap
 from src.schemas.pet_schemas import AnimaForCnap, AnimaForlLintel, AnimalForVeterinary, AnimalForUser
-
+from src.schemas.report_schemas import ReportRequest 
+from src.utils.email_utils import send_report_email
+from src.utils.pdf_generator import create_identification_pdf 
 
 router = APIRouter(prefix="/pets", tags=["Pets 🐶"])
 db_dependency = Annotated[Session, Depends(get_db)]
@@ -318,3 +320,68 @@ async def delete_pet(
     db.commit()
 
     return {"message": "Успішне видалення"}
+
+@router.post("/generate-report")
+async def generate_report(
+    request: ReportRequest,
+    user: Annotated[dict, Depends(get_current_user)],
+    db: Session = Depends(get_db)
+):
+    pet = db.query(Pets).options(
+        joinedload(Pets.owner),
+        joinedload(Pets.identifiers),
+        joinedload(Pets.passport)
+    ).filter(Pets.pet_id == request.pet_id).first()
+    
+    if not pet:
+        raise HTTPException(status_code=404, detail="Тваринку не знайдено")
+    if pet.user_id != user.get('user_id'):
+        raise HTTPException(status_code=403, detail="Ви не є власником")
+
+    if request.name_document == "Офіційний витяг про ідентифікаційні дані тварини":
+        if not pet.identifiers:
+             raise HTTPException(status_code=400, detail="У тварини відсутній ідентифікатор (чип/клеймо)")
+        
+        identifier = pet.identifiers[-1]
+        cnap_org = identifier.cnap
+        
+        pdf_context = {
+            "creation_date": datetime.now().strftime("%d.%m.%Y"),
+            "passport_number": pet.passport.passport_number if pet.passport else "Паспорт не оформлено",
+            
+            "pet_name": pet.pet_name,
+            "species": pet.species,
+            "breed": pet.breed,
+            
+            "identifier_db_id": f"ID запису: {identifier.identifier_id}",
+            "identifier_number": identifier.identifier_number,
+            "identifier_type": identifier.identifier_type,
+            "identifier_date": identifier.date.strftime("%d.%m.%Y") if identifier.date else "—",
+            
+            # Передаємо словник "cnap", щоб працювало {{ cnap.name }}
+            "cnap": {
+                "name": cnap_org.name if cnap_org else "Невідомо",
+                "city": cnap_org.city if cnap_org else "",
+                "street": cnap_org.street if cnap_org else "",
+                "phone_number": cnap_org.phone_number if cnap_org else "—"
+            }
+        }
+
+        try:
+            pdf_bytes = create_identification_pdf(pdf_context)
+            
+            filename = f"Extract_{pet.pet_id}.pdf"
+            await send_report_email(
+                to_email=pet.owner.email,
+                pdf_bytes=pdf_bytes,
+                filename=filename
+            )
+
+        except Exception as e:
+            print(f"Server Error: {e}")
+            raise HTTPException(status_code=500, detail="Помилка при генерації або відправці звіту.")
+
+        return {"detail": "Витяг створено успішно та надіслано на вашу пошту"}
+
+    else:
+        raise HTTPException(status_code=400, detail="Тип документа не підтримується")
