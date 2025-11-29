@@ -124,7 +124,9 @@ async def change_email(
 ):
     user_id = current_user.get("user_id")
     if user_id is None:
-        raise HTTPException(401, "Не вдалося виконати автентифікацію.")
+        raise HTTPException(
+            status_code=401, 
+            detail="Не вдалося виконати автентифікацію.")
     
     if data.new_email == user.email:
         raise HTTPException(
@@ -134,7 +136,9 @@ async def change_email(
 
     existing = db.query(Users).filter(Users.email == data.new_email).first()
     if existing:
-        raise HTTPException(409, "Цей email вже використовується іншим користувачем.")
+        raise HTTPException(
+             status_code=409, 
+             detail="Цей email вже використовується іншим користувачем.")
 
     user = db.query(Users).filter(Users.user_id == user_id).first()
     user.email = data.new_email
@@ -163,7 +167,9 @@ async def change_password(
 ):
     user_id = current_user.get("user_id")
     if user_id is None:
-        raise HTTPException(401, "Не вдалося виконати автентифікацію.")
+        raise HTTPException(
+            status_code=401, 
+            detail="Не вдалося виконати автентифікацію.")
 
     user = db.query(Users).filter(Users.user_id == user_id).first()
 
@@ -194,7 +200,9 @@ async def get_my_profile(
 
     user = db.query(Users).filter(Users.user_id == user_id).first()
     if not user:
-        raise HTTPException(404, "Користувача не знайдено.")
+        raise HTTPException(
+            status_code=404, 
+            detail="Користувача не знайдено.")
 
     return {
         "user_id": user.user_id,
