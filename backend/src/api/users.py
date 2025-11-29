@@ -115,6 +115,7 @@ async def get_my_pets(db: db_dependency, user: user_dependency):
 
     return pet_items
 
+
 @router.put("/me/change-email", status_code=200)
 async def change_email(
     data: ChangeEmailRequest,
@@ -124,6 +125,12 @@ async def change_email(
     user_id = current_user.get("user_id")
     if user_id is None:
         raise HTTPException(401, "Не вдалося виконати автентифікацію.")
+    
+    if data.new_email == user.email:
+        raise HTTPException(
+            status_code=400,
+            detail="Новий email не може збігатися з поточним."
+        )
 
     existing = db.query(Users).filter(Users.email == data.new_email).first()
     if existing:
@@ -146,6 +153,7 @@ async def change_email(
         "access_token": token,
         "token_type": "bearer"
     }
+
 
 @router.put("/me/change-password", status_code=200)
 async def change_password(
@@ -170,6 +178,7 @@ async def change_password(
     db.refresh(user)
 
     return {"message": "Пароль успішно оновлено."}
+
 
 @router.get("/me", response_model=UserResponse, status_code=200)
 async def get_my_profile(
