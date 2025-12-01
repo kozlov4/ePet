@@ -65,6 +65,18 @@ class MenuFragment : Fragment() {
             }
         }
 
+        tv_to_support.setOnClickListener {
+            val url = "https://e-pet-seven.vercel.app/home"
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+            startActivity(intent)
+        }
+
+        tv_to_question.setOnClickListener {
+            val url = "https://e-pet-seven.vercel.app/home"
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+            startActivity(intent)
+        }
+
         bth_exit.setOnClickListener {
             clearUserInfo(requireContext())
             navigateToAuthActivity()

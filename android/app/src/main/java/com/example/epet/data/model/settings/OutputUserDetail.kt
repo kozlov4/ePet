@@ -5,7 +5,7 @@ data class OutputUserDetail(
     val first_name: String = "-",
     val patronymic: String = "-",
     val passport_number: String = "-",
-    val adsress: String = "-",
+    val full_address: String = "-",
     val postal_index: String = "-",
     val email: String = "-",
     var password: String? = "-"

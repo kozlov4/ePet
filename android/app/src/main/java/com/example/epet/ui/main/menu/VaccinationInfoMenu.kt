@@ -6,11 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.content.DialogInterface
 import android.graphics.Color
+import android.widget.ImageView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.example.epet.R
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -29,6 +31,7 @@ class VaccinationInfoMenu(private val onClose: (() -> Unit)? = null) : BottomShe
 
     private lateinit var tv_passport_number: TextView
     private lateinit var tv_update_datetime: TextView
+    private lateinit var iv_copy_passport: ImageView
     private lateinit var rv_vaccinations: RecyclerView
 
     private var pet_id: String? = null
@@ -88,12 +91,18 @@ class VaccinationInfoMenu(private val onClose: (() -> Unit)? = null) : BottomShe
     /** Ініціалізація всіх елементів інтерфейсу **/
     private fun initViews(view: View) {
         tv_passport_number = view.findViewById(R.id.tv_passport_number)
+        iv_copy_passport = view.findViewById(R.id.iv_copy_passport)
         tv_update_datetime = view.findViewById(R.id.tv_update_datetime)
         rv_vaccinations = view.findViewById(R.id.rv_vaccinations)
     }
 
     /** Ініціалізація кнопок **/
     private fun initButtons() {
+        iv_copy_passport.setOnClickListener {
+            val clipboard = requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager
+            val clip = android.content.ClipData.newPlainText("label", tv_passport_number.text)
+            clipboard.setPrimaryClip(clip)
+        }
     }
 
     /** Ініціалізація StateFlow **/

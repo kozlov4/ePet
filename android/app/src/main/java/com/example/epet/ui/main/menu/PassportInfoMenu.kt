@@ -19,6 +19,8 @@ import kotlinx.coroutines.launch
 import kotlin.getValue
 import androidx.fragment.app.activityViewModels
 import com.bumptech.glide.Glide
+import android.widget.Toast
+import android.content.Context
 
 class PassportInfoMenu(private val onClose: (() -> Unit)? = null) : BottomSheetDialogFragment() {
 
@@ -127,6 +129,11 @@ class PassportInfoMenu(private val onClose: (() -> Unit)? = null) : BottomSheetD
 
     /** Ініціалізація всіх кнопок інтерфейсу **/
     private fun initButtons() {
+        iv_copy_passport.setOnClickListener {
+            val clipboard = requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager
+            val clip = android.content.ClipData.newPlainText("label", tv_passport_number.text)
+            clipboard.setPrimaryClip(clip)
+        }
     }
 
     /** Ініціалізація StateFlow **/
