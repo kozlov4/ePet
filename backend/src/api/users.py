@@ -127,7 +127,8 @@ async def change_email(
         raise HTTPException(
             status_code=401, 
             detail="Не вдалося виконати автентифікацію.")
-    
+
+    user = db.query(Users).filter(Users.user_id == user_id).first()
     if data.new_email == user.email:
         raise HTTPException(
             status_code=400,
@@ -140,7 +141,7 @@ async def change_email(
              status_code=409, 
              detail="Цей email вже використовується іншим користувачем.")
 
-    user = db.query(Users).filter(Users.user_id == user_id).first()
+
     user.email = data.new_email
 
     db.commit()
@@ -173,10 +174,16 @@ async def change_password(
 
     user = db.query(Users).filter(Users.user_id == user_id).first()
 
+    if not bcrypt_context.verify(data.old_password, user.password):
+        raise HTTPException(
+            status_code=400,
+            detail="Помилка при змінні пароля спробуйте новий пароль."
+        )
+
     if bcrypt_context.verify(data.new_password, user.password):
         raise HTTPException(
             status_code=400,
-            detail="Новий пароль не може збігатися з поточним."
+            detail="Помилка при змінні пароля спробуйте новий пароль."
         )
 
     user.password = bcrypt_context.hash(data.new_password)
