@@ -1,5 +1,5 @@
 from pydantic import BaseModel, EmailStr, Field
-from typing import List
+from typing import List, Optional
 
 class UserResponse(BaseModel):
   user_id:int
@@ -34,6 +34,8 @@ class UserPetItem(BaseModel):
 class ChangeEmailRequest(BaseModel):
     new_email: EmailStr = Field(min_length=1, max_length=100)
 
-class ChangePasswordRequest(BaseModel):
-    old_password: str = Field(min_length=8, max_length=100)
-    new_password: str = Field(min_length=8, max_length=100)
+
+class UpdateProfileRequest(BaseModel):
+    new_email: Optional[EmailStr] = Field(None, min_length=1, max_length=100)
+    old_password: Optional[str] = Field(None, min_length=8, max_length=100)
+    new_password: Optional[str] = Field(None, min_length=8, max_length=100)
