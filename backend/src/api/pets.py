@@ -425,3 +425,36 @@ async def generate_report(
         raise HTTPException(status_code=500, detail="Помилка при відправці звіту")
 
     return {"detail": "Витяг створено успішно та надіслано на вашу пошту"}
+
+
+@router.delete("/delete/{pet_id}")
+async def delete_pet(
+    pet_id: int,
+    org_or_cnap: Annotated[Organizations | Cnap, Depends(get_current_org_or_cnap)],
+    db: db_dependency
+):
+
+    if isinstance(org_or_cnap, Organizations):
+        org_type = org_or_cnap.organization_type
+        org_id = org_or_cnap.organization_id
+    elif isinstance(org_or_cnap, Cnap):
+        org_type = "ЦНАП"
+        org_id = None
+    else:
+        raise HTTPException(status_code=403, detail="Недостатньо прав")
+
+    pet = db.query(Pets).filter(Pets.pet_id == pet_id).first()
+
+    if not pet:
+        raise HTTPException(status_code=404, detail="Тваринку не знайдено")
+
+    if org_type == "Ветклініка":
+        raise HTTPException(status_code=403, detail="Недостатньо прав для видалення")
+
+    if org_type == "Притулок" and pet.organization_id != org_id:
+        raise HTTPException(status_code=403, detail="Недостатньо прав для видалення")
+
+    db.delete(pet)
+    db.commit()
+
+    return {"message": "Успішне видалення"}
