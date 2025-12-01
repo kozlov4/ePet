@@ -1,6 +1,7 @@
 package com.example.epet.ui.services.view
 
 import SelectorMenu
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -20,8 +21,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.epet.data.model.passport.OutputPetItem
+import com.example.epet.data.model.service.InputExtractPet
 import com.example.epet.ui.main.viewmodel.PassportViewModel
 import com.example.epet.ui.service.adapter.PetListAdapter
+import com.example.epet.ui.service.viewmodel.ServiceViewModel
 import kotlinx.coroutines.launch
 import kotlin.getValue
 import kotlin.math.abs
@@ -29,6 +32,7 @@ import kotlin.math.abs
 class ExtractPetFragment : Fragment() {
 
     private val passportViewModel: PassportViewModel by activityViewModels()
+    private val serviceViewModel: ServiceViewModel by activityViewModels()
 
     private val args: ExtractPetFragmentArgs by navArgs()
 
@@ -56,6 +60,7 @@ class ExtractPetFragment : Fragment() {
         initExtractInfo()
         initButtons()
         initStateFlow()
+        initSharedFlow()
 
         setupSnapHelper()
         centerFirstCard()
@@ -91,16 +96,50 @@ class ExtractPetFragment : Fragment() {
         }
 
         bth_create_extract.setOnClickListener {
+            val sharedPref = requireContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+            val token = sharedPref.getString("access_token", null)
+            val extractName = args.extractName
+            var inputExtractName = ""
             val selectedPetId = getCenteredPetId()
 
-            val action = ExtractPetFragmentDirections.actionExtractPetToMessage(
-                tittletext = "Витяг про улюбленця",
-                emoji = "✅",
-                main = "Витяг сформовано!",
-                description = "Документ про пухнастого буде надіслано вам найближчим часом на email"
-            )
+            if (extractName == "Витяг з реєстру домашніх тварин") {
+                inputExtractName = "Витяг з реєстру домашніх тварин"
+            } else if (extractName == "Витяг про щеплення тварини") {
+                inputExtractName = "Медичний витяг про проведені щеплення тварини"
+            } else if (extractName == "Витяг за ідентифікаторами") {
+                inputExtractName = "Витяг про ідентифікаційні дані тварини"
+            }
 
-            findNavController().navigate(action)
+            serviceViewModel.generateReport(token, InputExtractPet(selectedPetId, inputExtractName))
+        }
+    }
+
+    /** Ініціалізація SharedFlow **/
+    private fun initSharedFlow() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                serviceViewModel.outputGenerateReport.collect { state ->
+                    if (state.detail == "Витяг створено успішно та надіслано на вашу пошту") {
+                        val action = ExtractPetFragmentDirections.actionExtractPetToMessage(
+                            tittletext = "Витяг про улюбленця",
+                            emoji = "✅",
+                            main = "Витяг сформовано!",
+                            description = "Документ про пухнастого буде надіслано вам найближчим часом на email"
+                        )
+
+                        findNavController().navigate(action)
+                    } else {
+                        val action = ExtractPetFragmentDirections.actionExtractPetToMessage(
+                            tittletext = "Витяг про улюбленця",
+                            emoji = "⛔",
+                            main = "Помилка!",
+                            description = state.detail
+                        )
+
+                        findNavController().navigate(action)
+                    }
+                }
+            }
         }
     }
 

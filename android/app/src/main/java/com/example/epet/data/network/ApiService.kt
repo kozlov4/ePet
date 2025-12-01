@@ -7,6 +7,8 @@ import com.example.epet.data.model.auth.OutputResetPassword
 import com.example.epet.data.model.passport.OutputPetItem
 import com.example.epet.data.model.passport.OutputPassportDetail
 import com.example.epet.data.model.passport.OutputVaccinationsList
+import com.example.epet.data.model.service.InputExtractPet
+import com.example.epet.data.model.service.OutputExtractPet
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.POST
@@ -48,4 +50,11 @@ interface ApiService {
     @GET("pets/{pet_id}/vaccinations")
     suspend fun vaccinationsList(
         @Path("pet_id") petId: String): Response<OutputVaccinationsList>
+
+    /** Витяги **/
+
+    @POST("pets/generate-report")
+    suspend fun generateReport(
+        @Header("Authorization") token: String,
+        @Body inputResetPassword: InputExtractPet): Response<OutputExtractPet>
 }
