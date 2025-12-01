@@ -1,14 +1,19 @@
 from pydantic import BaseModel, EmailStr, Field
 from typing import List, Optional
 
+
 class UserResponse(BaseModel):
-  user_id:int
-  last_name:str
-  first_name:str
-  patronymic:str
-  passport_number:str
-  postal_index:str
-  email:str
+    user_id: int
+    last_name: str
+    first_name: str
+    patronymic: str | None = None
+    passport_number: str | None = None
+    full_address: str
+    postal_index: str | None = None
+    email: str
+
+    class Config:
+        from_attributes = True
 
 class UserCreateRequest(BaseModel):
     last_name:str = Field(min_length=3, max_length=100)

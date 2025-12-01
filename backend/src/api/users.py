@@ -133,22 +133,16 @@ async def update_profile(
 
     email_changed = False
 
-    if data.new_email is not None:
-        if data.new_email != user.email:
-            existing = db.query(Users).filter(Users.email == data.new_email).first()
-            if existing:
-                raise HTTPException(
-                    status_code=409,
-                    detail="Цей email вже використовується іншим користувачем."
-                )
-
-            user.email = data.new_email
-            email_changed = True
-        else:
+    if data.new_email is not None and data.new_email != user.email:
+        existing = db.query(Users).filter(Users.email == data.new_email).first()
+        if existing:
             raise HTTPException(
-                status_code=400,
-                detail="Новий email не може збігатися з поточним."
+                status_code=409,
+                detail="Цей email вже використовується іншим користувачем."
             )
+
+        user.email = data.new_email
+        email_changed = True
 
     if data.new_password is not None:
         if not data.old_password:
@@ -199,26 +193,21 @@ async def get_my_profile(
 ):
     user_id = current_user.get("user_id")
     if user_id is None:
-        raise HTTPException(
-            status_code=401,
-            detail="Не вдалося виконати автентифікацію."
-        )
+        raise HTTPException(status_code=401, detail="Не вдалося виконати автентифікацію.")
 
     user = db.query(Users).filter(Users.user_id == user_id).first()
     if not user:
-        raise HTTPException(
-            status_code=404, 
-            detail="Користувача не знайдено.")
+        raise HTTPException(status_code=404, detail="Користувача не знайдено.")
+
+    address_str = f"{user.city}, {user.street} {user.house_number}"
 
     return {
         "user_id": user.user_id,
         "last_name": user.last_name,
         "first_name": user.first_name,
         "patronymic": user.patronymic,
-        "passport_number": user.passport_number,
-        "city": user.city,
-        "street": user.street,
-        "house_number": user.house_number,
+        "passport_number":user.passport_number,
+        "full_address": address_str,
         "postal_index": user.postal_index,
-        "email": user.email
+        "email": user.email,
     }
