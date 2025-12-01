@@ -8,7 +8,7 @@ from sqlalchemy import select
 from datetime import datetime
 from deep_translator import GoogleTranslator
 
-from src.schemas.user_schemas import UserCreateRequest, UserPetItem, ChangeEmailRequest, ChangePasswordRequest, UserResponse
+from src.schemas.user_schemas import UserCreateRequest, UserPetItem, UserResponse, UpdateProfileRequest
 from src.schemas.token_schemas import TokenResponse
 from src.db.database import get_db
 from src.db.models import Users
@@ -116,81 +116,80 @@ async def get_my_pets(db: db_dependency, user: user_dependency):
     return pet_items
 
 
-@router.put("/me/change-email", status_code=200)
-async def change_email(
-    data: ChangeEmailRequest,
-    db: db_dependency,
-    current_user: user_dependency
+@router.put("/me/update-profile", status_code=200)
+async def update_profile(
+        data: UpdateProfileRequest,
+        db: db_dependency,
+        current_user: user_dependency
 ):
     user_id = current_user.get("user_id")
     if user_id is None:
         raise HTTPException(
-            status_code=401, 
-            detail="Не вдалося виконати автентифікацію.")
-
-    user = db.query(Users).filter(Users.user_id == user_id).first()
-    if data.new_email == user.email:
-        raise HTTPException(
-            status_code=400,
-            detail="Новий email не може збігатися з поточним."
+            status_code=401,
+            detail="Не вдалося виконати автентифікацію."
         )
 
-    existing = db.query(Users).filter(Users.email == data.new_email).first()
-    if existing:
-        raise HTTPException(
-             status_code=409, 
-             detail="Цей email вже використовується іншим користувачем.")
+    user = db.query(Users).filter(Users.user_id == user_id).first()
 
+    email_changed = False
 
-    user.email = data.new_email
+    if data.new_email is not None:
+        if data.new_email != user.email:
+            existing = db.query(Users).filter(Users.email == data.new_email).first()
+            if existing:
+                raise HTTPException(
+                    status_code=409,
+                    detail="Цей email вже використовується іншим користувачем."
+                )
+
+            user.email = data.new_email
+            email_changed = True
+        else:
+            raise HTTPException(
+                status_code=400,
+                detail="Новий email не може збігатися з поточним."
+            )
+
+    if data.new_password is not None:
+        if not data.old_password:
+            raise HTTPException(
+                status_code=400,
+                detail="Для зміни пароля необхідно ввести старий пароль."
+            )
+
+        if not bcrypt_context.verify(data.old_password, user.password):
+            raise HTTPException(
+                status_code=400,
+                detail="Невірний старий пароль."
+            )
+
+        if bcrypt_context.verify(data.new_password, user.password):
+            raise HTTPException(
+                status_code=400,
+                detail="Новий пароль повинен відрізнятися від старого."
+            )
+
+        user.password = bcrypt_context.hash(data.new_password)
 
     db.commit()
     db.refresh(user)
 
-    token = create_access_token(
-        subject=user.email,
-        id=user.user_id,
-        expires_delta=timedelta(minutes=30)
-    )
-
-    return {
-        "message": "Email успішно оновлено",
-        "access_token": token,
-        "token_type": "bearer"
+    response = {
+        "message": "Дані профілю успішно оновлено",
+        "access_token": None,
+        "token_type": None
     }
 
-
-@router.put("/me/change-password", status_code=200)
-async def change_password(
-    data: ChangePasswordRequest,
-    db: db_dependency,
-    current_user: user_dependency
-):
-    user_id = current_user.get("user_id")
-    if user_id is None:
-        raise HTTPException(
-            status_code=401, 
-            detail="Не вдалося виконати автентифікацію.")
-
-    user = db.query(Users).filter(Users.user_id == user_id).first()
-
-    if not bcrypt_context.verify(data.old_password, user.password):
-        raise HTTPException(
-            status_code=400,
-            detail="Помилка при змінні пароля спробуйте новий пароль."
+    if email_changed:
+        token = create_access_token(
+            subject=user.email,
+            id=user.user_id,
+            expires_delta=timedelta(minutes=30)
         )
+        response["access_token"] = token
+        response["token_type"] = "bearer"
 
-    if bcrypt_context.verify(data.new_password, user.password):
-        raise HTTPException(
-            status_code=400,
-            detail="Помилка при змінні пароля спробуйте новий пароль."
-        )
-
-    user.password = bcrypt_context.hash(data.new_password)
-    db.commit()
-    db.refresh(user)
-
-    return {"message": "Пароль успішно оновлено."}
+    return response
 
 
 @router.get("/me", response_model=UserResponse, status_code=200)
