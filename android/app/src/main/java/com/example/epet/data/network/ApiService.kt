@@ -9,6 +9,7 @@ import com.example.epet.data.model.passport.OutputPassportDetail
 import com.example.epet.data.model.passport.OutputVaccinationsList
 import com.example.epet.data.model.service.InputExtractPet
 import com.example.epet.data.model.service.OutputExtractPet
+import com.example.epet.data.model.settings.OutputUserDetail
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.POST
@@ -57,4 +58,9 @@ interface ApiService {
     suspend fun generateReport(
         @Header("Authorization") token: String,
         @Body inputResetPassword: InputExtractPet): Response<OutputExtractPet>
+
+    /** Налаштування **/
+    @GET("users/me")
+    suspend fun userRetail(
+        @Header("Authorization") token: String): Response<OutputUserDetail>
 }

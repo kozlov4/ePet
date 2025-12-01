@@ -1,5 +1,6 @@
 package com.example.epet.ui.settings.view
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -94,7 +95,11 @@ class SettingsFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.outputUserDetail.collect { state ->
+                    val sharedPref = requireContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+                    val user_password = sharedPref.getString("user_password", null)
+
                     outputUserDetail = state
+                    outputUserDetail.password = user_password
                     updateData(state)
                 }
             }

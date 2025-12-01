@@ -8,5 +8,5 @@ data class OutputUserDetail(
     val adsress: String = "-",
     val postal_index: String = "-",
     val email: String = "-",
-    val password: String = "-"
+    var password: String? = "-"
 )

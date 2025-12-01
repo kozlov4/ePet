@@ -113,6 +113,7 @@ class LoginFragment : Fragment() {
         with(sharedPref.edit()) {
             putString("access_token", access_token)
             putString("user_name", user_name)
+            putString("user_password", et_password.text.toString())
             apply()
         }
     }
