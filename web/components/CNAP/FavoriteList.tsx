@@ -15,18 +15,18 @@ import { fetchPaginatedData } from '../../utils/api';
 export function FavoriteList() {
     const router = useRouter();
     const activeView = 'animals';
-     const currentPath = router.pathname;
+    const currentPath = router.pathname;
 
     const handleAction = (item: any, actionType: string) => {
         const id = item.pet_id || item.id;
 
         if (actionType === 'details') {
-        if (currentPath.includes('/CNAP')) {
-            router.push(`/CNAP/pet-passport/${id}`);
-        } else if (currentPath.includes('/Vet-Clinic')) {
-            router.push(`/Vet-Clinic/pet-passport/${id}`);
+            if (currentPath.includes('/CNAP')) {
+                router.push(`/CNAP/pet-passport/${id}`);
+            } else if (currentPath.includes('/Vet-Clinic')) {
+                router.push(`/Vet-Clinic/pet-passport/${id}`);
+            }
         }
-    }
     };
 
     const animalColumns: ColumnDefinition<Pet>[] = [

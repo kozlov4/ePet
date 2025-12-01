@@ -8,7 +8,7 @@ from sqlalchemy import select
 from datetime import datetime
 from deep_translator import GoogleTranslator
 
-from src.schemas.user_schemas import UserCreateRequest, UserPetItem
+from src.schemas.user_schemas import UserCreateRequest, UserPetItem, ChangeEmailRequest, ChangePasswordRequest, UserResponse
 from src.schemas.token_schemas import TokenResponse
 from src.db.database import get_db
 from src.db.models import Users
@@ -20,7 +20,6 @@ load_dotenv()
 
 
 router = APIRouter(tags=['Users 🧑‍🦱'], prefix="/users")
-
 db_dependency = Annotated[Session, Depends(get_db)]
 
 
@@ -99,7 +98,7 @@ async def get_my_pets(db: db_dependency, user: user_dependency):
     user_pets = result.scalars().all()
 
     pet_items = []
-    formatted_update_time = datetime.now().strftime('%d.%m.%Y %H:%M')
+    formatted_update_time = datetime.now().strftime('%d.%m.%Y')
 
     for pet in user_pets:
         pet_name_en = translate_text(pet.pet_name)
@@ -115,3 +114,112 @@ async def get_my_pets(db: db_dependency, user: user_dependency):
         pet_items.append(item)
 
     return pet_items
+
+
+@router.put("/me/change-email", status_code=200)
+async def change_email(
+    data: ChangeEmailRequest,
+    db: db_dependency,
+    current_user: user_dependency
+):
+    user_id = current_user.get("user_id")
+    if user_id is None:
+        raise HTTPException(
+            status_code=401, 
+            detail="Не вдалося виконати автентифікацію.")
+
+    user = db.query(Users).filter(Users.user_id == user_id).first()
+    if data.new_email == user.email:
+        raise HTTPException(
+            status_code=400,
+            detail="Новий email не може збігатися з поточним."
+        )
+
+    existing = db.query(Users).filter(Users.email == data.new_email).first()
+    if existing:
+        raise HTTPException(
+             status_code=409, 
+             detail="Цей email вже використовується іншим користувачем.")
+
+
+    user.email = data.new_email
+
+    db.commit()
+    db.refresh(user)
+
+    token = create_access_token(
+        subject=user.email,
+        id=user.user_id,
+        expires_delta=timedelta(minutes=30)
+    )
+
+    return {
+        "message": "Email успішно оновлено",
+        "access_token": token,
+        "token_type": "bearer"
+    }
+
+
+@router.put("/me/change-password", status_code=200)
+async def change_password(
+    data: ChangePasswordRequest,
+    db: db_dependency,
+    current_user: user_dependency
+):
+    user_id = current_user.get("user_id")
+    if user_id is None:
+        raise HTTPException(
+            status_code=401, 
+            detail="Не вдалося виконати автентифікацію.")
+
+    user = db.query(Users).filter(Users.user_id == user_id).first()
+
+    if not bcrypt_context.verify(data.old_password, user.password):
+        raise HTTPException(
+            status_code=400,
+            detail="Помилка при змінні пароля спробуйте новий пароль."
+        )
+
+    if bcrypt_context.verify(data.new_password, user.password):
+        raise HTTPException(
+            status_code=400,
+            detail="Помилка при змінні пароля спробуйте новий пароль."
+        )
+
+    user.password = bcrypt_context.hash(data.new_password)
+    db.commit()
+    db.refresh(user)
+
+    return {"message": "Пароль успішно оновлено."}
+
+
+@router.get("/me", response_model=UserResponse, status_code=200)
+async def get_my_profile(
+    db: db_dependency,
+    current_user: user_dependency
+):
+    user_id = current_user.get("user_id")
+    if user_id is None:
+        raise HTTPException(
+            status_code=401,
+            detail="Не вдалося виконати автентифікацію."
+        )
+
+    user = db.query(Users).filter(Users.user_id == user_id).first()
+    if not user:
+        raise HTTPException(
+            status_code=404, 
+            detail="Користувача не знайдено.")
+
+    return {
+        "user_id": user.user_id,
+        "last_name": user.last_name,
+        "first_name": user.first_name,
+        "patronymic": user.patronymic,
+        "passport_number": user.passport_number,
+        "city": user.city,
+        "street": user.street,
+        "house_number": user.house_number,
+        "postal_index": user.postal_index,
+        "email": user.email
+    }

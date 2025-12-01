@@ -152,11 +152,10 @@ export function ReusableTable({
                     whileTap={{ scale: 0.97 }}
                     transition={{ type: 'spring', stiffness: 300 }}
                 >
-                    <Link
-                        href={addNewLink}
-                        className="text-[15px] w-full md:w-auto flex-shrink-0 rounded-[10em] border-2 border-black bg-white px-10 py-3 font-semibold text-black text-center cursor-pointer transition-all duration-300 hover:bg-black hover:text-white hover:shadow-lg"
-                    >
-                        {addNewText}
+                    <Link href={addNewLink}>
+                        <div className="text-[15px] w-full md:w-auto flex-shrink-0 rounded-[10em] border-2 border-black bg-white px-10 py-3 font-semibold text-black text-center cursor-pointer transition-all duration-300 hover:bg-black hover:text-white hover:shadow-lg">
+                            {addNewText}
+                        </div>
                     </Link>
                 </motion.div>
             </motion.div>

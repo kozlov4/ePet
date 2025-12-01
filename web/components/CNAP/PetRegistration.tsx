@@ -15,6 +15,8 @@ import ReactCrop, {
 import 'react-image-crop/dist/ReactCrop.css';
 import { getCroppedImg } from '../../utils/getCroppedImg';
 
+const API_BASE = process.env.NEXT_PUBLIC_API_DOMAIN || '';
+
 type ModalState = {
     message: string;
     type: 'success' | 'error';
@@ -117,7 +119,7 @@ export default function PetRegistration() {
 
             if (rule.min >= 1 && value.length === 0) {
                 setModalState({
-                    message: 'Будь ласка, заповніть поле "${rule.label}".',
+                    message: `Будь ласка, заповніть поле "${rule.label}".`,
                     type: 'error',
                 });
                 return;
@@ -125,7 +127,7 @@ export default function PetRegistration() {
 
             if (value.length > 0 && value.length < rule.min) {
                 setModalState({
-                    message: 'Поле "${rule.label}" має містити щонайменше ${rule.min} символів.',
+                    message: `Поле "${rule.label}" має містити щонайменше ${rule.min} символів.`,
                     type: 'error',
                 });
                 return;
@@ -168,7 +170,7 @@ export default function PetRegistration() {
                 return;
             }
 
-            const response = await fetch(`https://upcity.live/pets/pets`, {
+            const response = await fetch(`${API_BASE}/pets/pets`, {
                 method: 'POST',
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -184,7 +186,10 @@ export default function PetRegistration() {
                 );
             }
 
-            if (data.detail === 'Не вдалося знайти власника з вказаним паспортом.') {
+            if (
+                data.detail ===
+                'Не вдалося знайти власника з вказаним паспортом.'
+            ) {
                 setModalState({
                     message: data.detail,
                     type: 'error',
@@ -448,8 +453,8 @@ export default function PetRegistration() {
                                     htmlFor="gender"
                                     className={`absolute left-1 top-2 z-10 origin-[0] transform bg-gray-50 px-2 text-sm text-gray-500 duration-300 ${
                                         petData.gender
-                                            ? 'scale-75 -translate-y-4' 
-                                            : 'scale-100 -translate-y-1/2 top-1/2' 
+                                            ? 'scale-75 -translate-y-4'
+                                            : 'scale-100 -translate-y-1/2 top-1/2'
                                     } peer-focus:top-2 peer-focus:-translate-y-4 peer-focus:scale-75 peer-focus:px-2 peer-focus:text-blue-600`}
                                 >
                                     Стать
@@ -546,8 +551,8 @@ interface InputFieldProps {
     value: string;
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     type?: string; // Optional type prop for input (e.g., 'date', 'text')
-    minLength?: number;    
-    maxLength?: number;    
+    minLength?: number;
+    maxLength?: number;
     required?: boolean;
 }
 
@@ -557,8 +562,8 @@ const InputField: React.FC<InputFieldProps> = ({
     value,
     onChange,
     type = 'text',
-    minLength,    
-    maxLength,    
+    minLength,
+    maxLength,
     required = false,
 }) => (
     <div className="relative">
@@ -569,9 +574,9 @@ const InputField: React.FC<InputFieldProps> = ({
             value={value}
             onChange={onChange}
             className="peer block w-full appearance-none rounded-lg border border-gray-300 bg-transparent px-2.5 pb-2.5 pt-4 text-sm text-gray-900 focus:border-blue-600 focus:outline-none focus:ring-0"
-            placeholder=" "            
-            minLength={minLength}            
-            maxLength={maxLength}            
+            placeholder=" "
+            minLength={minLength}
+            maxLength={maxLength}
             required={required}
         />
         <label

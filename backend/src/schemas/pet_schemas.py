@@ -45,7 +45,7 @@ class AnimalBase(BaseModel):
     img_url:str
     pet_name:str
     pet_name_en: str
-    date_of_birth: datetime 
+    date_of_birth: str
     breed:str
     breed_en: str
     gender:str
@@ -68,7 +68,7 @@ class AnimalForVeterinary(AnimalBase):
     owner_passport_number: str
     identifier_type:str
     identifier_type_en: str
-    date: Optional[datetime] = None 
+    date: Optional[str] = None 
     identifier_number:str
 
 class AnimaForCnap(AnimalForVeterinary):
