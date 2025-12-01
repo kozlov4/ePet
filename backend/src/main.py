@@ -11,6 +11,7 @@ app = FastAPI(
     description="API для роботи з вет клініками цнап та юзерами",
     version="1.0.0"
 )
+#app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 
 #uploads_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "uploads")
 #app.mount("/uploads", StaticFiles(directory=uploads_path), name="uploads")
