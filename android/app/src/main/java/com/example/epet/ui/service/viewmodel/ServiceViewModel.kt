@@ -16,6 +16,7 @@ class ServiceViewModel : ViewModel() {
     private val _outputGenerateReport = MutableSharedFlow<OutputExtractPet>()
     val outputGenerateReport = _outputGenerateReport.asSharedFlow()
 
+
     fun generateReport(token: String?, inputExtractPet: InputExtractPet) {
         viewModelScope.launch {
             val output = repository.generateReport(token, inputExtractPet)

@@ -2,6 +2,7 @@ package com.example.epet.ui.settings.view
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,6 +18,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.example.epet.R
+import com.example.epet.data.model.settings.InputUpdateProfile
+import com.example.epet.data.model.settings.OutputUpdateProfile
 import com.example.epet.data.model.settings.OutputUserDetail
 import com.example.epet.ui.settings.viewmodel.SettingsViewModel
 import kotlinx.coroutines.launch
@@ -84,8 +87,15 @@ class SettingsFragment : Fragment() {
                 changeToEdit()
 
             else if (bth_edit.text.toString() == "Зберегти зміни") {
-                changeToStatic()
-                updateData(outputUserDetail) // ПРОВЕРИТЬ ПОСЛЕ ПОДКЛЮЧЕНИЕ К БЕКЕНДУ
+                val sharedPref = requireContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+                val token = sharedPref.getString("access_token", null)
+                val user_password = sharedPref.getString("user_password", null)
+
+                if (outputUserDetail.email == et_email_address.text.toString() && outputUserDetail.password == et_password.text.toString()) {
+                    changeToStatic()
+                } else {
+                    viewModel.updateProfile(token, InputUpdateProfile(et_email_address.text.toString(), user_password, et_password.text.toString()))
+                }
             }
         }
     }
@@ -94,13 +104,39 @@ class SettingsFragment : Fragment() {
     private fun initStateFlow() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.outputUserDetail.collect { state ->
-                    val sharedPref = requireContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
-                    val user_password = sharedPref.getString("user_password", null)
 
-                    outputUserDetail = state
-                    outputUserDetail.password = user_password
-                    updateData(state)
+                launch {
+                    viewModel.outputUserDetail.collect { state ->
+                        val sharedPref = requireContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+                        val user_password = sharedPref.getString("user_password", null)
+
+                        outputUserDetail = state.copy(password = user_password)
+                        updateData(outputUserDetail)
+                    }
+                }
+
+                launch {
+                    viewModel.outputUpdateProfile.collect { state ->
+                        Log.d("DATAAA", state.toString())
+                        when (state) {
+                            is OutputUpdateProfile.Success -> {
+                                val sharedPref = requireContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+                                with(sharedPref.edit()) {
+                                    putString("access_token", state.access_token)
+                                    putString("user_password", et_password.text.toString())
+                                    apply()
+                                }
+
+                                viewModel.userDetail(state.access_token)
+                                tv_message.text = ""
+                                changeToStatic()
+                            }
+
+                            is OutputUpdateProfile.Error -> {
+                                tv_message.text = state.detail
+                            }
+                        }
+                    }
                 }
             }
         }

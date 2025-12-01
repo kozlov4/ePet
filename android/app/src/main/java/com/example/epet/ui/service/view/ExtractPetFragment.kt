@@ -60,7 +60,6 @@ class ExtractPetFragment : Fragment() {
         initExtractInfo()
         initButtons()
         initStateFlow()
-        initSharedFlow()
 
         setupSnapHelper()
         centerFirstCard()
@@ -114,41 +113,39 @@ class ExtractPetFragment : Fragment() {
         }
     }
 
-    /** Ініціалізація SharedFlow **/
-    private fun initSharedFlow() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                serviceViewModel.outputGenerateReport.collect { state ->
-                    if (state.detail == "Витяг створено успішно та надіслано на вашу пошту") {
-                        val action = ExtractPetFragmentDirections.actionExtractPetToMessage(
-                            tittletext = "Витяг про улюбленця",
-                            emoji = "✅",
-                            main = "Витяг сформовано!",
-                            description = "Документ про пухнастого буде надіслано вам найближчим часом на email"
-                        )
-
-                        findNavController().navigate(action)
-                    } else {
-                        val action = ExtractPetFragmentDirections.actionExtractPetToMessage(
-                            tittletext = "Витяг про улюбленця",
-                            emoji = "⛔",
-                            main = "Помилка!",
-                            description = state.detail
-                        )
-
-                        findNavController().navigate(action)
-                    }
-                }
-            }
-        }
-    }
-
     /** Ініціалізація StateFlow **/
     private fun initStateFlow() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                passportViewModel.outputPassportList.collect { state ->
-                    setupRecyclerView(state)
+
+                launch {
+                    passportViewModel.outputPassportList.collect { state ->
+                        setupRecyclerView(state)
+                    }
+                }
+
+                launch {
+                    serviceViewModel.outputGenerateReport.collect { state ->
+                        if (state.detail == "Витяг створено успішно та надіслано на вашу пошту") {
+                            val action = ExtractPetFragmentDirections.actionExtractPetToMessage(
+                                tittletext = "Витяг про улюбленця",
+                                emoji = "✅",
+                                main = "Витяг сформовано!",
+                                description = "Документ про пухнастого буде надіслано вам найближчим часом на email"
+                            )
+
+                            findNavController().navigate(action)
+                        } else {
+                            val action = ExtractPetFragmentDirections.actionExtractPetToMessage(
+                                tittletext = "Витяг про улюбленця",
+                                emoji = "⛔",
+                                main = "Помилка!",
+                                description = state.detail
+                            )
+
+                            findNavController().navigate(action)
+                        }
+                    }
                 }
             }
         }
