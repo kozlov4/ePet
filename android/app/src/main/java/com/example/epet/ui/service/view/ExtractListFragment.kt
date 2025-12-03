@@ -14,7 +14,9 @@ class ExtractListFragment : Fragment() {
 
     private lateinit var iv_to_back: ImageView
 
-    private lateinit var сс_to_documents: ConstraintLayout
+    private lateinit var cc_to_extract_pet_register: ConstraintLayout
+    private lateinit var cc_to_extract_pet_vaccinations: ConstraintLayout
+    private lateinit var cc_to_extract_pet_identifier: ConstraintLayout
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_extract_list, container, false)
@@ -29,7 +31,9 @@ class ExtractListFragment : Fragment() {
     /** Ініціалізація всіх елементів інтерфейсу **/
     private fun initViews(view: View) {
         iv_to_back = view.findViewById(R.id.iv_to_back)
-        сс_to_documents = view.findViewById(R.id.сс_to_documents)
+        cc_to_extract_pet_register = view.findViewById(R.id.cc_to_extract_pet_register)
+        cc_to_extract_pet_vaccinations = view.findViewById(R.id.cc_to_extract_pet_vaccinations)
+        cc_to_extract_pet_identifier = view.findViewById(R.id.cc_to_extract_pet_identifier)
     }
 
     /** Ініціалізація всіх кнопок інтерфейсу **/
@@ -38,8 +42,19 @@ class ExtractListFragment : Fragment() {
             findNavController().popBackStack()
         }
 
-        сс_to_documents.setOnClickListener {
-            findNavController().navigate(R.id.action_documents_to_extract_pet)
+        cc_to_extract_pet_register.setOnClickListener {
+            val action = ExtractListFragmentDirections.actionExtractListToExtractPet("Витяг з реєстру домашніх тварин")
+            findNavController().navigate(action)
+        }
+
+        cc_to_extract_pet_vaccinations.setOnClickListener {
+            val action = ExtractListFragmentDirections.actionExtractListToExtractPet("Витяг про щеплення тварини")
+            findNavController().navigate(action)
+        }
+
+        cc_to_extract_pet_identifier.setOnClickListener {
+            val action = ExtractListFragmentDirections.actionExtractListToExtractPet("Витяг за ідентифікаторами")
+            findNavController().navigate(action)
         }
     }
 }

@@ -16,10 +16,12 @@ import androidx.navigation.NavOptions
 import androidx.navigation.NavController
 import com.example.epet.ui.main.viewmodel.PassportViewModel
 import androidx.activity.viewModels
+import com.example.epet.ui.settings.viewmodel.SettingsViewModel
 
 class MainActivity : AppCompatActivity() {
 
-    val viewModel: PassportViewModel by viewModels()
+    val passportViewModel: PassportViewModel by viewModels()
+    val settingsViewModel: SettingsViewModel by viewModels()
 
     private var lastBackPressedTime = 0L
     private val backPressThreshold = 2000L
@@ -70,7 +72,8 @@ class MainActivity : AppCompatActivity() {
     private fun initStateFlow() {
         val sharedPref = getSharedPreferences("UserPrefs", MODE_PRIVATE)
         val token = sharedPref.getString("access_token", null)
-        viewModel.passportList(token)
+        passportViewModel.passportList(token)
+        settingsViewModel.userDetail(token)
     }
 
     /** Ініціалізація всіх кнопок інтерфейсу **/

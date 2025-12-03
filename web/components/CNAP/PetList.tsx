@@ -3,7 +3,7 @@
 import { useRouter } from 'next/router';
 import { useCallback } from 'react';
 
-import { ReusableTable } from '../../components/Base/ReusableTable';
+import { Table } from '../../components/ui/Table';
 import { ColumnDefinition, PaginatedResponse, Pet } from '../../types/api';
 import { fetchPaginatedData } from '../../utils/api';
 
@@ -31,7 +31,6 @@ export function PetList() {
 
         if (actionType === 'edit') {
             alert(`(MainCNAP) Редагування ID: ${id}`);
-           
         }
     };
 
@@ -118,7 +117,7 @@ export function PetList() {
     }
 
     return (
-        <ReusableTable
+        <Table
             key={activeView}
             columns={config.columns}
             title={config.title}

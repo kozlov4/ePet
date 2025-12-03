@@ -17,9 +17,10 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.example.epet.ui.main.viewmodel.PassportViewModel
 import kotlinx.coroutines.launch
 import kotlin.getValue
-import android.content.Context
 import androidx.fragment.app.activityViewModels
 import com.bumptech.glide.Glide
+import android.widget.Toast
+import android.content.Context
 
 class PassportInfoMenu(private val onClose: (() -> Unit)? = null) : BottomSheetDialogFragment() {
 
@@ -106,7 +107,7 @@ class PassportInfoMenu(private val onClose: (() -> Unit)? = null) : BottomSheetD
         tv_passport_number = view.findViewById(R.id.tv_passport_number)
         iv_copy_passport = view.findViewById(R.id.iv_copy_passport)
         tv_update_datetime = view.findViewById(R.id.tv_update_datetime)
-        tv_pet_name = view.findViewById(R.id.tv_drug_name)
+        tv_pet_name = view.findViewById(R.id.tv_pet_name)
         tv_pet_name_en = view.findViewById(R.id.tv_pet_name_en)
         iv_photo = view.findViewById(R.id.iv_photo)
         tv_date_of_birth = view.findViewById(R.id.tv_date_of_birth)
@@ -128,6 +129,11 @@ class PassportInfoMenu(private val onClose: (() -> Unit)? = null) : BottomSheetD
 
     /** Ініціалізація всіх кнопок інтерфейсу **/
     private fun initButtons() {
+        iv_copy_passport.setOnClickListener {
+            val clipboard = requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager
+            val clip = android.content.ClipData.newPlainText("label", tv_passport_number.text)
+            clipboard.setPrimaryClip(clip)
+        }
     }
 
     /** Ініціалізація StateFlow **/

@@ -4,6 +4,7 @@ import android.util.Patterns
 import com.example.epet.data.model.auth.InputRegistration
 import com.example.epet.data.model.auth.InputLogin
 import com.example.epet.data.model.auth.InputResetPassword
+import com.example.epet.data.model.settings.InputUpdateProfile
 
 object ValidationHelper {
 
@@ -34,6 +35,14 @@ object ValidationHelper {
     fun validateResetPassword(input: InputResetPassword): String? {
         return when {
             !Patterns.EMAIL_ADDRESS.matcher(input.email).matches() -> "Некоректний формат email"
+            else -> null
+        }
+    }
+
+    fun validateUpdateProfile(input: InputUpdateProfile): String? {
+        return when {
+            !Patterns.EMAIL_ADDRESS.matcher(input.new_email).matches() -> "Некоректний формат email"
+            input.new_password.length !in 8..100 -> "Пароль має містити від 8 символів"
             else -> null
         }
     }
