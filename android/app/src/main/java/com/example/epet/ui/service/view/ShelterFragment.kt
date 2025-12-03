@@ -11,7 +11,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.epet.R
-import com.example.epet.data.model.OutputPetShelter
+import com.example.epet.data.model.service.OutputPetShelter
 
 class ShelterFragment : Fragment() {
 
@@ -76,13 +76,13 @@ class ShelterFragment : Fragment() {
         val cardView = layoutInflater.inflate(R.layout.item_shelter, card_container, false)
 
         val iv_photo = cardView.findViewById<ImageView>(R.id.iv_photo)
-        val tv_name = cardView.findViewById<TextView>(R.id.tv_drug_name)
+        val tv_pet_name = cardView.findViewById<TextView>(R.id.tv_pet_name)
         val tv_sex = cardView.findViewById<TextView>(R.id.tv_sex)
         val tv_breed = cardView.findViewById<TextView>(R.id.tv_breed)
         val tv_birth_date = cardView.findViewById<TextView>(R.id.tv_breed)
 
         iv_photo.setImageResource(pet.image)
-        tv_name.text = pet.name
+        tv_pet_name.text = pet.name
         tv_sex.text = "Стать: ${pet.sex}"
         tv_breed.text = "Порода: ${pet.breed}"
         tv_birth_date.text = pet.birthDate

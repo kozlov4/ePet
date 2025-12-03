@@ -7,6 +7,11 @@ import com.example.epet.data.model.auth.OutputResetPassword
 import com.example.epet.data.model.passport.OutputPetItem
 import com.example.epet.data.model.passport.OutputPassportDetail
 import com.example.epet.data.model.passport.OutputVaccinationsList
+import com.example.epet.data.model.service.InputExtractPet
+import com.example.epet.data.model.service.OutputExtractPet
+import com.example.epet.data.model.settings.InputUpdateProfile
+import com.example.epet.data.model.settings.OutputUpdateProfile
+import com.example.epet.data.model.settings.OutputUserDetail
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.POST
@@ -14,6 +19,7 @@ import retrofit2.http.FormUrlEncoded
 import retrofit2.http.Field
 import retrofit2.http.GET
 import retrofit2.http.Header
+import retrofit2.http.PUT
 import retrofit2.http.Path
 
 interface ApiService {
@@ -48,4 +54,21 @@ interface ApiService {
     @GET("pets/{pet_id}/vaccinations")
     suspend fun vaccinationsList(
         @Path("pet_id") petId: String): Response<OutputVaccinationsList>
+
+    /** Витяги **/
+
+    @POST("pets/generate-report")
+    suspend fun generateReport(
+        @Header("Authorization") token: String,
+        @Body inputResetPassword: InputExtractPet): Response<OutputExtractPet>
+
+    /** Налаштування **/
+    @GET("users/me")
+    suspend fun userRetail(
+        @Header("Authorization") token: String): Response<OutputUserDetail>
+
+    @PUT("users/me/update-profile")
+    suspend fun updateProfile(
+        @Header("Authorization") token: String,
+        @Body inputUpdateProfile: InputUpdateProfile): Response<OutputUpdateProfile.Success>
 }

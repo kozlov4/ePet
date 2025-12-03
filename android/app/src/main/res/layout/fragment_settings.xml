@@ -46,7 +46,7 @@
         app:layout_constraintTop_toTopOf="@+id/guideline_horizontal_fields">
 
         <TextView
-            android:id="@+id/tv_surname"
+            android:id="@+id/tv_last_name"
             android:layout_width="match_parent"
             android:layout_height="45dp"
             android:paddingHorizontal="18dp"
@@ -64,7 +64,7 @@
             android:background="@color/gray_hint_text"/>
 
         <TextView
-            android:id="@+id/tv_drug_name"
+            android:id="@+id/tv_first_name"
             android:layout_width="match_parent"
             android:layout_height="45dp"
             android:paddingHorizontal="18dp"

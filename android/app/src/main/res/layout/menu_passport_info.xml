@@ -102,7 +102,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/tv_update_datetime">
 
                 <TextView
-                    android:id="@+id/tv_drug_name"
+                    android:id="@+id/tv_pet_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/e_ukraine_regular"
@@ -121,7 +121,7 @@
                     android:textColor="@android:color/black"
                     android:textSize="13sp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_drug_name" />
+                    app:layout_constraintTop_toBottomOf="@+id/tv_pet_name" />
 
                 <ImageView
                     android:id="@+id/iv_photo"
@@ -144,7 +144,7 @@
                     app:layout_constraintBottom_toBottomOf="@+id/iv_photo"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@id/guideline_vertical_center1"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_drug_name">
+                    app:layout_constraintTop_toBottomOf="@+id/tv_pet_name">
 
                     <TextView
                         android:layout_width="wrap_content"
