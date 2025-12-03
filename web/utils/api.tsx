@@ -1,6 +1,6 @@
 import { PaginatedResponse } from "../types/api";
 
-const API_BASE_URL = 'https://upcity.live';
+const API_BASE = process.env.NEXT_PUBLIC_API_DOMAIN || '';
 
 export interface FetchOptions {
     page: number;
@@ -30,7 +30,7 @@ export async function fetchPaginatedData(
         params.append(queryParamName, query);
     }
 
-    const apiUrl = `${API_BASE_URL}${endpoint}?${params.toString()}`;
+    const apiUrl = `${API_BASE}${endpoint}?${params.toString()}`;
 
     const res = await fetch(apiUrl, {
         headers: {

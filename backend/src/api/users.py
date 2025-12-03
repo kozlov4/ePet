@@ -8,7 +8,7 @@ from sqlalchemy import select
 from datetime import datetime
 from deep_translator import GoogleTranslator
 
-from src.schemas.user_schemas import UserCreateRequest, UserPetItem
+from src.schemas.user_schemas import UserCreateRequest, UserPetItem, UserResponse, UpdateProfileRequest
 from src.schemas.token_schemas import TokenResponse
 from src.db.database import get_db
 from src.db.models import Users
@@ -20,7 +20,6 @@ load_dotenv()
 
 
 router = APIRouter(tags=['Users 🧑‍🦱'], prefix="/users")
-
 db_dependency = Annotated[Session, Depends(get_db)]
 
 
@@ -115,3 +114,100 @@ async def get_my_pets(db: db_dependency, user: user_dependency):
         pet_items.append(item)
 
     return pet_items
+
+
+@router.put("/me/update-profile", status_code=200)
+async def update_profile(
+        data: UpdateProfileRequest,
+        db: db_dependency,
+        current_user: user_dependency
+):
+    user_id = current_user.get("user_id")
+    if user_id is None:
+        raise HTTPException(
+            status_code=401,
+            detail="Не вдалося виконати автентифікацію."
+        )
+
+    user = db.query(Users).filter(Users.user_id == user_id).first()
+
+    email_changed = False
+
+    if data.new_email is not None and data.new_email != user.email:
+        existing = db.query(Users).filter(Users.email == data.new_email).first()
+        if existing:
+            raise HTTPException(
+                status_code=409,
+                detail="Цей email вже використовується іншим користувачем."
+            )
+
+        user.email = data.new_email
+        email_changed = True
+
+    if data.new_password is not None:
+        if not data.old_password:
+            raise HTTPException(
+                status_code=400,
+                detail="Для зміни пароля необхідно ввести старий пароль."
+            )
+
+        if not bcrypt_context.verify(data.old_password, user.password):
+            raise HTTPException(
+                status_code=400,
+                detail="Невірний старий пароль."
+            )
+
+        if bcrypt_context.verify(data.new_password, user.password):
+            raise HTTPException(
+                status_code=400,
+                detail="Новий пароль повинен відрізнятися від старого."
+            )
+
+        user.password = bcrypt_context.hash(data.new_password)
+
+    db.commit()
+    db.refresh(user)
+
+    response = {
+        "message": "Дані профілю успішно оновлено",
+        "access_token": None,
+        "token_type": None
+    }
+
+    if email_changed:
+        token = create_access_token(
+            subject=user.email,
+            id=user.user_id,
+            expires_delta=timedelta(minutes=30)
+        )
+        response["access_token"] = token
+        response["token_type"] = "bearer"
+
+    return response
+
+
+@router.get("/me", response_model=UserResponse, status_code=200)
+async def get_my_profile(
+    db: db_dependency,
+    current_user: user_dependency
+):
+    user_id = current_user.get("user_id")
+    if user_id is None:
+        raise HTTPException(status_code=401, detail="Не вдалося виконати автентифікацію.")
+
+    user = db.query(Users).filter(Users.user_id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="Користувача не знайдено.")
+
+    address_str = f"{user.city}, {user.street} {user.house_number}"
+
+    return {
+        "user_id": user.user_id,
+        "last_name": user.last_name,
+        "first_name": user.first_name,
+        "patronymic": user.patronymic,
+        "passport_number":user.passport_number,
+        "full_address": address_str,
+        "postal_index": user.postal_index,
+        "email": user.email,
+    }

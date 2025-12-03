@@ -8,8 +8,11 @@ import {
 } from '../../types/api';
 import { fetchPaginatedData } from '../../utils/api';
 import { Table } from '../ui/Table';
+import router from 'next/router';
 
-export function Organisations() {
+const API_BASE = process.env.NEXT_PUBLIC_API_DOMAIN || '';
+
+export function Organizations() {
     const activeView = 'organizations';
     const [searchTerm, setSearchTerm] = useState('');
 
@@ -58,7 +61,7 @@ export function Organisations() {
             queryParamName: '',
             columns: orgColumns,
             title: 'Список організацій',
-            addNewLink: '/CNAP/pet-registration',
+            addNewLink: '/CNAP/organization/create',
             addNewText: 'Зареєструвати організацію',
             searchPlaceholder: 'Пошук...',
         },
@@ -93,8 +96,10 @@ export function Organisations() {
         action: 'edit' | 'delete',
     ) => {
         if (action === 'edit') {
-            // TODO: Implement edit logic
-            alert(`Editing organization: ${org.organization_name}`);
+            const dataStr = encodeURIComponent(JSON.stringify(org));
+            router.push(
+                `/CNAP/organization/${org.organization_id}?data=${dataStr}`,
+            );
         } else if (action === 'delete') {
             if (
                 window.confirm(

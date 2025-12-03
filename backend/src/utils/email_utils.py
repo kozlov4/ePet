@@ -1,9 +1,12 @@
 import os
+import base64
 from dotenv import load_dotenv
 from fastapi import HTTPException
 from sendgrid import SendGridAPIClient
-from sendgrid.helpers.mail import Mail, ReplyTo, HtmlContent
-
+from sendgrid.helpers.mail import (
+    Mail, ReplyTo, HtmlContent, Attachment, 
+    FileContent, FileName, FileType, Disposition
+)
 
 load_dotenv()
 
@@ -41,3 +44,45 @@ async def send_reset_email(to_email: str, reset_link: str):
     except Exception as e:
         print(f"Error sending email: {str(e)}")
         raise HTTPException(status_code=500, detail=f"SendGrid error: {str(e)}")
+    
+
+async def send_report_email(to_email: str, pdf_bytes: bytes, filename: str):
+    """
+    Відправка PDF файлу.
+    """
+    encoded_file = base64.b64encode(pdf_bytes).decode()
+
+    html_content = """
+    <html><body>
+        <h3>Ваш документ готовий!</h3>
+        <p>Витяг про ідентифікаційні дані сформовано.</p>
+        <p>PDF-файл знаходиться у вкладенні до цього листа.</p>
+    </body></html>
+    """
+
+    message = Mail(
+        from_email=FROM_EMAIL,
+        to_emails=to_email,
+        subject=f"Ваш документ: {filename}",
+        html_content=HtmlContent(html_content)
+    )
+    
+    attachment = Attachment()
+    attachment.file_content = FileContent(encoded_file)
+    attachment.file_type = FileType('application/pdf')
+    attachment.file_name = FileName(filename)
+    attachment.disposition = Disposition('attachment')
+    
+    message.attachment = attachment
+    message.reply_to = ReplyTo(REPLY_TO_EMAIL, "Підтримка")
+
+    _send_via_sendgrid(message)
+
+
+def _send_via_sendgrid(message):
+    try:
+        sg = SendGridAPIClient(SENDGRID_API_KEY)
+        sg.send(message)
+    except Exception as e:
+        print(f"Error sending email: {e}")
+        raise HTTPException(status_code=500, detail="Не вдалося відправити email.")

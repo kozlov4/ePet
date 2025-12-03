@@ -14,6 +14,9 @@ from typing import Annotated
 from src.api.core import  get_current_user
 from src.api.organization import   get_current_org_or_cnap
 from src.schemas.pet_schemas import AnimaForCnap, AnimaForlLintel, AnimalForVeterinary, AnimalForUser
+from src.schemas.report_schemas import ReportRequest 
+from src.utils.email_utils import send_report_email
+from src.utils.pdf_generator import create_identification_pdf, create_vaccination_pdf, create_general_pdf
 
 
 router = APIRouter(prefix="/pets", tags=["Pets 🐶"])
@@ -286,6 +289,144 @@ async def add_pet(
     }
 
 
+@router.post("/generate-report")
+async def generate_report(
+    request: ReportRequest,
+    user: Annotated[dict, Depends(get_current_user)],
+    db: Session = Depends(get_db)
+):
+    pet = db.query(Pets).options(
+        joinedload(Pets.owner),
+        joinedload(Pets.identifiers),
+        joinedload(Pets.passport),
+        joinedload(Pets.organization),
+        joinedload(Pets.vaccinations).joinedload(Vaccinations.organization)
+    ).filter(Pets.pet_id == request.pet_id).first()
+    
+    if not pet:
+        raise HTTPException(status_code=404, detail="Тваринку не знайдено")
+    if pet.user_id != user.get('user_id'):
+        raise HTTPException(status_code=403, detail="Ви не є власником")
+
+    pdf_bytes = None
+    filename = "Report.pdf"
+
+    # =========================================================
+    # ЗВІТ 1: Ідентифікація
+    # =========================================================
+    if request.name_document == "Витяг про ідентифікаційні дані тварини":
+        if not pet.identifiers:
+             raise HTTPException(status_code=400, detail="У тварини відсутній ідентифікатор")
+        
+        identifier = pet.identifiers[-1]
+        cnap_org = identifier.cnap
+        
+        pdf_context = {
+            "creation_date": datetime.now().strftime("%d.%m.%Y"),
+            "passport_id": f"{pet.passport.passport_number}" if pet.passport else "Паспорт не оформлено",
+            "pet_name": pet.pet_name,
+            "species": pet.species,
+            "breed": pet.breed,
+            "identifier_db_id": f"ID запису: {identifier.identifier_id}",
+            "identifier_number": identifier.identifier_number,
+            "identifier_type": identifier.identifier_type,
+            "identifier_date": identifier.date.strftime("%d.%m.%Y") if identifier.date else "—",
+            "cnap": {
+                "name": cnap_org.name if cnap_org else "Невідомо",
+                "city": cnap_org.city if cnap_org else "",
+                "street": cnap_org.street if cnap_org else "",
+                "phone_number": cnap_org.phone_number if cnap_org else "—"
+            }
+        }
+        pdf_bytes = create_identification_pdf(pdf_context)
+        filename = f"Identification_{pet.pet_id}.pdf"
+
+    # =========================================================
+    # ЗВІТ 2: Вакцинація
+    # =========================================================
+    elif request.name_document == "Медичний витяг про проведені щеплення тварини":
+        if not pet.vaccinations:
+            raise HTTPException(status_code=400, detail="У тварини немає записів про вакцинацію")
+
+        vac_list = []
+        for vac in pet.vaccinations:
+            vac_list.append({
+                "manufacturer": vac.manufacturer,
+                "drug_name": vac.drug_name,
+                "series_number": vac.series_number,
+                "vaccination_date": vac.vaccination_date.strftime("%d.%m.%Y"),
+                "valid_until": vac.valid_until.strftime("%d.%m.%Y"),
+                "organization_name": vac.organization.organization_name if vac.organization else "Невідомо"
+            })
+
+        pdf_context = {
+            "creation_date": datetime.now().strftime("%d.%m.%Y"),
+            "passport_id": f"{pet.passport.passport_number}" if pet.passport else "Паспорт не оформлено",
+            "pet_name": pet.pet_name,
+            "species": pet.species,
+            "breed": pet.breed,
+            "vaccinations": vac_list
+        }
+        pdf_bytes = create_vaccination_pdf(pdf_context)
+        filename = f"Vaccination_{pet.pet_id}.pdf"
+
+    # =========================================================
+    # ЗВІТ 3: Витяг з реєстру (Загальний) - НОВИЙ
+    # =========================================================
+    elif request.name_document == "Витяг з реєстру домашніх тварин":
+        
+        gender_ua = "Самець" if pet.gender in ["M", "Ч", "Male"] else "Самка"
+        steril_ua = "Стерилізований(а)" if pet.sterilization else "Не стерилізований(а)"
+        
+        owner_addr = f"{pet.owner.city}, {pet.owner.street}"
+        if pet.owner.house_number:
+            owner_addr += f", буд. {pet.owner.house_number}"
+            
+        reg_org = pet.organization
+        org_addr_str = "—"
+        if reg_org:
+             org_addr_str = f"{reg_org.city}, {reg_org.street}"
+             if reg_org.building:
+                 org_addr_str += f", {reg_org.building}"
+
+        pdf_context = {
+            "creation_date": datetime.now().strftime("%d.%m.%Y"),
+            "passport_id": f"{pet.passport.passport_number}" if pet.passport else "Паспорт не оформлено",
+            
+            "pet_name": pet.pet_name,
+            "date_of_birth": pet.date_of_birth.strftime("%d.%m.%Y"),
+            "breed": pet.breed,
+            "gender": gender_ua,
+            "color": pet.color,
+            "species": pet.species,
+            "sterilisation": steril_ua,
+            
+            "owner_name": f"{pet.owner.last_name} {pet.owner.first_name} {pet.owner.patronymic}",
+            "owner_address": owner_addr,
+            
+            "org_name": reg_org.organization_name if reg_org else "Невідомо",
+            "org_address": org_addr_str
+        }
+
+        pdf_bytes = create_general_pdf(pdf_context, pet.img_url)
+        filename = f"Registry_Extract_{pet.pet_id}.pdf"
+
+    else:
+        raise HTTPException(status_code=400, detail="Тип документа не підтримується")
+
+    try:
+        await send_report_email(
+            to_email=pet.owner.email,
+            pdf_bytes=pdf_bytes,
+            filename=filename
+        )
+    except Exception as e:
+        print(f"Error: {e}")
+        raise HTTPException(status_code=500, detail="Помилка при відправці звіту")
+
+    return {"detail": "Витяг створено успішно та надіслано на вашу пошту"}
+
+
 @router.delete("/delete/{pet_id}")
 async def delete_pet(
     pet_id: int,
@@ -293,13 +434,12 @@ async def delete_pet(
     db: db_dependency
 ):
 
-    # Определяем пользователя
     if isinstance(org_or_cnap, Organizations):
         org_type = org_or_cnap.organization_type
         org_id = org_or_cnap.organization_id
     elif isinstance(org_or_cnap, Cnap):
         org_type = "ЦНАП"
-        org_id = None  
+        org_id = None
     else:
         raise HTTPException(status_code=403, detail="Недостатньо прав")
 

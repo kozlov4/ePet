@@ -22,7 +22,7 @@ class CreateOrganization(BaseModel):
   organization_type:OrgType
   city:str = Field(min_length=3, max_length=50)
   street:str = Field(min_length=3, max_length=50)
-  building:str = Field(min_length=3, max_length=10)
+  building:str = Field(min_length=1, max_length=10)
   phone_number:str = Field(min_length=3, max_length=20)
   email:EmailStr
 
