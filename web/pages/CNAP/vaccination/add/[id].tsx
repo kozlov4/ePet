@@ -159,17 +159,15 @@ export default function AddVaccination() {
     return (
         <div className="min-h-screen bg-white">
             <div className="max-w-[830px] w-full mx-auto my-12 flex flex-col gap-8">
-                <div className="flex gap-10 items-start translate-x-[-80px]">
+                <div className="flex gap-10 items-center translate-x-[-80px]">
                     <button
                         onClick={handleBack}
                         className="rounded-full bg-black p-2 transition-[0.2s] cursor-pointer hover:bg-gray-300"
                     >
                         <ArrowBack />
                     </button>
-                    <p className="text-2xl">
-                        Щеплення
-                        <br />
-                        улюбленця
+                    <p className="text-2xl whitespace-nowrap">
+                        Щеплення улюбленця
                     </p>
                 </div>
                 <div className="flex gap-2 items-center">
