@@ -1,11 +1,10 @@
 'use client';
 
-import { useState, useEffect, useCallback, useRef } from 'react';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
 import { motion } from 'framer-motion';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useInfiniteScroll } from '../../hooks/useInfiniteScroll';
-import { ColumnDefinition, PaginatedResponse } from '../../types/api';
 
 function useDebounce(value: string, delay: number) {
     const [debouncedValue, setDebouncedValue] = useState(value);
@@ -18,7 +17,7 @@ function useDebounce(value: string, delay: number) {
     return debouncedValue;
 }
 
-export function ReusableTable({
+export function Table({
     columns,
     title,
     addNewLink,
@@ -180,7 +179,7 @@ export function ReusableTable({
                         </tr>
                     </thead>
 
-                    <tbody className="ReusableTable divide-y overflow-hidden divide-gray-300">
+                    <tbody className="Table divide-y overflow-hidden divide-gray-300">
                         {items.map((item, i) => {
                             const key =
                                 item.pet_id ?? item.organization_id ?? i;
