@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { ReactNode } from 'react';
 
 interface Owner {
     passport_number: string;
@@ -32,12 +32,13 @@ export interface PaginatedResponse<T> {
     items: T[];
 }
 
-
-
 export interface ColumnDefinition<T> {
     accessor: keyof T;
     header: string;
-    cell?: (item: T, onAction: (item: T, actionType: string) => void) => React.ReactNode;
+    cell?: (
+        item: T,
+        onAction: (item: T, actionType: string) => void,
+    ) => React.ReactNode;
 }
 
 export interface ViewConfig {
@@ -46,11 +47,9 @@ export interface ViewConfig {
     columns: ColumnDefinition<any>[];
     title: string;
     addNewLink: string;
-    addNewText: string;
+    addNewText?: string;
     searchPlaceholder: string;
 }
-
-
 
 export interface User {
     name: string;

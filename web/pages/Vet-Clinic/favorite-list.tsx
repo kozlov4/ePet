@@ -4,7 +4,7 @@ export default function FavoriteListPage() {
     return (
         <div className="flex min-h-screen w-screen flex-col bg-cover bg-center">
             <main className="flex-grow">
-                <FavoriteList />
+                <FavoriteList activeView="vetclinic" />
             </main>
         </div>
     );
