@@ -1,6 +1,6 @@
 import { useSearchParams } from 'next/navigation';
-import { NewPasswordPage } from '../components/auth/NewPassword';
-import { ResetPasswordPage } from '../components/auth/ResetPassword';
+import { NewPasswordPage } from '../components/Auth/NewPassword';
+import { ResetPasswordPage } from '../components/Auth/ResetPassword';
 
 const ResetPassword = () => {
     const searchParams = useSearchParams();
