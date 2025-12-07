@@ -2,7 +2,7 @@ from random import randint
 from enum import Enum
 from fastapi import APIRouter, Depends, HTTPException, status,  UploadFile, Form
 from sqlalchemy.orm import Session, joinedload
-from typing import Union
+from typing import Union, Optional
 from sqlalchemy.future import select
 from deep_translator import GoogleTranslator
 from datetime import datetime, date
@@ -11,10 +11,10 @@ from src.db.database import get_db
 from src.schemas.vaccination_schemas import VaccinationsListResponse
 from src.db.models import Pets, Vaccinations, Organizations, Cnap, Passports, Identifiers, Users, Extracts
 from typing import Annotated
-from src.api.core import  get_current_user
-from src.api.organization import   get_current_org_or_cnap
-from src.schemas.pet_schemas import AnimaForCnap, AnimaForlLintel, AnimalForVeterinary, AnimalForUser
-from src.schemas.report_schemas import ReportRequest 
+from src.api.core import get_current_user
+from src.api.organization import get_current_org_or_cnap
+from src.schemas.pet_schemas import AnimaForCnap, AnimaForlLintel, AnimalForVeterinary, AnimalForUser, PetUpdateRequest
+from src.schemas.report_schemas import ReportRequest
 from src.utils.email_utils import send_report_email
 from src.utils.pdf_generator import create_identification_pdf, create_vaccination_pdf, create_general_pdf
 
@@ -23,17 +23,19 @@ router = APIRouter(prefix="/pets", tags=["Pets 🐶"])
 db_dependency = Annotated[Session, Depends(get_db)]
 user_dependency = Annotated[dict, Depends(get_current_user)]
 
+
 def format_value(value, default="—"):
     if value is None or value == "":
         return default
     return str(value)
+
 
 def check_gender(gender):
     if gender == "Ж":
         return "F"
     elif gender == "Ч":
         return "M"
-    
+
 
 @router.get("/{pet_id}")
 async def get_pet_info(
@@ -58,7 +60,6 @@ async def get_pet_info(
         org_type = "ЦНАП"
     else:
         org_type = None
-
 
     user_id = user.get('user_id')
 
@@ -97,9 +98,11 @@ async def get_pet_info(
             species=pet.species,
             species_en=translation.translate(pet.species),
             organization_id=org_id,
-            date=identifier.date.strftime('%d.%m.%Y') if identifier and identifier.date else "—",
+            date=identifier.date.strftime(
+                '%d.%m.%Y') if identifier and identifier.date else "—",
             identifier_type=identifier.identifier_type if identifier else "—",
-            identifier_type_en=translation.translate(identifier.identifier_type) if identifier else "—",
+            identifier_type_en=translation.translate(
+                identifier.identifier_type) if identifier else "—",
             identifier_number=identifier.identifier_number if identifier else "—",
             owner_passport_number=pet.owner.passport_number if pet.owner else "—",
         )
@@ -120,10 +123,12 @@ async def get_pet_info(
             color_en=translation.translate(pet.color),
             species=pet.species,
             species_en=translation.translate(pet.species),
-            organization_id=org_id,               
-            date=identifier.date.strftime('%d.%m.%Y') if identifier and identifier.date else "—",
+            organization_id=org_id,
+            date=identifier.date.strftime(
+                '%d.%m.%Y') if identifier and identifier.date else "—",
             identifier_type=identifier.identifier_type if identifier else "—",
-            identifier_type_en=translation.translate(identifier.identifier_type) if identifier else "—",
+            identifier_type_en=translation.translate(
+                identifier.identifier_type) if identifier else "—",
             identifier_number=identifier.identifier_number if identifier else "—",
             owner_passport_number=pet.owner.passport_number if pet.owner else "—",
         )
@@ -145,9 +150,11 @@ async def get_pet_info(
             species=pet.species,
             species_en=translation.translate(pet.species),
             organization_id=org_id,
-            date=identifier.date.strftime('%d.%m.%Y') if identifier and identifier.date else "—",
+            date=identifier.date.strftime(
+                '%d.%m.%Y') if identifier and identifier.date else "—",
             identifier_type=identifier.identifier_type if identifier else "—",
-            identifier_type_en=translation.translate(identifier.identifier_type) if identifier else "—",
+            identifier_type_en=translation.translate(
+                identifier.identifier_type) if identifier else "—",
             identifier_number=identifier.identifier_number if identifier else "—",
             owner_passport_number=pet.owner.passport_number if pet.owner else "—",
             update_datetime=datetime.now().strftime('%d.%m.%Y')
@@ -157,10 +164,10 @@ async def get_pet_info(
         raise HTTPException(status_code=403, detail="Немає доступу")
 
 
-
 @router.get("/{pet_id}/vaccinations", response_model=VaccinationsListResponse)
 async def get_pet_vaccinations(pet_id: int, db: Session = Depends(get_db)):
-    pet = db.query(Pets).options(joinedload(Pets.passport)).filter(Pets.pet_id == pet_id).first()
+    pet = db.query(Pets).options(joinedload(Pets.passport)
+                                 ).filter(Pets.pet_id == pet_id).first()
     if not pet:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -199,15 +206,18 @@ def generate_passport_number(db) -> str:
     while True:
         number = randint(1000, 999999)
         passport_number = f"UA-AA-{number:06d}"
-        exists = db.query(Passports).filter(Passports.passport_number == passport_number).first()
+        exists = db.query(Passports).filter(
+            Passports.passport_number == passport_number).first()
         if not exists:
             return passport_number
+
 
 class GenderEnum(str, Enum):
     male = "Ч"
     female = "Ж"
 
-@router.post("/pets", status_code=201)
+
+@router.post("/", status_code=201)
 async def add_pet(
     file: UploadFile,
     pet_name: str = Form(..., min_length=3, max_length=100),
@@ -215,77 +225,224 @@ async def add_pet(
     breed: str = Form(..., min_length=3, max_length=50),
     species: str = Form(..., min_length=3, max_length=50),
     color: str = Form(..., min_length=3, max_length=30),
-    date_of_birth:date = Form(...),
-    identifier_type: str = Form(..., min_length=3, max_length=50),
-    identifier_number: str = Form(..., min_length=3, max_length=50),
-    chip_date: date = Form(...),
-    owner_passport_number: str = Form(..., min_length=3, max_length=20),
+    date_of_birth: date = Form(...),
+    identifier_type: Optional[str] = Form(None),
+    identifier_number: Optional[str] = Form(None),
+    chip_date: Optional[date] = Form(None),
+    owner_passport_number: Optional[str] = Form(None),
     db: Session = Depends(get_db),
-    cnap: Annotated[Union[Cnap, None], Depends(get_current_org_or_cnap)] = None,
+    org: Annotated[Union[Organizations, Cnap, None], Depends(
+        get_current_org_or_cnap)] = None,
 ):
-    if cnap is None:
-        raise HTTPException(status_code=403, detail="Додавати тварин можуть лише ЦНАП")
+    if org is None:
+        raise HTTPException(
+            status_code=403, detail="Недостатньо прав для додавання тварини")
 
-    user = db.query(Users).filter(Users.passport_number == owner_passport_number).first()
-    if not user:
-        raise HTTPException(status_code=404, detail="Користувача з таким паспортом не знайдено")
+    if isinstance(org, Cnap):
+        org_type = "ЦНАП"
+        org_id = org.cnap_id
+    elif isinstance(org, Organizations):
+        org_type = org.organization_type
+        org_id = org.organization_id
+    else:
+        raise HTTPException(status_code=403, detail="Недостатньо прав")
 
-    passport_number = generate_passport_number(db)
-    img_url: str = upload_image(file)  
+    if org_type == "Ветклініка":
+        raise HTTPException(
+            status_code=403, detail="Ветклініка не може додавати тварин")
+
+    user_id = None
+    passport_number = None
+
+    if org_type == "ЦНАП":
+        if not owner_passport_number:
+            raise HTTPException(
+                status_code=400, detail="Потрібно вказати паспорт власника")
+
+        user = db.query(Users).filter(
+            Users.passport_number == owner_passport_number
+        ).first()
+        if not user:
+            raise HTTPException(
+                status_code=404, detail="Користувача не знайдено")
+
+        user_id = user.user_id
+
+        if not (identifier_type and identifier_number and chip_date):
+            raise HTTPException(
+                status_code=400,
+                detail="Необхідно заповнити тип і номер чипа та дату чипування"
+            )
+
+        passport_number = generate_passport_number(db)
+
+    if org_type == "Притулок":
+        user_id = None,
+        identifier_type = None
+        identifier_number = None
+        chip_date = None
+        passport_number = None
+
+    img_url: str = upload_image(file)
 
     new_pet = Pets(
         img_url=img_url,
         pet_name=pet_name,
         species=species,
         breed=breed,
-        gender=gender.value, 
+        gender=gender.value,
         date_of_birth=date_of_birth,
         color=color,
-        organization_id=cnap.cnap_id,
-        user_id=user.user_id,
+        organization_id=org_id,
+        user_id=user_id,
         sterilization=False
     )
     db.add(new_pet)
     db.commit()
     db.refresh(new_pet)
 
-    existing_identifier = db.query(Identifiers).filter(
-        Identifiers.identifier_number == identifier_number
-    ).first()
-    if existing_identifier:
-        raise HTTPException(
-            status_code=400,
-            detail=f"Ідентифікатор з номером '{identifier_number}' вже існує"
+    if org_type == "ЦНАП":
+
+        existing_identifier = db.query(Identifiers).filter(
+            Identifiers.identifier_number == identifier_number
+        ).first()
+        if existing_identifier:
+            raise HTTPException(
+                status_code=400, detail=f"Ідентифікатор з номером '{identifier_number}' вже існує")
+
+        identifier = Identifiers(
+            identifier_number=identifier_number,
+            identifier_type=identifier_type,
+            date=chip_date,
+            cnap_id=org_id,
+            pet_id=new_pet.pet_id
+        )
+        db.add(identifier)
+        db.commit()
+
+        passport = Passports(
+            passport_number=passport_number,
+            pet_id=new_pet.pet_id,
+            cnap_id=org_id
         )
 
-    identifier = Identifiers(
-        identifier_number=identifier_number,
-        identifier_type=identifier_type,
-        date=chip_date,
-        cnap_id=cnap.cnap_id,
-        pet_id=new_pet.pet_id
-    )
-    db.add(identifier)
-    db.commit()
+        db.add(passport)
+        db.commit()
 
-    passport = Passports(
-        passport_number=passport_number,
-        pet_id=new_pet.pet_id,
-        cnap_id=cnap.cnap_id
-    )
+        response = {
+            "message": "Тварину успішно додано",
+            "pet_id": new_pet.pet_id,
+            "img_url": img_url,
+            "registered_by": org_type,
+        }
 
-    db.add(passport)
+        if org_type == "ЦНАП":
+            response["chip"] = {
+                "identifier_number": identifier.identifier_number,
+                "identifier_type": identifier.identifier_type,
+                "chip_date": chip_date.isoformat()
+            }
+
+        return response
+
+
+@router.patch("/{pet_id}/update", status_code=200)
+async def update_pet(
+    pet_id: int,
+    data: PetUpdateRequest,
+    db: db_dependency,
+    actor: Annotated[Union[Organizations, Cnap, None],
+                     Depends(get_current_org_or_cnap)]
+):
+    pet = db.query(Pets).filter(Pets.pet_id == pet_id).first()
+    if not pet:
+        raise HTTPException(status_code=404, detail="Тваринку не знайдено")
+
+    if isinstance(actor, Organizations):
+        org_type = actor.organization_type
+        org_id = actor.organization_id
+    elif isinstance(actor, Cnap):
+        org_type = "ЦНАП"
+        org_id = actor.cnap_id
+    else:
+        raise HTTPException(status_code=403, detail="Недостатньо прав")
+
+    if org_type == "Ветклініка":
+        raise HTTPException(
+            status_code=403, detail="Ветклініка не може редагувати")
+
+    if org_type == "Притулок" and pet.organization_id != org_id:
+        raise HTTPException(
+            status_code=403, detail="Притулок може редагувати лише свої тварини")
+
+    if org_type == "ЦНАП" and pet.organization_id != org_id:
+        raise HTTPException(
+            status_code=403, detail="ЦНАП може редагувати лише свої тварини")
+
+    updated_fields = []
+
+    pet_fields = [
+        "pet_name", "gender", "breed", "species",
+        "color", "date_of_birth"
+    ]
+
+    for field in pet_fields:
+        value = getattr(data, field)
+        if value is not None:
+            setattr(pet, field, value)
+            updated_fields.append(field)
+
+    identifier_fields = [
+        "identifier_type", "identifier_number", "chip_date"
+    ]
+
+    if any(getattr(data, f) is not None for f in identifier_fields):
+        if org_type != "ЦНАП":
+            raise HTTPException(
+                status_code=403, detail="Лише ЦНАП може редагувати ідентифікатор")
+
+        identifier = (
+            db.query(Identifiers)
+            .filter(Identifiers.pet_id == pet_id)
+            .first()
+        )
+
+        if not identifier:
+            raise HTTPException(
+                status_code=404, detail="У тварини немає ідентифікатора")
+
+        for field in identifier_fields:
+            value = getattr(data, field)
+            if value is not None:
+                setattr(identifier, field.replace("identifier_", ""), value)
+                updated_fields.append(field)
+
+    if data.owner_passport_number:
+        if org_type != "ЦНАП":
+            raise HTTPException(
+                status_code=403, detail="Лише ЦНАП може змінювати власника")
+
+        new_user = db.query(Users).filter(
+            Users.passport_number == data.owner_passport_number
+        ).first()
+
+        if not new_user:
+            raise HTTPException(
+                status_code=404, detail="Користувача не знайдено")
+
+        pet.user_id = new_user.user_id
+        updated_fields.append("owner_passport_number")
+
+    if not updated_fields:
+        raise HTTPException(
+            status_code=400, detail="Немає полів для оновлення")
+
     db.commit()
+    db.refresh(pet)
 
     return {
-        "message": "Тварину успішно додано",
-        "pet_id": new_pet.pet_id,
-        "img_url": img_url,
-        "chip": {
-            "identifier_number": identifier.identifier_number,
-            "identifier_type": identifier.identifier_type,
-            "chip_date": chip_date.isoformat()
-        }
+        "message": "Дані тварини оновлено",
+        "updated_fields": updated_fields
     }
 
 
@@ -302,7 +459,7 @@ async def generate_report(
         joinedload(Pets.organization),
         joinedload(Pets.vaccinations).joinedload(Vaccinations.organization)
     ).filter(Pets.pet_id == request.pet_id).first()
-    
+
     if not pet:
         raise HTTPException(status_code=404, detail="Тваринку не знайдено")
     if pet.user_id != user.get('user_id'):
@@ -316,11 +473,12 @@ async def generate_report(
     # =========================================================
     if request.name_document == "Офіційний витяг про ідентифікаційні дані тварини":
         if not pet.identifiers:
-             raise HTTPException(status_code=400, detail="У тварини відсутній ідентифікатор")
-        
+            raise HTTPException(
+                status_code=400, detail="У тварини відсутній ідентифікатор")
+
         identifier = pet.identifiers[-1]
         cnap_org = identifier.cnap
-        
+
         pdf_context = {
             "creation_date": datetime.now().strftime("%d.%m.%Y"),
             "passport_id": f"{pet.passport.passport_number}" if pet.passport else "Паспорт не оформлено",
@@ -346,7 +504,8 @@ async def generate_report(
     # =========================================================
     elif request.name_document == "Медичний витяг про проведені щеплення тварини":
         if not pet.vaccinations:
-            raise HTTPException(status_code=400, detail="У тварини немає записів про вакцинацію")
+            raise HTTPException(
+                status_code=400, detail="У тварини немає записів про вакцинацію")
 
         vac_list = []
         for vac in pet.vaccinations:
@@ -377,7 +536,7 @@ async def generate_report(
         
         gender_ua = "Самець" if pet.gender in ["M", "Ч", "Male"] else "Самка"
         steril_ua = "Стерилізований(а)" if pet.sterilization else "Не стерилізований(а)"
-        
+
         owner_addr = f"{pet.owner.city}, {pet.owner.street}"
         if pet.owner.house_number:
             owner_addr += f", буд. {pet.owner.house_number}"
@@ -398,7 +557,7 @@ async def generate_report(
         pdf_context = {
             "creation_date": datetime.now().strftime("%d.%m.%Y"),
             "passport_id": f"{pet.passport.passport_number}" if pet.passport else "Паспорт не оформлено",
-            
+
             "pet_name": pet.pet_name,
             "date_of_birth": pet.date_of_birth.strftime("%d.%m.%Y"),
             "breed": pet.breed,
@@ -406,7 +565,7 @@ async def generate_report(
             "color": pet.color,
             "species": pet.species,
             "sterilisation": steril_ua,
-            
+
             "owner_name": f"{pet.owner.last_name} {pet.owner.first_name} {pet.owner.patronymic}",
             "owner_address": owner_addr,
             
@@ -418,7 +577,8 @@ async def generate_report(
         filename = f"Registry_Extract_{pet.pet_id}.pdf"
 
     else:
-        raise HTTPException(status_code=400, detail="Тип документа не підтримується")
+        raise HTTPException(
+            status_code=400, detail="Тип документа не підтримується")
 
     try:
         await send_report_email(
@@ -437,7 +597,8 @@ async def generate_report(
 
     except Exception as e:
         print(f"Error: {e}")
-        raise HTTPException(status_code=500, detail="Помилка при відправці звіту")
+        raise HTTPException(
+            status_code=500, detail="Помилка при відправці звіту")
 
     return {"detail": "Витяг створено успішно та надіслано на вашу пошту"}
 
@@ -459,17 +620,18 @@ async def delete_pet(
         raise HTTPException(status_code=403, detail="Недостатньо прав")
 
     pet = db.query(Pets).filter(Pets.pet_id == pet_id).first()
-
     if not pet:
         raise HTTPException(status_code=404, detail="Тваринку не знайдено")
 
     if org_type == "Ветклініка":
-        raise HTTPException(status_code=403, detail="Недостатньо прав для видалення")
+        raise HTTPException(
+            status_code=403, detail="Недостатньо прав для видалення")
 
     if org_type == "Притулок" and pet.organization_id != org_id:
-        raise HTTPException(status_code=403, detail="Недостатньо прав для видалення")
+        raise HTTPException(
+            status_code=403, detail="Недостатньо прав для видалення")
 
     db.delete(pet)
     db.commit()
 
-    return {"message": "Успішне видалення"}
+    return {"message": "Тваринку успішно видалено"}
