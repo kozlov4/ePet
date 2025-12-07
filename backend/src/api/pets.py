@@ -13,7 +13,7 @@ from src.db.models import Pets, Vaccinations, Organizations, Cnap, Passports, Id
 from typing import Annotated
 from src.api.core import get_current_user
 from src.api.organization import get_current_org_or_cnap
-from src.schemas.pet_schemas import AnimaForCnap, AnimaForlLintel, AnimalForVeterinary, AnimalForUser
+from src.schemas.pet_schemas import AnimaForCnap, AnimaForlLintel, AnimalForVeterinary, AnimalForUser, PetUpdateRequest
 from src.schemas.report_schemas import ReportRequest
 from src.utils.email_utils import send_report_email
 from src.utils.pdf_generator import create_identification_pdf, create_vaccination_pdf, create_general_pdf
@@ -344,6 +344,106 @@ async def add_pet(
             }
 
         return response
+
+
+@router.patch("/{pet_id}/update", status_code=200)
+async def update_pet(
+    pet_id: int,
+    data: PetUpdateRequest,
+    db: db_dependency,
+    actor: Annotated[Union[Organizations, Cnap, None],
+                     Depends(get_current_org_or_cnap)]
+):
+    pet = db.query(Pets).filter(Pets.pet_id == pet_id).first()
+    if not pet:
+        raise HTTPException(status_code=404, detail="Тваринку не знайдено")
+
+    if isinstance(actor, Organizations):
+        org_type = actor.organization_type
+        org_id = actor.organization_id
+    elif isinstance(actor, Cnap):
+        org_type = "ЦНАП"
+        org_id = actor.cnap_id
+    else:
+        raise HTTPException(status_code=403, detail="Недостатньо прав")
+
+    if org_type == "Ветклініка":
+        raise HTTPException(
+            status_code=403, detail="Ветклініка не може редагувати")
+
+    if org_type == "Притулок" and pet.organization_id != org_id:
+        raise HTTPException(
+            status_code=403, detail="Притулок може редагувати лише свої тварини")
+
+    if org_type == "ЦНАП" and pet.organization_id != org_id:
+        raise HTTPException(
+            status_code=403, detail="ЦНАП може редагувати лише свої тварини")
+
+    updated_fields = []
+
+    pet_fields = [
+        "pet_name", "gender", "breed", "species",
+        "color", "date_of_birth"
+    ]
+
+    for field in pet_fields:
+        value = getattr(data, field)
+        if value is not None:
+            setattr(pet, field, value)
+            updated_fields.append(field)
+
+    identifier_fields = [
+        "identifier_type", "identifier_number", "chip_date"
+    ]
+
+    if any(getattr(data, f) is not None for f in identifier_fields):
+        if org_type != "ЦНАП":
+            raise HTTPException(
+                status_code=403, detail="Лише ЦНАП може редагувати ідентифікатор")
+
+        identifier = (
+            db.query(Identifiers)
+            .filter(Identifiers.pet_id == pet_id)
+            .first()
+        )
+
+        if not identifier:
+            raise HTTPException(
+                status_code=404, detail="У тварини немає ідентифікатора")
+
+        for field in identifier_fields:
+            value = getattr(data, field)
+            if value is not None:
+                setattr(identifier, field.replace("identifier_", ""), value)
+                updated_fields.append(field)
+
+    if data.owner_passport_number:
+        if org_type != "ЦНАП":
+            raise HTTPException(
+                status_code=403, detail="Лише ЦНАП може змінювати власника")
+
+        new_user = db.query(Users).filter(
+            Users.passport_number == data.owner_passport_number
+        ).first()
+
+        if not new_user:
+            raise HTTPException(
+                status_code=404, detail="Користувача не знайдено")
+
+        pet.user_id = new_user.user_id
+        updated_fields.append("owner_passport_number")
+
+    if not updated_fields:
+        raise HTTPException(
+            status_code=400, detail="Немає полів для оновлення")
+
+    db.commit()
+    db.refresh(pet)
+
+    return {
+        "message": "Дані тварини оновлено",
+        "updated_fields": updated_fields
+    }
 
 
 @router.post("/generate-report")
