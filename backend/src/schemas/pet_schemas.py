@@ -108,3 +108,7 @@ class IdentifierUpdate(BaseModel):
     identifier_type: Optional[str] = None
     identifier_number: Optional[str] = None
     chip_date: Optional[date] = None
+
+
+class OwnerUpdate(BaseModel):
+    owner_passport_number: Optional[str] = None
