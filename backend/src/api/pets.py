@@ -2,7 +2,7 @@ from random import randint
 from enum import Enum
 from fastapi import APIRouter, Depends, HTTPException, status,  UploadFile, Form
 from sqlalchemy.orm import Session, joinedload
-from typing import Union
+from typing import Union, Optional
 from sqlalchemy.future import select
 from deep_translator import GoogleTranslator
 from datetime import datetime, date
@@ -226,10 +226,10 @@ async def add_pet(
     species: str = Form(..., min_length=3, max_length=50),
     color: str = Form(..., min_length=3, max_length=30),
     date_of_birth: date = Form(...),
-    identifier_type: str | None = Form(None),
-    identifier_number: str | None = Form(None),
-    chip_date: date | None = Form(None),
-    owner_passport_number: str | None = Form(None),
+    identifier_type: Optional[str] = Form(None),
+    identifier_number: Optional[str] = Form(None),
+    chip_date: Optional[date] = Form(None),
+    owner_passport_number: Optional[str] = Form(None),
     db: Session = Depends(get_db),
     org: Annotated[Union[Organizations, Cnap, None], Depends(
         get_current_org_or_cnap)] = None,
