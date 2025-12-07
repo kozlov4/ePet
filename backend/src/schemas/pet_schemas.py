@@ -93,3 +93,12 @@ class AddPetRequest(BaseModel):
     date: date
     identifier_number: str = Field(min_length=3, max_length=50)
     owner_passport_number: str = Field(min_length=3, max_length=20)
+
+
+class PetBaseUpdate(BaseModel):
+    pet_name: Optional[str] = None
+    gender: Optional[str] = None
+    breed: Optional[str] = None
+    species: Optional[str] = None
+    color: Optional[str] = None
+    date_of_birth: Optional[date] = None
