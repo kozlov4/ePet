@@ -217,7 +217,7 @@ class GenderEnum(str, Enum):
     female = "Ж"
 
 
-@router.post("/pets", status_code=201)
+@router.post("/", status_code=201)
 async def add_pet(
     file: UploadFile,
     pet_name: str = Form(..., min_length=3, max_length=100),
@@ -226,25 +226,63 @@ async def add_pet(
     species: str = Form(..., min_length=3, max_length=50),
     color: str = Form(..., min_length=3, max_length=30),
     date_of_birth: date = Form(...),
-    identifier_type: str = Form(..., min_length=3, max_length=50),
-    identifier_number: str = Form(..., min_length=3, max_length=50),
-    chip_date: date = Form(...),
-    owner_passport_number: str = Form(..., min_length=3, max_length=20),
+    identifier_type: str | None = Form(None),
+    identifier_number: str | None = Form(None),
+    chip_date: date | None = Form(None),
+    owner_passport_number: str | None = Form(None),
     db: Session = Depends(get_db),
-    cnap: Annotated[Union[Cnap, None], Depends(
+    org: Annotated[Union[Organizations, Cnap, None], Depends(
         get_current_org_or_cnap)] = None,
 ):
-    if cnap is None:
+    if org is None:
         raise HTTPException(
-            status_code=403, detail="Додавати тварин можуть лише ЦНАП")
+            status_code=403, detail="Недостатньо прав для додавання тварини")
 
-    user = db.query(Users).filter(Users.passport_number ==
-                                  owner_passport_number).first()
-    if not user:
+    if isinstance(org, Cnap):
+        org_type = "ЦНАП"
+        org_id = org.cnap_id
+    elif isinstance(org, Organizations):
+        org_type = org.organization_type
+        org_id = org.organization_id
+    else:
+        raise HTTPException(status_code=403, detail="Недостатньо прав")
+
+    if org_type == "Ветклініка":
         raise HTTPException(
-            status_code=404, detail="Користувача з таким паспортом не знайдено")
+            status_code=403, detail="Ветклініка не може додавати тварин")
 
-    passport_number = generate_passport_number(db)
+    user_id = None
+    passport_number = None
+
+    if org_type == "ЦНАП":
+        if not owner_passport_number:
+            raise HTTPException(
+                status_code=400, detail="Потрібно вказати паспорт власника")
+
+        user = db.query(Users).filter(
+            Users.passport_number == owner_passport_number
+        ).first()
+        if not user:
+            raise HTTPException(
+                status_code=404, detail="Користувача не знайдено")
+
+        user_id = user.user_id
+
+        if not (identifier_type and identifier_number and chip_date):
+            raise HTTPException(
+                status_code=400,
+                detail="Необхідно заповнити тип і номер чипа та дату чипування"
+            )
+
+        passport_number = generate_passport_number(db)
+
+    if org_type == "Притулок":
+        user_id = None,
+        identifier_type = None
+        identifier_number = None
+        chip_date = None
+        passport_number = None
+
     img_url: str = upload_image(file)
 
     new_pet = Pets(
@@ -255,52 +293,57 @@ async def add_pet(
         gender=gender.value,
         date_of_birth=date_of_birth,
         color=color,
-        organization_id=cnap.cnap_id,
-        user_id=user.user_id,
+        organization_id=org_id,
+        user_id=user_id,
         sterilization=False
     )
     db.add(new_pet)
     db.commit()
     db.refresh(new_pet)
 
-    existing_identifier = db.query(Identifiers).filter(
-        Identifiers.identifier_number == identifier_number
-    ).first()
-    if existing_identifier:
-        raise HTTPException(
-            status_code=400,
-            detail=f"Ідентифікатор з номером '{identifier_number}' вже існує"
+    if org_type == "ЦНАП":
+
+        existing_identifier = db.query(Identifiers).filter(
+            Identifiers.identifier_number == identifier_number
+        ).first()
+        if existing_identifier:
+            raise HTTPException(
+                status_code=400, detail=f"Ідентифікатор з номером '{identifier_number}' вже існує")
+
+        identifier = Identifiers(
+            identifier_number=identifier_number,
+            identifier_type=identifier_type,
+            date=chip_date,
+            cnap_id=org_id,
+            pet_id=new_pet.pet_id
+        )
+        db.add(identifier)
+        db.commit()
+
+        passport = Passports(
+            passport_number=passport_number,
+            pet_id=new_pet.pet_id,
+            cnap_id=org_id
         )
 
-    identifier = Identifiers(
-        identifier_number=identifier_number,
-        identifier_type=identifier_type,
-        date=chip_date,
-        cnap_id=cnap.cnap_id,
-        pet_id=new_pet.pet_id
-    )
-    db.add(identifier)
-    db.commit()
+        db.add(passport)
+        db.commit()
 
-    passport = Passports(
-        passport_number=passport_number,
-        pet_id=new_pet.pet_id,
-        cnap_id=cnap.cnap_id
-    )
-
-    db.add(passport)
-    db.commit()
-
-    return {
-        "message": "Тварину успішно додано",
-        "pet_id": new_pet.pet_id,
-        "img_url": img_url,
-        "chip": {
-            "identifier_number": identifier.identifier_number,
-            "identifier_type": identifier.identifier_type,
-            "chip_date": chip_date.isoformat()
+        response = {
+            "message": "Тварину успішно додано",
+            "pet_id": new_pet.pet_id,
+            "img_url": img_url,
+            "registered_by": org_type,
         }
-    }
+
+        if org_type == "ЦНАП":
+            response["chip"] = {
+                "identifier_number": identifier.identifier_number,
+                "identifier_type": identifier.identifier_type,
+                "chip_date": chip_date.isoformat()
+            }
+
+        return response
 
 
 @router.post("/generate-report")
