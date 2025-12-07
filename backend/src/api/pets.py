@@ -274,14 +274,11 @@ async def add_pet(
                 detail="Необхідно заповнити тип і номер чипа та дату чипування"
             )
 
-        passport_number = generate_passport_number(db)
-
     if org_type == "Притулок":
         user_id = None,
         identifier_type = None
         identifier_number = None
         chip_date = None
-        passport_number = None
 
     img_url: str = upload_image(file)
 
@@ -320,12 +317,14 @@ async def add_pet(
         db.add(identifier)
         db.commit()
 
+        passport_number = generate_passport_number(db)
+
         passport = Passports(
             passport_number=passport_number,
             pet_id=new_pet.pet_id,
-            cnap_id=org_id
+            cnap_id=org_id if org_type == "ЦНАП" else None,
+            shelter_id=org_id if org_type == "Притулок" else None
         )
-
         db.add(passport)
         db.commit()
 
@@ -333,6 +332,7 @@ async def add_pet(
             "message": "Тварину успішно додано",
             "pet_id": new_pet.pet_id,
             "img_url": img_url,
+            "passport_number": passport_number,
             "registered_by": org_type,
         }
 
