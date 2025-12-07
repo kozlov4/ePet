@@ -102,3 +102,9 @@ class PetBaseUpdate(BaseModel):
     species: Optional[str] = None
     color: Optional[str] = None
     date_of_birth: Optional[date] = None
+
+
+class IdentifierUpdate(BaseModel):
+    identifier_type: Optional[str] = None
+    identifier_number: Optional[str] = None
+    chip_date: Optional[date] = None
