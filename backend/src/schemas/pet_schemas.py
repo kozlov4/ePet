@@ -95,7 +95,7 @@ class AddPetRequest(BaseModel):
     owner_passport_number: str = Field(min_length=3, max_length=20)
 
 
-class PetBaseUpdate(BaseModel):
+class PetUpdateRequest(BaseModel):
     pet_name: Optional[str] = None
     gender: Optional[str] = None
     breed: Optional[str] = None
@@ -103,12 +103,11 @@ class PetBaseUpdate(BaseModel):
     color: Optional[str] = None
     date_of_birth: Optional[date] = None
 
-
-class IdentifierUpdate(BaseModel):
     identifier_type: Optional[str] = None
     identifier_number: Optional[str] = None
     chip_date: Optional[date] = None
 
-
-class OwnerUpdate(BaseModel):
     owner_passport_number: Optional[str] = None
+
+    class Config:
+        extra = "forbid"
