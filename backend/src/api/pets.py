@@ -9,7 +9,7 @@ from datetime import datetime, date
 from src.api.image import upload_image
 from src.db.database import get_db
 from src.schemas.vaccination_schemas import VaccinationsListResponse
-from src.db.models import Pets, Vaccinations, Organizations, Cnap, Passports, Identifiers, Users
+from src.db.models import Pets, Vaccinations, Organizations, Cnap, Passports, Identifiers, Users, Extracts
 from typing import Annotated
 from src.api.core import  get_current_user
 from src.api.organization import   get_current_org_or_cnap
@@ -298,7 +298,7 @@ async def generate_report(
     pet = db.query(Pets).options(
         joinedload(Pets.owner),
         joinedload(Pets.identifiers),
-        joinedload(Pets.passport),
+        joinedload(Pets.passport).joinedload(Passports.organization),
         joinedload(Pets.organization),
         joinedload(Pets.vaccinations).joinedload(Vaccinations.organization)
     ).filter(Pets.pet_id == request.pet_id).first()
@@ -314,7 +314,7 @@ async def generate_report(
     # =========================================================
     # ЗВІТ 1: Ідентифікація
     # =========================================================
-    if request.name_document == "Витяг про ідентифікаційні дані тварини":
+    if request.name_document == "Офіційний витяг про ідентифікаційні дані тварини":
         if not pet.identifiers:
              raise HTTPException(status_code=400, detail="У тварини відсутній ідентифікатор")
         
@@ -371,9 +371,9 @@ async def generate_report(
         filename = f"Vaccination_{pet.pet_id}.pdf"
 
     # =========================================================
-    # ЗВІТ 3: Витяг з реєстру (Загальний) - НОВИЙ
+    # ЗВІТ 3: Витяг з реєстру (Загальний)
     # =========================================================
-    elif request.name_document == "Витяг з реєстру домашніх тварин":
+    if request.name_document == "Витяг з реєстру домашніх тварин":
         
         gender_ua = "Самець" if pet.gender in ["M", "Ч", "Male"] else "Самка"
         steril_ua = "Стерилізований(а)" if pet.sterilization else "Не стерилізований(а)"
@@ -382,12 +382,18 @@ async def generate_report(
         if pet.owner.house_number:
             owner_addr += f", буд. {pet.owner.house_number}"
             
-        reg_org = pet.organization
+        reg_cnap = None
+        if pet.passport and pet.passport.organization:
+            reg_cnap = pet.passport.organization
+            
         org_addr_str = "—"
-        if reg_org:
-             org_addr_str = f"{reg_org.city}, {reg_org.street}"
-             if reg_org.building:
-                 org_addr_str += f", {reg_org.building}"
+        org_name_str = "Невідомо"
+
+        if reg_cnap:
+             org_name_str = reg_cnap.name
+             org_addr_str = f"{reg_cnap.city}, {reg_cnap.street}"
+             if reg_cnap.building:
+                 org_addr_str += f", {reg_cnap.building}"
 
         pdf_context = {
             "creation_date": datetime.now().strftime("%d.%m.%Y"),
@@ -404,7 +410,7 @@ async def generate_report(
             "owner_name": f"{pet.owner.last_name} {pet.owner.first_name} {pet.owner.patronymic}",
             "owner_address": owner_addr,
             
-            "org_name": reg_org.organization_name if reg_org else "Невідомо",
+            "org_name": org_name_str,
             "org_address": org_addr_str
         }
 
@@ -420,6 +426,15 @@ async def generate_report(
             pdf_bytes=pdf_bytes,
             filename=filename
         )
+
+        new_extract = Extracts(
+            extract_date=datetime.now(),
+            extract_name=request.name_document,
+            pet_id=pet.pet_id
+        )
+        db.add(new_extract)
+        db.commit()
+
     except Exception as e:
         print(f"Error: {e}")
         raise HTTPException(status_code=500, detail="Помилка при відправці звіту")
