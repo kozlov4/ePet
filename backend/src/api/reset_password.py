@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 from src.db.database import get_db
 from typing import Annotated
 from sqlalchemy.orm import Session
-from src.api.core import  bcrypt_context
+from src.authentication.service import  bcrypt_context
 from starlette import status
 from src.schemas.password_schemas import ResetPasswordPayload
 

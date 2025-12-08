@@ -4,7 +4,7 @@ from typing import Annotated
 
 from src.db.database import get_db
 from src.db.models import Requests, Pets
-from src.api.core import get_current_user
+from src.authentication.service import get_current_user
 from src.schemas.request_schemas import RequestCreate
 
 router = APIRouter(prefix="/requests", tags=["Requests 📝"])

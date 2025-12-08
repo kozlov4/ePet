@@ -9,7 +9,7 @@ from deep_translator import GoogleTranslator
 
 from src.db.database import get_db
 from src.db.models import Users
-from src.api.core import create_access_token, bcrypt_context, get_current_user
+from src.authentication.service import create_access_token, bcrypt_context, get_current_user
 from src.users.schemas import  UserRegistrationRequest, UpdateProfileRequest
 from src.db.models import  Pets
 
