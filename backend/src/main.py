@@ -5,8 +5,9 @@ from src.users.router import router as user_router
 from src.authentication.router import router as auth_router
 from src.organizations.router import router as organization_router
 from src.pets.router import router as pets_router
-from src.api import  reset_password, forgot_password, vaccinations
-
+from src.vaccinations.router import router as vaccinations_router
+from src.requests.router import router as requests_router
+from src.password import reset_password, forgot_password
 
 app = FastAPI(
     title="ePet 🐶",
@@ -42,7 +43,8 @@ app.include_router(reset_password.router)
 app.include_router(forgot_password.router)
 app.include_router(auth_router)
 app.include_router(pets_router)
-app.include_router(vaccinations.router)
+app.include_router(vaccinations_router)
+app.include_router(requests_router)
 
 
 

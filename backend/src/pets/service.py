@@ -1,6 +1,9 @@
+import os
 from datetime import datetime
 from random import randint
-
+import shutil
+import uuid
+from dotenv import load_dotenv
 from deep_translator import GoogleTranslator
 from fastapi import  Depends, HTTPException,  UploadFile
 from fastapi.encoders import jsonable_encoder
@@ -11,7 +14,6 @@ from typing import Union
 from starlette import status
 from src.utils.email_utils import send_report_email
 from src.utils.pdf_generator import create_identification_pdf, create_vaccination_pdf, create_general_pdf
-from src.api.image import upload_image
 from src.db.database import get_db
 from src.db.models import Pets, Organizations, Cnap, Passports, Identifiers, Users
 from typing import Annotated
@@ -20,8 +22,27 @@ from src.pets.schemas import PetCreateForm, ReadPetForCnap, ReadPetForLintel, Re
 from src.organizations.service import get_current_org_or_cnap
 from src.db.models import Vaccinations, Extracts
 
+load_dotenv()
+
+UPLOAD_DIR = f"{os.getenv('UPLOAD_DIR')}"
+BASE_URL = f"{os.getenv('BASE_URL')}"
+
 db_dependency = Annotated[Session, Depends(get_db)]
 user_dependency = Annotated[dict, Depends(get_current_user)]
+
+
+def upload_image(file: UploadFile) -> str:
+    if not file.filename.lower().endswith((".jpg", ".jpeg", ".png", ".gif")):
+        raise HTTPException(status_code=400, detail="Непідтримуваний формат файлу")
+
+    filename = f"{uuid.uuid4().hex}_{file.filename}"
+    filepath = os.path.join(UPLOAD_DIR, filename)
+
+    with open(filepath, "wb") as buffer:
+        shutil.copyfileobj(file.file, buffer)
+
+    return f"{BASE_URL}/{filename}"
+
 
 
 def format_value(value, default="—"):

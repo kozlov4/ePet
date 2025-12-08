@@ -7,16 +7,14 @@ from typing import Annotated
 from sqlalchemy.orm import Session
 from src.authentication.service import  bcrypt_context
 from starlette import status
-from src.schemas.password_schemas import ResetPasswordPayload
-
+from src.password.schemas import ResetPasswordPayload
 
 router = APIRouter(tags=['Reset password 🔄'])
 db_dependency = Annotated[Session, Depends(get_db)]
 
 
-
 @router.post("/reset-password/")
-async def reset_password(payload: ResetPasswordPayload, db: db_dependency):
+async def reset_password_route(payload: ResetPasswordPayload, db: db_dependency):
     user = db.query(Users).filter(Users.reset_token == payload.token).first()
 
     token_expired = True
