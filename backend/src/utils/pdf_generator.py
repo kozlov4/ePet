@@ -58,7 +58,7 @@ EXTRACT_TEMPLATE = """
     <div class="mont-9">Тел: {{ cnap.phone_number }}</div>
     <div class="signature-block">
         {% if signature_b64 %}<img src="data:image/png;base64,{{ signature_b64 }}" class="signature-img">{% else %}<div style="height: 60px;"></div>{% endif %}
-        <div style="border-top: 1px solid #ccc; display: inline-block; padding-top: 5px;">Затверджено гендиректором «єУлюбленець» Корякін З.П.</div>
+        <div style="border-top: 1px solid #ccc; display: inline-block; padding-top: 5px;">Затверджено гендиректором «єУлюбленець»</div>
     </div>
 </body>
 </html>
@@ -125,7 +125,7 @@ VACCINATION_TEMPLATE = """
 
     <div class="signature-block">
         {% if signature_b64 %}<img src="data:image/png;base64,{{ signature_b64 }}" class="signature-img">{% else %}<div style="height: 60px;"></div>{% endif %}
-        <div style="border-top: 1px solid #ccc; display: inline-block; padding-top: 5px;">Затверджено гендиректором «єУлюбленець» Корякін З.П.</div>
+        <div style="border-top: 1px solid #ccc; display: inline-block; padding-top: 5px;">Затверджено гендиректором «єУлюбленець»</div>
     </div>
 </body>
 </html>
@@ -256,7 +256,7 @@ GENERAL_TEMPLATE = """
             <div style="height: 60px;"></div>
         {% endif %}
         <div style="border-top: 1px solid #ccc; display: inline-block; padding-top: 5px;">
-            Затверджено гендиректором «єУлюбленець» Корякін З.П.
+            Затверджено гендиректором «єУлюбленець»
         </div>
     </div>
 

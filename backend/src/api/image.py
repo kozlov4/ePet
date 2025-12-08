@@ -1,11 +1,7 @@
 import os
 import shutil
 import uuid
-from datetime import datetime
-from src.db.database import get_db
 from fastapi import HTTPException, UploadFile
-from sqlalchemy.orm import Session
-from fastapi.responses import JSONResponse
 from dotenv import load_dotenv
 
 load_dotenv()
