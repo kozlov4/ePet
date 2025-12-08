@@ -137,10 +137,7 @@ class Pets(Base, TableNameMixin):
 
 class Requests(Base, TableNameMixin):
     request_id: Mapped[int_pk]
-    status: Mapped[str_50]
-    request_type: Mapped[str_50]
     creation_date: Mapped[datetime_created]
-    update_date: Mapped[datetime_updated]
     organization_id: Mapped[int] = mapped_column(ForeignKey('organizations.organization_id'))
     user_id: Mapped[int] = mapped_column(ForeignKey('users.user_id'))
     pet_id: Mapped[int] = mapped_column(ForeignKey('pets.pet_id'))

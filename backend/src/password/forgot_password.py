@@ -7,9 +7,7 @@ from sqlalchemy.orm import Session
 from src.db.database import get_db
 from src.db.models import Users
 from src.utils.email_utils import send_reset_email
-from src.schemas.password_schemas import ForgotPasswordPayload
-
-
+from src.password.schemas import ForgotPasswordPayload
 router = APIRouter(tags=['Forgot password 🤔'])
 
 load_dotenv()
@@ -20,7 +18,7 @@ db_dependency = Annotated[Session, Depends(get_db)]
 
 
 @router.post("/forgot-password/")
-async def forgot_password(payload: ForgotPasswordPayload, db: db_dependency):
+async def forgot_password_route(payload: ForgotPasswordPayload, db: db_dependency):
     user = db.query(Users).filter(Users.email == payload.email).first()
     
     if user:
