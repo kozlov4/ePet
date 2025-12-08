@@ -1,4 +1,6 @@
 import re
+from typing import Optional
+
 from pydantic import BaseModel, Field, EmailStr, field_validator
 from enum import Enum
 
@@ -56,6 +58,9 @@ class UserRegistrationRequest(BaseModel):
     email: EmailStr = Field(min_length=5, max_length=100)
     password: str = Field(min_length=8, max_length=100)
 
+    class Config:
+        from_attributes = True
+
     @field_validator("last_name", "first_name", "patronymic")
     @classmethod
     def validate_ukrainian_names(cls, v: str):
@@ -102,3 +107,46 @@ class UserRegistrationRequest(BaseModel):
             raise ValueError("Номер будинку містить недопустимі символи")
 
         return v.upper()
+
+
+class UserReadPersonalInfo(BaseModel):
+    user_id: int
+    last_name: str
+    first_name: str
+    patronymic: str
+    passport_number: str
+    full_address: str
+    postal_index: str
+    email: str
+
+    class Config:
+        from_attributes = True
+
+
+class UserPetItem(BaseModel):
+    pet_id: str
+    img_url:str
+    passport_number: str
+    pet_name_ua: str
+    pet_name_en: str
+    date_of_birth: str
+    update_datetime: str
+
+
+class UpdateProfileRequest(BaseModel):
+    new_email: Optional[EmailStr] = Field(None, min_length=1, max_length=100)
+    old_password: Optional[str] = Field(None, min_length=8, max_length=100)
+    new_password: Optional[str] = Field(None, min_length=8, max_length=100)
+
+    @field_validator("new_password")
+    @classmethod
+    def validate_password_strength(cls, v: str):
+        if not any(char.isdigit() for char in v):
+            raise ValueError("Пароль повинен містити хоча б одну цифру")
+        if not any(char.isupper() for char in v):
+            raise ValueError("Пароль повинен містити хоча б одну велику літеру")
+        if not any(char.islower() for char in v):
+            raise ValueError("Пароль повинен містити хоча б одну малу літеру")
+        if not any(char in "!@#$%^&*()_+" for char in v):
+            raise ValueError("Пароль повинен містити спеціальний символ (!@#$%^&*()_+)")
+        return v
