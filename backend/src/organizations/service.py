@@ -2,49 +2,41 @@ from typing import Annotated, Optional, Union, List
 import math
 from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session, joinedload
-from sqlalchemy import func
+from sqlalchemy import func, or_
 from src.db.database import get_db
 from src.db.models import Organizations, Pets, Passports, Cnap
-from src.authentication.service import  get_current_user
-from src.schemas.pet_schemas import AnimalForOrgResponse, OwnerForOrgResponse, PaginatedAnimalResponse, GetOrgInfo
-from src.schemas.organization_schemas import OrganizationsForCnap, CreateOrganization, UpdateOrganization
-from src.authentication.service import bcrypt_context
+from src.authentication.service import get_current_user, bcrypt_context
+from src.organizations.schemas import OwnerForOrgResponse, AnimalForOrgResponse, PaginatedAnimalResponse, \
+    ReadPersonalInformationByOrg, ReadAllOrganizations, CreateNewOrganization, UpdateOrganization
 
-
-router = APIRouter(tags=['Organizations 🏢'], prefix="/organizations")
 db_dependency = Annotated[Session, Depends(get_db)]
 user_dependency = Annotated[dict, Depends(get_current_user)]
 
-
-
 async def get_current_org_or_cnap(
-    user: user_dependency, 
-    db: db_dependency
+        user: user_dependency,
+        db: db_dependency
 ) -> Optional[Union[Organizations, Cnap]]:
-
     email = user.get("username")
     if not email:
         return None
 
     org = db.query(Organizations).filter(Organizations.email == email).first()
     if org:
-        return org  
+        return org
 
     cnap = db.query(Cnap).filter(Cnap.email == email).first()
     if cnap:
-        return cnap  
+        return cnap
 
-        
     return None
 
-@router.get('/animals/', response_model=PaginatedAnimalResponse)
-async def get_animals_for_org(
-    db: db_dependency,
-    org_or_cnap: Annotated[Union[Organizations, Cnap], Depends(get_current_org_or_cnap)],
-    page: Annotated[int, Query(ge=1, description="Номер сторінки")] = 1,
-    size: Annotated[int, Query(ge=1, le=100, description="Кількість записів на сторінці")] = 6,
-    animal_passport_number: Optional[str] = Query(None, description="Номер паспорта тварини для пошуку")
-):
+#TODO Видалити paginated
+def read_all_animals_service(
+        db:Session,
+        org_or_cnap: Annotated[Union[Organizations, Cnap], Depends(get_current_org_or_cnap)],
+        page:int,
+        size:int,
+        animal_passport_number:str):
     if isinstance(org_or_cnap, Organizations):
         org_type = org_or_cnap.organization_type
         org_id = org_or_cnap.organization_id
@@ -70,11 +62,11 @@ async def get_animals_for_org(
 
     if org_type in ["ЦНАП", "Ветклініка"]:
         base_query = (
-        base_query
-        .join(Pets.organization)
-        .filter(Organizations.organization_type != "Притулок")
-    )
-        
+            base_query
+            .join(Pets.organization)
+            .filter(Organizations.organization_type != "Притулок")
+        )
+
     total_items = base_query.with_entities(func.count(Pets.pet_id)).scalar()
 
     animals_from_db = (
@@ -116,15 +108,10 @@ async def get_animals_for_org(
     )
 
 
-
-@router.get("/info/", response_model=GetOrgInfo)
-async def get_info(
-    db: db_dependency,
-    org_user: Annotated[Optional[Union[Organizations, Cnap]], Depends(get_current_org_or_cnap)]
-):
-    if isinstance(org_user, Organizations):
-        org = org_user
-        return GetOrgInfo(
+def read_personal_info_service(org_or_cnap:Annotated[Optional[Union[Organizations, Cnap]], Depends(get_current_org_or_cnap)]):
+    if isinstance(org_or_cnap, Organizations):
+        org = org_or_cnap
+        return ReadPersonalInformationByOrg(
             organization_name=org.organization_name,
             organization_type=org.organization_type,
             city=org.city,
@@ -133,11 +120,11 @@ async def get_info(
             phone_number=org.phone_number,
             email=org.email
         )
-    if isinstance(org_user, Cnap):
-        cnap = org_user
-        return GetOrgInfo(
+    if isinstance(org_or_cnap, Cnap):
+        cnap = org_or_cnap
+        return ReadPersonalInformationByOrg(
             organization_name=cnap.name,
-            organization_type="ЦНАП",
+            organization_type="Центр надання адміністративних послуг (ЦНАП)",
             city=cnap.city,
             street=cnap.street,
             building=cnap.building,
@@ -148,17 +135,13 @@ async def get_info(
     raise HTTPException(403, "Доступ тільки для організацій або ЦНАП.")
 
 
-@router.get("/organizations/", response_model=List[OrganizationsForCnap])
-async def get_all_organizations(
-    db: db_dependency,
-    cnap: Annotated[Cnap, Depends(get_current_org_or_cnap)]
-):
+def read_all_organizations_service(db:Session, cnap:Annotated[Cnap, Depends(get_current_org_or_cnap)]):
     if cnap is None:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="only cnap can gets organizations")
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="У вас немає доступу")
     orgs = db.query(Organizations).filter(Organizations.cnap_id == cnap.cnap_id).all()
 
     return [
-        OrganizationsForCnap(
+        ReadAllOrganizations(
             organization_id=o.organization_id,
             organization_name=o.organization_name,
             organization_type=o.organization_type,
@@ -171,26 +154,15 @@ async def get_all_organizations(
         for o in orgs
     ]
 
-@router.post("/create/", status_code=201)
-async def create_new_organization(
-    db: db_dependency,
-    data: CreateOrganization,
-    org_or_cnap: Annotated[Union[Cnap, None], Depends(get_current_org_or_cnap)] = None
-):
 
-    if isinstance(org_or_cnap, Organizations):
-        raise HTTPException(status_code=403, detail="Доступ тільки для ЦНАП.")
+def create_new_organization_service(db:Session, data: CreateNewOrganization, org_or_cnap:Annotated[Union[Cnap, None], Depends(get_current_org_or_cnap)] = None):
+    if not isinstance(org_or_cnap, Cnap):
+        raise HTTPException(
+            status_code=403,
+            detail="Додавати організації може лише ЦНАП"
+        )
 
-    elif isinstance(org_or_cnap, Cnap):
-        org_type = "ЦНАП"
-        is_cnap = True
-    else:
-        raise HTTPException(status_code=403, detail="Доступ тільки для організацій або ЦНАП.")
-
-    if org_type != "ЦНАП":
-        raise HTTPException(status_code=403, detail="Додавати організції можуть лише ЦНАПи")
-
-    org_default_password = bcrypt_context.hash("test12345")
+    org_default_password = bcrypt_context.hash("Test12345$")
 
     new_org = Organizations(
         organization_name=data.organization_name,
@@ -204,43 +176,46 @@ async def create_new_organization(
         cnap_id=org_or_cnap.cnap_id
     )
 
-    existing_email = db.query(Organizations).filter(Organizations.email == new_org.email).first()
+    existing_email = db.query(Organizations).filter(or_(Organizations.email == new_org.email,
+                    Organizations.organization_name == new_org.organization_name)).first()
     if existing_email:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
-            detail="Цю пошту використовувати заборонено"
+            detail="Ці дані для реєстрації нової організації заборонено"
         )
 
     db.add(new_org)
     db.commit()
     db.refresh(new_org)
 
-    return {"message": "Організацію успішно додано"}
+    return {"message": "Організацію успішно додано", "new_organizations": new_org}
 
 
-@router.put("/organizations/{org_id}")
-async def update_organization(
-    db: db_dependency,
+def update_organization_service(
+    db: Session,
     org_id: int,
     upd_data: UpdateOrganization,
-    org_or_cnap: Annotated[Union[Cnap, None], Depends(get_current_org_or_cnap)] = None,
+    org_or_cnap: Annotated[Union[Cnap, None], Depends(get_current_org_or_cnap)] = None
 ):
+    cur_org = (
+        db.query(Organizations)
+        .filter(Organizations.organization_id == org_id)
+        .first()
+    )
+    if not cur_org:
+        raise HTTPException(status_code=404, detail="Організацію не знайдено")
 
-    cur_org = db.query(Organizations).filter(Organizations.organization_id == org_id).first()
+    if not isinstance(org_or_cnap, Cnap):
+        raise HTTPException(
+            status_code=403,
+            detail="Оновлювати організації може лише ЦНАП"
+        )
 
-    if cur_org is None:
-        raise HTTPException(status_code=403, detail="Організацію не знайдено")
-
-    if isinstance(org_or_cnap, Organizations):
-        raise HTTPException(status_code=403, detail="Доступ тільки для ЦНАП.")
-
-    elif isinstance(org_or_cnap, Cnap):
-        org_type = "ЦНАП"
-    else:
-        raise HTTPException(status_code=403, detail="Доступ тільки для організацій або ЦНАП.")
-
-    if org_type != "ЦНАП":
-        raise HTTPException(status_code=403, detail="Додавати організції можуть лише ЦНАПи")
+    if cur_org.cnap_id != org_or_cnap.cnap_id:
+        raise HTTPException(
+            status_code=403,
+            detail="Ви не маєте право змінювати чужі організації"
+        )
 
     existing_email = (
         db.query(Organizations)
@@ -248,7 +223,6 @@ async def update_organization(
         .filter(Organizations.organization_id != cur_org.organization_id)
         .first()
     )
-
     if existing_email:
         raise HTTPException(status_code=409, detail="Цю пошту використовувати заборонено")
 
@@ -262,16 +236,11 @@ async def update_organization(
 
     db.commit()
     db.refresh(cur_org)
+
     return cur_org
 
-
-@router.delete("/organizations/{org_id}", status_code=204)
-async def delete_organization(
-    db: db_dependency,
-    org_id: int,
-    org_or_cnap: Annotated[Union[Cnap, None], Depends(get_current_org_or_cnap)] = None,
-):
-
+#TODO Видаляти поля в таблицях де є інформація з цією організацією
+def delete_organization_service(db:Session, org_id: int, org_or_cnap: Annotated[Union[Cnap, None], Depends(get_current_org_or_cnap)] = None):
     cur_org = db.query(Organizations).filter(Organizations.organization_id == org_id).first()
     if cur_org is None:
         raise HTTPException(status_code=404, detail="Організацію не знайдено")
@@ -286,4 +255,3 @@ async def delete_organization(
     db.commit()
 
     return
-
