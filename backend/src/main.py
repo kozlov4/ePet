@@ -1,9 +1,8 @@
-import os
-
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
-from src.api import users, organization, reset_password, forgot_password, login, pets, vaccinations
+from src.users.router import router as user_router
+from src.api import  organization, reset_password, forgot_password, login, pets, vaccinations
 
 
 app = FastAPI(
@@ -16,8 +15,8 @@ app = FastAPI(
 #uploads_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "uploads")
 #app.mount("/uploads", StaticFiles(directory=uploads_path), name="uploads")
 
-app.mount("/uploads", StaticFiles(directory="/root/project/uploads"), name="uploads")
-#app.mount("/uploads", StaticFiles(directory="/home/hapy/uploads"), name="uploads")
+#app.mount("/uploads", StaticFiles(directory="/root/project/uploads"), name="uploads")
+app.mount("/uploads", StaticFiles(directory="/home/hapy/uploads"), name="uploads")
 
 origins = [
     "http://localhost:3000", 
@@ -34,7 +33,7 @@ app.add_middleware(
     allow_headers=["*"],       
 )
 
-app.include_router(users.router)
+app.include_router(user_router)
 app.include_router(organization.router)
 app.include_router(reset_password.router)
 app.include_router(forgot_password.router)

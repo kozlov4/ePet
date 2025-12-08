@@ -1,67 +1,39 @@
-from datetime import  timedelta
+from datetime import timedelta
 from typing import Annotated, List
 from dotenv import load_dotenv
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session, joinedload
-from sqlalchemy import select
+from sqlalchemy import select, or_
 from datetime import datetime
 from deep_translator import GoogleTranslator
 
-from src.schemas.user_schemas import UserCreateRequest, UserPetItem, UserResponse, UpdateProfileRequest
+from src.schemas.user_schemas import  UserPetItem, UserResponse, UpdateProfileRequest
 from src.schemas.token_schemas import TokenResponse
 from src.db.database import get_db
 from src.db.models import Users
 from src.api.core import create_access_token, bcrypt_context, get_current_user
 from src.db.models import Pets
+from src.users.schemas import  UserRegistrationRequest
+from src.users.service import register_user_service
 
 
 load_dotenv()
 
-
 router = APIRouter(tags=['Users 🧑‍🦱'], prefix="/users")
 db_dependency = Annotated[Session, Depends(get_db)]
-
+user_dependency = Annotated[dict, Depends(get_current_user)]
 
 
 @router.post('/register/', status_code=status.HTTP_201_CREATED, response_model=TokenResponse)
-async def create_user(db: db_dependency, create_user_request: UserCreateRequest):
-    existing_user = db.query(Users).filter(Users.email == create_user_request.email).first()
+async def register_user_route(db: db_dependency, create_user_request: UserRegistrationRequest):
+    existing_user = db.query(Users).filter(or_(Users.email == create_user_request.email, Users.passport_number == create_user_request.passport_number)).first()
     if existing_user:
-        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Email already in use.")
-
-    create_user_model = Users(
-        last_name=create_user_request.last_name,
-        first_name=create_user_request.first_name,
-        patronymic=create_user_request.patronymic,
-        passport_number=create_user_request.passport_number,
-        city=create_user_request.city,
-        street=create_user_request.street,
-        house_number=create_user_request.house_number,
-        postal_index=create_user_request.postal_index,
-        email=create_user_request.email,
-        password=bcrypt_context.hash(create_user_request.password)
-    )
-    
-    db.add(create_user_model)
-    db.commit()
-    db.refresh(create_user_model)
-
-    token = create_access_token(
-        subject=create_user_model.email,
-        id=create_user_model.user_id,
-        expires_delta=timedelta(minutes=30)
-    )
-
-    return {
-        "access_token": token, 
-        "token_type": "bearer", 
-        "user_name": create_user_model.first_name
-    }
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Не вдалося створити обліковий запис. Спробуйте пізніше або використовуйте іншу електронну адресу.")
+    return  register_user_service(db=db, create_user_request=create_user_request)
 
 
 
-user_dependency = Annotated[dict, Depends(get_current_user)]
 
 def format_value(value, default="—"):
     if value is None or value == "":
@@ -104,7 +76,7 @@ async def get_my_pets(db: db_dependency, user: user_dependency):
         pet_name_en = translate_text(pet.pet_name)
         item = {
             "pet_id": str(pet.pet_id),
-            "img_url":str(pet.img_url),
+            "img_url": str(pet.img_url),
             "passport_number": format_value(pet.passport.passport_number if pet.passport else None),
             "pet_name_ua": format_value(pet.pet_name),
             "pet_name_en": format_value(pet_name_en),
@@ -188,8 +160,8 @@ async def update_profile(
 
 @router.get("/me", response_model=UserResponse, status_code=200)
 async def get_my_profile(
-    db: db_dependency,
-    current_user: user_dependency
+        db: db_dependency,
+        current_user: user_dependency
 ):
     user_id = current_user.get("user_id")
     if user_id is None:
@@ -206,7 +178,7 @@ async def get_my_profile(
         "last_name": user.last_name,
         "first_name": user.first_name,
         "patronymic": user.patronymic,
-        "passport_number":user.passport_number,
+        "passport_number": user.passport_number,
         "full_address": address_str,
         "postal_index": user.postal_index,
         "email": user.email,
