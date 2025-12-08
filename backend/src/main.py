@@ -1,9 +1,8 @@
-import os
-
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
-from src.api import users, organization, reset_password, forgot_password, login, pets, vaccinations
+from src.users.router import router as user_router
+from src.api import  organization, reset_password, forgot_password, login, pets, vaccinations
 
 
 app = FastAPI(
@@ -34,7 +33,7 @@ app.add_middleware(
     allow_headers=["*"],       
 )
 
-app.include_router(users.router)
+app.include_router(user_router)
 app.include_router(organization.router)
 app.include_router(reset_password.router)
 app.include_router(forgot_password.router)
