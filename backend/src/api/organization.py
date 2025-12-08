@@ -5,10 +5,10 @@ from sqlalchemy.orm import Session, joinedload
 from sqlalchemy import func
 from src.db.database import get_db
 from src.db.models import Organizations, Pets, Passports, Cnap
-from src.api.core import  get_current_user
+from src.authentication.service import  get_current_user
 from src.schemas.pet_schemas import AnimalForOrgResponse, OwnerForOrgResponse, PaginatedAnimalResponse, GetOrgInfo
 from src.schemas.organization_schemas import OrganizationsForCnap, CreateOrganization, UpdateOrganization
-from src.api.core import bcrypt_context
+from src.authentication.service import bcrypt_context
 
 
 router = APIRouter(tags=['Organizations 🏢'], prefix="/organizations")

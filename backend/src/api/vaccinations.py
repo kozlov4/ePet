@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session, joinedload
 from src.db.database import get_db
 from src.schemas.vaccination_schemas import VaccinationItem
 from src.db.models import Pets, Vaccinations, Organizations, Cnap
-from src.api.core import  get_current_user
+from src.authentication.service import  get_current_user
 from src.api.organization import   get_current_org_or_cnap
 
 router = APIRouter(tags=['Vaccinations 💉'], prefix="/vaccinations")
