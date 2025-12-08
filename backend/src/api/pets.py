@@ -12,7 +12,7 @@ from src.schemas.vaccination_schemas import VaccinationsListResponse
 from src.db.models import Pets, Vaccinations, Organizations, Cnap, Passports, Identifiers, Users, Extracts
 from typing import Annotated
 from src.authentication.service import get_current_user
-from src.api.organization import get_current_org_or_cnap
+from src.organizations.service import get_current_org_or_cnap
 from src.schemas.pet_schemas import AnimaForCnap, AnimaForlLintel, AnimalForVeterinary, AnimalForUser, PetUpdateRequest
 from src.schemas.report_schemas import ReportRequest
 from src.utils.email_utils import send_report_email

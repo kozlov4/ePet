@@ -1,16 +1,11 @@
-from datetime import timedelta
 from typing import Annotated, List
 from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy.orm import Session, joinedload
-from sqlalchemy import select, or_
-from datetime import datetime
-from deep_translator import GoogleTranslator
-from sqlalchemy.testing.pickleable import User
+from sqlalchemy.orm import Session
+from sqlalchemy import  or_
 
 from src.db.database import get_db
 from src.db.models import Users
-from src.authentication.service import create_access_token, bcrypt_context, get_current_user
-from src.db.models import Pets
+from src.authentication.service import  get_current_user
 from src.users.schemas import  UserRegistrationRequest, UserReadPersonalInfo, UserPetItem, UpdateProfileRequest
 from src.users.service import register_user_service, get_my_personal_info_service, get_all_my_pets_service, update_my_profile_service
 from src.authentication.schemas import TokenResponse
