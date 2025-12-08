@@ -1,11 +1,11 @@
 from typing import Annotated, Union
-from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy.orm import Session, joinedload
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.orm import Session
 from src.db.database import get_db
-from src.schemas.vaccination_schemas import VaccinationItem
 from src.db.models import Pets, Vaccinations, Organizations, Cnap
 from src.authentication.service import  get_current_user
 from src.organizations.service import   get_current_org_or_cnap
+from src.vaccinations.schemas import VaccinationItem
 
 router = APIRouter(tags=['Vaccinations 💉'], prefix="/vaccinations")
 db_dependency = Annotated[Session, Depends(get_db)]

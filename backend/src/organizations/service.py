@@ -3,6 +3,8 @@ import math
 from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session, joinedload
 from sqlalchemy import func, or_
+from sqlalchemy.testing.pickleable import User
+
 from src.db.database import get_db
 from src.db.models import Organizations, Pets, Passports, Cnap
 from src.authentication.service import get_current_user, bcrypt_context
@@ -255,3 +257,6 @@ def delete_organization_service(db:Session, org_id: int, org_or_cnap: Annotated[
     db.commit()
 
     return
+
+
+

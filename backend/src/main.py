@@ -4,7 +4,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from src.users.router import router as user_router
 from src.authentication.router import router as auth_router
 from src.organizations.router import router as organization_router
-from src.api import  reset_password, forgot_password, pets, vaccinations
+from src.pets.router import router as pets_router
+from src.api import  reset_password, forgot_password, vaccinations
 
 
 app = FastAPI(
@@ -40,7 +41,7 @@ app.include_router(organization_router)
 app.include_router(reset_password.router)
 app.include_router(forgot_password.router)
 app.include_router(auth_router)
-app.include_router(pets.router)
+app.include_router(pets_router)
 app.include_router(vaccinations.router)
 
 
