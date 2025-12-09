@@ -196,7 +196,7 @@ export function Table({
                                     {columns.map((col) => (
                                         <td
                                             key={String(col.accessor)}
-                                            className="px-6 py-4 whitespace-nowrap text-sm font-medium text-[24px]"
+                                            className="px-6 py-4 text-sm font-medium text-[14px]"
                                         >
                                             {col.cell
                                                 ? col.cell(item, onAction)

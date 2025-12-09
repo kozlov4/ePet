@@ -3,39 +3,17 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
-
 import ArrowBack from '../../assets/images/icons/ArrowBack';
 import CopyIcon from '../../assets/images/icons/CopyIcon';
+import { PetPassportData } from '../../types/api';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_DOMAIN || '';
 
-interface PetPassportData {
-    pet_id: number;
-    passport_number: string;
-    img_url?: string;
-    pet_name: string;
-    pet_name_en?: string;
-    date_of_birth: string;
-    breed: string;
-    breed_en?: string;
-    gender: string;
-    gender_en?: string;
-    color: string;
-    color_en?: string;
-    species: string;
-    species_en?: string;
-    organization_id: number | null;
-    owner_passport_number: string;
-    identifier_type: string;
-    identifier_type_en?: string;
-    date: string;
-    identifier_number: string;
-}
-
-export  function PetPassport({
-    actionButton, changeButton     
+export function PetPassport({
+    actionButton,
+    changeButton,
 }: {
-    actionButton?: React.ReactNode,
+    actionButton?: React.ReactNode;
     changeButton?: React.ReactNode;
 }) {
     const router = useRouter();
@@ -154,41 +132,45 @@ export  function PetPassport({
     );
 
     const handleDelete = async () => {
-    const petId = router.query.id; 
+        const petId = router.query.id;
 
-    if (!petId) {
-        alert("ID не знайдено у маршруті");
-        return;
-    }
-
-    const confirmDelete = confirm("Видалити цього улюбленця?");
-    if (!confirmDelete) return;
-
-    try {
-        const token = localStorage.getItem("access_token");
-        if (!token) {
-            alert("Токен авторизації відсутній");
+        if (!petId) {
+            alert('ID не знайдено у маршруті');
             return;
         }
 
-        const response = await fetch(`${API_BASE}/pets/delete/${petId}`, {
-            method: "DELETE",
-            headers: {
-                "Authorization": `Bearer ${token}`,
-                "Accept": "application/json",
-            },
-        });
+        const confirmDelete = confirm('Видалити цього улюбленця?');
+        if (!confirmDelete) return;
 
-        if (!response.ok) {
-            throw new Error("Помилка видалення");
+        try {
+            const token = localStorage.getItem('access_token');
+            if (!token) {
+                alert('Токен авторизації відсутній');
+                return;
+            }
+
+            const response = await fetch(`${API_BASE}/pets/delete/${petId}`, {
+                method: 'DELETE',
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    Accept: 'application/json',
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error('Помилка видалення');
+            }
+
+            alert('Улюбленця успішно видалено!');
+            router.back();
+        } catch (error) {
+            alert(error instanceof Error ? error.message : 'Невідома помилка');
         }
+    };
 
-        alert("Улюбленця успішно видалено!");
-       router.back()
-    } catch (error) {
-        alert(error instanceof Error ? error.message : "Невідома помилка");
-    }
-};
+    const handleChange = async () => {
+        router.push(`/Alley/pet-edition/${id}`);
+    };
 
     return (
         <div className="min-h-screen bg-white">
@@ -198,7 +180,7 @@ export  function PetPassport({
                         onClick={handleBack}
                         className="rounded-full bg-black p-2 transition-[0.2s] cursor-pointer hover:bg-gray-300"
                     >
-                        <ArrowBack/>
+                        <ArrowBack />
                     </button>
                     <p className="text-2xl">
                         Паспорт домашнього
@@ -212,7 +194,7 @@ export  function PetPassport({
                         onClick={handleCopyPassport}
                         className="cursor-pointer hover:opacity-70 transition-opacity"
                     >
-                        <CopyIcon/>
+                        <CopyIcon />
                     </button>
                 </div>
                 <div className="flex justify-between">
@@ -272,70 +254,74 @@ export  function PetPassport({
                     </div>
                 </div>
                 {!changeButton && (
-                     <div className="flex justify-between">
-                    <InfoField
-                        fields={[
-                            {
-                                label: 'Місцезнаходження чіпу:',
-                                labelEn: 'Chip location',
-                                value: petData.identifier_type,
-                                valueEn: petData.identifier_type_en,
-                            },
-                            {
-                                label: 'Дата чіпування:',
-                                labelEn: 'Chip date',
-                                value: formatDate(petData.date),
-                            },
-                            {
-                                label: 'Номер чіпу:',
-                                labelEn: 'Chip number',
-                                value: petData.identifier_number,
-                            },
-                        ]}
-                    />
-                    <InfoField
-                        fields={[
-                            {
-                                label: 'Власник:',
-                                labelEn: 'Owner',
-                                value: petData.owner_passport_number,
-                            },
-                            {
-                                label: 'Орган що видав:',
-                                labelEn: 'Issuing authority',
-                                value: petData.identifier_number,
-                            },
-                        ]}
-                    />
-                </div>
+                    <div className="flex justify-between">
+                        <InfoField
+                            fields={[
+                                {
+                                    label: 'Місцезнаходження чіпу:',
+                                    labelEn: 'Chip location',
+                                    value: petData.identifier_type,
+                                    valueEn: petData.identifier_type_en,
+                                },
+                                {
+                                    label: 'Дата чіпування:',
+                                    labelEn: 'Chip date',
+                                    value: formatDate(petData.date),
+                                },
+                                {
+                                    label: 'Номер чіпу:',
+                                    labelEn: 'Chip number',
+                                    value: petData.identifier_number,
+                                },
+                            ]}
+                        />
+                        <InfoField
+                            fields={[
+                                {
+                                    label: 'Власник:',
+                                    labelEn: 'Owner',
+                                    value: petData.owner_passport_number,
+                                },
+                                {
+                                    label: 'Орган що видав:',
+                                    labelEn: 'Issuing authority',
+                                    value: petData.identifier_number,
+                                },
+                            ]}
+                        />
+                    </div>
                 )}
-               
+
                 {actionButton && (
                     <div className="flex justify-end">
-                    <button
-                    onClick={handleDelete}
-                    className="
+                        <button
+                            onClick={handleDelete}
+                            className="
                         px-4 py-2 w-[45%] 
                         bg-black text-white font-medium text-base 
                         rounded-3xl border border-transparent cursor-pointer
                         hover:bg-white hover:text-black hover:border-black
                         transition
-                    ">
-                        Видалити
-                    </button></div>
+                    "
+                        >
+                            Видалити
+                        </button>
+                    </div>
                 )}
                 {changeButton && (
-                    <div
-                    className="flex justify-start">
-                    <button className="
+                    <div className="flex justify-start">
+                        <button
+                            className="
                     px-4 py-2 w-[45%] 
                     bg-black text-white font-medium text-base 
                     rounded-3xl border border-transparent cursor-pointer
                     hover:bg-white hover:text-black hover:border-black
-                    transition
-                ">
-                    Редагувати
-                    </button></div>
+                    transition"
+                            onClick={handleChange}
+                        >
+                            Редагувати
+                        </button>
+                    </div>
                 )}
             </div>
         </div>

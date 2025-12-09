@@ -106,8 +106,22 @@ export function Organizations() {
                     `Are you sure you want to delete ${org.organization_name}?`,
                 )
             ) {
-                // TODO: Implement delete logic
-                alert(`Deleting organization: ${org.organization_name}`);
+                const token = localStorage.getItem('access_token');
+                const res = await fetch(
+                    `${API_BASE}/organizations/organizations/${org.organization_id}`,
+                    {
+                        method: 'DELETE',
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    },
+                );
+
+                if (!res.ok) {
+                    throw new Error('Failed to delete organization');
+                }
+
+                router.reload();
             }
         }
     };

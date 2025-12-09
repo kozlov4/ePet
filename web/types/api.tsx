@@ -12,6 +12,28 @@ export interface Pet {
     animal_passport_number: string | null;
     owner: Owner | null;
 }
+export interface PetPassportData {
+    pet_id: number;
+    passport_number: string;
+    img_url?: string;
+    pet_name: string;
+    pet_name_en?: string;
+    date_of_birth: string;
+    breed: string;
+    breed_en?: string;
+    gender: string;
+    gender_en?: string;
+    color: string;
+    color_en?: string;
+    species: string;
+    species_en?: string;
+    organization_id: number | null;
+    owner_passport_number: string;
+    identifier_type: string;
+    identifier_type_en?: string;
+    date: string;
+    identifier_number: string;
+}
 
 export interface Organization {
     organization_id: string;

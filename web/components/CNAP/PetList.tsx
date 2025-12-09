@@ -38,7 +38,7 @@ export function PetList() {
         {
             accessor: 'animal_passport_number',
             header: 'ID:',
-            cell: (pet) => pet.animal_passport_number || 'null',
+            cell: (pet) => pet.animal_passport_number || pet.pet_id,
         },
         { accessor: 'breed', header: 'Порода:' },
         { accessor: 'gender', header: 'Стать:' },
