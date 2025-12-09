@@ -6,10 +6,10 @@ from sqlalchemy import func, or_
 from sqlalchemy.testing.pickleable import User
 
 from src.db.database import get_db
-from src.db.models import Organizations, Pets, Passports, Cnap
+from src.db.models import Organizations, Pets, Passports, Cnap, Users, Requests
 from src.authentication.service import get_current_user, bcrypt_context
 from src.organizations.schemas import OwnerForOrgResponse, AnimalForOrgResponse, PaginatedAnimalResponse, \
-    ReadPersonalInformationByOrg, ReadAllOrganizations, CreateNewOrganization, UpdateOrganization
+    ReadPersonalInformationByOrg, ReadAllOrganizations, CreateNewOrganization, UpdateOrganization, ShelterRequestResponse
 
 db_dependency = Annotated[Session, Depends(get_db)]
 user_dependency = Annotated[dict, Depends(get_current_user)]
@@ -190,7 +190,7 @@ def create_new_organization_service(db:Session, data: CreateNewOrganization, org
     db.commit()
     db.refresh(new_org)
 
-    return {"message": "Організацію успішно додано", "new_organizations": new_org}
+    return {"message": "Організацію успішно додано"}
 
 
 def update_organization_service(
@@ -259,4 +259,38 @@ def delete_organization_service(db:Session, org_id: int, org_or_cnap: Annotated[
     return
 
 
+def get_requests_for_shelter_service(db:Session, org_user:Annotated[Union[Organizations, Cnap, None], Depends(get_current_org_or_cnap)]):
+    if not isinstance(org_user, Organizations) or org_user.organization_type != "Притулок":
+        raise HTTPException(
+            status_code=403,
+            detail="Переглядати заявки можуть лише представники притулків"
+        )
 
+    requests = (
+        db.query(Requests)
+        .join(Users, Requests.user_id == Users.user_id)
+        .filter(Requests.organization_id == org_user.organization_id)
+        .options(joinedload(Requests.user))
+        .all()
+    )
+
+    result = []
+    for req in requests:
+        user = req.user
+
+        f_initial = user.first_name[0] if user.first_name else ""
+        p_initial = user.patronymic[0] if user.patronymic else ""
+
+        short_name = f"{user.last_name} {f_initial}. {p_initial}."
+
+        date_str = req.creation_date.strftime("%d.%m.%Y") if req.creation_date else "—"
+
+        result.append(ShelterRequestResponse(
+            request_id=req.request_id,
+            creation_date=date_str,
+            user_full_name=short_name,
+            user_email=user.email,
+            pet_id=req.pet_id
+        ))
+
+    return result

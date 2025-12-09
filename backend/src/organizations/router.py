@@ -1,13 +1,13 @@
 from typing import Annotated, Optional, Union, List
 from fastapi import APIRouter, Depends, HTTPException, status, Query
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from src.db.database import get_db
 from src.db.models import Organizations, Cnap
 from src.authentication.service import get_current_user
-from src.authentication.service import bcrypt_context
 from src.organizations.service import  get_current_org_or_cnap
-from src.organizations.schemas import PaginatedAnimalResponse,  ReadPersonalInformationByOrg, ReadAllOrganizations, CreateNewOrganization, UpdateOrganization
-from src.organizations.service import read_all_animals_service, read_personal_info_service, read_all_organizations_service, create_new_organization_service, update_organization_service, delete_organization_service
+from src.organizations.schemas import PaginatedAnimalResponse,  ReadPersonalInformationByOrg, ReadAllOrganizations, CreateNewOrganization, UpdateOrganization, ShelterRequestResponse
+from src.organizations.service import read_all_animals_service, read_personal_info_service, read_all_organizations_service, create_new_organization_service, update_organization_service, delete_organization_service, get_requests_for_shelter_service
+from src.db.models import  Requests, Users
 
 router = APIRouter(tags=['Organizations 🏢'], prefix="/organizations")
 
@@ -39,6 +39,15 @@ async def read_all_organizations_route(
         cnap: Annotated[Cnap, Depends(get_current_org_or_cnap)]
 ):
     return read_all_organizations_service(db=db, cnap=cnap)
+
+
+@router.get("/organization/list", response_model=List[ShelterRequestResponse])
+async def get_requests_for_shelter_route(
+        db: db_dependency,
+        org_user: Annotated[Union[Organizations, Cnap, None], Depends(get_current_org_or_cnap)],
+):
+    return get_requests_for_shelter_service(db=db, org_user=org_user)
+
 
 
 @router.post("/create/", status_code=201)

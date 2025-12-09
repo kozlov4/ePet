@@ -117,3 +117,11 @@ class UpdateOrganization(CreateNewOrganization):
    pass
 
 
+class ShelterRequestResponse(BaseModel):
+    request_id: int
+    creation_date: str
+    user_full_name: str
+    user_email: str
+    pet_id: int
+
+
