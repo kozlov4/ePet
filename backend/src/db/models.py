@@ -72,6 +72,8 @@ class Organizations(Base, TableNameMixin):
     email: Mapped[str_100_uniq]
     password: Mapped[text_req]
     cnap_id:  Mapped[int] = mapped_column(ForeignKey('cnap.cnap_id'))
+    reset_token: Mapped[str_255_opt]
+    reset_token_created_at: Mapped[datetime_opt]
 
     pets: Mapped[List["Pets"]] = relationship(back_populates="organization")
     requests: Mapped[List["Requests"]] = relationship(back_populates="organization")
@@ -137,10 +139,7 @@ class Pets(Base, TableNameMixin):
 
 class Requests(Base, TableNameMixin):
     request_id: Mapped[int_pk]
-    status: Mapped[str_50]
-    request_type: Mapped[str_50]
     creation_date: Mapped[datetime_created]
-    update_date: Mapped[datetime_updated]
     organization_id: Mapped[int] = mapped_column(ForeignKey('organizations.organization_id'))
     user_id: Mapped[int] = mapped_column(ForeignKey('users.user_id'))
     pet_id: Mapped[int] = mapped_column(ForeignKey('pets.pet_id'))

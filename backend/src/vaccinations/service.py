@@ -1,42 +1,38 @@
+from datetime import datetime
 from typing import Annotated, Union
-from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy.orm import Session, joinedload
+from fastapi import  Depends, HTTPException
+from sqlalchemy.orm import Session
 from src.db.database import get_db
-from src.schemas.vaccination_schemas import VaccinationItem
 from src.db.models import Pets, Vaccinations, Organizations, Cnap
-from src.api.core import  get_current_user
-from src.api.organization import   get_current_org_or_cnap
+from src.authentication.service import  get_current_user
+from src.organizations.service import   get_current_org_or_cnap
+from src.vaccinations.schemas import CreateVaccination
 
-router = APIRouter(tags=['Vaccinations 💉'], prefix="/vaccinations")
+
 db_dependency = Annotated[Session, Depends(get_db)]
 user_dependency = Annotated[dict, Depends(get_current_user)]
 
-@router.post("/{pet_id}", response_model=VaccinationItem, status_code=201)
-async def add_vaccination(
-    pet_id: int,
-    db: db_dependency,
-    data: VaccinationItem,
-    org_user: Annotated[Union[Organizations, Cnap, None], Depends(get_current_org_or_cnap)],
-):
-    # Доступ лише для ветклінік
+
+def add_vaccination_service(pet_id: int, db: Session, data:CreateVaccination, org_user: Annotated[Union[Organizations, Cnap, None], Depends(get_current_org_or_cnap)]):
     if not isinstance(org_user, Organizations) or org_user.organization_type != "Ветклініка":
         raise HTTPException(
             status_code=403,
             detail="Додати вакцинацію може лише ветклініка"
         )
 
-    # Перевіряємо тварину
     pet = db.query(Pets).filter(Pets.pet_id == pet_id).first()
     if not pet:
         raise HTTPException(status_code=404, detail="Тваринку не знайдено")
 
-    # Створення нового запису вакцинації
+    vac_date_obj = datetime.strptime(data.vaccination_date, "%d.%m.%Y").date()
+    valid_until_obj = datetime.strptime(data.valid_until, "%d.%m.%Y").date()
+
     vaccination = Vaccinations(
         pet_id=pet_id,
         drug_name=data.drug_name,
         series_number=data.series_number,
-        vaccination_date=data.vaccination_date,
-        valid_until=data.valid_until,
+        vaccination_date=vac_date_obj,
+        valid_until=valid_until_obj,
         organization_id=org_user.organization_id
     )
 
@@ -44,12 +40,11 @@ async def add_vaccination(
     db.commit()
     db.refresh(vaccination)
 
-    return VaccinationItem(
+    return CreateVaccination(
         drug_name=vaccination.drug_name,
         series_number=vaccination.series_number,
-        vaccination_date=vaccination.vaccination_date,
-        valid_until=vaccination.valid_until,
-        organization_name=org_user.organization_name
+        vaccination_date=vaccination.vaccination_date.strftime("%d.%m.%Y"),
+        valid_until=vaccination.valid_until.strftime("%d.%m.%Y")
     )
 
 

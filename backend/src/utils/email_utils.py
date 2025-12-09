@@ -47,9 +47,7 @@ async def send_reset_email(to_email: str, reset_link: str):
     
 
 async def send_report_email(to_email: str, pdf_bytes: bytes, filename: str):
-    """
-    Відправка PDF файлу.
-    """
+
     encoded_file = base64.b64encode(pdf_bytes).decode()
 
     html_content = """

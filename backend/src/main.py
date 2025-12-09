@@ -1,10 +1,13 @@
-import os
-
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
-from src.api import users, organization, reset_password, forgot_password, login, pets, vaccinations
-
+from src.users.router import router as user_router
+from src.authentication.router import router as auth_router
+from src.organizations.router import router as organization_router
+from src.pets.router import router as pets_router
+from src.vaccinations.router import router as vaccinations_router
+from src.requests.router import router as requests_router
+from src.password import reset_password, forgot_password
 
 app = FastAPI(
     title="ePet 🐶",
@@ -34,13 +37,14 @@ app.add_middleware(
     allow_headers=["*"],       
 )
 
-app.include_router(users.router)
-app.include_router(organization.router)
+app.include_router(user_router)
+app.include_router(organization_router)
 app.include_router(reset_password.router)
 app.include_router(forgot_password.router)
-app.include_router(login.router)
-app.include_router(pets.router)
-app.include_router(vaccinations.router)
+app.include_router(auth_router)
+app.include_router(pets_router)
+app.include_router(vaccinations_router)
+app.include_router(requests_router)
 
 
 
