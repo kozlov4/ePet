@@ -150,3 +150,10 @@ class UpdateProfileRequest(BaseModel):
         if not any(char in "!@#$%^&*()_+" for char in v):
             raise ValueError("Пароль повинен містити спеціальний символ (!@#$%^&*()_+)")
         return v
+
+
+class NotificationResponse(BaseModel):
+    extract_name: str
+    pet_name: str
+    date: str
+    message: str

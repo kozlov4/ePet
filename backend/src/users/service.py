@@ -10,8 +10,8 @@ from deep_translator import GoogleTranslator
 from src.db.database import get_db
 from src.db.models import Users
 from src.authentication.service import create_access_token, bcrypt_context, get_current_user
-from src.users.schemas import  UserRegistrationRequest, UpdateProfileRequest
-from src.db.models import  Pets
+from src.users.schemas import  UserRegistrationRequest, UpdateProfileRequest, NotificationResponse
+from src.db.models import  Pets, Extracts
 
 
 db_dependency = Annotated[Session, Depends(get_db)]
@@ -169,4 +169,30 @@ def update_my_profile_service(db: Session, user_id:int, updated_data: UpdateProf
         response["token_type"] = "bearer"
 
     return response
+
+
+def get_notifications_service(db: Session, user_id: int):
+    extracts = (
+        db.query(Extracts)
+        .join(Pets, Extracts.pet_id == Pets.pet_id)
+        .filter(Pets.user_id == user_id)
+        .order_by(Extracts.extract_date.desc())
+        .options(joinedload(Extracts.pet))
+        .all()
+    )
+
+    result = []
+    for ext in extracts:
+        date_str = ext.extract_date.strftime("%d.%m.%Y %H:%M") if ext.extract_date else "—"
+
+        msg = f"Витяг «{ext.extract_name}» для улюбленця {ext.pet.pet_name} сформовано успішно!"
+
+        result.append(NotificationResponse(
+            extract_name=ext.extract_name,
+            pet_name=ext.pet.pet_name,
+            date=date_str,
+            message=msg
+        ))
+
+    return result
 

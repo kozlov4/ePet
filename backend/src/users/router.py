@@ -7,7 +7,7 @@ from src.db.database import get_db
 from src.db.models import Users
 from src.authentication.service import  get_current_user
 from src.users.schemas import  UserRegistrationRequest, UserReadPersonalInfo, UserPetItem, UpdateProfileRequest
-from src.users.service import register_user_service, get_my_personal_info_service, get_all_my_pets_service, update_my_profile_service
+from src.users.service import register_user_service, get_my_personal_info_service, get_all_my_pets_service, update_my_profile_service, get_notifications_service
 from src.authentication.schemas import TokenResponse
 
 router = APIRouter(tags=['Users 🧑‍🦱'], prefix="/users")
@@ -28,6 +28,10 @@ async def get_my_personal_info_route(
 async def get_all_my_pets_route(db: db_dependency, user: user_dependency):
     return get_all_my_pets_service(db=db, user_id=user.get('user_id'))
 
+
+@router.get("/notifications/")
+async def get_notifications_route(db: db_dependency, current_user: user_dependency):
+    return get_notifications_service(db=db, user_id=current_user.get('user_id'))
 
 @router.post('/register/', status_code=status.HTTP_201_CREATED, response_model=TokenResponse)
 async def register_user_route(db: db_dependency, create_user_request: UserRegistrationRequest):

@@ -72,6 +72,8 @@ class Organizations(Base, TableNameMixin):
     email: Mapped[str_100_uniq]
     password: Mapped[text_req]
     cnap_id:  Mapped[int] = mapped_column(ForeignKey('cnap.cnap_id'))
+    reset_token: Mapped[str_255_opt]
+    reset_token_created_at: Mapped[datetime_opt]
 
     pets: Mapped[List["Pets"]] = relationship(back_populates="organization")
     requests: Mapped[List["Requests"]] = relationship(back_populates="organization")
