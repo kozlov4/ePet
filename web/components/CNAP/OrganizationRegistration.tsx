@@ -103,70 +103,70 @@ export default function OrganizationPage({
     };
 
     return (
-        <div className="min-h-screen justify-center w-full bg-gray-50 px-35 py-10">
-            <div className="mb-8 flex items-center">
-                <button
-                    onClick={() => router.back()}
-                    className="mr-4 rounded-full bg-black p-2 transition-[0.2s] cursor-pointer hover:bg-gray-300"
-                >
-                    <ArrowBack />
-                </button>
-                <h1 className="text-2xl font-semibold text-gray-800">
-                    {isEditMode
-                        ? 'Редагування організації'
-                        : 'Реєстрація організації'}
-                </h1>
-            </div>
+        <div className="min-h-screen w-full bg-gray-50 px-35 py-10 flex justify-center items-center">
+            <div className="w-full max-w-4xl">
+                <div className="mb-8 flex items-center justify-start">
+                    <button
+                        onClick={() => router.back()}
+                        className="mr-4 rounded-full bg-black p-2 transition-[0.2s] cursor-pointer hover:bg-gray-300"
+                    >
+                        <ArrowBack />
+                    </button>
+                    <h1 className="text-2xl font-semibold text-gray-800">
+                        {isEditMode
+                            ? 'Редагування організації'
+                            : 'Реєстрація організації'}
+                    </h1>
+                </div>
 
-            <div className="w-full max-w-4xl rounded-xl bg-[rgba(217,217,217,0.27)] p-6 shadow-lg sm:p-8 lg:p-10">
-                <form
-                    onSubmit={handleSubmit}
-                    className="rounded-3xl p-6 sm:p-8"
-                >
-                    <div className="space-y-4">
-                        {error && (
-                            <div className="p-3 text-sm text-red-600 bg-red-50 rounded-xl text-center">
-                                {error}
-                            </div>
-                        )}
+                <div className="w-full justify-center max-w-4xl rounded-xl bg-[rgba(217,217,217,0.27)] p-6 shadow-lg sm:p-8 lg:p-10 mx-auto">
+                    <form
+                        onSubmit={handleSubmit}
+                        className="rounded-3xl p-6 sm:p-8"
+                    >
+                        <div className="space-y-4">
+                            {error && (
+                                <div className="p-3 text-sm text-red-600 bg-red-50 rounded-xl text-center">
+                                    {error}
+                                </div>
+                            )}
 
-                        <div className="">
-                            <div className="bg-white rounded-xl overflow-hidden shadow-sm border border-transparent focus-within:border-gray-300 transition-colors">
-                                <input
-                                    type="text"
-                                    name="organization_name"
-                                    value={formData.organization_name}
-                                    onChange={handleInputChange}
-                                    placeholder="Назва організації"
-                                    className="w-full px-4 py-3.5 outline-none text-gray-700 placeholder-gray-400 text-sm bg-transparent"
-                                    required
-                                />
-                                <select
-                                    name="organization_type"
-                                    value={formData.organization_type}
-                                    onChange={handleInputChange}
-                                    className="w-full px-4 py-3.5 outline-none text-gray-700 bg-transparent appearance-none text-sm cursor-pointer"
-                                    required
-                                >
-                                    <option
-                                        value=""
-                                        disabled
-                                        className="text-gray-400"
+                            <div>
+                                <div className="bg-white rounded-xl overflow-hidden shadow-sm border border-transparent focus-within:border-gray-300 transition-colors">
+                                    <input
+                                        type="text"
+                                        name="organization_name"
+                                        value={formData.organization_name}
+                                        onChange={handleInputChange}
+                                        placeholder="Назва організації"
+                                        className="w-full px-4 py-3.5 outline-none text-gray-700 placeholder-gray-400 text-sm bg-transparent"
+                                        required
+                                    />
+                                    <select
+                                        name="organization_type"
+                                        value={formData.organization_type}
+                                        onChange={handleInputChange}
+                                        className="w-full px-4 py-3.5 outline-none text-gray-700 bg-transparent appearance-none text-sm cursor-pointer"
+                                        required
                                     >
-                                        Тип організації
-                                    </option>
-                                    {ORGANIZATION_TYPES.map((type) => (
-                                        <option key={type} value={type}>
-                                            {type}
+                                        <option
+                                            value=""
+                                            disabled
+                                            className="text-gray-400"
+                                        >
+                                            Тип організації
                                         </option>
-                                    ))}
-                                </select>
+                                        {ORGANIZATION_TYPES.map((type) => (
+                                            <option key={type} value={type}>
+                                                {type}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
                             </div>
-                        </div>
 
-                        <div className="space-y-3 pt-2">
-                            <div className="bg-white rounded-xl overflow-hidden shadow-sm border border-transparent focus-within:border-gray-300 transition-colors">
-                                <div className="">
+                            <div className="space-y-3 pt-2">
+                                <div className="bg-white flex rounded-xl overflow-hidden shadow-sm border border-transparent focus-within:border-gray-300 transition-colors">
                                     <input
                                         type="text"
                                         name="city"
@@ -196,46 +196,46 @@ export default function OrganizationPage({
                                     />
                                 </div>
                             </div>
-                        </div>
 
-                        <div className="space-y-3 pt-2">
-                            <div className="bg-white rounded-xl overflow-hidden shadow-sm border border-transparent focus-within:border-gray-300 transition-colors">
-                                <input
-                                    type="tel"
-                                    name="phone_number"
-                                    value={formData.phone_number}
-                                    onChange={handleInputChange}
-                                    placeholder="Номер телефону"
-                                    className="w-full px-4 py-3.5 outline-none text-gray-700 placeholder-gray-400 text-sm bg-transparent"
-                                    required
-                                />
-                                <input
-                                    type="email"
-                                    name="email"
-                                    value={formData.email}
-                                    onChange={handleInputChange}
-                                    placeholder="Електронна адреса"
-                                    className="w-full px-4 py-3.5 outline-none text-gray-700 placeholder-gray-400 text-sm bg-transparent"
-                                    required
-                                />
+                            <div className="space-y-3 pt-2">
+                                <div className="bg-white rounded-xl overflow-hidden shadow-sm border border-transparent focus-within:border-gray-300 transition-colors">
+                                    <input
+                                        type="tel"
+                                        name="phone_number"
+                                        value={formData.phone_number}
+                                        onChange={handleInputChange}
+                                        placeholder="Номер телефону"
+                                        className="w-full px-4 py-3.5 outline-none text-gray-700 placeholder-gray-400 text-sm bg-transparent"
+                                        required
+                                    />
+                                    <input
+                                        type="email"
+                                        name="email"
+                                        value={formData.email}
+                                        onChange={handleInputChange}
+                                        placeholder="Електронна адреса"
+                                        className="w-full px-4 py-3.5 outline-none text-gray-700 placeholder-gray-400 text-sm bg-transparent"
+                                        required
+                                    />
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div className="mt-10">
-                        <button
-                            type="submit"
-                            disabled={isLoading}
-                            className="w-full bg-black text-white rounded-full py-4 text-sm font-semibold hover:bg-gray-800 transition-colors disabled:bg-gray-600 disabled:cursor-not-allowed"
-                        >
-                            {isLoading
-                                ? 'Завантаження...'
-                                : isEditMode
-                                ? 'Зберегти зміни'
-                                : 'Зареєструвати'}
-                        </button>
-                    </div>
-                </form>
+                        <div className="mt-10">
+                            <button
+                                type="submit"
+                                disabled={isLoading}
+                                className="w-full bg-black text-white rounded-full py-4 text-sm font-semibold hover:bg-gray-800 transition-colors disabled:bg-gray-600 disabled:cursor-not-allowed"
+                            >
+                                {isLoading
+                                    ? 'Завантаження...'
+                                    : isEditMode
+                                    ? 'Зберегти зміни'
+                                    : 'Зареєструвати'}
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     );
