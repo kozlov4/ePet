@@ -56,9 +56,9 @@ const Home = () => {
                 </motion.div>
             </motion.div>
 
-            <section className="relative mt-40 mx-16">
+            <section className="relative mt-40 mx-6">
                 <motion.div
-                    className="flex flex-col gap-9 max-w-xl"
+                    className="flex flex-col gap-12 max-w-2xl"
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 1, delay: 1 }}
@@ -79,8 +79,8 @@ const Home = () => {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8, delay: 1.3 }}
                     >
-                        Піклуйтесь про свого пухнастого друга зручніше, ніж
-                        будь-коли...
+                        Піклуйтесь про свого пухнастого друга зручніше, ніж будь-коли.Зберігайте документи, переглядайте історію щеплень, отримуйте нагадування про візити до ветеринара та відкривайте нові можливості догляду — все в одному місці <br /><br /> Завантажте «єУлюбленець» і зробіть життя свого улюбленця ще кращим
+                        
                     </motion.p>
                     <motion.img
                         src="./google-play.png"
