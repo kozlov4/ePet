@@ -51,7 +51,7 @@ class PassportRepository {
         }
 
         return try {
-            val response = RetrofitClient.api.vaccinationsList( pet_id)
+            val response = RetrofitClient.api.vaccinationsList( "Bearer $token", pet_id)
             if (response.isSuccessful) {
                 response.body() ?: OutputVaccinationsList()
             } else {

@@ -53,6 +53,7 @@ interface ApiService {
 
     @GET("pets/{pet_id}/vaccinations")
     suspend fun vaccinationsList(
+        @Header("Authorization") token: String,
         @Path("pet_id") petId: String): Response<OutputVaccinationsList>
 
     /** Витяги **/
