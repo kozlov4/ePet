@@ -71,8 +71,8 @@ export default function OrganizationPage({
         try {
             const token = localStorage.getItem('access_token');
             const url = isEditMode
-                ? `${API_BASE}/organizations/organizations/${id}`
-                : `${API_BASE}/organizations/create`;
+                ? ${API_BASE}/organizations/organizations/${id}
+                : ${API_BASE}/organizations/create;
 
             const method = isEditMode ? 'PUT' : 'POST';
 
@@ -85,7 +85,7 @@ export default function OrganizationPage({
                 method,
                 headers: {
                     'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}`,
+                    Authorization: Bearer ${token},
                 },
                 body: JSON.stringify(payload),
             });
@@ -118,8 +118,7 @@ export default function OrganizationPage({
                             : 'Реєстрація організації'}
                     </h1>
                 </div>
-
-                <div className="w-full justify-center max-w-4xl rounded-xl bg-[rgba(217,217,217,0.27)] p-6 shadow-lg sm:p-8 lg:p-10 mx-auto">
+<div className="w-full justify-center max-w-4xl rounded-xl bg-[rgba(217,217,217,0.27)] p-6 shadow-lg sm:p-8 lg:p-10 mx-auto">
                     <form
                         onSubmit={handleSubmit}
                         className="rounded-3xl p-6 sm:p-8"
@@ -164,10 +163,8 @@ export default function OrganizationPage({
                                     </select>
                                 </div>
                             </div>
-
-                        <div className="space-y-3 pt-2">
-                            <div className="bg-white rounded-xl overflow-hidden shadow-sm border border-transparent focus-within:border-gray-300 transition-colors аду">
-                                <div className="grid grid-cols-1 divide-y divide-gray-100">
+<div className="space-y-3 pt-2">
+                                <div className="bg-white flex rounded-xl overflow-hidden shadow-sm border border-transparent focus-within:border-gray-300 transition-colors">
                                     <input
                                         type="text"
                                         name="city"
@@ -221,8 +218,7 @@ export default function OrganizationPage({
                                 </div>
                             </div>
                         </div>
-
-                        <div className="mt-10">
+<div className="mt-10">
                             <button
                                 type="submit"
                                 disabled={isLoading}
