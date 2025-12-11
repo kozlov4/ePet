@@ -19,12 +19,11 @@ import kotlinx.coroutines.launch
 import kotlin.getValue
 import androidx.fragment.app.activityViewModels
 import com.bumptech.glide.Glide
-import android.widget.Toast
 import android.content.Context
 
 class PassportInfoMenu(private val onClose: (() -> Unit)? = null) : BottomSheetDialogFragment() {
 
-    val viewModel: PassportViewModel by activityViewModels()
+    val passportViewModel: PassportViewModel by activityViewModels()
 
     private lateinit var tv_passport_number: TextView
     private lateinit var iv_copy_passport: ImageView
@@ -140,7 +139,7 @@ class PassportInfoMenu(private val onClose: (() -> Unit)? = null) : BottomSheetD
     private fun initStateFlow() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.outputPassportDetail.collect { state ->
+                passportViewModel.outputPassportDetail.collect { state ->
                     tv_passport_number.text = state.passport_number
                     tv_pet_name.text = state.pet_name
                     tv_pet_name_en.text = state.pet_name_en

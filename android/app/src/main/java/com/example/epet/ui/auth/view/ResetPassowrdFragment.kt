@@ -23,7 +23,7 @@ import kotlinx.coroutines.launch
 class ResetPassowrdFragment : Fragment() {
 
     private val args: ResetPassowrdFragmentArgs by navArgs()
-    private val viewModel: AuthViewModel by lazy { AuthViewModel(AuthRepository()) }
+    private val authViewModel: AuthViewModel by lazy { AuthViewModel(AuthRepository()) }
 
     private lateinit var iv_to_back: ImageView
     private lateinit var et_email_address: EditText
@@ -60,7 +60,7 @@ class ResetPassowrdFragment : Fragment() {
 
         bth_reset_password.setOnClickListener {
             val email = et_email_address.text.toString().trimEnd()
-            viewModel.resetPassword(InputResetPassword(email))
+            authViewModel.resetPassword(InputResetPassword(email))
         }
     }
 
@@ -73,7 +73,7 @@ class ResetPassowrdFragment : Fragment() {
     private fun initStateFlow() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.outputEmail.collect { state ->
+                authViewModel.outputEmail.collect { state ->
                     if (state.msg == "Якщо електронна адреса існує, посилання для скидання паролю було надіслано на пошту.") {
 
                         tv_message.text = ""

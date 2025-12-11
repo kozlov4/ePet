@@ -25,7 +25,7 @@ import androidx.lifecycle.Lifecycle
 
 class RegistrationFragment : Fragment() {
 
-    private val viewModel: AuthViewModel by lazy { AuthViewModel(AuthRepository()) }
+    private val authViewModel: AuthViewModel by lazy { AuthViewModel(AuthRepository()) }
 
     private lateinit var tv_tittletext: TextView
     private lateinit var tv_message: TextView
@@ -97,7 +97,7 @@ class RegistrationFragment : Fragment() {
             val email = et_email_address.text.toString().trimEnd()
             val password = et_password.text.toString().trimEnd()
 
-            viewModel.registration(
+            authViewModel.registration(
                 InputRegistration(last_name, first_name, patronymic, passport_number, "", "", "", postal_index, email, password), address)
         }
     }
@@ -106,7 +106,7 @@ class RegistrationFragment : Fragment() {
     private fun initStateFlow() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.outputRegisatration.collect { state ->
+                authViewModel.outputRegisatration.collect { state ->
                     when (state) {
                         is OutputAuth.Success -> {
                             tv_message.text = ""

@@ -15,7 +15,7 @@ import com.example.epet.ui.main.viewmodel.PassportViewModel
 
 class SelectorMenu(private val onClose: (() -> Unit)? = null) : BottomSheetDialogFragment() {
 
-    val viewModel: PassportViewModel by activityViewModels()
+    val passportViewModel: PassportViewModel by activityViewModels()
 
     private lateinit var tv_passport_info: TextView
     private lateinit var tv_vaccination_info: TextView
@@ -99,7 +99,7 @@ class SelectorMenu(private val onClose: (() -> Unit)? = null) : BottomSheetDialo
     private fun initStateFlow() {
         val sharedPref = requireContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
         val token = sharedPref.getString("access_token", null)
-        viewModel.passportDetail(token, pet_id)
-        viewModel.vaccinationList(token, pet_id)
+        passportViewModel.passportDetail(token, pet_id)
+        passportViewModel.vaccinationList(token, pet_id)
     }
 }

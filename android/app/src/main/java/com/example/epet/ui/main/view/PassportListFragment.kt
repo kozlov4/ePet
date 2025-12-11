@@ -24,7 +24,7 @@ import androidx.fragment.app.activityViewModels
 
 class PassportListFragment : Fragment() {
 
-    private val viewModel: PassportViewModel by activityViewModels()
+    private val passportViewModel: PassportViewModel by activityViewModels()
 
     private lateinit var rvPassports: RecyclerView
     private lateinit var llIndicators: LinearLayout
@@ -64,7 +64,7 @@ class PassportListFragment : Fragment() {
     private fun initStateFlow() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.outputPassportList.collect { state ->
+                passportViewModel.outputPassportList.collect { state ->
                     setupRecyclerView(state)
                     setupIndicators(state.size)
                 }

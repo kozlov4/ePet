@@ -12,7 +12,6 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.example.epet.R
 import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -27,7 +26,7 @@ import kotlin.getValue
 
 class VaccinationInfoMenu(private val onClose: (() -> Unit)? = null) : BottomSheetDialogFragment() {
 
-    val viewModel: PassportViewModel by activityViewModels()
+    val passportViewModel: PassportViewModel by activityViewModels()
 
     private lateinit var tv_passport_number: TextView
     private lateinit var tv_update_datetime: TextView
@@ -109,7 +108,7 @@ class VaccinationInfoMenu(private val onClose: (() -> Unit)? = null) : BottomShe
     private fun initStateFlow() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.outputVaccinationList.collect { state ->
+                passportViewModel.outputVaccinationList.collect { state ->
                     tv_passport_number.text = state.passport_number
 
                     setUpdateDatetime(state.update_datetime)

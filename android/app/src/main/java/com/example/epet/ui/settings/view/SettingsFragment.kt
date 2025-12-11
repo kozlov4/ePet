@@ -23,7 +23,7 @@ import kotlinx.coroutines.launch
 
 class SettingsFragment : Fragment(R.layout.fragment_settings) {
 
-    val viewModel: SettingsViewModel by activityViewModels()
+    val settingsViewModel: SettingsViewModel by activityViewModels()
     private var outputUserDetail: OutputUserDetail = OutputUserDetail()
 
     private lateinit var iv_to_back: ImageView
@@ -85,7 +85,7 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         if (outputUserDetail.email == et_email_address.text.toString() && outputUserDetail.password == et_password.text.toString()) {
             changeToStatic()
         } else {
-            viewModel.updateProfile(token, InputUpdateProfile(et_email_address.text.toString().trimEnd(), user_password, et_password.text.toString().trimEnd())
+            settingsViewModel.updateProfile(token, InputUpdateProfile(et_email_address.text.toString().trimEnd(), user_password, et_password.text.toString().trimEnd())
             )
         }
     }
@@ -97,7 +97,7 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
 
                 // Отримання даних користувача
                 launch {
-                    viewModel.outputUserDetail.collect { state ->
+                    settingsViewModel.outputUserDetail.collect { state ->
                         val sharedPref = requireContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
                         val user_password = sharedPref.getString("user_password", null)
                         outputUserDetail = state.copy(password = user_password)
@@ -107,7 +107,7 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
 
                 // Обробка оновлення профілю
                 launch {
-                    viewModel.outputUpdateProfile.collect { state ->
+                    settingsViewModel.outputUpdateProfile.collect { state ->
                         when (state) {
                             is OutputUpdateProfile.Success -> {
 
@@ -119,7 +119,7 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
                                 }
 
                                 val token = sharedPref.getString("access_token", null)
-                                viewModel.userDetail(token)
+                                settingsViewModel.userDetail(token)
                                 tv_message.text = ""
                                 changeToStatic()
                             }
