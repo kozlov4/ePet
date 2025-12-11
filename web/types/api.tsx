@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { ReactNode } from 'react';
 
 interface Owner {
     passport_number: string;
@@ -11,6 +11,28 @@ export interface Pet {
     gender: string;
     animal_passport_number: string | null;
     owner: Owner | null;
+}
+export interface PetPassportData {
+    pet_id: number;
+    passport_number: string;
+    img_url?: string;
+    pet_name: string;
+    pet_name_en?: string;
+    date_of_birth: string;
+    breed: string;
+    breed_en?: string;
+    gender: string;
+    gender_en?: string;
+    color: string;
+    color_en?: string;
+    species: string;
+    species_en?: string;
+    organization_id: number | null;
+    owner_passport_number: string;
+    identifier_type: string;
+    identifier_type_en?: string;
+    date: string;
+    identifier_number: string;
 }
 
 export interface Organization {
@@ -32,12 +54,13 @@ export interface PaginatedResponse<T> {
     items: T[];
 }
 
-
-
 export interface ColumnDefinition<T> {
     accessor: keyof T;
     header: string;
-    cell?: (item: T, onAction: (item: T, actionType: string) => void) => React.ReactNode;
+    cell?: (
+        item: T,
+        onAction: (item: T, actionType: string) => void,
+    ) => React.ReactNode;
 }
 
 export interface ViewConfig {
@@ -46,11 +69,9 @@ export interface ViewConfig {
     columns: ColumnDefinition<any>[];
     title: string;
     addNewLink: string;
-    addNewText: string;
+    addNewText?: string;
     searchPlaceholder: string;
 }
-
-
 
 export interface User {
     name: string;

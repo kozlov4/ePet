@@ -113,11 +113,12 @@ class LoginFragment : Fragment() {
         with(sharedPref.edit()) {
             putString("access_token", access_token)
             putString("user_name", user_name)
+            putString("user_password", et_password.text.toString())
             apply()
         }
     }
 
-    /** Переход на наступну активність **/
+    /** Перехід на наступну активність **/
     private fun navigateToMainActivity() {
         val intent = Intent(requireContext(), MainActivity::class.java)
         startActivity(intent)

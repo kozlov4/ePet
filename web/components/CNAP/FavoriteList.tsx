@@ -3,7 +3,7 @@
 import { useRouter } from 'next/router';
 import { useCallback } from 'react';
 
-import { ReusableTable } from '../../components/Base/ReusableTable';
+import { Table } from '../../components/ui/Table';
 import {
     ColumnDefinition,
     PaginatedResponse,
@@ -12,9 +12,12 @@ import {
 } from '../../types/api';
 import { fetchPaginatedData } from '../../utils/api';
 
-export function FavoriteList() {
+export function FavoriteList({
+    activeView,
+}: {
+    activeView: 'cnap' | 'vetclinic';
+}) {
     const router = useRouter();
-    const activeView = 'animals';
     const currentPath = router.pathname;
 
     const handleAction = (item: any, actionType: string) => {
@@ -26,6 +29,8 @@ export function FavoriteList() {
             } else if (currentPath.includes('/Vet-Clinic')) {
                 router.push(`/Vet-Clinic/pet-passport/${id}`);
             }
+        } else if (actionType === 'vaccination') {
+            router.push(`/CNAP/vaccination/${id}`);
         }
     };
 
@@ -47,24 +52,55 @@ export function FavoriteList() {
             accessor: 'pet_id',
             header: '',
             cell: (pet, onActionCallback) => (
-                <button
-                    onClick={() => onActionCallback(pet, 'details')}
-                    className="rounded-[10em] bg-black px-4 py-2 text-[15px] font-semibold cursor-pointer text-white transition-all duration-300 hover:bg-white hover:text-black border-1 hover:border-black"
-                >
-                    Повна інформація
-                </button>
+                <div className="flex flex-row gap-5">
+                    {activeView === 'cnap' ? (
+                        <>
+                            <button
+                                onClick={() => onActionCallback(pet, 'details')}
+                                className="rounded-[10em] bg-black px-4 py-2 text-[15px] font-medium cursor-pointer text-white transition-all duration-300   border-1"
+                            >
+                                Повна інформація
+                            </button>
+                        </>
+                    ) : (
+                        <>
+                            <button
+                                onClick={() => onActionCallback(pet, 'details')}
+                                className="rounded-[10em] bg-white px-4 py-2 text-[15px] font-medium cursor-pointer text-black transition-all duration-300   border-1"
+                            >
+                                Повна інформація
+                            </button>
+                        </>
+                    )}
+                    {activeView === 'vetclinic' && (
+                        <button
+                            onClick={() => onActionCallback(pet, 'vaccination')}
+                            className="rounded-[10em] bg-black px-4 py-2 text-[15px] font-medium cursor-pointer text-white transition-all duration-300   border-1 "
+                        >
+                            Щеплення
+                        </button>
+                    )}
+                </div>
             ),
         },
     ];
 
     const viewConfigs: Record<string, ViewConfig> = {
-        animals: {
+        cnap: {
             endpoint: '/organizations/animals',
             queryParamName: 'animal_passport_number',
             columns: animalColumns,
             title: 'Паспорт домашнього улюбленця',
             addNewLink: '/CNAP/pet-registration',
             addNewText: 'Зареєструвати улюбленця',
+            searchPlaceholder: 'Пошук...',
+        },
+        vetclinic: {
+            endpoint: '/organizations/animals',
+            queryParamName: 'animal_passport_number',
+            columns: animalColumns,
+            title: 'Паспорт домашнього улюбленця',
+            addNewLink: '/CNAP/pet-registration',
             searchPlaceholder: 'Пошук...',
         },
     };
@@ -95,7 +131,7 @@ export function FavoriteList() {
     }
 
     return (
-        <ReusableTable
+        <Table
             key={activeView}
             columns={config.columns}
             title={config.title}

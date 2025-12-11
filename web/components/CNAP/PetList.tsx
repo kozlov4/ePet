@@ -3,15 +3,17 @@
 import { useRouter } from 'next/router';
 import { useCallback } from 'react';
 
-import { ReusableTable } from '../../components/Base/ReusableTable';
+import { Table } from '../../components/ui/Table';
 import { ColumnDefinition, PaginatedResponse, Pet } from '../../types/api';
 import { fetchPaginatedData } from '../../utils/api';
+
+const API_BASE = process.env.NEXT_PUBLIC_API_DOMAIN || '';
 
 export function PetList() {
     const router = useRouter();
     const activeView = (router.query.view as string) || 'animals';
 
-    const handleAction = (item: any, actionType: string) => {
+    const handleAction = async (item: any, actionType: string) => {
         const id = item.pet_id || item.id;
 
         if (actionType === 'details') {
@@ -19,19 +21,24 @@ export function PetList() {
         }
 
         if (actionType === 'delete') {
-            if (
-                window.confirm(
-                    `(MainCNAP) Ви впевнені, що хочете видалити ID: ${id}?`,
-                )
-            ) {
-                console.log('Видалення...', item);
-                alert(`Елемент ${id} видалено.`);
-            }
-        }
+            if (window.confirm(`Ви впевнені, що хочете видалити ID: ${id}?`)) {
+                const token = localStorage.getItem('access_token');
+                const res = await fetch(
+                    `${API_BASE}/pets/delete/${item.pet_id}`,
+                    {
+                        method: 'DELETE',
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    },
+                );
 
-        if (actionType === 'edit') {
-            alert(`(MainCNAP) Редагування ID: ${id}`);
-           
+                if (!res.ok) {
+                    throw new Error('Failed to delete pet');
+                }
+
+                router.reload();
+            }
         }
     };
 
@@ -39,7 +46,7 @@ export function PetList() {
         {
             accessor: 'animal_passport_number',
             header: 'ID:',
-            cell: (pet) => pet.animal_passport_number || 'null',
+            cell: (pet) => pet.animal_passport_number || pet.pet_id,
         },
         { accessor: 'breed', header: 'Порода:' },
         { accessor: 'gender', header: 'Стать:' },
@@ -118,7 +125,7 @@ export function PetList() {
     }
 
     return (
-        <ReusableTable
+        <Table
             key={activeView}
             columns={config.columns}
             title={config.title}

@@ -14,6 +14,7 @@ export function Login() {
     const [passwordError, setPasswordError] = useState('');
     const router = useRouter();
     const { login } = useAuth();
+    const [message, setMessage] = useState('');
 
     const validateEmail = (value) => {
         if (!value) return '';
@@ -60,45 +61,22 @@ export function Login() {
                 console.log('Response:', data);
 
                 if (data.detail === 'Organization not found.') {
-                    toast.error('Організація не знайдена.', {
-                        position: 'top-center',
-                        autoClose: 2000,
-                        hideProgressBar: true,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                    });
+                    setMessage('Помилка авторизації');
                 } else if (data.access_token) {
-                    toast.success('Успішний вхід!', {
-                        position: 'top-center',
-                        autoClose: 2000,
-                        hideProgressBar: true,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                    });
-
                     login({ name: data.user_name }, data.access_token);
-                    if (data.organization_type === "Ветклініка")
-                    router.push('/Vet-Clinic/favorite-list');
-                    else if(data.organization_type == "ЦНАП")
-                        router.push('/CNAP/favorite-list')
-                    else if(data.organization_type == "Притулок")
-                        router.push('/Alley/pet-list')
+                    if (data.organization_type === 'Ветклініка')
+                        router.push('/Vet-Clinic/favorite-list');
+                    else if (data.organization_type == 'ЦНАП')
+                        router.push('/CNAP/favorite-list');
+                    else if (data.organization_type == 'Притулок')
+                        router.push('/Alley/pet-list');
                 } else {
-                    toast.error('Помилка входу. Перевірте дані.', {
-                        position: 'top-center',
-                        autoClose: 2000,
-                        hideProgressBar: true,
-                    });
+                     setMessage('Помилка авторизації');
+                
                 }
             } catch (error) {
-                console.error('Error:', error);
-                toast.error("Помилка з'єднання з сервером.", {
-                    position: 'top-center',
-                    autoClose: 2000,
-                    hideProgressBar: true,
-                });
+                setMessage('Помилка авторизації');
+                
             }
         }
     };
@@ -122,7 +100,7 @@ export function Login() {
                 </motion.h1>
 
                 <motion.div
-                    className="w-full h-[70%] flex flex-col justify-center items-start p-4 rounded-xl"
+                    className="w-full h-[75%] flex flex-col justify-center items-start p-4 rounded-xl"
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 1, delay: 0.3 }}
@@ -169,7 +147,7 @@ export function Login() {
                     <a
                         href="/reset-password"
                         className="
-                      flex w-[90%] justify-end
+                      flex w-[94%] justify-end
                       font-medium text-[15px] underline decoration-slate-600 decoration-solid decoration-skip-ink-none text-[#606060]
                       transition-all duration-300 ease-in-out
                       hover:text-[#1e88e5] h
@@ -178,7 +156,18 @@ export function Login() {
                     >
                         Забули пароль?
                     </a>
+
+                    {message && (
+                    <span
+                        className={`flex w-full justify-center text-center text-[14px] mt-2 text-red-500`}
+                    >
+                        {message}
+                    </span>
+                )}
+
                 </motion.div>
+
+                
 
                 <motion.button
                     onClick={handleSubmit}

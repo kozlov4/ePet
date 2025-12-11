@@ -18,7 +18,7 @@
 
         <action
             android:id="@+id/action_list_to_documents"
-            app:destination="@id/fragment_services_documents"
+            app:destination="@id/fragment_extract_list"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
@@ -55,11 +55,11 @@
     </fragment>
 
     <fragment
-        android:id="@+id/fragment_services_documents"
+        android:id="@+id/fragment_extract_list"
         android:name="com.example.epet.ui.services.view.ExtractListFragment">
 
         <action
-            android:id="@+id/action_documents_to_extract_pet"
+            android:id="@+id/action_extract_list_to_extract_pet"
             app:destination="@id/fragment_services_extract_pet"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
@@ -70,6 +70,10 @@
     <fragment
         android:id="@+id/fragment_services_extract_pet"
         android:name="com.example.epet.ui.services.view.ExtractPetFragment" >
+
+        <argument
+            android:name="extract_name"
+            app:argType="string" />
 
         <action
             android:id="@+id/action_extract_pet_to_message"

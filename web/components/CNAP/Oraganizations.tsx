@@ -1,13 +1,13 @@
 'use client';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import {
     ColumnDefinition,
     Organization,
     PaginatedResponse,
     ViewConfig,
 } from '../../types/api';
-import { ReusableTable } from '../Base/ReusableTable';
 import { fetchPaginatedData } from '../../utils/api';
+import { Table } from '../ui/Table';
 import router from 'next/router';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_DOMAIN || '';
@@ -125,7 +125,7 @@ export function Organizations() {
         }
     };
     return (
-        <ReusableTable
+        <Table
             key={activeView}
             columns={config.columns}
             title={config.title}

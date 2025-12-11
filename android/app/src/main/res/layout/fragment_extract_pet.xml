@@ -36,6 +36,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <LinearLayout
+        android:id="@+id/ll_info"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@drawable/bg_extract"
@@ -46,7 +47,7 @@
         android:orientation="vertical"
         app:layout_constraintStart_toStartOf="@+id/guideline_vertical_left"
         app:layout_constraintEnd_toEndOf="@+id/guideline_vertical_right"
-        app:layout_constraintTop_toTopOf="@+id/guideline_horizontal_menu">
+        app:layout_constraintTop_toTopOf="@+id/guideline_horizontal_info_top">
 
         <TextView
             android:layout_width="match_parent"
@@ -61,11 +62,12 @@
             android:textSize="13sp" />
 
         <TextView
+            android:id="@+id/tv_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@null"
-            android:layout_marginTop="30dp"
             android:layout_marginLeft="7dp"
+            android:layout_marginTop="30dp"
+            android:background="@null"
             android:clickable="true"
             android:focusable="true"
             android:fontFamily="@font/e_ukraine_regular"
@@ -86,9 +88,20 @@
             android:text="Витяг підтверджує стан тварини на момент формування документа."
             android:textColor="@color/black"
             android:textSize="13sp" />
-
-
     </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_pets"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:clipToPadding="false"
+        android:overScrollMode="never"
+        app:layout_constraintTop_toBottomOf="@+id/ll_info"
+        app:layout_constraintBottom_toTopOf="@+id/bth_create_extract"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_default="percent"
+        app:layout_constraintHeight_percent="0.15" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/bth_create_extract"
@@ -116,7 +129,7 @@
         app:layout_constraintGuide_percent="0.11" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline_horizontal_menu"
+        android:id="@+id/guideline_horizontal_info_top"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -127,7 +140,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.76" />
+        app:layout_constraintGuide_percent="0.82" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_vertical_left"
