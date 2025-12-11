@@ -38,13 +38,13 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_messages"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:scrollbars="vertical"
+        android:layout_height="0dp"
         android:paddingTop="4dp"
+        android:scrollbars="none"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_horizontal_bottom"
         app:layout_constraintEnd_toEndOf="@+id/guideline_vertical_right"
         app:layout_constraintStart_toStartOf="@+id/guideline_vertical_left"
-        app:layout_constraintTop_toBottomOf="@+id/guideline_horizontal_list"/>
-
+        app:layout_constraintTop_toBottomOf="@+id/guideline_horizontal_list" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_horizontal_text"
@@ -73,4 +73,11 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.93" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_horizontal_bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.865" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -105,7 +105,7 @@ class ExtractPetFragment : Fragment() {
             } else if (extractName == "Витяг про щеплення тварини") {
                 inputExtractName = "Медичний витяг про проведені щеплення тварини"
             } else if (extractName == "Витяг за ідентифікаторами") {
-                inputExtractName = "Витяг про ідентифікаційні дані тварини"
+                inputExtractName = "Офіційний витяг про ідентифікаційні дані тварини"
             }
 
             serviceViewModel.generateReport(token, InputExtractPet(selectedPetId, inputExtractName))

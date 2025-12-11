@@ -3,7 +3,7 @@ package com.example.epet.data.repository
 import com.example.epet.data.model.notification.OutputNotification
 import com.example.epet.data.network.RetrofitClient
 
-class NotificationsRepository {
+class NotificationRepository {
 
     suspend fun getNotifications(token: String?) : List<OutputNotification> {
 

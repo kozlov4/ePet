@@ -1,5 +1,6 @@
 package com.example.epet.ui.messages.view
 
+import android.content.Context.MODE_PRIVATE
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -27,7 +28,7 @@ class NotificationsListFragment : Fragment() {
     private lateinit var rv_messages: RecyclerView
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_message_list, container, false)
+        return inflater.inflate(R.layout.fragment_notification, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -52,6 +53,10 @@ class NotificationsListFragment : Fragment() {
 
     /** Ініціалізація StateFlow **/
     private fun initStateFlow() {
+        val sharedPref = requireContext().getSharedPreferences("UserPrefs", MODE_PRIVATE)
+        val token = sharedPref.getString("access_token", null)
+        notificationsViewModel.getNotifications(token)
+
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 notificationsViewModel.outputNotifications.collect { state ->
