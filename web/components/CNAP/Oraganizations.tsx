@@ -14,7 +14,6 @@ const API_BASE = process.env.NEXT_PUBLIC_API_DOMAIN || '';
 
 export function Organizations() {
     const activeView = 'organizations';
-    const [searchTerm, setSearchTerm] = useState('');
 
     const orgColumns: ColumnDefinition<Organization>[] = [
         {
@@ -125,7 +124,6 @@ export function Organizations() {
             }
         }
     };
-
     return (
         <Table
             key={activeView}

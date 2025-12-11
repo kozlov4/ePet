@@ -165,8 +165,9 @@ export default function OrganizationPage({
                                 </div>
                             </div>
 
-                            <div className="space-y-3 pt-2">
-                                <div className="bg-white flex rounded-xl overflow-hidden shadow-sm border border-transparent focus-within:border-gray-300 transition-colors">
+                        <div className="space-y-3 pt-2">
+                            <div className="bg-white rounded-xl overflow-hidden shadow-sm border border-transparent focus-within:border-gray-300 transition-colors аду">
+                                <div className="grid grid-cols-1 divide-y divide-gray-100">
                                     <input
                                         type="text"
                                         name="city"
