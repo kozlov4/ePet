@@ -5,7 +5,6 @@ import { useAuth } from '../hooks/useAuth';
 import '../styles/globals.css';
 import { AuthProvider } from '../hooks/AuthProvider';
 
-
 export default function App({ Component, pageProps }) {
     return (
         <AuthProvider>
@@ -50,7 +49,7 @@ function AppContent({ Component, pageProps }) {
                 { label: 'Список тварин', href: '/Alley/pet-list' },
                 {
                     label: 'Повідомлення',
-                    href: '/CNAP/organizations',
+                    href: '/Alley/notifications',
                 },
             ],
             accountName: user?.name || '',
@@ -62,8 +61,10 @@ function AppContent({ Component, pageProps }) {
     } else if (isVet && !headerProps && !customHeader) {
         finalHeaderProps = {
             navProps: [
-                { label: 'Список улюбленців', href: '/Vet-Clinic/favorite-list' },
-                
+                {
+                    label: 'Список улюбленців',
+                    href: '/Vet-Clinic/favorite-list',
+                },
             ],
             accountName: user?.name || '',
             buttonProps: {
