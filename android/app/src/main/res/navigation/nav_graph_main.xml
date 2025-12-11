@@ -107,7 +107,7 @@
 
     <fragment
         android:id="@+id/fragment_messages_list"
-        android:name="com.example.epet.ui.messages.view.MessageListFragment" />
+        android:name="com.example.epet.ui.messages.view.NotificationsListFragment" />
 
     <fragment
         android:id="@+id/fragment_settings"

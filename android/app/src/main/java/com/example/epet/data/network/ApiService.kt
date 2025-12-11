@@ -10,6 +10,7 @@ import com.example.epet.data.model.passport.OutputVaccinationsList
 import com.example.epet.data.model.service.InputExtractPet
 import com.example.epet.data.model.service.OutputExtractPet
 import com.example.epet.data.model.settings.InputUpdateProfile
+import com.example.epet.data.model.notification.OutputNotification
 import com.example.epet.data.model.settings.OutputUpdateProfile
 import com.example.epet.data.model.settings.OutputUserDetail
 import retrofit2.Response
@@ -64,6 +65,7 @@ interface ApiService {
         @Body inputResetPassword: InputExtractPet): Response<OutputExtractPet>
 
     /** Налаштування **/
+
     @GET("users/me")
     suspend fun userRetail(
         @Header("Authorization") token: String): Response<OutputUserDetail>
@@ -72,4 +74,10 @@ interface ApiService {
     suspend fun updateProfile(
         @Header("Authorization") token: String,
         @Body inputUpdateProfile: InputUpdateProfile): Response<OutputUpdateProfile.Success>
+
+    /** Список повідомлень **/
+
+    @GET("users/notifications/")
+    suspend fun getNotifications(
+        @Header("Authorization") token: String): Response<List<OutputNotification>>
 }

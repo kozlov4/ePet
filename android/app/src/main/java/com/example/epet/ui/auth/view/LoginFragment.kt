@@ -85,6 +85,7 @@ class LoginFragment : Fragment() {
         et_email_address.setText(args.email)
     }
 
+    /** Ініціалізація StateFlow **/
     private fun initStateFlow() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
