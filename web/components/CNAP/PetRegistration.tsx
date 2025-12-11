@@ -34,6 +34,9 @@ export default function PetRegistration({
     const router = useRouter();
     const fileInputRef = useRef<HTMLInputElement>(null);
     function formatDate(dateString: string): string {
+        if (dateString == undefined) {
+            return new Date().toISOString().split('T')[0];
+        }
         const parts = dateString.split('.');
 
         if (parts.length !== 3) {
