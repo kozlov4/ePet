@@ -1,9 +1,10 @@
 package com.example.epet.data.model.service
 
 data class OutputPetShelter(
-    val image: Int,
-    val name: String,
-    val sex: String,
+    val pet_id: Int,
+    val img_url: String,
+    val pet_name: String,
+    val gender: String,
     val breed: String,
-    val birthDate: String
+    val date_of_birth: String
 )

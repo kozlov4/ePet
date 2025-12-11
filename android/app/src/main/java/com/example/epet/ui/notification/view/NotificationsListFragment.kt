@@ -14,7 +14,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.epet.R
-import com.example.epet.data.model.auth.OutputAuth
 import com.example.epet.data.model.notification.OutputNotification
 import com.example.epet.ui.messages.adapter.NotificationsListAdapter
 import com.example.epet.ui.notification.viewmodel.NotificationsViewModel
@@ -55,7 +54,7 @@ class NotificationsListFragment : Fragment() {
     private fun initStateFlow() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                notificationsViewModel.outputGetNotifications.collect { state ->
+                notificationsViewModel.outputNotifications.collect { state ->
                     setupRecyclerView(state)
                 }
             }

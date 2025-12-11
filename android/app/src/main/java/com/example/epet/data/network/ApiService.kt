@@ -11,6 +11,7 @@ import com.example.epet.data.model.service.InputExtractPet
 import com.example.epet.data.model.service.OutputExtractPet
 import com.example.epet.data.model.settings.InputUpdateProfile
 import com.example.epet.data.model.notification.OutputNotification
+import com.example.epet.data.model.service.OutputPetShelter
 import com.example.epet.data.model.settings.OutputUpdateProfile
 import com.example.epet.data.model.settings.OutputUserDetail
 import retrofit2.Response
@@ -77,7 +78,14 @@ interface ApiService {
 
     /** Список повідомлень **/
 
-    @GET("users/notifications/")
+    @GET("users/notifications")
     suspend fun getNotifications(
         @Header("Authorization") token: String): Response<List<OutputNotification>>
+
+    /** Притулок **/
+
+    @GET("/requests/list")
+    suspend fun getPetsShelter(
+        @Header("Authorization") token: String): Response<List<OutputPetShelter>>
+
 }

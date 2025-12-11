@@ -17,11 +17,13 @@ import androidx.navigation.NavController
 import com.example.epet.ui.main.viewmodel.PassportViewModel
 import androidx.activity.viewModels
 import com.example.epet.ui.notification.viewmodel.NotificationsViewModel
+import com.example.epet.ui.service.viewmodel.ServiceViewModel
 import com.example.epet.ui.settings.viewmodel.SettingsViewModel
 
 class MainActivity : AppCompatActivity() {
 
     val passportViewModel: PassportViewModel by viewModels()
+    val serviceViewModel: ServiceViewModel by viewModels()
     val settingsViewModel: SettingsViewModel by viewModels()
     val notificationsViewModel: NotificationsViewModel by viewModels()
 
@@ -74,7 +76,9 @@ class MainActivity : AppCompatActivity() {
     private fun initStateFlow() {
         val sharedPref = getSharedPreferences("UserPrefs", MODE_PRIVATE)
         val token = sharedPref.getString("access_token", null)
+
         passportViewModel.passportList(token)
+        serviceViewModel.getPetsShelter(token)
         settingsViewModel.userDetail(token)
         notificationsViewModel.getNotifications(token)
     }

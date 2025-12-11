@@ -9,19 +9,28 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
 import com.example.epet.R
 import com.example.epet.data.model.service.OutputPetShelter
+import com.example.epet.ui.service.viewmodel.ServiceViewModel
+import kotlinx.coroutines.launch
 
 class ShelterFragment : Fragment() {
+
+    val serviceViewModel : ServiceViewModel by activityViewModels()
 
     private lateinit var card_container: FrameLayout
     private lateinit var ib_like: ImageButton
     private lateinit var ib_dislike: ImageButton
     private lateinit var iv_to_back: ImageView
 
+    private var listPetsShelter: List<OutputPetShelter> = emptyList()
     private var currentIndex = 0
-
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_shelter, container, false)
@@ -32,7 +41,9 @@ class ShelterFragment : Fragment() {
 
         initViews(view)
         initButtons()
-        showNextCard(animated = false, getPetShelterList())
+        initStateFlow()
+
+        showNextCard(animated = false, listPetsShelter)
     }
 
     /** Ініціалізація всіх елементів інтерфейсу **/
@@ -58,34 +69,48 @@ class ShelterFragment : Fragment() {
         }
     }
 
-    /** Повертає приклад даних про повідомлення **/
-    private fun getPetShelterList(): List<OutputPetShelter> = listOf(
-        OutputPetShelter(R.drawable.icon_empty_image, "Донні", "Ч", "Метис", "24.02.2020"),
-        OutputPetShelter(R.drawable.icon_empty_image, "Мурзік", "Ч", "Британський", "11.08.2019"),
-        OutputPetShelter(R.drawable.icon_empty_image, "Луна", "Ж", "Сіамський", "03.05.2021"),
-        OutputPetShelter(R.drawable.icon_empty_image, "Сніжок", "Ч", "Ангор", "17.12.2022"),
-        OutputPetShelter(R.drawable.icon_empty_image, "Белла", "Ж", "Шотландський", "29.07.2020"),
-        OutputPetShelter(R.drawable.icon_empty_image, "Барсік", "Ч", "Метис", "10.01.2018")
-    )
+    /** Ініціалізація StateFlow **/
+    private fun initStateFlow() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                serviceViewModel.outputPetsShelter.collect { state ->
+                    listPetsShelter = state
+                }
+            }
+        }
+    }
 
     /** Показ наступної картки **/
-    private fun showNextCard(animated: Boolean = true, petList: List<OutputPetShelter>) {
-        if (currentIndex >= petList.size) return
+    private fun showNextCard(animated: Boolean = true, listPetsShelter: List<OutputPetShelter>) {
+        if (currentIndex >= listPetsShelter.size) return
 
-        val pet = petList[currentIndex]
+        val pet = listPetsShelter[currentIndex]
         val cardView = layoutInflater.inflate(R.layout.item_shelter, card_container, false)
 
         val iv_photo = cardView.findViewById<ImageView>(R.id.iv_photo)
         val tv_pet_name = cardView.findViewById<TextView>(R.id.tv_pet_name)
-        val tv_sex = cardView.findViewById<TextView>(R.id.tv_sex)
+        val tv_gender = cardView.findViewById<TextView>(R.id.tv_gender)
         val tv_breed = cardView.findViewById<TextView>(R.id.tv_breed)
         val tv_birth_date = cardView.findViewById<TextView>(R.id.tv_breed)
 
-        iv_photo.setImageResource(pet.image)
-        tv_pet_name.text = pet.name
-        tv_sex.text = "Стать: ${pet.sex}"
+        try {
+            if (pet.img_url.isNotBlank() && pet.img_url != "https://") {
+                Glide.with(requireContext())
+                    .load(pet.img_url)
+                    .error(R.drawable.icon_empty_image)
+                    .into(iv_photo)
+            } else {
+                iv_photo.setImageResource(R.drawable.icon_empty_image)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            iv_photo.setImageResource(R.drawable.icon_empty_image)
+        }
+
+        tv_pet_name.text = pet.pet_name
+        tv_gender.text = "Стать: ${pet.gender}"
         tv_breed.text = "Порода: ${pet.breed}"
-        tv_birth_date.text = pet.birthDate
+        tv_birth_date.text = pet.date_of_birth
 
         if (animated) {
             cardView.scaleX = 0.9f
@@ -120,7 +145,7 @@ class ShelterFragment : Fragment() {
             .withEndAction {
                 card_container.removeView(topCard)
                 currentIndex++
-                showNextCard(animated = true, getPetShelterList())
+                showNextCard(animated = true, listPetsShelter)
             }
             .start()
     }
