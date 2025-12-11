@@ -6,38 +6,36 @@ const API_BASE = process.env.NEXT_PUBLIC_API_DOMAIN || '';
 
 export function ResetPasswordPage() {
     const [email, setEmail] = useState('');
+    const [emailError, setEmailError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [message, setMessage] = useState('');
 
-    const isValidEmail = (value) => {
+    const validateEmail = (value) => {
+        if (!value) return '';
+        if (value.length > 30) return 'Максимум 30 символів';
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailRegex.test(value);
+        if (!emailRegex.test(value)) return 'Невірний формат електронної пошти';
+        return '';
     };
 
     const handleResetPassword = async (emailAddress) => {
         setIsLoading(true);
         setMessage('');
 
-        if (!isValidEmail(emailAddress)) {
-            setMessage(
-                'Неправильний тип даних: введіть коректну електронну адресу'
-            );
+        const error = validateEmail(emailAddress);
+        setEmailError(error);
+
+        if (error) {
             setIsLoading(false);
             return;
         }
 
         try {
-            const response = await fetch(
-                `${API_BASE}/forgot-password/`,
-                {
-                    // MOVE DOMAIN TO ENV VARIABLE
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ email: emailAddress }),
-                }
-            );
+            const response = await fetch(`${API_BASE}/forgot-password/`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: emailAddress }),
+            });
 
             if (response.ok) {
                 setMessage(
@@ -48,11 +46,12 @@ export function ResetPasswordPage() {
             }
         } catch (error) {
             console.error('Error during password reset:', error);
-            setMessage('Помилка. Не вдалося надіслати. Спробуйте ще раз.');
         } finally {
             setIsLoading(false);
         }
     };
+
+    const isFormValid = !validateEmail(email) && email;
 
     return (
         <div className="w-[50%] h-full flex bg-white">
@@ -73,29 +72,49 @@ export function ResetPasswordPage() {
                     transition={{ duration: 1, delay: 0.3 }}
                 >
                     <input
-                        onChange={(e) => setEmail(e.target.value)}
                         type="email"
                         placeholder="Електронна адреса"
-                        className="w-full h-[30%] px-4 py-2 font-normal text-[20px] text-black border border-[#e6e6e6] rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        value={email}
+                        onChange={(e) => {
+                            setEmail(e.target.value);
+                            setEmailError(validateEmail(e.target.value));
+                        }}
+                        className={`w-full h-[30%] px-4 py-2 font-normal text-[20px] border rounded-xl 
+                            focus:outline-none focus:ring-2
+                            ${
+                                emailError
+                                    ? 'border-red-500 ring-red-500 text-red-500'
+                                    : 'border-[#e6e6e6] ring-blue-500 text-black'
+                            }`}
                     />
-                </motion.div>
 
-                {message && (
+                    {emailError && (
+                        <p className="text-red-500 text-sm mt-1 text-center w-full">
+                            {emailError}
+                        </p>
+                    )}
+
+                    {message && (
                     <span
-                        className={`flex w-full justify-center text-center text-[14px] mt-2 ${
-                            message ===
-                            'Якщо електронна адреса існує, посилання для скидання паролю було надіслано на пошту'
-                                ? 'text-green-400'
-                                : 'text-red-500'
-                        }`}
+                        className={`flex w-full justify-center text-center text-[14px] mt-2 text-green-400`}
                     >
                         {message}
                     </span>
                 )}
+
+                </motion.div>
+
+                
+
                 <motion.button
                     onClick={() => handleResetPassword(email)}
-                    disabled={isLoading}
-                    className="w-full h-[15%] mt-[1%] flex justify-center items-center font-medium text-xl rounded-3xl bg-black text-white cursor-pointer transition-all duration-300 ease-in-out hover:bg-[#1e88e5] hover:shadow-[0_0_20px_#1e88e580] hover:scale-[1.05] active:scale-[0.98]"
+                    disabled={!isFormValid || isLoading}
+                    className={`w-full h-[15%] mt-[1%] flex justify-center items-center font-medium text-xl rounded-3xl transition-all duration-300 ease-in-out 
+                        ${
+                            isFormValid
+                                ? 'bg-black text-white hover:bg-[#1e88e5] hover:shadow-[0_0_20px_#1e88e580] hover:scale-[1.05] active:scale-[0.98]'
+                                : 'bg-gray-700 text-gray-200 cursor-not-allowed'
+                        }`}
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.8, delay: 0.7 }}

@@ -1,12 +1,14 @@
 'use client';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
+import { useRouter } from 'next/router';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_DOMAIN || '';
 
 export function NewPasswordPage(props: { token: string }) {
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const router = useRouter();
 
     const [isLoading, setIsLoading] = useState(false);
     const [message, setMessage] = useState('');
@@ -47,6 +49,8 @@ export function NewPasswordPage(props: { token: string }) {
 
             if (!response.ok) {
                 throw new Error(data.detail || 'Network response was not ok');
+            }else{
+                router.push('/signIn');
             }
 
             setMessage('Новий пароль встановлено!');
