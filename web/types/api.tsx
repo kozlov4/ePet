@@ -88,3 +88,13 @@ export interface AuthContextType {
 export interface AuthProviderProps {
     children: ReactNode;
 }
+
+export type NotificationType = 'adoption_request' | 'cancellation' | 'success';
+
+export interface Notification {
+    request_id: number;
+    creation_date: string;
+    user_full_name: string;
+    user_email: string;
+    pet_id: number;
+}
