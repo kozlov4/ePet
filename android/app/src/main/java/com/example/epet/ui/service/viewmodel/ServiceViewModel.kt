@@ -5,12 +5,14 @@ import androidx.lifecycle.viewModelScope
 import com.example.epet.data.model.service.OutputExtractPet
 import com.example.epet.data.repository.ServiceRepository
 import com.example.epet.data.model.service.InputExtractPet
+import com.example.epet.data.model.service.InputRequestShelter
 import com.example.epet.data.model.service.OutputPetShelter
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import com.example.epet.data.model.service.OutputRequestShelter
 
 class ServiceViewModel : ViewModel() {
 
@@ -21,6 +23,9 @@ class ServiceViewModel : ViewModel() {
 
     private val _outputPetsShelter = MutableStateFlow<List<OutputPetShelter>>(emptyList())
     val outputPetsShelter = _outputPetsShelter.asStateFlow()
+
+    private val _outputRequestShelter = MutableSharedFlow<OutputRequestShelter>()
+    val outputRequestShelter = _outputRequestShelter.asSharedFlow()
 
     fun generateReport(token: String?, inputExtractPet: InputExtractPet) {
         viewModelScope.launch {
@@ -33,6 +38,15 @@ class ServiceViewModel : ViewModel() {
         viewModelScope.launch {
             val output = repository.getPetsShelter(token)
             _outputPetsShelter.value = output
+        }
+    }
+
+    fun requestShelter(token: String?, inputRequestShelter: InputRequestShelter) {
+        viewModelScope.launch {
+            val input = inputRequestShelter
+            val output = repository.requestShelter(token, input)
+
+            _outputRequestShelter.emit(output)
         }
     }
 }

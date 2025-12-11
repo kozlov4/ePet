@@ -11,7 +11,9 @@ import com.example.epet.data.model.service.InputExtractPet
 import com.example.epet.data.model.service.OutputExtractPet
 import com.example.epet.data.model.settings.InputUpdateProfile
 import com.example.epet.data.model.notification.OutputNotification
+import com.example.epet.data.model.service.InputRequestShelter
 import com.example.epet.data.model.service.OutputPetShelter
+import com.example.epet.data.model.service.OutputRequestShelter
 import com.example.epet.data.model.settings.OutputUpdateProfile
 import com.example.epet.data.model.settings.OutputUserDetail
 import retrofit2.Response
@@ -87,5 +89,10 @@ interface ApiService {
     @GET("/requests/list")
     suspend fun getPetsShelter(
         @Header("Authorization") token: String): Response<List<OutputPetShelter>>
+
+    @POST("/requests/apply")
+    suspend fun requestShelter(
+        @Header("Authorization") token: String,
+        @Body inputRequestShelter: InputRequestShelter): Response<OutputRequestShelter.Success>
 
 }

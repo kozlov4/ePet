@@ -1,5 +1,6 @@
 package com.example.epet.ui.services.view
 
+import android.content.Context.MODE_PRIVATE
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -16,7 +17,10 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.example.epet.R
+import com.example.epet.data.model.auth.OutputAuth
+import com.example.epet.data.model.service.InputRequestShelter
 import com.example.epet.data.model.service.OutputPetShelter
+import com.example.epet.data.model.service.OutputRequestShelter
 import com.example.epet.ui.service.viewmodel.ServiceViewModel
 import kotlinx.coroutines.launch
 
@@ -31,6 +35,7 @@ class ShelterFragment : Fragment() {
 
     private var listPetsShelter: List<OutputPetShelter> = emptyList()
     private var currentIndex = 0
+    private var currentPetId = 0
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_shelter, container, false)
@@ -61,6 +66,11 @@ class ShelterFragment : Fragment() {
         }
 
         ib_like.setOnClickListener {
+            val sharedPref = requireActivity().getSharedPreferences("UserPrefs", MODE_PRIVATE)
+            val token = sharedPref.getString("access_token", null)
+
+            serviceViewModel.requestShelter(token, InputRequestShelter(currentPetId))
+
             swipeCard(exitToLeft = true)
         }
 
@@ -73,8 +83,39 @@ class ShelterFragment : Fragment() {
     private fun initStateFlow() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                serviceViewModel.outputPetsShelter.collect { state ->
-                    listPetsShelter = state
+
+                launch {
+                    serviceViewModel.outputPetsShelter.collect { state ->
+                        listPetsShelter = state
+                    }
+                }
+
+                launch {
+                    serviceViewModel.outputRequestShelter.collect { state ->
+                        when (state) {
+                            is OutputRequestShelter.Success -> {
+                                val action = ShelterFragmentDirections.actionShelterToMessage(
+                                    tittletext = "єПрихисток",
+                                    emoji = "✅",
+                                    main = "Заявку надіслано!",
+                                    description = state.message
+                                )
+
+                                findNavController().navigate(action)
+                            }
+
+                            is OutputRequestShelter.Error -> {
+                                val action = ShelterFragmentDirections.actionShelterToMessage(
+                                    tittletext = "єПрихисток",
+                                    emoji = "⛔",
+                                    main = "Помилка!",
+                                    description = state.detail
+                                )
+
+                                findNavController().navigate(action)
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -92,6 +133,8 @@ class ShelterFragment : Fragment() {
         val tv_gender = cardView.findViewById<TextView>(R.id.tv_gender)
         val tv_breed = cardView.findViewById<TextView>(R.id.tv_breed)
         val tv_birth_date = cardView.findViewById<TextView>(R.id.tv_breed)
+
+        currentPetId = pet.pet_id
 
         try {
             if (pet.img_url.isNotBlank() && pet.img_url != "https://") {
