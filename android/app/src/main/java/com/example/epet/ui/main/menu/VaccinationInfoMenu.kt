@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.content.DialogInterface
 import android.graphics.Color
 import android.widget.ImageView
+import android.widget.LinearLayout
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -28,6 +29,8 @@ class VaccinationInfoMenu(private val onClose: (() -> Unit)? = null) : BottomShe
 
     val passportViewModel: PassportViewModel by activityViewModels()
 
+    private lateinit var ll_message: LinearLayout
+    private lateinit var ll_main: LinearLayout
     private lateinit var tv_passport_number: TextView
     private lateinit var tv_update_datetime: TextView
     private lateinit var iv_copy_passport: ImageView
@@ -89,6 +92,8 @@ class VaccinationInfoMenu(private val onClose: (() -> Unit)? = null) : BottomShe
 
     /** Ініціалізація всіх елементів інтерфейсу **/
     private fun initViews(view: View) {
+        ll_message = view.findViewById(R.id.ll_message)
+        ll_main = view.findViewById(R.id.ll_main)
         tv_passport_number = view.findViewById(R.id.tv_passport_number)
         iv_copy_passport = view.findViewById(R.id.iv_copy_passport)
         tv_update_datetime = view.findViewById(R.id.tv_update_datetime)
@@ -110,10 +115,20 @@ class VaccinationInfoMenu(private val onClose: (() -> Unit)? = null) : BottomShe
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 passportViewModel.outputVaccinationList.collect { state ->
                     tv_passport_number.text = state.passport_number
-
                     setUpdateDatetime(state.update_datetime)
 
-                    setupRecyclerView(state.vaccinations)
+                    if (state.vaccinations == emptyList<OutputVaccinationItem>()) {
+                        ll_message.visibility = View.VISIBLE
+                        ll_main.visibility = View.INVISIBLE
+                        rv_vaccinations.visibility = View.INVISIBLE
+
+                    } else {
+                        ll_message.visibility = View.INVISIBLE
+                        ll_main.visibility = View.VISIBLE
+                        rv_vaccinations.visibility = View.VISIBLE
+
+                        setupRecyclerView(state.vaccinations)
+                    }
                 }
             }
         }

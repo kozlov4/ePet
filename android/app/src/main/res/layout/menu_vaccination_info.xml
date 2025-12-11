@@ -87,6 +87,33 @@
                 app:layout_constraintTop_toBottomOf="@+id/tv_passport_number" />
 
             <LinearLayout
+                android:id="@+id/ll_message"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginTop="30dp"
+                android:orientation="vertical"
+                android:visibility="invisible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_update_datetime">
+
+                <TextView
+                    android:id="@+id/tv_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:background="@null"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:fontFamily="@font/e_ukraine_regular"
+                    android:gravity="center"
+                    android:text="У цього улюбленця ще немає вакцинацій 😥"
+                    android:textColor="@color/black"
+                    android:textSize="13sp" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:id="@+id/ll_main"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -189,10 +216,11 @@
                 app:layout_constraintTop_toBottomOf="@+id/ll_main"/>
 
             <View
+                android:id="@+id/view"
                 android:layout_width="0dp"
                 android:layout_height="80dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/rv_vaccinations"/>
+                app:layout_constraintTop_toBottomOf="@+id/rv_vaccinations" />
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline_vertical_left"
