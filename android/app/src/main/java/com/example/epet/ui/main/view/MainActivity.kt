@@ -28,11 +28,11 @@ import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
-    val loadingViewModel: LoadingViewModel by viewModels()
-    val passportViewModel: PassportViewModel by viewModels()
-    val serviceViewModel: ServiceViewModel by viewModels()
-    val settingsViewModel: SettingsViewModel by viewModels()
-    val notificationsViewModel: NotificationsViewModel by viewModels()
+    private val loadingViewModel: LoadingViewModel by viewModels()
+    private val passportViewModel: PassportViewModel by viewModels()
+    private val serviceViewModel: ServiceViewModel by viewModels()
+    private val settingsViewModel: SettingsViewModel by viewModels()
+    private val notificationsViewModel: NotificationsViewModel by viewModels()
 
     private var lastBackPressedTime = 0L
     private val backPressThreshold = 2000L

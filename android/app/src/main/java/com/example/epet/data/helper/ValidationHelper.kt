@@ -27,7 +27,12 @@ object ValidationHelper {
             input.house_number?.length !in 1..20 -> "Номер будинку має містити від 1 символу"
             input.postal_index.length !in 1..10 -> "Поштовий індекс має містити від 1 символу"
             !Patterns.EMAIL_ADDRESS.matcher(input.email).matches() -> "Некоректний формат email"
+
             input.password.length !in 8..100 -> "Пароль має містити від 8 символів"
+            input.password.none { it.isDigit() } -> "Пароль повинен містити хоча б одну цифру"
+            input.password.none { it.isUpperCase() } -> "Пароль повинен містити хоча б одну велику літеру"
+            input.password.none { it.isLowerCase() } -> "Пароль повинен містити хоча б одну малу літеру"
+            input.password.none { "!@#$%^&*()_+".contains(it) } -> "Пароль повинен містити спеціальний символ (!@#$%^&*()_+)"
             else -> null
         }
     }
@@ -43,6 +48,10 @@ object ValidationHelper {
         return when {
             !Patterns.EMAIL_ADDRESS.matcher(input.new_email).matches() -> "Некоректний формат email"
             input.new_password.length !in 8..100 -> "Пароль має містити від 8 символів"
+            input.new_password.none { it.isDigit() } -> "Пароль повинен містити хоча б одну цифру"
+            input.new_password.none { it.isUpperCase() } -> "Пароль повинен містити хоча б одну велику літеру"
+            input.new_password.none { it.isLowerCase() } -> "Пароль повинен містити хоча б одну малу літеру"
+            input.new_password.none { "!@#$%^&*()_+".contains(it) } -> "Пароль повинен містити спеціальний символ (!@#$%^&*()_+)"
             else -> null
         }
     }

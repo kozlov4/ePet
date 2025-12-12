@@ -20,10 +20,13 @@ import com.example.epet.data.model.settings.OutputUpdateProfile
 import com.example.epet.data.model.settings.OutputUserDetail
 import com.example.epet.ui.settings.viewmodel.SettingsViewModel
 import kotlinx.coroutines.launch
+import com.example.epet.ui.main.viewmodel.LoadingViewModel
 
 class SettingsFragment : Fragment(R.layout.fragment_settings) {
 
-    val settingsViewModel: SettingsViewModel by activityViewModels()
+    private val settingsViewModel: SettingsViewModel by activityViewModels()
+    private val loadingViewModel: LoadingViewModel by activityViewModels()
+
     private var outputUserDetail: OutputUserDetail = OutputUserDetail()
 
     private lateinit var iv_to_back: ImageView
@@ -82,11 +85,13 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         val token = sharedPref.getString("access_token", null)
         val user_password = sharedPref.getString("user_password", null)
 
+        tv_message.text = ""
+
         if (outputUserDetail.email == et_email_address.text.toString() && outputUserDetail.password == et_password.text.toString()) {
             changeToStatic()
         } else {
-            settingsViewModel.updateProfile(token, InputUpdateProfile(et_email_address.text.toString().trimEnd(), user_password, et_password.text.toString().trimEnd())
-            )
+            loadingViewModel.show()
+            settingsViewModel.updateProfile(token, InputUpdateProfile(et_email_address.text.toString().trimEnd(), user_password, et_password.text.toString().trimEnd()))
         }
     }
 
@@ -115,16 +120,19 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
                                 with(sharedPref.edit()) {
                                     putString("user_password", et_password.text.toString())
                                     if (state.access_token != null) putString("access_token", state.access_token)
-                                    apply()
+                                    commit()
                                 }
 
                                 val token = sharedPref.getString("access_token", null)
                                 settingsViewModel.userDetail(token)
+
+                                loadingViewModel.hide()
                                 tv_message.text = ""
                                 changeToStatic()
                             }
 
                             is OutputUpdateProfile.Error -> {
+                                loadingViewModel.hide()
                                 tv_message.text = state.detail
                             }
                         }

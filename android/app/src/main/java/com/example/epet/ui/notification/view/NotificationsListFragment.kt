@@ -22,7 +22,7 @@ import kotlinx.coroutines.launch
 
 class NotificationsListFragment : Fragment() {
 
-   val notificationsViewModel: NotificationsViewModel by activityViewModels()
+    private val notificationsViewModel: NotificationsViewModel by activityViewModels()
 
     private lateinit var iv_to_back: ImageView
     private lateinit var rv_messages: RecyclerView

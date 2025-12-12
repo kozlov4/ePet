@@ -163,14 +163,16 @@
         android:clickable="true"
         android:focusable="true">
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:gravity="center"
-            android:fontFamily="@font/e_ukraine_regular"
-            android:text="Завантаження..."
-            android:textColor="@color/white"
-            android:textSize="16sp"
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:id="@+id/progressIndicator"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center"
+            android:indeterminate="true"
+            app:indicatorSize="48dp"
+            app:trackThickness="4dp"
+            app:indicatorColor="@color/white"
+            app:trackColor="#00FFFFFF"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@id/guideline_horizontal_text"
             app:layout_constraintStart_toStartOf="parent"
@@ -182,6 +184,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             app:layout_constraintGuide_percent="0.865" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.Guideline

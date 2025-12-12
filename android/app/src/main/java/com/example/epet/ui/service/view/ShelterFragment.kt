@@ -26,7 +26,7 @@ import kotlinx.coroutines.launch
 
 class ShelterFragment : Fragment() {
 
-    val serviceViewModel : ServiceViewModel by activityViewModels()
+    private val serviceViewModel : ServiceViewModel by activityViewModels()
 
     private lateinit var card_container: FrameLayout
     private lateinit var ib_like: ImageButton
