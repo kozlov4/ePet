@@ -19,6 +19,7 @@ app = FastAPI(
 #uploads_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "uploads")
 #app.mount("/uploads", StaticFiles(directory=uploads_path), name="uploads")
 
+
 app.mount("/uploads", StaticFiles(directory="/root/project/uploads"), name="uploads")
 #app.mount("/uploads", StaticFiles(directory="/home/hapy/uploads"), name="uploads")
 
