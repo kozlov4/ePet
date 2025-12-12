@@ -26,8 +26,9 @@ class PassportListFragment : Fragment() {
 
     private val passportViewModel: PassportViewModel by activityViewModels()
 
-    private lateinit var rvPassports: RecyclerView
-    private lateinit var llIndicators: LinearLayout
+    private lateinit var rv_Passports: RecyclerView
+    private lateinit var ll_Indicators: LinearLayout
+    private lateinit var ll_message: LinearLayout
 
     private lateinit var layoutManager: LinearLayoutManager
     private lateinit var passportListAdapter: PassportListAdapter
@@ -56,8 +57,9 @@ class PassportListFragment : Fragment() {
 
     /** Ініціалізація всіх елементів інтерфейсу **/
     private fun initViews(view: View) {
-        rvPassports = view.findViewById(R.id.rv_passports)
-        llIndicators = view.findViewById(R.id.ll_indicators)
+        rv_Passports = view.findViewById(R.id.rv_passports)
+        ll_Indicators = view.findViewById(R.id.ll_indicators)
+        ll_message = view.findViewById(R.id.ll_message)
     }
 
     /** Ініціалізація StateFlow **/
@@ -65,6 +67,13 @@ class PassportListFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 passportViewModel.outputPassportList.collect { state ->
+
+                    if (state == emptyList<OutputPetItem>()) {
+                        ll_message.visibility = View.VISIBLE
+                    } else {
+                        ll_message.visibility = View.INVISIBLE
+                    }
+
                     setupRecyclerView(state)
                     setupIndicators(state.size)
                 }
@@ -84,8 +93,8 @@ class PassportListFragment : Fragment() {
         }
 
         layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        rvPassports.layoutManager = layoutManager
-        rvPassports.adapter = passportListAdapter
+        rv_Passports.layoutManager = layoutManager
+        rv_Passports.adapter = passportListAdapter
     }
 
     /** Налаштування SnapHelper для центрованої прокрутки **/
@@ -101,27 +110,27 @@ class PassportListFragment : Fragment() {
                 }
             }
         }
-        snapHelper.attachToRecyclerView(rvPassports)
+        snapHelper.attachToRecyclerView(rv_Passports)
     }
 
     /** Центрування першої карточки та налаштування padding **/
     private fun centerFirstCard() {
-        rvPassports.post {
+        rv_Passports.post {
             val screenWidth = resources.displayMetrics.widthPixels
             val cardWidth = (screenWidth * CARD_WIDTH_RATIO).toInt()
             val sidePadding = (screenWidth - cardWidth) / 2
 
-            rvPassports.setPadding(sidePadding, 0, sidePadding, 0)
-            rvPassports.clipToPadding = false
-            rvPassports.overScrollMode = RecyclerView.OVER_SCROLL_NEVER
+            rv_Passports.setPadding(sidePadding, 0, sidePadding, 0)
+            rv_Passports.clipToPadding = false
+            rv_Passports.overScrollMode = RecyclerView.OVER_SCROLL_NEVER
             layoutManager.scrollToPositionWithOffset(0, sidePadding)
-            rvPassports.post { scaleChildren() }
+            rv_Passports.post { scaleChildren() }
         }
     }
 
     /** Слушатель прокрутки для масштабування карток **/
     private fun setupScrollListener() {
-        rvPassports.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+        rv_Passports.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 scaleChildren()
             }
@@ -130,32 +139,32 @@ class PassportListFragment : Fragment() {
 
     /** Масштабування карток та плавне оновлення індикаторів **/
     private fun scaleChildren() {
-        val center = rvPassports.width / 2
-        val childCount = rvPassports.childCount
-        val indicatorCount = llIndicators.childCount
+        val center = rv_Passports.width / 2
+        val childCount = rv_Passports.childCount
+        val indicatorCount = ll_Indicators.childCount
 
-        for (i in 0 until indicatorCount) llIndicators.getChildAt(i).alpha = INDICATOR_ALPHA_MIN
+        for (i in 0 until indicatorCount) ll_Indicators.getChildAt(i).alpha = INDICATOR_ALPHA_MIN
 
         for (i in 0 until childCount) {
-            val child = rvPassports.getChildAt(i)
+            val child = rv_Passports.getChildAt(i)
             val childCenter = (child.left + child.right) / 2
             val distance = abs(center - childCenter)
 
-            val scale = CARD_SCALE_MAX - (distance.toFloat() / rvPassports.width) * (CARD_SCALE_MAX - CARD_SCALE_MIN)
+            val scale = CARD_SCALE_MAX - (distance.toFloat() / rv_Passports.width) * (CARD_SCALE_MAX - CARD_SCALE_MIN)
             child.scaleX = scale
             child.scaleY = scale
 
             val position = layoutManager.getPosition(child)
             if (position in 0 until indicatorCount) {
-                val alpha = 1f - (distance.toFloat() / rvPassports.width)
-                llIndicators.getChildAt(position).alpha = alpha.coerceIn(INDICATOR_ALPHA_MIN, 1f)
+                val alpha = 1f - (distance.toFloat() / rv_Passports.width)
+                ll_Indicators.getChildAt(position).alpha = alpha.coerceIn(INDICATOR_ALPHA_MIN, 1f)
             }
         }
     }
 
     /** Створення індикаторів під RecyclerView **/
     private fun setupIndicators(count: Int) {
-        llIndicators.removeAllViews()
+        ll_Indicators.removeAllViews()
         val sizePx = (resources.displayMetrics.density * INDICATOR_SIZE_DP).toInt()
         val marginPx = (resources.displayMetrics.density * INDICATOR_MARGIN_DP).toInt()
 
@@ -165,7 +174,7 @@ class PassportListFragment : Fragment() {
                 setBackgroundResource(R.drawable.icon_indicator)
                 alpha = INDICATOR_ALPHA_MIN
             }
-            llIndicators.addView(dot)
+            ll_Indicators.addView(dot)
         }
     }
 }

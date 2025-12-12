@@ -4,6 +4,33 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <LinearLayout
+        android:id="@+id/ll_message"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline_horizontal_documents_top"
+        app:layout_constraintBottom_toBottomOf="@+id/guideline_horizontal_documents_bottom">
+
+        <TextView
+            android:id="@+id/tv_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:background="@null"
+            android:clickable="true"
+            android:focusable="true"
+            android:fontFamily="@font/e_ukraine_regular"
+            android:gravity="center"
+            android:text="Улюбленців не знайдено 😥"
+            android:textColor="@color/black"
+            android:textSize="13sp" />
+    </LinearLayout>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_passports"
         android:layout_width="0dp"

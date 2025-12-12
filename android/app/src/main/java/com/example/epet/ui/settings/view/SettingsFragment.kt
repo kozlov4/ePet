@@ -123,8 +123,7 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
                                     commit()
                                 }
 
-                                val token = sharedPref.getString("access_token", null)
-                                settingsViewModel.userDetail(token)
+                                outputUserDetail = outputUserDetail.copy(email = et_email_address.text.toString(), password = et_password.text.toString())
 
                                 loadingViewModel.hide()
                                 tv_message.text = ""

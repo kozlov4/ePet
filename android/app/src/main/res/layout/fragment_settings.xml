@@ -214,10 +214,11 @@
 
     <TextView
         android:id="@+id/tv_message"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:fontFamily="@font/e_ukraine_regular"
+        android:gravity="center"
         android:text=""
         android:textColor="@color/blue_hint_text"
         android:textSize="10sp"
