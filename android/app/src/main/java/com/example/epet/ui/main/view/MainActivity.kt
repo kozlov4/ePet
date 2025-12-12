@@ -16,12 +16,19 @@ import androidx.navigation.NavOptions
 import androidx.navigation.NavController
 import com.example.epet.ui.main.viewmodel.PassportViewModel
 import androidx.activity.viewModels
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import com.example.epet.ui.main.viewmodel.LoadingViewModel
 import com.example.epet.ui.notification.viewmodel.NotificationsViewModel
 import com.example.epet.ui.service.viewmodel.ServiceViewModel
 import com.example.epet.ui.settings.viewmodel.SettingsViewModel
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
+    val loadingViewModel: LoadingViewModel by viewModels()
     val passportViewModel: PassportViewModel by viewModels()
     val serviceViewModel: ServiceViewModel by viewModels()
     val settingsViewModel: SettingsViewModel by viewModels()
@@ -34,6 +41,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var ll_to_documents: LinearLayout
     private lateinit var ll_to_services: LinearLayout
     private lateinit var ll_to_menu: LinearLayout
+    private lateinit var cc_loading: ConstraintLayout
 
     private lateinit var iv_icon_feed: ImageView
     private lateinit var iv_icon_documents: ImageView
@@ -63,6 +71,7 @@ class MainActivity : AppCompatActivity() {
         ll_to_documents = findViewById(R.id.ll_to_documents)
         ll_to_services = findViewById(R.id.ll_to_services)
         ll_to_menu = findViewById(R.id.ll_to_menu)
+        cc_loading = findViewById(R.id.cc_loading)
 
         iv_icon_feed = findViewById(R.id.iv_icon_feed)
         iv_icon_documents = findViewById(R.id.iv_icon_documents)
@@ -81,6 +90,18 @@ class MainActivity : AppCompatActivity() {
         serviceViewModel.getPetsShelter(token)
         settingsViewModel.userDetail(token)
         notificationsViewModel.getNotifications(token)
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                loadingViewModel.loading.collect { state ->
+                    if (state == true) {
+                        cc_loading.visibility = View.VISIBLE
+                    } else {
+                        cc_loading.visibility = View.GONE
+                    }
+                }
+            }
+        }
     }
 
     /** Ініціалізація всіх кнопок інтерфейсу **/

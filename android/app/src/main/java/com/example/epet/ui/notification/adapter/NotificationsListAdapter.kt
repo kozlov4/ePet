@@ -22,8 +22,8 @@ class NotificationsListAdapter(private val notificationsList: List<OutputNotific
 
     override fun onBindViewHolder(holder: NotificationsViewHolder, position: Int) {
         val notification = notificationsList[position]
-        holder.tv_main.text = notification.extract_name
-        holder.tv_description.text = notification.message
+        holder.tv_main.text = notification.message
+        holder.tv_description.text = "${notification.extract_name} сформовано ${notification.date}"
     }
 
     override fun getItemCount(): Int = notificationsList.size

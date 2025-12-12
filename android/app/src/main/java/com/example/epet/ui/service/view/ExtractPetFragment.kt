@@ -27,9 +27,11 @@ import com.example.epet.ui.service.viewmodel.ServiceViewModel
 import kotlinx.coroutines.launch
 import kotlin.getValue
 import kotlin.math.abs
+import com.example.epet.ui.main.viewmodel.LoadingViewModel
 
 class ExtractPetFragment : Fragment() {
 
+    private val loadingViewModel: LoadingViewModel by activityViewModels()
     private val passportViewModel: PassportViewModel by activityViewModels()
     private val serviceViewModel: ServiceViewModel by activityViewModels()
 
@@ -109,6 +111,7 @@ class ExtractPetFragment : Fragment() {
             }
 
             serviceViewModel.generateReport(token, InputExtractPet(selectedPetId, inputExtractName))
+            loadingViewModel.show()
         }
     }
 
@@ -141,9 +144,10 @@ class ExtractPetFragment : Fragment() {
                                 main = "Помилка!",
                                 description = state.detail
                             )
-
                             findNavController().navigate(action)
                         }
+
+                        loadingViewModel.hide()
                     }
                 }
             }
