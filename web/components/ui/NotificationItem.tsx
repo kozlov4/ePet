@@ -35,7 +35,7 @@ const NotificationItem = ({ notification }: NotificationItemProps) => {
     };
 
     const containerClasses =
-        'mb-4 p-4 rounded-xl shadow-lg transition-all duration-300 ease-in-out bg-white hover:shadow-xl';
+        'mb-4 p-4 rounded-xl shadow-lg transition-all duration-300 ease-in-out hover:shadow-xl bg-[rgba(171,171,171,0.27)]';
 
     return (
         <div className={containerClasses} onClick={toggleOpen}>
@@ -46,7 +46,7 @@ const NotificationItem = ({ notification }: NotificationItemProps) => {
                     </h3>
                     {`Користувач ${notification.user_full_name} надіслав(ла) запит на всиновлення тварини.`}
                 </div>
-                <div className="flex items-center text-sm font-medium text-blue-600 cursor-pointer">
+                <div className="flex items-center text-sm font-medium text-gray-400 cursor-pointer">
                     {isOpen ? 'Згорнути' : 'Розгорнути'}
                     <Chevron isOpen={isOpen} />
                 </div>
