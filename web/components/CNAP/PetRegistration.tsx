@@ -306,7 +306,7 @@ export default function PetRegistration({
         }
     };
     return (
-        <div className="min-h-screen w-full bg-gray-50 py-10">
+        <div className="min-h-screen w-full bg-gray-50 pt-10">
             <AnimatePresence>
                 {modalState && (
                     <motion.div
@@ -421,7 +421,9 @@ export default function PetRegistration({
                     </button>
                     <h1 className="text-2xl font-semibold text-gray-800">
                         {`${
-                            pet?.pet_id ? 'Оновлення інформації про' : 'Реєстрація'
+                            pet?.pet_id
+                                ? 'Оновлення інформації про'
+                                : 'Реєстрація'
                         } улюбленця`}
                     </h1>
                 </div>
@@ -580,6 +582,11 @@ export default function PetRegistration({
                     </div>
                 </form>
             </div>
+            <style jsx global>{`
+                footer {
+                    display: none !important;
+                }
+            `}</style>
         </div>
     );
 }
