@@ -1,8 +1,8 @@
 'use client';
-import React, { useState, useEffect } from 'react';
-import { Organization } from '../../types/api';
-import { useRouter, useParams, useSearchParams } from 'next/navigation';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
+import React, { useEffect, useState } from 'react';
 import ArrowBack from '../../assets/images/icons/ArrowBack';
+import { Organization } from '../../types/api';
 import { API_BASE, devError } from '../../utils/config';
 
 const ORGANIZATION_TYPES = ['Ветклініка', 'Притулок'];
@@ -78,7 +78,7 @@ export default function OrganizationPage({
 
             const payload = { ...formData };
             if (!isEditMode) {
-                delete payload.organization_id;
+                delete (payload as any).organization_id;
             }
 
             const response = await fetch(url, {

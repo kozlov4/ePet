@@ -1,10 +1,10 @@
 'use client';
 
+import { AnimatePresence, motion } from 'framer-motion';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import React, { useRef, useState } from 'react';
 import ArrowBack from '../../assets/images/icons/ArrowBack';
-import { AnimatePresence, motion } from 'framer-motion';
 
 import ReactCrop, {
     type Crop,
@@ -13,9 +13,9 @@ import ReactCrop, {
     makeAspectCrop,
 } from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
-import { getCroppedImg } from '../../utils/getCroppedImg';
 import { PetPassportData } from '../../types/api';
-import { API_BASE, devLog, devError } from '../../utils/config';
+import { API_BASE, devError, devLog } from '../../utils/config';
+import { getCroppedImg } from '../../utils/getCroppedImg';
 
 type ModalState = {
     message: string;
@@ -54,7 +54,7 @@ export default function PetRegistration({
         breed: pet?.breed || '',
         species: pet?.species || '',
         color: pet?.color || '',
-        date_of_birth: formatDate(pet?.date_of_birth) || '',
+        date_of_birth: formatDate(pet?.date_of_birth || '') || '',
         identifier_type: '',
         identifier_number: '',
         chip_date: '',
@@ -160,13 +160,16 @@ export default function PetRegistration({
         setLoading(true);
 
         const formData = new FormData();
-        formData.append('file', petFile);
+        formData.append('file', petFile as Blob);
 
         Object.keys(petData).forEach((key) => {
             formData.append(key, petData[key]);
         });
 
-        devLog('Registering pet with data:', Object.fromEntries(formData.entries()));
+        devLog(
+            'Registering pet with data:',
+            Object.fromEntries(formData.entries()),
+        );
 
         try {
             const token = localStorage.getItem('access_token');
@@ -230,7 +233,10 @@ export default function PetRegistration({
         } catch (error) {
             devError('Error registering pet:', error);
             setModalState({
-                message: error instanceof Error ? error.message : "Помилка з'єднання з сервером.",
+                message:
+                    error instanceof Error
+                        ? error.message
+                        : "Помилка з'єднання з сервером.",
                 type: 'error',
             });
         } finally {
