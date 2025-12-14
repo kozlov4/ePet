@@ -2,8 +2,7 @@
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
-
-const API_BASE = process.env.NEXT_PUBLIC_API_DOMAIN || '';
+import { API_BASE, devError } from '../../utils/config';
 
 export function NewPasswordPage(props: { token: string }) {
     const [newPassword, setNewPassword] = useState('');
@@ -13,7 +12,7 @@ export function NewPasswordPage(props: { token: string }) {
     const [isLoading, setIsLoading] = useState(false);
     const [message, setMessage] = useState('');
 
-    const handleSetNewPassword = async (emailAddress) => {
+    const handleSetNewPassword = async (): Promise<void> => {
         setIsLoading(true);
         setMessage('');
 
@@ -33,7 +32,6 @@ export function NewPasswordPage(props: { token: string }) {
             const response = await fetch(
                 `${API_BASE}/reset-password/`,
                 {
-                    // TODO: MOVE DOMAIN TO ENV VARIABLE
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -55,7 +53,7 @@ export function NewPasswordPage(props: { token: string }) {
 
             setMessage('Новий пароль встановлено!');
         } catch (error) {
-            console.error('Error during setting new password:', error);
+            devError('Error during setting new password:', error);
 
             if (
                 error instanceof Error &&
@@ -114,7 +112,7 @@ export function NewPasswordPage(props: { token: string }) {
                     </span>
                 )}
                 <motion.button
-                    onClick={() => handleSetNewPassword(newPassword)}
+                    onClick={() => handleSetNewPassword()}
                     disabled={isLoading}
                     className="w-full h-[15%] mt-[1%] flex justify-center items-center font-medium text-xl rounded-3xl bg-black text-white cursor-pointer transition-all duration-300 ease-in-out hover:bg-[#1e88e5] hover:shadow-[0_0_20px_#1e88e580] hover:scale-[1.05] active:scale-[0.98]"
                     initial={{ opacity: 0, scale: 0.9 }}

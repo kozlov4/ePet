@@ -6,8 +6,7 @@ import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import NotificationItem from '../../components/ui/NotificationItem';
 import { Notification } from '../../types/api';
-
-const API_BASE = process.env.NEXT_PUBLIC_API_DOMAIN || '';
+import { API_BASE } from '../../utils/config';
 
 export default function NotificationsPage() {
     const [notifications, setNotifications] = useState<Notification[] | null>(

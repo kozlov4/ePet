@@ -3,9 +3,9 @@ import React, { useState, useEffect } from 'react';
 import { Organization } from '../../types/api';
 import { useRouter, useParams, useSearchParams } from 'next/navigation';
 import ArrowBack from '../../assets/images/icons/ArrowBack';
+import { API_BASE, devError } from '../../utils/config';
 
 const ORGANIZATION_TYPES = ['Ветклініка', 'Притулок'];
-const API_BASE = process.env.NEXT_PUBLIC_API_DOMAIN || '';
 
 interface OrganizationPageProps {
     initialData?: Organization;
@@ -47,7 +47,7 @@ export default function OrganizationPage({
                 const parsedData = JSON.parse(decodeURIComponent(dataParam));
                 setFormData(parsedData);
             } catch (e) {
-                console.error('Failed to parse organization data from URL', e);
+                devError('Failed to parse organization data from URL', e);
                 setError('Помилка при читанні даних організації.');
             }
         }

@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 
 export function useInfiniteScroll(
-  ref: React.RefObject<HTMLElement>,
+  ref: React.RefObject<HTMLElement | null>,
   callback: () => Promise<void>,
   hasMore: boolean
 ) {

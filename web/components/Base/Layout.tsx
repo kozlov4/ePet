@@ -31,11 +31,9 @@ export const Layout: React.FC<LayoutProps> = ({
     const finalHeaderProps = headerProps || defaultHeaderProps;
 
     return (
-        <div className="min-h-screen">
+        <div className="min-h-screen flex flex-col">
             {showHeader && (customHeader || <Header {...finalHeaderProps} />)}
-            <main className="flex-grow">
-                {children}
-            </main>
+            <main className="flex-grow flex flex-col">{children}</main>
             <Footer />
         </div>
     );

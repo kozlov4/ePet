@@ -2,6 +2,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import ArrowBack from '../../../assets/images/icons/ArrowBack';
 import CopyIcon from '../../../assets/images/icons/CopyIcon';
+import { API_BASE, devLog } from '../../../utils/config';
 
 interface VaccinationData {
     passport_number: string;
@@ -39,7 +40,7 @@ export default function VaccinationInfo() {
                 }
 
                 const response = await fetch(
-                    `https://upcity.live/pets/${id}/vaccinations`,
+                    `${API_BASE}/pets/${id}/vaccinations`,
                     {
                         headers: {
                             Authorization: `Bearer ${token}`,
@@ -53,7 +54,7 @@ export default function VaccinationInfo() {
                 }
 
                 const data = await response.json();
-                console.log(data);
+                devLog('Vaccination data:', data);
                 setVaccinationData(data);
             } catch (err) {
                 setError(

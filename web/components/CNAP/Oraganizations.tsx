@@ -9,8 +9,7 @@ import {
 import { fetchPaginatedData } from '../../utils/api';
 import { Table } from '../ui/Table';
 import router from 'next/router';
-
-const API_BASE = process.env.NEXT_PUBLIC_API_DOMAIN || '';
+import { API_BASE } from '../../utils/config';
 
 export function Organizations() {
     const activeView = 'organizations';

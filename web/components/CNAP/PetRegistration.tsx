@@ -15,8 +15,7 @@ import ReactCrop, {
 import 'react-image-crop/dist/ReactCrop.css';
 import { getCroppedImg } from '../../utils/getCroppedImg';
 import { PetPassportData } from '../../types/api';
-
-const API_BASE = process.env.NEXT_PUBLIC_API_DOMAIN || '';
+import { API_BASE, devLog, devError } from '../../utils/config';
 
 type ModalState = {
     message: string;
@@ -167,10 +166,7 @@ export default function PetRegistration({
             formData.append(key, petData[key]);
         });
 
-        console.log('Registering pet with data:');
-        for (let [key, value] of formData.entries()) {
-            console.log(key, value);
-        }
+        devLog('Registering pet with data:', Object.fromEntries(formData.entries()));
 
         try {
             const token = localStorage.getItem('access_token');
@@ -232,9 +228,9 @@ export default function PetRegistration({
                 onClose: () => router.back(),
             });
         } catch (error) {
-            console.error('Error registering pet:', error);
+            devError('Error registering pet:', error);
             setModalState({
-                message: error.message || "Помилка з'єднання з сервером.",
+                message: error instanceof Error ? error.message : "Помилка з'єднання з сервером.",
                 type: 'error',
             });
         } finally {
@@ -296,7 +292,7 @@ export default function PetRegistration({
 
                 onCropCancel();
             } catch (e) {
-                console.error('Помилка при обрізці фото:', e);
+                devError('Помилка при обрізці фото:', e);
                 onCropCancel();
                 setModalState({
                     message: 'Не вдалося обрізати фото. Спробуйте інше.',

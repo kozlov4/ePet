@@ -1,24 +1,23 @@
 'use client';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
-
-const API_BASE = process.env.NEXT_PUBLIC_API_DOMAIN || '';
+import { API_BASE, devError } from '../../utils/config';
 
 export function ResetPasswordPage() {
-    const [email, setEmail] = useState('');
-    const [emailError, setEmailError] = useState('');
-    const [isLoading, setIsLoading] = useState(false);
-    const [message, setMessage] = useState('');
+    const [email, setEmail] = useState<string>('');
+    const [emailError, setEmailError] = useState<string>('');
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [message, setMessage] = useState<string>('');
 
-    const validateEmail = (value) => {
+    const validateEmail = (value: string): string => {
         if (!value) return '';
-        if (value.length > 30) return 'Максимум 30 символів';
+        // Removed arbitrary 30 character limit
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(value)) return 'Невірний формат електронної пошти';
         return '';
     };
 
-    const handleResetPassword = async (emailAddress) => {
+    const handleResetPassword = async (emailAddress: string): Promise<void> => {
         setIsLoading(true);
         setMessage('');
 
@@ -39,13 +38,14 @@ export function ResetPasswordPage() {
 
             if (response.ok) {
                 setMessage(
-                    'Якщо електронна адреса існує, посилання для скидання паролю було надіслано на пошту'
+                    'Якщо електронна адреса існує, посилання для скидання паролю було надіслано на пошту',
                 );
             } else {
                 throw new Error('Network response was not ok');
             }
         } catch (error) {
-            console.error('Error during password reset:', error);
+            devError('Error during password reset:', error);
+            setMessage('Сталася помилка. Спробуйте пізніше.');
         } finally {
             setIsLoading(false);
         }
@@ -95,16 +95,13 @@ export function ResetPasswordPage() {
                     )}
 
                     {message && (
-                    <span
-                        className={`flex w-full justify-center text-center text-[14px] mt-2 text-green-400`}
-                    >
-                        {message}
-                    </span>
-                )}
-
+                        <span
+                            className={`flex w-full justify-center text-center text-[14px] mt-2 text-green-400`}
+                        >
+                            {message}
+                        </span>
+                    )}
                 </motion.div>
-
-                
 
                 <motion.button
                     onClick={() => handleResetPassword(email)}

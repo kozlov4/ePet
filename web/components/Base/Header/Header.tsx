@@ -81,22 +81,38 @@ export const Header: React.FC<HeaderProps> = ({
                     ))}
                 </motion.div>
 
-                <Link
-                    href={buttonProps.href}
-                    className="flex gap-4 items-center"
-                >
+                <div className="flex gap-4 items-center">
                     {accountName && (
                         <span className="text-black">{accountName}</span>
                     )}
-                    <motion.button
-                        className="flex px-5 py-3 bg-black rounded-3xl cursor-pointer justify-center items-center text-white font-medium text-[15px] transition-all duration-300 ease-in-out hover:bg-[#1e88e5] hover:shadow-[0_0_20px_#1e88e580] hover:scale-[1.05] active:scale-[0.98]"
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 0.6, delay: 0.8 }}
-                    >
-                        {buttonProps.label}
-                    </motion.button>
-                </Link>
+                    {buttonProps.action === 'app' ? (
+                        <motion.button
+                            onClick={() => {
+                                window.open(
+                                    'https://play.google.com/store/apps/details?id=com.example.epet',
+                                    '_blank',
+                                );
+                            }}
+                            className="flex px-5 py-3 bg-black rounded-3xl cursor-pointer justify-center items-center text-white font-medium text-[15px] transition-all duration-300 ease-in-out hover:bg-[#1e88e5] hover:shadow-[0_0_20px_#1e88e580] hover:scale-[1.05] active:scale-[0.98]"
+                            initial={{ opacity: 0, scale: 0.8 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ duration: 0.6, delay: 0.8 }}
+                        >
+                            {buttonProps.label}
+                        </motion.button>
+                    ) : (
+                        <Link href={buttonProps.href}>
+                            <motion.button
+                                className="flex px-5 py-3 bg-black rounded-3xl cursor-pointer justify-center items-center text-white font-medium text-[15px] transition-all duration-300 ease-in-out hover:bg-[#1e88e5] hover:shadow-[0_0_20px_#1e88e580] hover:scale-[1.05] active:scale-[0.98]"
+                                initial={{ opacity: 0, scale: 0.8 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                transition={{ duration: 0.6, delay: 0.8 }}
+                            >
+                                {buttonProps.label}
+                            </motion.button>
+                        </Link>
+                    )}
+                </div>
             </motion.div>
         </div>
     );
