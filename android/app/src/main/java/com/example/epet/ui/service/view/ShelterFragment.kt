@@ -17,7 +17,6 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.example.epet.R
-import com.example.epet.data.model.auth.OutputAuth
 import com.example.epet.data.model.service.InputRequestShelter
 import com.example.epet.data.model.service.OutputPetShelter
 import com.example.epet.data.model.service.OutputRequestShelter
@@ -47,8 +46,6 @@ class ShelterFragment : Fragment() {
         initViews(view)
         initButtons()
         initStateFlow()
-
-        showNextCard(animated = false, listPetsShelter)
     }
 
     /** Ініціалізація всіх елементів інтерфейсу **/
@@ -87,6 +84,7 @@ class ShelterFragment : Fragment() {
                 launch {
                     serviceViewModel.outputPetsShelter.collect { state ->
                         listPetsShelter = state
+                        showNextCard(animated = false, listPetsShelter)
                     }
                 }
 
