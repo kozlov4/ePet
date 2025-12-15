@@ -59,14 +59,20 @@ object ValidationHelper {
     }
 
     fun validateUpdateProfile(input: InputUpdateProfile): String? {
-        return when {
-            !Patterns.EMAIL_ADDRESS.matcher(input.new_email).matches() -> "Некоректний формат email"
-            input.new_password.length !in 8..100 -> "Пароль має містити від 8 символів"
-            input.new_password.none { it.isDigit() } -> "Пароль повинен містити хоча б одну цифру"
-            input.new_password.none { it.isUpperCase() } -> "Пароль повинен містити хоча б одну велику літеру"
-            input.new_password.none { it.isLowerCase() } -> "Пароль повинен містити хоча б одну малу літеру"
-            input.new_password.none { "!@#$%^&*()_+".contains(it) } -> "Пароль повинен містити спеціальний символ (!@#$%^&*()_+)"
-            else -> null
+        input.new_email?.let {
+            if (!Patterns.EMAIL_ADDRESS.matcher(it).matches()) {
+                return "Некоректний формат email"
+            }
         }
+
+        input.new_password?.let { password ->
+            if (password.length !in 8..100) return "Пароль має містити від 8 символів"
+            if (password.none { it.isDigit() }) return "Пароль повинен містити хоча б одну цифру"
+            if (password.none { it.isUpperCase() }) return "Пароль повинен містити хоча б одну велику літеру"
+            if (password.none { it.isLowerCase() }) return "Пароль повинен містити хоча б одну малу літеру"
+            if (password.none { "!@#$%^&*()_+".contains(it) }) return "Пароль повинен містити спеціальний символ (!@#$%^&*()_+)"
+        }
+
+        return null
     }
 }

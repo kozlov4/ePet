@@ -79,7 +79,7 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         }
     }
 
-    /** Логіка збереження змін **/
+    /** Логика сохранения изменений */
     private fun saveChanges() {
         val sharedPref = requireContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
         val token = sharedPref.getString("access_token", null)
@@ -87,13 +87,30 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
 
         tv_message.text = ""
 
-        if (outputUserDetail.email == et_email_address.text.toString() && outputUserDetail.password == et_password.text.toString()) {
+        val inputUpdateProfile = InputUpdateProfile(
+            new_email = if (outputUserDetail.email != et_email_address.text.toString().trimEnd())
+                et_email_address.text.toString().trimEnd()
+            else null,
+
+            old_password = if (user_password != et_password.text.toString().trimEnd())
+                user_password
+            else null,
+
+            new_password = if (user_password != et_password.text.toString().trimEnd())
+                et_password.text.toString().trimEnd()
+
+            else null
+        )
+
+        if (inputUpdateProfile.new_email == null && inputUpdateProfile.old_password == null && inputUpdateProfile.new_password == null) {
             changeToStatic()
-        } else {
-            loadingViewModel.show()
-            settingsViewModel.updateProfile(token, InputUpdateProfile(et_email_address.text.toString().trimEnd(), user_password, et_password.text.toString().trimEnd()))
+            return
         }
+
+        loadingViewModel.show()
+        settingsViewModel.updateProfile(token, inputUpdateProfile)
     }
+
 
     /** Ініціалізація StateFlow **/
     private fun initStateFlow() {
@@ -105,8 +122,9 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
                     settingsViewModel.outputUserDetail.collect { state ->
                         val sharedPref = requireContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
                         val user_password = sharedPref.getString("user_password", null)
+
                         outputUserDetail = state.copy(password = user_password)
-                        updateData(outputUserDetail)
+                        updateTextView(outputUserDetail)
                     }
                 }
 
@@ -117,13 +135,14 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
                             is OutputUpdateProfile.Success -> {
 
                                 val sharedPref = requireContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+                                val token = sharedPref.getString("access_token", null)
                                 with(sharedPref.edit()) {
                                     putString("user_password", et_password.text.toString())
                                     if (state.access_token != null) putString("access_token", state.access_token)
                                     commit()
                                 }
 
-                                outputUserDetail = outputUserDetail.copy(email = et_email_address.text.toString(), password = et_password.text.toString())
+                                settingsViewModel.userDetail(token)
 
                                 loadingViewModel.hide()
                                 tv_message.text = ""
@@ -142,7 +161,7 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
     }
 
     /** Оновлення полів користувача **/
-    private fun updateData(input: OutputUserDetail) {
+    private fun updateTextView(input: OutputUserDetail) {
         tv_last_name.text = input.last_name
         tv_first_name.text = input.first_name
         tv_patronymic.text = input.patronymic

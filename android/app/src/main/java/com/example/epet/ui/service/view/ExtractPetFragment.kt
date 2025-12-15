@@ -19,6 +19,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.example.epet.data.model.notification.OutputNotification
 import com.example.epet.data.model.passport.OutputPetItem
 import com.example.epet.data.model.service.InputExtractPet
 import com.example.epet.ui.main.viewmodel.PassportViewModel
@@ -44,6 +45,7 @@ class ExtractPetFragment : Fragment() {
     private lateinit var iv_to_back: ImageView
     private lateinit var tv_tittletext: TextView
     private lateinit var tv_description: TextView
+    private lateinit var tv_message: TextView
     private lateinit var rv_pets: RecyclerView
     private lateinit var bth_create_extract: AppCompatButton
 
@@ -61,10 +63,6 @@ class ExtractPetFragment : Fragment() {
         initExtractInfo()
         initButtons()
         initStateFlow()
-
-        setupSnapHelper()
-        centerFirstCard()
-        setupScrollListener()
     }
 
     /** Ініціалізація всіх елементів інтерфейсу **/
@@ -72,6 +70,7 @@ class ExtractPetFragment : Fragment() {
         iv_to_back = view.findViewById(R.id.iv_to_back)
         tv_tittletext = view.findViewById(R.id.tv_tittletext)
         tv_description = view.findViewById(R.id.tv_description)
+        tv_message = view.findViewById(R.id.tv_message)
         rv_pets = view.findViewById(R.id.rv_pets)
         bth_create_extract = view.findViewById(R.id.bth_create_extract)
     }
@@ -122,7 +121,16 @@ class ExtractPetFragment : Fragment() {
 
                 launch {
                     passportViewModel.outputPassportList.collect { state ->
-                        setupRecyclerView(state)
+                        if (state == emptyList<OutputPetItem>())  {
+                            tv_message.visibility = View.VISIBLE
+                            bth_create_extract.isEnabled = false
+                            bth_create_extract.alpha = 0.5f
+                        } else {
+                            tv_message.visibility = View.INVISIBLE
+                            bth_create_extract.isEnabled = true
+                            bth_create_extract.alpha = 1.0f
+                            setupRecyclerView(state)
+                        }
                     }
                 }
 
@@ -161,8 +169,11 @@ class ExtractPetFragment : Fragment() {
 
         rv_pets.layoutManager = layoutManager
         rv_pets.adapter = petListAdapter
-    }
 
+        setupSnapHelper()
+        centerFirstCard()
+        setupScrollListener()
+    }
 
     /** Налаштування SnapHelper для центрованої прокрутки **/
     private fun setupSnapHelper() {

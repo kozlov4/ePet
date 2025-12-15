@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
@@ -25,6 +26,7 @@ class NotificationsListFragment : Fragment() {
     private val notificationsViewModel: NotificationsViewModel by activityViewModels()
 
     private lateinit var iv_to_back: ImageView
+    private lateinit var tv_message: TextView
     private lateinit var rv_messages: RecyclerView
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -42,6 +44,7 @@ class NotificationsListFragment : Fragment() {
     private fun initViews(view: View) {
         iv_to_back = view.findViewById(R.id.iv_to_back)
         rv_messages = view.findViewById(R.id.rv_messages)
+        tv_message = view.findViewById(R.id.tv_message)
     }
 
     /** Ініціалізація всіх кнопок інтерфейсу **/
@@ -60,7 +63,12 @@ class NotificationsListFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 notificationsViewModel.outputNotifications.collect { state ->
-                    setupRecyclerView(state)
+                    if (state == emptyList<OutputNotification>())  {
+                        tv_message.visibility = View.VISIBLE
+                    } else {
+                        tv_message.visibility = View.INVISIBLE
+                        setupRecyclerView(state)
+                    }
                 }
             }
         }

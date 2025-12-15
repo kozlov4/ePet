@@ -13,6 +13,7 @@ import com.example.epet.R
 import com.example.epet.ui.main.adapter.PassportListAdapter
 import kotlin.math.abs
 import SelectorMenu
+import android.widget.TextView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -28,7 +29,7 @@ class PassportListFragment : Fragment() {
 
     private lateinit var rv_Passports: RecyclerView
     private lateinit var ll_Indicators: LinearLayout
-    private lateinit var ll_message: LinearLayout
+    private lateinit var tv_message: TextView
 
     private lateinit var layoutManager: LinearLayoutManager
     private lateinit var passportListAdapter: PassportListAdapter
@@ -50,16 +51,13 @@ class PassportListFragment : Fragment() {
 
         initViews(view)
         initStateFlow()
-        setupSnapHelper()
-        centerFirstCard()
-        setupScrollListener()
     }
 
     /** Ініціалізація всіх елементів інтерфейсу **/
     private fun initViews(view: View) {
         rv_Passports = view.findViewById(R.id.rv_passports)
         ll_Indicators = view.findViewById(R.id.ll_indicators)
-        ll_message = view.findViewById(R.id.ll_message)
+        tv_message = view.findViewById(R.id.tv_message)
     }
 
     /** Ініціалізація StateFlow **/
@@ -69,13 +67,12 @@ class PassportListFragment : Fragment() {
                 passportViewModel.outputPassportList.collect { state ->
 
                     if (state == emptyList<OutputPetItem>()) {
-                        ll_message.visibility = View.VISIBLE
+                        tv_message.visibility = View.VISIBLE
                     } else {
-                        ll_message.visibility = View.INVISIBLE
+                        tv_message.visibility = View.INVISIBLE
+                        setupRecyclerView(state)
+                        setupIndicators(state.size)
                     }
-
-                    setupRecyclerView(state)
-                    setupIndicators(state.size)
                 }
             }
         }
@@ -95,6 +92,10 @@ class PassportListFragment : Fragment() {
         layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         rv_Passports.layoutManager = layoutManager
         rv_Passports.adapter = passportListAdapter
+
+        setupSnapHelper()
+        centerFirstCard()
+        setupScrollListener()
     }
 
     /** Налаштування SnapHelper для центрованої прокрутки **/
