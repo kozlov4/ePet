@@ -93,32 +93,24 @@ class ShelterFragment : Fragment() {
                 launch {
                     serviceViewModel.outputRequestShelter.collect { state ->
                         when (state) {
-                            is OutputRequestShelter.Success -> {
-                                val action = ShelterFragmentDirections.actionShelterToMessage(
-                                    tittletext = "єПрихисток",
-                                    emoji = "✅",
-                                    main = "Заявку надіслано!",
-                                    description = state.message
-                                )
-
-                                findNavController().navigate(action)
-                            }
-
-                            is OutputRequestShelter.Error -> {
-                                val action = ShelterFragmentDirections.actionShelterToMessage(
-                                    tittletext = "єПрихисток",
-                                    emoji = "⛔",
-                                    main = "Помилка!",
-                                    description = state.detail
-                                )
-
-                                findNavController().navigate(action)
-                            }
+                            is OutputRequestShelter.Success -> navigateToMessage("✅", "Заявку надіслано!", state.message)
+                            is OutputRequestShelter.Error -> navigateToMessage("⛔", "Помилка!", state.detail)
                         }
                     }
                 }
             }
         }
+    }
+
+    /** Перехід на сторінку повідомлення **/
+    private fun navigateToMessage(emoji: String, main: String, description: String) {
+        val action = ShelterFragmentDirections.actionShelterToMessage(
+            tittletext = "Витяг про улюбленця",
+            emoji = emoji,
+            main = main,
+            description = description
+        )
+        findNavController().navigate(action)
     }
 
     /** Показ наступної картки **/

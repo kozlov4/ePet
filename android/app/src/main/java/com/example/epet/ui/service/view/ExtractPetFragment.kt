@@ -1,6 +1,7 @@
 package com.example.epet.ui.services.view
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -22,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.epet.data.model.notification.OutputNotification
 import com.example.epet.data.model.passport.OutputPetItem
 import com.example.epet.data.model.service.InputExtractPet
+import com.example.epet.ui.main.view.MainActivity
 import com.example.epet.ui.main.viewmodel.PassportViewModel
 import com.example.epet.ui.service.adapter.PetListAdapter
 import com.example.epet.ui.service.viewmodel.ServiceViewModel
@@ -137,22 +139,9 @@ class ExtractPetFragment : Fragment() {
                 launch {
                     serviceViewModel.outputGenerateReport.collect { state ->
                         if (state.detail == "Витяг створено успішно та надіслано на вашу пошту") {
-                            val action = ExtractPetFragmentDirections.actionExtractPetToMessage(
-                                tittletext = "Витяг про улюбленця",
-                                emoji = "✅",
-                                main = "Витяг сформовано!",
-                                description = "Документ про пухнастого буде надіслано вам найближчим часом на email"
-                            )
-
-                            findNavController().navigate(action)
+                            navigateToMessage("✅", "Витяг сформовано!", state.detail)
                         } else {
-                            val action = ExtractPetFragmentDirections.actionExtractPetToMessage(
-                                tittletext = "Витяг про улюбленця",
-                                emoji = "⛔",
-                                main = "Помилка!",
-                                description = state.detail
-                            )
-                            findNavController().navigate(action)
+                            navigateToMessage("⛔", "Помилка!", state.detail)
                         }
 
                         loadingViewModel.hide()
@@ -160,6 +149,17 @@ class ExtractPetFragment : Fragment() {
                 }
             }
         }
+    }
+
+    /** Перехід на сторінку повідомлення **/
+    private fun navigateToMessage(emoji: String, main: String, description: String) {
+        val action = ExtractPetFragmentDirections.actionExtractPetToMessage(
+            tittletext = "Витяг про улюбленця",
+            emoji = emoji,
+            main = main,
+            description = description
+        )
+        findNavController().navigate(action)
     }
 
     /** Налаштування RecyclerView **/

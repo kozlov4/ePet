@@ -12,7 +12,9 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.asSharedFlow
 
-class AuthViewModel(private val repository: AuthRepository) : ViewModel() {
+class AuthViewModel() : ViewModel() {
+
+    private val repository = AuthRepository()
 
     private val _outputLogin = MutableSharedFlow<OutputAuth>()
     val outputLogin = _outputLogin.asSharedFlow()

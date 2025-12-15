@@ -37,6 +37,7 @@ class NotificationsListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initViews(view)
         initButtons()
+        loadUserNotifications()
         initStateFlow()
     }
 
@@ -54,12 +55,15 @@ class NotificationsListFragment : Fragment() {
         }
     }
 
-    /** Ініціалізація StateFlow **/
-    private fun initStateFlow() {
+    /** Ініціалізація повідомлень користувача **/
+    fun loadUserNotifications() {
         val sharedPref = requireContext().getSharedPreferences("UserPrefs", MODE_PRIVATE)
         val token = sharedPref.getString("access_token", null)
         notificationsViewModel.getNotifications(token)
+    }
 
+    /** Ініціалізація StateFlow **/
+    private fun initStateFlow() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 notificationsViewModel.outputNotifications.collect { state ->

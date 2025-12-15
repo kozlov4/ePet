@@ -15,7 +15,7 @@ import androidx.navigation.fragment.findNavController
 import android.content.Context
 import com.example.epet.data.model.auth.InputRegistration
 import com.example.epet.data.model.auth.OutputAuth
-import com.example.epet.data.repository.AuthRepository
+import androidx.fragment.app.activityViewModels
 import com.example.epet.ui.auth.viewmodel.AuthViewModel
 import com.example.epet.ui.main.view.MainActivity
 import androidx.lifecycle.lifecycleScope
@@ -25,7 +25,7 @@ import androidx.lifecycle.Lifecycle
 
 class RegistrationFragment : Fragment() {
 
-    private val authViewModel: AuthViewModel by lazy { AuthViewModel(AuthRepository()) }
+    private val authViewModel: AuthViewModel by activityViewModels()
 
     private lateinit var tv_tittletext: TextView
     private lateinit var tv_message: TextView

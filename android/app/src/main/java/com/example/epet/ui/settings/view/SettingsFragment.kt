@@ -72,14 +72,50 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         }
 
         bth_edit.setOnClickListener {
-            if (bth_edit.text.toString() == "Редагувати")
-                changeToEdit()
-            else if (bth_edit.text.toString() == "Зберегти зміни")
-                saveChanges()
+            if (bth_edit.text.toString() == "Редагувати") textViewSwitchMode(edit = true) else saveChanges()
         }
     }
 
-    /** Логика сохранения изменений */
+    /** Ініціалізація StateFlow **/
+    private fun initStateFlow() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+
+                // Отримання даних користувача
+                launch {
+                    settingsViewModel.outputUserDetail.collect { state ->
+                        val sharedPref = requireContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+                        val user_password = sharedPref.getString("user_password", null)
+
+                        outputUserDetail = state.copy(password = user_password)
+                        updateTextView(outputUserDetail)
+                    }
+                }
+
+                // Обробка оновлення профілю
+                launch {
+                    settingsViewModel.outputUpdateProfile.collect { state ->
+                        when (state) {
+                            is OutputUpdateProfile.Success -> {
+                                val token = saveUserToken(state)
+                                settingsViewModel.userDetail(token)
+                                tv_message.text = ""
+                                loadingViewModel.hide()
+                                textViewSwitchMode(edit = false)
+                            }
+
+                            is OutputUpdateProfile.Error -> {
+                                loadingViewModel.hide()
+                                tv_message.text = state.detail
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /** Збереження змін */
     private fun saveChanges() {
         val sharedPref = requireContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
         val token = sharedPref.getString("access_token", null)
@@ -103,7 +139,7 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         )
 
         if (inputUpdateProfile.new_email == null && inputUpdateProfile.old_password == null && inputUpdateProfile.new_password == null) {
-            changeToStatic()
+            textViewSwitchMode(edit = false)
             return
         }
 
@@ -111,53 +147,18 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         settingsViewModel.updateProfile(token, inputUpdateProfile)
     }
 
+    /** Зберешення токену користувача */
+    private fun saveUserToken(state: OutputUpdateProfile.Success): String? {
+        val sharedPref = requireContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+        val token = sharedPref.getString("access_token", null)
 
-    /** Ініціалізація StateFlow **/
-    private fun initStateFlow() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-
-                // Отримання даних користувача
-                launch {
-                    settingsViewModel.outputUserDetail.collect { state ->
-                        val sharedPref = requireContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
-                        val user_password = sharedPref.getString("user_password", null)
-
-                        outputUserDetail = state.copy(password = user_password)
-                        updateTextView(outputUserDetail)
-                    }
-                }
-
-                // Обробка оновлення профілю
-                launch {
-                    settingsViewModel.outputUpdateProfile.collect { state ->
-                        when (state) {
-                            is OutputUpdateProfile.Success -> {
-
-                                val sharedPref = requireContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
-                                val token = sharedPref.getString("access_token", null)
-                                with(sharedPref.edit()) {
-                                    putString("user_password", et_password.text.toString())
-                                    if (state.access_token != null) putString("access_token", state.access_token)
-                                    commit()
-                                }
-
-                                settingsViewModel.userDetail(token)
-
-                                loadingViewModel.hide()
-                                tv_message.text = ""
-                                changeToStatic()
-                            }
-
-                            is OutputUpdateProfile.Error -> {
-                                loadingViewModel.hide()
-                                tv_message.text = state.detail
-                            }
-                        }
-                    }
-                }
-            }
+        with(sharedPref.edit()) {
+            putString("user_password", et_password.text.toString())
+            if (state.access_token != null) putString("access_token", state.access_token)
+            commit()
         }
+
+        return token
     }
 
     /** Оновлення полів користувача **/
@@ -173,36 +174,23 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         et_password.setText(input.password)
     }
 
-    /** Зміна на редагування **/
-    private fun changeToEdit() {
-        val grayColor = ContextCompat.getColor(requireContext(), R.color.gray_hint_text)
-        listOf(tv_last_name, tv_first_name, tv_patronymic, tv_passport_number, tv_address, tv_postal_code).forEach { it.setTextColor(grayColor) }
+    /** Зміна полів на редагування/статику **/
+    private fun textViewSwitchMode(edit: Boolean) {
+        val color = ContextCompat.getColor(requireContext(), if (edit) R.color.gray_hint_text else R.color.black)
+        listOf(tv_last_name, tv_first_name, tv_patronymic, tv_passport_number, tv_address, tv_postal_code).forEach { it.setTextColor(color) }
 
         et_email_address.apply {
-            isFocusableInTouchMode = true
-            isFocusable = true
-            isClickable = true
+            isFocusableInTouchMode = edit
+            isFocusable = edit
+            isClickable = edit
         }
 
         et_password.apply {
-            isFocusableInTouchMode = true
-            isFocusable = true
-            isClickable = true
+            isFocusableInTouchMode = edit
+            isFocusable = edit
+            isClickable = edit
         }
 
-        bth_edit.text = "Зберегти зміни"
-    }
-
-    /** Зміна на статичне **/
-    private fun changeToStatic() {
-        val blackColor = ContextCompat.getColor(requireContext(), R.color.black)
-        listOf(tv_last_name, tv_first_name, tv_patronymic, tv_passport_number, tv_address, tv_postal_code).forEach { it.setTextColor(blackColor) }
-
-        et_email_address.isFocusable = false
-        et_email_address.isClickable = false
-        et_password.isFocusable = false
-        et_password.isClickable = false
-
-        bth_edit.text = "Редагувати"
+        bth_edit.text = if (edit) "Зберегти зміни" else "Редагувати"
     }
 }

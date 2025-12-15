@@ -82,6 +82,7 @@ class MenuFragment : Fragment() {
             navigateToAuthActivity()
         }
     }
+
     /** Збереження даних користувача **/
     private fun clearUserInfo(context: Context) {
         val sharedPref = context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)

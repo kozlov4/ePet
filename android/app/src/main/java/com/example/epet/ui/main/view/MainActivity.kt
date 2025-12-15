@@ -62,6 +62,8 @@ class MainActivity : AppCompatActivity() {
         initNavigationBar()
         initButtons()
         setupBackPressed()
+
+        loadUserData()
         initStateFlow()
     }
 
@@ -81,8 +83,8 @@ class MainActivity : AppCompatActivity() {
         v_fake_bar = findViewById(R.id.v_fake_bar)
     }
 
-    /** Ініціалізація StateFlow **/
-    private fun initStateFlow() {
+    /** Завантаження даних користувача **/
+    fun loadUserData() {
         val sharedPref = getSharedPreferences("UserPrefs", MODE_PRIVATE)
         val token = sharedPref.getString("access_token", null)
 
@@ -90,7 +92,10 @@ class MainActivity : AppCompatActivity() {
         serviceViewModel.getPetsShelter(token)
         settingsViewModel.userDetail(token)
         notificationsViewModel.getNotifications(token)
+    }
 
+    /** Ініціалізація StateFlow **/
+    private fun initStateFlow() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 loadingViewModel.loading.collect { state ->
@@ -125,8 +130,7 @@ class MainActivity : AppCompatActivity() {
         icons: List<ImageView>,
         defaultImages: List<Int>,
         selectedImages: List<Int>,
-        selectedIndex: Int
-    ) {
+        selectedIndex: Int) {
         icons.forEachIndexed { i, icon ->
             icon.setImageResource(if (i == selectedIndex) selectedImages[i] else defaultImages[i])
         }
