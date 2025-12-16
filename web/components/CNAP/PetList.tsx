@@ -4,7 +4,12 @@ import { useRouter } from 'next/router';
 import { useCallback } from 'react';
 
 import { Table } from '../../components/ui/Table';
-import { ColumnDefinition, PaginatedResponse, Pet } from '../../types/api';
+import {
+    ColumnDefinition,
+    PaginatedResponse,
+    Pet,
+    ViewConfig,
+} from '../../types/api';
 import { fetchPaginatedData } from '../../utils/api';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_DOMAIN || '';
@@ -76,16 +81,6 @@ export function PetList() {
             ),
         },
     ];
-
-    interface ViewConfig {
-        endpoint: string;
-        queryParamName: string;
-        columns: ColumnDefinition<any>[];
-        title: string;
-        addNewLink: string;
-        addNewText: string;
-        searchPlaceholder: string;
-    }
 
     const viewConfigs: Record<string, ViewConfig> = {
         animals: {

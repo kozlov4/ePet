@@ -1,4 +1,4 @@
-import { Organizations } from '../../components/CNAP/Oraganizations';
+import Organizations from '../../components/CNAP/Organizations';
 
 export default function OrganizationsPage() {
     return (

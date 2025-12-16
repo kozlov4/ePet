@@ -170,9 +170,11 @@ export function Table({
                 <table className="min-w-full border-collapse">
                     <thead>
                         <tr>
-                            {columns.map((col) => (
+                            {columns.map((col, colIndex) => (
                                 <th
-                                    key={String(col.accessor)}
+                                    key={`th-${colIndex}-${String(
+                                        col.accessor,
+                                    )}`}
                                     className="px-6 py-4 text-left text-sm font-medium text-[20px]"
                                 >
                                     {col.header}
@@ -193,9 +195,11 @@ export function Table({
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ delay: 0.05 * i }}
                                 >
-                                    {columns.map((col) => (
+                                    {columns.map((col, colIndex) => (
                                         <td
-                                            key={String(col.accessor)}
+                                            key={`${key}-td-${colIndex}-${String(
+                                                col.accessor,
+                                            )}`}
                                             className="px-6 py-4 text-sm font-medium text-[14px]"
                                         >
                                             {col.cell
