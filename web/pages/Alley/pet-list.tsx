@@ -6,7 +6,7 @@ export default function PetListPage() {
     return (
         <div className="flex min-h-screen w-screen flex-col bg-cover bg-center">
             <main className="flex-grow">
-                <PetList />
+                <PetList all_fields_to_search={true} />
             </main>
         </div>
     );
