@@ -182,9 +182,9 @@ def get_notifications_service(db: Session, user_id: int):
 
     result = []
     for ext in extracts:
-        date_str = ext.extract_date.strftime("%d.%m.%Y %H:%M") if ext.extract_date else "—"
+        date_str = ext.extract_date.strftime("%d.%m.%Y") if ext.extract_date else "—"
 
-        msg = f"Витяг  сформовано!"
+        msg = f"Витяг сформовано!"
 
         result.append(NotificationResponse(
             extract_name=ext.extract_name,

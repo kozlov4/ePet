@@ -21,9 +21,10 @@ async def read_all_animals_route(
         org_or_cnap: Annotated[Union[Organizations, Cnap], Depends(get_current_org_or_cnap)],
         page: Annotated[int, Query(ge=1, description="Номер сторінки")] = 1,
         size: Annotated[int, Query(ge=1, le=100, description="Кількість записів на сторінці")] = 6,
-        animal_passport_number: Optional[str] = Query(None, description="Номер паспорта тварини для пошуку")
+        animal_passport_number: Optional[str] = Query(None, description="Номер паспорта тварини для пошуку"),
+        search: Optional[str] = Query(None, description="Пошук для притулка за всіма атрибутами")
 ):
-    return read_all_animals_service(db=db, org_or_cnap=org_or_cnap, page=page, size=size, animal_passport_number=animal_passport_number)
+    return read_all_animals_service(db=db, org_or_cnap=org_or_cnap, page=page, size=size, animal_passport_number=animal_passport_number, search=search)
 
 
 @router.get("/info/", response_model=ReadPersonalInformationByOrg)
@@ -36,9 +37,10 @@ async def read_personal_info_route(
 @router.get("/organizations/", response_model=List[ReadAllOrganizations])
 async def read_all_organizations_route(
         db: db_dependency,
-        cnap: Annotated[Cnap, Depends(get_current_org_or_cnap)]
+        cnap: Annotated[Cnap, Depends(get_current_org_or_cnap)],
+        organization_name: Optional[str] = Query(None, description="Пошук за назвою організації"),
 ):
-    return read_all_organizations_service(db=db, cnap=cnap)
+    return read_all_organizations_service(db=db, cnap=cnap, organization_name=organization_name)
 
 
 @router.get("/organization/list", response_model=List[ShelterRequestResponse])
