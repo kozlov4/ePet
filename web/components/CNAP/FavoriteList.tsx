@@ -101,6 +101,7 @@ export function FavoriteList({
             columns: animalColumns,
             title: 'Список улюбленців',
             addNewLink: '/CNAP/pet-registration',
+            addNewText: 'Зареєструвати улюбленця',
             searchPlaceholder: 'Пошук...',
         },
     };
