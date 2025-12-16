@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import ArrowBack from '../../assets/images/icons/ArrowBack';
 import CopyIcon from '../../assets/images/icons/CopyIcon';
 import { PetPassportData } from '../../types/api';
+import { copyToClipboard } from '../../utils/clipboard';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_DOMAIN || '';
 
@@ -59,8 +60,10 @@ export function PetPassport({
 
     const handleCopyPassport = () => {
         if (petData?.passport_number) {
-            navigator.clipboard.writeText(petData.passport_number);
-            alert('Номер паспорта скопійовано!');
+            copyToClipboard(
+                petData.passport_number,
+                'Номер паспорта скопійовано!',
+            );
         }
     };
 
@@ -107,27 +110,29 @@ export function PetPassport({
     }
 
     const InfoField = ({ fields }: { fields: InfoFieldItem[] }) => (
-        <div className="w-[369px] grid grid-cols-[max-content_1fr] gap-x-8 gap-y-3 bg-[#F5F5F5] rounded-2xl py-4 pl-6 pr-6">
-            {fields.flatMap((field, index) => [
-                <div key={`label-${index}`} className="flex flex-col gap-1">
-                    <p className="text-sm text-black whitespace-nowrap">
-                        {field.label}
-                    </p>
-                    {field.labelEn && (
-                        <p className="text-xs text-[#B3B3B3] whitespace-nowrap">
-                            {field.labelEn}
+        <div className="grid grid-cols-[1fr_1fr] gap-x-6 gap-y-4 bg-[#F5F5F5] rounded-2xl py-6 pl-6 pr-6 w-[368px]">
+            {fields.map((field, index) => (
+                <>
+                    <div className="flex flex-col gap-2">
+                        <p className="text-sm text-black whitespace-nowrap">
+                            {field.label}
                         </p>
-                    )}
-                </div>,
-                <div key={`value-${index}`} className="flex flex-col gap-1">
-                    <p className="text-sm text-black">{field.value}</p>
-                    {field.valueEn && (
-                        <p className="text-xs text-[#B3B3B3]">
-                            {field.valueEn}
-                        </p>
-                    )}
-                </div>,
-            ])}
+                        {field.labelEn && (
+                            <p className="text-xs text-[#B3B3B3] whitespace-nowrap">
+                                {field.labelEn}
+                            </p>
+                        )}
+                    </div>
+                    <div className="flex flex-col gap-2">
+                        <p className="text-sm text-black">{field.value}</p>
+                        {field.valueEn && (
+                            <p className="text-xs text-[#B3B3B3]">
+                                {field.valueEn}
+                            </p>
+                        )}
+                    </div>
+                </>
+            ))}
         </div>
     );
 
@@ -173,7 +178,7 @@ export function PetPassport({
     };
 
     return (
-        <div className="min-h-screen bg-white">
+        <div className="">
             <div className="max-w-[830px] w-full mx-auto my-12 flex flex-col gap-8">
                 <div className="flex gap-10 items-start translate-x-[-80px]">
                     <button
@@ -182,27 +187,29 @@ export function PetPassport({
                     >
                         <ArrowBack />
                     </button>
-                    <p className="text-2xl">
-                        Паспорт домашнього
-                        <br />
-                        улюбленця
-                    </p>
+                    <p className="text-2xl">{`${
+                        changeButton
+                            ? 'Повна інформація'
+                            : 'Паспорт домашнього улюбленця'
+                    }`}</p>
                 </div>
-                <div className="flex gap-2 items-center">
-                    <p className="text-4xl">{petData.passport_number}</p>
-                    <button
-                        onClick={handleCopyPassport}
-                        className="cursor-pointer hover:opacity-70 transition-opacity"
-                    >
-                        <CopyIcon />
-                    </button>
-                </div>
-                <div className="flex justify-between">
-                    <div className="flex gap-10">
+                {petData.passport_number != '—' && (
+                    <div className="flex gap-2 items-center">
+                        <p className="text-5xl">{petData.passport_number}</p>
+                        <button
+                            onClick={handleCopyPassport}
+                            className="cursor-pointer hover:opacity-70 transition-opacity"
+                        >
+                            <CopyIcon />
+                        </button>
+                    </div>
+                )}
+                <div className="flex justify-between items-start">
+                    <div className="flex gap-10 ">
                         <img
                             src={petData.img_url}
                             alt=""
-                            className="w-[200px] h-[250px] rounded-3xl"
+                            className="w-[200px] h-[250px] rounded-3xl object-cover"
                         />
                         <div className="flex flex-col gap-8">
                             <div className="flex flex-col gap-1">
@@ -210,15 +217,17 @@ export function PetPassport({
                                 <p className="text-sm">{petData.pet_name_en}</p>
                             </div>
                             <div className="flex flex-col gap-1">
-                                <p className="text-sm">Дата народження:</p>
-                                <p className="text-sm">Date of birth</p>
-                                <p className="text-sm  text-[#B3B3B3]">
+                                <p className="text-[13px]">Дата народження:</p>
+                                <p className="text-[10px] text-[#B3B3B3]">
+                                    Date of birth
+                                </p>
+                                <p className="text-[13px] ">
                                     {formatDate(petData.date_of_birth)}
                                 </p>
                             </div>
                         </div>
                     </div>
-                    <div className="flex flex-col gap-5">
+                    <div className="flex flex-col gap-5 w-[368px]">
                         <InfoField
                             fields={[
                                 {
@@ -327,3 +336,5 @@ export function PetPassport({
         </div>
     );
 }
+
+PetPassport.showFooter = false;

@@ -1,10 +1,10 @@
 'use client';
 
+import { AnimatePresence, motion } from 'framer-motion';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import React, { useRef, useState } from 'react';
 import ArrowBack from '../../assets/images/icons/ArrowBack';
-import { AnimatePresence, motion } from 'framer-motion';
 
 import ReactCrop, {
     type Crop,
@@ -13,10 +13,9 @@ import ReactCrop, {
     makeAspectCrop,
 } from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
-import { getCroppedImg } from '../../utils/getCroppedImg';
 import { PetPassportData } from '../../types/api';
-
-const API_BASE = process.env.NEXT_PUBLIC_API_DOMAIN || '';
+import { API_BASE, devError, devLog } from '../../utils/config';
+import { getCroppedImg } from '../../utils/getCroppedImg';
 
 type ModalState = {
     message: string;
@@ -55,7 +54,7 @@ export default function PetRegistration({
         breed: pet?.breed || '',
         species: pet?.species || '',
         color: pet?.color || '',
-        date_of_birth: formatDate(pet?.date_of_birth) || '',
+        date_of_birth: formatDate(pet?.date_of_birth || '') || '',
         identifier_type: '',
         identifier_number: '',
         chip_date: '',
@@ -161,16 +160,16 @@ export default function PetRegistration({
         setLoading(true);
 
         const formData = new FormData();
-        formData.append('file', petFile);
+        formData.append('file', petFile as Blob);
 
         Object.keys(petData).forEach((key) => {
             formData.append(key, petData[key]);
         });
 
-        console.log('Registering pet with data:');
-        for (let [key, value] of formData.entries()) {
-            console.log(key, value);
-        }
+        devLog(
+            'Registering pet with data:',
+            Object.fromEntries(formData.entries()),
+        );
 
         try {
             const token = localStorage.getItem('access_token');
@@ -232,9 +231,12 @@ export default function PetRegistration({
                 onClose: () => router.back(),
             });
         } catch (error) {
-            console.error('Error registering pet:', error);
+            devError('Error registering pet:', error);
             setModalState({
-                message: error.message || "Помилка з'єднання з сервером.",
+                message:
+                    error instanceof Error
+                        ? error.message
+                        : "Помилка з'єднання з сервером.",
                 type: 'error',
             });
         } finally {
@@ -296,7 +298,7 @@ export default function PetRegistration({
 
                 onCropCancel();
             } catch (e) {
-                console.error('Помилка при обрізці фото:', e);
+                devError('Помилка при обрізці фото:', e);
                 onCropCancel();
                 setModalState({
                     message: 'Не вдалося обрізати фото. Спробуйте інше.',
@@ -306,7 +308,7 @@ export default function PetRegistration({
         }
     };
     return (
-        <div className="min-h-screen justify-center w-full bg-gray-50 px-35 py-10">
+        <div className="w-full pt-10">
             <AnimatePresence>
                 {modalState && (
                     <motion.div
@@ -411,19 +413,25 @@ export default function PetRegistration({
                 )}
             </AnimatePresence>
 
-            <div className="mb-8 flex items-center">
-                <button
-                    onClick={() => router.back()}
-                    className="mr-4 rounded-full bg-black p-2 transition-[0.2s] cursor-pointer hover:bg-gray-300"
-                >
-                    <ArrowBack />
-                </button>
-                <h1 className="text-2xl font-semibold text-gray-800">
-                    Реєстрація домашнього улюбленця
-                </h1>
+            <div className="mb-8 flex items-center justify-center max-w-4xl mx-auto">
+                <div className="flex items-center w-full">
+                    <button
+                        onClick={() => router.back()}
+                        className="mr-4 rounded-full bg-black p-2 transition-[0.2s] cursor-pointer hover:bg-gray-300"
+                    >
+                        <ArrowBack />
+                    </button>
+                    <h1 className="text-2xl font-semibold text-gray-800">
+                        {`${
+                            pet?.pet_id
+                                ? 'Оновлення інформації про'
+                                : 'Реєстрація'
+                        } улюбленця`}
+                    </h1>
+                </div>
             </div>
 
-            <div className="w-full max-w-4xl rounded-xl bg-[rgba(217,217,217,0.27)] p-6 shadow-lg sm:p-8 lg:p-10">
+            <div className="w-full max-w-4xl mx-auto rounded-xl bg-[rgba(217,217,217,0.27)] p-6 shadow-lg sm:p-8 lg:p-10">
                 <form
                     onSubmit={handleSubmit}
                     className="grid grid-cols-1 gap-8 md:grid-cols-2"

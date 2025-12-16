@@ -1,6 +1,6 @@
 import OrganizationRegistration from '../../../components/CNAP/OrganizationRegistration';
 
-export default function OrganizationRegistrationPage() {
+export default function OrganizationCreatePage() {
     return (
         <>
             <style jsx global>{`

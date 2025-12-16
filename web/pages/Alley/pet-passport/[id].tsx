@@ -1,11 +1,15 @@
-import { PetPassport } from "../../../components/CNAP/PetPassport";
+import { PetPassport } from '../../../components/CNAP/PetPassport';
 
-
-
-export default function PetPasssport(){
-     return(
-        <PetPassport
-            changeButton={true}
-        />
+export default function PetPasssport() {
+    return (
+        <>
+            <style jsx global>{`
+                footer {
+                    display: none !important;
+                }
+            `}</style>
+            <PetPassport changeButton={true} />
+        </>
     );
 }
+PetPasssport.showFooter = false;

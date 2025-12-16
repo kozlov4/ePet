@@ -2,6 +2,8 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import ArrowBack from '../../../assets/images/icons/ArrowBack';
 import CopyIcon from '../../../assets/images/icons/CopyIcon';
+import { copyToClipboard } from '../../../utils/clipboard';
+import { API_BASE, devLog } from '../../../utils/config';
 
 interface VaccinationData {
     passport_number: string;
@@ -39,7 +41,7 @@ export default function VaccinationInfo() {
                 }
 
                 const response = await fetch(
-                    `https://upcity.live/pets/${id}/vaccinations`,
+                    `${API_BASE}/pets/${id}/vaccinations`,
                     {
                         headers: {
                             Authorization: `Bearer ${token}`,
@@ -53,7 +55,7 @@ export default function VaccinationInfo() {
                 }
 
                 const data = await response.json();
-                console.log(data);
+                devLog('Vaccination data:', data);
                 setVaccinationData(data);
             } catch (err) {
                 setError(
@@ -69,8 +71,10 @@ export default function VaccinationInfo() {
 
     const handleCopyPassport = () => {
         if (vaccinationData?.passport_number) {
-            navigator.clipboard.writeText(vaccinationData.passport_number);
-            alert('Назва препарату скопійовано!');
+            copyToClipboard(
+                vaccinationData.passport_number,
+                'Номер паспорта скопійовано!',
+            );
         }
     };
 
@@ -89,7 +93,7 @@ export default function VaccinationInfo() {
     };
 
     return (
-        <div className="min-h-screen bg-white">
+        <div className="min-h-screen">
             <div className="max-w-[830px] w-full mx-auto my-12 flex flex-col gap-8">
                 <div className="flex gap-10 items-center translate-x-[-80px]">
                     <button
@@ -161,7 +165,8 @@ export default function VaccinationInfo() {
                                         className="hover:bg-gray-50 transition-colors"
                                     >
                                         <td className="px-6 py-4  text-[20px]">
-                                            {vaccination.drug_name}{' '}
+                                            {vaccination.drug_name}
+                                            <br />
                                             {vaccination.series_number}
                                         </td>
                                         <td className="px-6 py-4 text-[20px]">

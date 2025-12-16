@@ -4,12 +4,20 @@ import { useRouter } from 'next/router';
 import { useCallback } from 'react';
 
 import { Table } from '../../components/ui/Table';
-import { ColumnDefinition, PaginatedResponse, Pet } from '../../types/api';
+import {
+    ColumnDefinition,
+    PaginatedResponse,
+    Pet,
+    ViewConfig,
+} from '../../types/api';
 import { fetchPaginatedData } from '../../utils/api';
+import { API_BASE } from '../../utils/config';
 
-const API_BASE = process.env.NEXT_PUBLIC_API_DOMAIN || '';
-
-export function PetList() {
+export function PetList({
+    all_fields_to_search,
+}: {
+    all_fields_to_search?: boolean;
+}) {
     const router = useRouter();
     const activeView = (router.query.view as string) || 'animals';
 
@@ -46,7 +54,8 @@ export function PetList() {
         {
             accessor: 'animal_passport_number',
             header: 'ID:',
-            cell: (pet) => pet.animal_passport_number || pet.pet_id,
+            cell: (pet) =>
+                all_fields_to_search ? pet.pet_id : pet.animal_passport_number,
         },
         { accessor: 'breed', header: 'Порода:' },
         { accessor: 'gender', header: 'Стать:' },
@@ -77,20 +86,12 @@ export function PetList() {
         },
     ];
 
-    interface ViewConfig {
-        endpoint: string;
-        queryParamName: string;
-        columns: ColumnDefinition<any>[];
-        title: string;
-        addNewLink: string;
-        addNewText: string;
-        searchPlaceholder: string;
-    }
-
     const viewConfigs: Record<string, ViewConfig> = {
         animals: {
             endpoint: '/organizations/animals',
-            queryParamName: 'animal_passport_number',
+            queryParamName: all_fields_to_search
+                ? 'search'
+                : 'animal_passport_number',
             columns: animalColumns,
             title: 'Список тварин',
             addNewLink: '/Alley/pet-registration',
