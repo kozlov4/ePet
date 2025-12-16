@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import ArrowBack from '../../assets/images/icons/ArrowBack';
 import CopyIcon from '../../assets/images/icons/CopyIcon';
 import { PetPassportData } from '../../types/api';
+import { copyToClipboard } from '../../utils/clipboard';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_DOMAIN || '';
 
@@ -59,8 +60,10 @@ export function PetPassport({
 
     const handleCopyPassport = () => {
         if (petData?.passport_number) {
-            navigator.clipboard.writeText(petData.passport_number);
-            alert('Номер паспорта скопійовано!');
+            copyToClipboard(
+                petData.passport_number,
+                'Номер паспорта скопійовано!',
+            );
         }
     };
 
@@ -107,7 +110,7 @@ export function PetPassport({
     }
 
     const InfoField = ({ fields }: { fields: InfoFieldItem[] }) => (
-        <div className="grid grid-cols-[1fr_1fr] gap-x-6 gap-y-4 bg-[#F5F5F5] rounded-2xl py-6 pl-6 pr-6">
+        <div className="grid grid-cols-[1fr_1fr] gap-x-6 gap-y-4 bg-[#F5F5F5] rounded-2xl py-6 pl-6 pr-6 w-[368px]">
             {fields.map((field, index) => (
                 <>
                     <div className="flex flex-col gap-2">
@@ -201,12 +204,12 @@ export function PetPassport({
                         </button>
                     </div>
                 )}
-                <div className="flex justify-between">
-                    <div className="flex gap-10">
+                <div className="flex justify-between items-start">
+                    <div className="flex gap-10 ">
                         <img
                             src={petData.img_url}
                             alt=""
-                            className="w-[200px] h-[250px] rounded-3xl"
+                            className="w-[200px] h-[250px] rounded-3xl object-cover"
                         />
                         <div className="flex flex-col gap-8">
                             <div className="flex flex-col gap-1">
@@ -214,17 +217,17 @@ export function PetPassport({
                                 <p className="text-sm">{petData.pet_name_en}</p>
                             </div>
                             <div className="flex flex-col gap-1">
-                                <p className="text-sm">Дата народження:</p>
-                                <p className="text-sm text-[#B3B3B3]">
+                                <p className="text-[13px]">Дата народження:</p>
+                                <p className="text-[10px] text-[#B3B3B3]">
                                     Date of birth
                                 </p>
-                                <p className="text-sm ">
+                                <p className="text-[13px] ">
                                     {formatDate(petData.date_of_birth)}
                                 </p>
                             </div>
                         </div>
                     </div>
-                    <div className="flex flex-col gap-5 justify-between">
+                    <div className="flex flex-col gap-5 w-[368px]">
                         <InfoField
                             fields={[
                                 {

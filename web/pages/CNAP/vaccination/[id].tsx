@@ -2,6 +2,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import ArrowBack from '../../../assets/images/icons/ArrowBack';
 import CopyIcon from '../../../assets/images/icons/CopyIcon';
+import { copyToClipboard } from '../../../utils/clipboard';
 
 interface VaccinationData {
     passport_number: string;
@@ -69,8 +70,10 @@ export default function VaccinationInfo() {
 
     const handleCopyPassport = () => {
         if (vaccinationData?.passport_number) {
-            navigator.clipboard.writeText(vaccinationData.passport_number);
-            alert('Назва препарату скопійовано!');
+            copyToClipboard(
+                vaccinationData.passport_number,
+                'Номер паспорта скопійовано!',
+            );
         }
     };
 

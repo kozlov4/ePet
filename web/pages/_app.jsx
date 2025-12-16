@@ -1,9 +1,10 @@
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { Layout } from '../components/Base/Layout';
+import { AuthProvider } from '../hooks/AuthProvider';
 import { useAuth } from '../hooks/useAuth';
 import '../styles/globals.css';
-import { AuthProvider } from '../hooks/AuthProvider';
 
 export default function App({ Component, pageProps }) {
     return (
@@ -75,12 +76,25 @@ function AppContent({ Component, pageProps }) {
     }
 
     return (
-        <Layout
-            headerProps={finalHeaderProps}
-            showHeader={finalShowHeader}
-            customHeader={customHeader}
-        >
-            <Component {...restPageProps} />
-        </Layout>
+        <>
+            <Layout
+                headerProps={finalHeaderProps}
+                showHeader={finalShowHeader}
+                customHeader={customHeader}
+            >
+                <Component {...restPageProps} />
+            </Layout>
+            <ToastContainer
+                position="top-right"
+                autoClose={2000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+            />
+        </>
     );
 }

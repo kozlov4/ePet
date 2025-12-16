@@ -99,7 +99,7 @@ export function FavoriteList({
             endpoint: '/organizations/animals',
             queryParamName: 'animal_passport_number',
             columns: animalColumns,
-            title: 'Паспорт домашнього улюбленця',
+            title: 'Список улюбленців',
             addNewLink: '/CNAP/pet-registration',
             searchPlaceholder: 'Пошук...',
         },
