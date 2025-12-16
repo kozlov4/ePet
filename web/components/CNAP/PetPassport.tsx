@@ -60,7 +60,6 @@ export function PetPassport({
     const handleCopyPassport = () => {
         if (petData?.passport_number) {
             navigator.clipboard.writeText(petData.passport_number);
-            alert('Номер паспорта скопійовано!');
         }
     };
 
@@ -175,7 +174,7 @@ export function PetPassport({
     };
 
     return (
-        <div className="min-h-screen bg-white">
+        <div className="">
             <div className="max-w-[830px] w-full mx-auto my-12 flex flex-col gap-8">
                 <div className="flex gap-10 items-start translate-x-[-80px]">
                     <button
@@ -333,3 +332,5 @@ export function PetPassport({
         </div>
     );
 }
+
+PetPassport.showFooter = false;

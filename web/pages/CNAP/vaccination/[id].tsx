@@ -70,7 +70,6 @@ export default function VaccinationInfo() {
     const handleCopyPassport = () => {
         if (vaccinationData?.passport_number) {
             navigator.clipboard.writeText(vaccinationData.passport_number);
-            alert('Назва препарату скопійовано!');
         }
     };
 

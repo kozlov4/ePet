@@ -77,7 +77,6 @@ export default function AddVaccination() {
     const handleCopyPassport = () => {
         if (vaccinationData?.passport_number) {
             navigator.clipboard.writeText(vaccinationData.passport_number);
-            alert('Номер паспорта скопійовано!');
         }
     };
 
@@ -157,7 +156,7 @@ export default function AddVaccination() {
     }
 
     return (
-        <div className="min-h-screen bg-white">
+        <div className="">
             <div className="max-w-[830px] w-full mx-auto my-12 flex flex-col gap-8">
                 <div className="flex gap-10 items-center translate-x-[-80px]">
                     <button
@@ -181,11 +180,9 @@ export default function AddVaccination() {
                         <CopyIcon />
                     </button>
                 </div>
-                <div className="bg-[#F5F5F5] rounded-2xl px-8 py-5">
-                    <form
-                        onSubmit={handleSubmit}
-                        className="flex flex-col gap-5"
-                    >
+
+                <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+                    <div className="bg-[#F5F5F5] rounded-2xl px-8 py-5">
                         <div className="flex flex-col gap-2">
                             <label className="text-[13px] font-medium flex flex-col">
                                 <span>Назва:</span>
@@ -253,18 +250,19 @@ export default function AddVaccination() {
                                 required
                             />
                         </div>
-                        <div className="flex justify-center mt-[22px]">
-                            <button
-                                type="submit"
-                                disabled={submitting}
-                                className="w-full rounded-[10em] bg-white px-14 py-3 text-[15px] font-semibold cursor-pointer text-black transition-all duration-300 border-2 border-black hover:bg-black hover:text-white disabled:opacity-50 disabled:cursor-not-allowed"
-                            >
-                                {submitting ? 'Додавання...' : 'Додати'}
-                            </button>
-                        </div>
-                    </form>
-                </div>
+                    </div>
+                    <div className="flex justify-center mt-[22px]">
+                        <button
+                            type="submit"
+                            disabled={submitting}
+                            className="w-full rounded-[10em] bg-white px-14 py-3 text-[15px] font-semibold cursor-pointer text-black transition-all duration-300 border-2 border-black hover:bg-black hover:text-white disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            {submitting ? 'Додавання...' : 'Додати'}
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     );
 }
+AddVaccination.showFooter = false;
