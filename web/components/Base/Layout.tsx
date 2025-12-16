@@ -7,6 +7,7 @@ type LayoutProps = {
     children: React.ReactNode;
     headerProps?: HeaderProps | null;
     showHeader?: boolean;
+    showFooter?: boolean;
     customHeader?: React.ReactNode;
 };
 
@@ -14,6 +15,7 @@ export const Layout: React.FC<LayoutProps> = ({
     children,
     headerProps,
     showHeader = true,
+    showFooter = true,
     customHeader,
 }) => {
     const defaultHeaderProps: HeaderProps = {
@@ -33,8 +35,8 @@ export const Layout: React.FC<LayoutProps> = ({
     return (
         <div className="min-h-screen flex flex-col">
             {showHeader && (customHeader || <Header {...finalHeaderProps} />)}
-            <main className="flex-grow flex flex-col">{children}</main>
-            <Footer />
+            <main className="flex-grow">{children}</main>
+            {showFooter && <Footer />}
         </div>
     );
 };

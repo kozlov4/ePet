@@ -11,7 +11,7 @@ import { fetchPaginatedData } from '../../utils/api';
 import { API_BASE } from '../../utils/config';
 import { Table } from '../ui/Table';
 
-export function Organizations() {
+export default function Organizations() {
     const activeView = 'organizations';
 
     const orgColumns: ColumnDefinition<Organization>[] = [
@@ -56,7 +56,7 @@ export function Organizations() {
     const viewConfigs: Record<string, ViewConfig> = {
         organizations: {
             endpoint: '/organizations/organizations',
-            queryParamName: '',
+            queryParamName: 'organization_name',
             columns: orgColumns,
             title: 'Список організацій',
             addNewLink: '/CNAP/organization/create',
@@ -65,7 +65,6 @@ export function Organizations() {
         },
     };
     const config = viewConfigs[activeView];
-
     const fetchFunction = useCallback(
         async (
             page: number,

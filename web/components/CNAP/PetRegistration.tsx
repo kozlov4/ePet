@@ -308,7 +308,7 @@ export default function PetRegistration({
         }
     };
     return (
-        <div className="min-h-screen justify-center w-full bg-gray-50 px-35 py-10">
+        <div className="w-full pt-10">
             <AnimatePresence>
                 {modalState && (
                     <motion.div
@@ -413,19 +413,25 @@ export default function PetRegistration({
                 )}
             </AnimatePresence>
 
-            <div className="mb-8 flex items-center">
-                <button
-                    onClick={() => router.back()}
-                    className="mr-4 rounded-full bg-black p-2 transition-[0.2s] cursor-pointer hover:bg-gray-300"
-                >
-                    <ArrowBack />
-                </button>
-                <h1 className="text-2xl font-semibold text-gray-800">
-                    Реєстрація домашнього улюбленця
-                </h1>
+            <div className="mb-8 flex items-center justify-center max-w-4xl mx-auto">
+                <div className="flex items-center w-full">
+                    <button
+                        onClick={() => router.back()}
+                        className="mr-4 rounded-full bg-black p-2 transition-[0.2s] cursor-pointer hover:bg-gray-300"
+                    >
+                        <ArrowBack />
+                    </button>
+                    <h1 className="text-2xl font-semibold text-gray-800">
+                        {`${
+                            pet?.pet_id
+                                ? 'Оновлення інформації про'
+                                : 'Реєстрація'
+                        } улюбленця`}
+                    </h1>
+                </div>
             </div>
 
-            <div className="w-full max-w-4xl rounded-xl bg-[rgba(217,217,217,0.27)] p-6 shadow-lg sm:p-8 lg:p-10">
+            <div className="w-full max-w-4xl mx-auto rounded-xl bg-[rgba(217,217,217,0.27)] p-6 shadow-lg sm:p-8 lg:p-10">
                 <form
                     onSubmit={handleSubmit}
                     className="grid grid-cols-1 gap-8 md:grid-cols-2"

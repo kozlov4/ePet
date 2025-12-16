@@ -60,34 +60,28 @@ export default function NotificationsPage() {
 
     if (isLoadingInitial) {
         return (
-            <div className="text-center py-8 text-xl text-gray-600">
-                Завантаження...
-            </div>
+            <div className="py-8 text-xl text-gray-600">Завантаження...</div>
         );
     }
 
     if (error) {
-        return (
-            <div className="text-red-500 text-center py-8 text-xl">{error}</div>
-        );
+        return <div className="text-red-500 py-8 text-xl">{error}</div>;
     }
 
     if (!notifications || notifications.length === 0) {
         return (
-            <div className="text-center py-8 text-xl text-gray-600">
-                Повідомлень немає.
-            </div>
+            <div className="py-8 text-xl text-gray-600">Повідомлень немає.</div>
         );
     }
 
     return (
         <motion.div
-            className="w-full min-h-screen pt-10 px-4 md:px-0"
+            className="min-h-screen pt-10 px-4 md:px-0"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: 'easeOut' }}
         >
-            <div className="max-w-3xl mx-auto">
+            <div className="max-w-3xl mx-12">
                 <h1 className="text-4xl font-light text-black mb-8">
                     Повідомлення
                 </h1>
