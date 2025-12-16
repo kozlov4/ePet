@@ -1,9 +1,11 @@
-const API_BASE = process.env.NEXT_PUBLIC_API_DOMAIN || '';
+import { API_BASE } from './config';
+import { handleAuthError } from './auth';
 
 export async function fetchOrganizationInfo() {
     const token = localStorage.getItem('access_token');
 
     if (!token) {
+        handleAuthError();
         throw new Error('Токен авторизації відсутній. Будь ласка, увійдіть.');
     }
 
@@ -18,6 +20,7 @@ export async function fetchOrganizationInfo() {
     });
 
     if (res.status === 401 || res.status === 403) {
+        handleAuthError();
         throw new Error(
             'Авторизація не вдалася. Термін дії токена закінчився.',
         );

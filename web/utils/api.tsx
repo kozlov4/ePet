@@ -1,4 +1,5 @@
 import { PaginatedResponse } from '../types/api';
+import { handleAuthError } from './auth';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_DOMAIN || '';
 
@@ -44,6 +45,7 @@ export async function fetchPaginatedData(
     });
 
     if (res.status === 401 || res.status === 403) {
+        handleAuthError();
         throw new Error(
             'Авторизація не вдалася. Термін дії токена закінчився.',
         );

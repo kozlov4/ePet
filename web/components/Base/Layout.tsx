@@ -1,7 +1,7 @@
 import React from 'react';
+import { HeaderProps } from '../Base/Header/HeaderTypes';
 import { Footer } from './Footer';
 import { Header } from './Header/Header';
-import { HeaderProps } from './Header/HeaderTypes';
 
 type LayoutProps = {
     children: React.ReactNode;
@@ -33,7 +33,7 @@ export const Layout: React.FC<LayoutProps> = ({
     const finalHeaderProps = headerProps || defaultHeaderProps;
 
     return (
-        <div className="min-h-screen">
+        <div className="min-h-screen flex flex-col">
             {showHeader && (customHeader || <Header {...finalHeaderProps} />)}
             <main className="flex-grow">{children}</main>
             {showFooter && <Footer />}

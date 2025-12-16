@@ -11,8 +11,7 @@ import {
     ViewConfig,
 } from '../../types/api';
 import { fetchPaginatedData } from '../../utils/api';
-
-const API_BASE = process.env.NEXT_PUBLIC_API_DOMAIN || '';
+import { API_BASE } from '../../utils/config';
 
 export function PetList({
     all_fields_to_search,

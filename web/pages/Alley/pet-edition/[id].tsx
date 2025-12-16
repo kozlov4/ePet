@@ -2,8 +2,7 @@ import { useEffect, useState } from 'react';
 import PetRegistration from '../../../components/CNAP/PetRegistration';
 import { PetPassportData } from '../../../types/api';
 import router from 'next/router';
-
-const API_BASE = process.env.NEXT_PUBLIC_API_DOMAIN || '';
+import { API_BASE } from '../../../utils/config';
 
 export default function PetEgitionPage() {
     const [petData, setPetData] = useState<PetPassportData | null>(null);

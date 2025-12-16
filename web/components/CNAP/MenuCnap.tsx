@@ -1,9 +1,9 @@
-import ArrowLeft from '../../assets/images/icons/ArrowLeft';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
+import { useCallback, useEffect, useState } from 'react';
+import ArrowLeft from '../../assets/images/icons/ArrowLeft';
 import { Organization } from '../../types/api';
 import { fetchOrganizationInfo } from '../../utils/fetchOrganization';
-import { motion } from 'framer-motion';
 
 export function Menu() {
     const [items, setItems] = useState<Organization | null>(null);
@@ -89,7 +89,7 @@ export function Menu() {
                         animate={{ opacity: 1 }}
                         transition={{ delay: 0.55, duration: 0.6 }}
                     >
-                        {items.organization_name}
+                        {items?.organization_name || ''}
                     </motion.span>
                 </div>
 
@@ -110,22 +110,22 @@ export function Menu() {
                         {
                             label: 'Тип організації',
                             sub: 'type of organization',
-                            value: items.organization_type,
+                            value: items?.organization_type || '',
                         },
                         {
                             label: 'Адреса:',
                             sub: 'Address',
-                            value: `${items.city} ${items.street} ${items.building}`,
+                            value: `${items?.city} ${items?.street} ${items?.building}`,
                         },
                         {
                             label: 'Номер телефону:',
                             sub: 'Phone number',
-                            value: items.phone_number,
+                            value: items?.phone_number || '',
                         },
                         {
                             label: 'Електронна адреса',
                             sub: 'E-mail address',
-                            value: items.email,
+                            value: items?.email || '',
                         },
                         {
                             label: 'Пароль',
@@ -169,6 +169,29 @@ export function Menu() {
                             </div>
                         </motion.div>
                     ))}
+
+                    <motion.div
+                        className="flex w-full justify-end"
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ delay: 1.1 }}
+                    >
+                        <button
+                            className="
+                            flex items-center justify-center
+                            border-black border-[1px]
+                            px-5 py-2 rounded-[30px]
+                            font-medium text-[12px] text-black
+                            bg-white cursor-pointer
+                            transition-all duration-300 ease-out
+                            hover:bg-black hover:text-white hover:shadow-[0_0_15px_rgba(0,0,0,0.3)]
+                            active:scale-[0.97]
+                        "
+                            onClick={() => router.push('/reset-password')}
+                        >
+                            Забув пароль
+                        </button>
+                    </motion.div>
 
                     <motion.div
                         className="

@@ -1,7 +1,9 @@
-import { createContext, useEffect, useState } from "react";
-import { AuthContextType, AuthProviderProps, User } from "../types/api";
+import { createContext, useEffect, useState } from 'react';
+import { AuthContextType, AuthProviderProps, User } from '../types/api';
 
-export const AuthContext = createContext<AuthContextType | undefined>(undefined);
+export const AuthContext = createContext<AuthContextType | undefined>(
+    undefined,
+);
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
     const [user, setUser] = useState<User | null>(null);
@@ -29,6 +31,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         setUser(null);
         localStorage.removeItem('user_name');
         localStorage.removeItem('access_token');
+        localStorage.removeItem('organization_type');
     };
 
     const value = {
