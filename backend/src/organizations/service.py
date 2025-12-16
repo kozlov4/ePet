@@ -38,7 +38,8 @@ def read_all_animals_service(
         org_or_cnap: Annotated[Union[Organizations, Cnap], Depends(get_current_org_or_cnap)],
         page:int,
         size:int,
-        animal_passport_number:str):
+        animal_passport_number:str = None,
+        search: str = None):
     if isinstance(org_or_cnap, Organizations):
         org_type = org_or_cnap.organization_type
         org_id = org_or_cnap.organization_id
@@ -54,6 +55,19 @@ def read_all_animals_service(
 
     if org_type == 'Притулок' and org_id:
         base_query = base_query.filter(Pets.organization_id == org_id)
+
+    if search:
+        base_query = base_query.outerjoin(Pets.passport)
+
+        search_pattern = f"%{search}%"
+
+        base_query = base_query.filter(
+            or_(
+                Pets.species.ilike(search_pattern),
+                Pets.breed.ilike(search_pattern),
+                Passports.passport_number.ilike(search_pattern),
+            )
+        )
 
     if animal_passport_number:
         base_query = (
@@ -87,7 +101,8 @@ def read_all_animals_service(
         animal_passport = pet.passport.passport_number if pet.passport else None
 
         owner_data = None
-        if (org_type != 'Ветклініка' or is_cnap) and pet.owner:
+
+        if pet.owner:
             owner_data = OwnerForOrgResponse(passport_number=pet.owner.passport_number)
 
         response_items.append(
@@ -137,10 +152,20 @@ def read_personal_info_service(org_or_cnap:Annotated[Optional[Union[Organization
     raise HTTPException(403, "Доступ тільки для організацій або ЦНАП.")
 
 
-def read_all_organizations_service(db:Session, cnap:Annotated[Cnap, Depends(get_current_org_or_cnap)]):
+def read_all_organizations_service(
+    db: Session,
+    cnap: Annotated[Cnap, Depends(get_current_org_or_cnap)],
+    organization_name: Optional[str] = None
+):
     if cnap is None:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="У вас немає доступу")
-    orgs = db.query(Organizations).filter(Organizations.cnap_id == cnap.cnap_id).all()
+
+    query = db.query(Organizations).filter(Organizations.cnap_id == cnap.cnap_id)
+
+    if organization_name:
+        query = query.filter(Organizations.organization_name == organization_name)
+
+    orgs = query.all()
 
     return [
         ReadAllOrganizations(
