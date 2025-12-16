@@ -11,6 +11,7 @@ export interface Pet {
     gender: string;
     animal_passport_number: string | null;
     owner: Owner | null;
+    series?: string;
 }
 export interface PetPassportData {
     pet_id: number;
@@ -69,7 +70,7 @@ export interface ViewConfig {
     columns: ColumnDefinition<any>[];
     title: string;
     addNewLink: string;
-    addNewText?: string;
+    addNewText: string;
     searchPlaceholder: string;
 }
 

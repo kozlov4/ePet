@@ -167,13 +167,19 @@ export function Table({
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.5 }}
             >
-                <table className="min-w-full border-collapse">
+                <table className="min-w-full border-collapse table-fixed">
                     <thead>
                         <tr>
-                            {columns.map((col) => (
+                            {columns.map((col, colIndex) => (
                                 <th
-                                    key={String(col.accessor)}
-                                    className="px-6 py-4 text-left text-sm font-medium text-[20px]"
+                                    key={`th-${colIndex}-${String(
+                                        col.accessor,
+                                    )}`}
+                                    className={`px-6 py-4 text-sm font-medium text-[20px] align-middle ${
+                                        col.header === ''
+                                            ? 'text-right'
+                                            : 'text-center'
+                                    }`}
                                 >
                                     {col.header}
                                 </th>
@@ -193,10 +199,16 @@ export function Table({
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ delay: 0.05 * i }}
                                 >
-                                    {columns.map((col) => (
+                                    {columns.map((col, colIndex) => (
                                         <td
-                                            key={String(col.accessor)}
-                                            className="px-6 py-4 text-sm font-medium text-[14px]"
+                                            key={`${key}-td-${colIndex}-${String(
+                                                col.accessor,
+                                            )}`}
+                                            className={`px-6 py-4 text-sm font-medium text-[14px] align-middle ${
+                                                col.header === ''
+                                                    ? 'text-right'
+                                                    : 'text-center'
+                                            }`}
                                         >
                                             {col.cell
                                                 ? col.cell(item, onAction)

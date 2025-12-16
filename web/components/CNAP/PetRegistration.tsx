@@ -306,7 +306,7 @@ export default function PetRegistration({
         }
     };
     return (
-        <div className="min-h-screen w-full bg-gray-50 pt-10">
+        <div className="w-full pt-10">
             <AnimatePresence>
                 {modalState && (
                     <motion.div
@@ -582,11 +582,6 @@ export default function PetRegistration({
                     </div>
                 </form>
             </div>
-            <style jsx global>{`
-                footer {
-                    display: none !important;
-                }
-            `}</style>
         </div>
     );
 }

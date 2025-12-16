@@ -19,8 +19,13 @@ function AppContent({ Component, pageProps }) {
     const router = useRouter();
     const { user } = useAuth();
 
-    const { headerProps, showHeader, customHeader, ...restPageProps } =
-        pageProps;
+    const {
+        headerProps,
+        showHeader,
+        showFooter,
+        customHeader,
+        ...restPageProps
+    } = pageProps;
 
     const isCNAPPage = router.pathname.startsWith('/CNAP');
     const isAllay = router.pathname.startsWith('/Alley');
@@ -28,6 +33,8 @@ function AppContent({ Component, pageProps }) {
 
     let finalHeaderProps = headerProps;
     let finalShowHeader = showHeader !== false;
+    let finalShowFooter =
+        showFooter !== false && Component.showFooter !== false;
 
     if (isCNAPPage && !headerProps && !customHeader) {
         finalHeaderProps = {

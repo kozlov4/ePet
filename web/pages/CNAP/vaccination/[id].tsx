@@ -92,7 +92,7 @@ export default function VaccinationInfo() {
     };
 
     return (
-        <div className="min-h-screen bg-white">
+        <div className="min-h-screen">
             <div className="max-w-[830px] w-full mx-auto my-12 flex flex-col gap-8">
                 <div className="flex gap-10 items-center translate-x-[-80px]">
                     <button
@@ -164,7 +164,8 @@ export default function VaccinationInfo() {
                                         className="hover:bg-gray-50 transition-colors"
                                     >
                                         <td className="px-6 py-4  text-[20px]">
-                                            {vaccination.drug_name}{' '}
+                                            {vaccination.drug_name}
+                                            <br />
                                             {vaccination.series_number}
                                         </td>
                                         <td className="px-6 py-4 text-[20px]">
