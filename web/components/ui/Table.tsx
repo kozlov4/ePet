@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useInfiniteScroll } from '../../hooks/useInfiniteScroll';
+import { ColumnDefinition, PaginatedResponse } from '../../types/api';
 
 function useDebounce(value: string, delay: number) {
     const [debouncedValue, setDebouncedValue] = useState(value);
@@ -17,7 +18,21 @@ function useDebounce(value: string, delay: number) {
     return debouncedValue;
 }
 
-export function Table({
+interface TableProps<T = any> {
+    columns: ColumnDefinition<T>[];
+    title: string;
+    addNewLink: string;
+    addNewText?: string;
+    searchPlaceholder: string;
+    fetchFunction: (
+        page: number,
+        size: number,
+        query: string,
+    ) => Promise<PaginatedResponse<T>>;
+    onAction: (item: T, actionType: string) => void;
+}
+
+export function Table<T = any>({
     columns,
     title,
     addNewLink,
@@ -25,27 +40,27 @@ export function Table({
     searchPlaceholder,
     fetchFunction,
     onAction,
-}) {
+}: TableProps<T>) {
     const router = useRouter();
-    const [items, setItems] = useState([]);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(1);
-    const [totalItems, setTotalItems] = useState(0);
-    const [currentQuery, setCurrentQuery] = useState('');
-    const [isLoadingInitial, setIsLoadingInitial] = useState(true);
-    const [error, setError] = useState(null);
+    const [items, setItems] = useState<T[]>([]);
+    const [currentPage, setCurrentPage] = useState<number>(1);
+    const [totalPages, setTotalPages] = useState<number>(1);
+    const [totalItems, setTotalItems] = useState<number>(0);
+    const [currentQuery, setCurrentQuery] = useState<string>('');
+    const [isLoadingInitial, setIsLoadingInitial] = useState<boolean>(true);
+    const [error, setError] = useState<string | null>(null);
     const pageSize = 10;
 
     const debouncedQuery = useDebounce(currentQuery, 500);
 
     const executeFetch = useCallback(
-        async (page, query, isNewSearch = false) => {
+        async (page: number, query: string, isNewSearch = false) => {
             setError(null);
             if (isNewSearch) setIsLoadingInitial(true);
 
             try {
                 const data = await fetchFunction(page, pageSize, query);
-                let newItems = Array.isArray(data) ? data : data.items;
+                const newItems = Array.isArray(data) ? data : data.items;
 
                 setItems((prev) =>
                     isNewSearch ? newItems : [...prev, ...newItems],
@@ -80,16 +95,14 @@ export function Table({
 
     const hasMore = currentPage < totalPages;
 
-    const observerRef = useRef(null);
+    const observerRef = useRef<HTMLDivElement>(null);
     const { loading: isLoadingMore } = useInfiniteScroll(
         observerRef,
         loadMore,
         hasMore,
     );
 
-    const handleSearch = (query) => setCurrentQuery(query);
-
-    const gridColsClass = `md:grid-cols-${columns.length}`;
+    const handleSearch = (query: string) => setCurrentQuery(query);
 
     return (
         <motion.div
@@ -115,6 +128,12 @@ export function Table({
                 >
                     {error}
                 </motion.div>
+            )}
+
+            {isLoadingInitial && (
+                <div className="text-center mt-6 text-lg text-blue-400">
+                    Завантаження даних...
+                </div>
             )}
 
             <motion.div
@@ -161,54 +180,76 @@ export function Table({
                 </motion.div>
             </motion.div>
 
-            <motion.div
-                className="overflow-hidden"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.5 }}
-            >
-                <table className="min-w-full border-collapse">
-                    <thead>
-                        <tr>
-                            {columns.map((col) => (
-                                <th
-                                    key={String(col.accessor)}
-                                    className="px-6 py-4 text-left text-sm font-medium text-[20px]"
-                                >
-                                    {col.header}
-                                </th>
-                            ))}
-                        </tr>
-                    </thead>
+            {!isLoadingInitial && (
+                <motion.div
+                    className="overflow-hidden"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.5 }}
+                >
+                    <table className="min-w-full border-collapse">
+                        <thead>
+                            <tr>
+                                {columns.map((col) => (
+                                    <th
+                                        key={String(col.accessor)}
+                                        className="px-6 py-4 text-left text-sm font-medium text-[20px]"
+                                    >
+                                        {col.header}
+                                    </th>
+                                ))}
+                            </tr>
+                        </thead>
 
-                    <tbody className="Table divide-y overflow-hidden divide-gray-300">
-                        {items.map((item, i) => {
-                            const key =
-                                item.pet_id ?? item.organization_id ?? i;
-                            return (
-                                <motion.tr
-                                    key={key}
-                                    className="hover:bg-[rgba(255,255,255,0.05)]"
-                                    initial={{ opacity: 0, y: 10 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ delay: 0.05 * i }}
-                                >
-                                    {columns.map((col) => (
-                                        <td
-                                            key={String(col.accessor)}
-                                            className="px-6 py-4 text-sm font-medium text-[14px]"
+                        <tbody className="Table divide-y overflow-hidden divide-gray-300">
+                            {items.length === 0 ? (
+                                <tr>
+                                    <td
+                                        colSpan={columns.length}
+                                        className="px-6 py-4 text-center text-gray-500"
+                                    >
+                                        Немає даних для відображення
+                                    </td>
+                                </tr>
+                            ) : (
+                                items.map((item, i) => {
+                                    const key =
+                                        (item as any).pet_id ??
+                                        (item as any).organization_id ??
+                                        i;
+                                    return (
+                                        <motion.tr
+                                            key={key}
+                                            className="hover:bg-[rgba(255,255,255,0.05)]"
+                                            initial={{ opacity: 0, y: 10 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            transition={{ delay: 0.05 * i }}
                                         >
-                                            {col.cell
-                                                ? col.cell(item, onAction)
-                                                : String(item[col.accessor])}
-                                        </td>
-                                    ))}
-                                </motion.tr>
-                            );
-                        })}
-                    </tbody>
-                </table>
-            </motion.div>
+                                            {columns.map((col) => (
+                                                <td
+                                                    key={String(col.accessor)}
+                                                    className="px-6 py-4 text-sm font-medium text-[14px]"
+                                                >
+                                                    {col.cell
+                                                        ? col.cell(
+                                                              item,
+                                                              onAction,
+                                                          )
+                                                        : String(
+                                                              (item as any)[
+                                                                  col.accessor
+                                                              ],
+                                                          )}
+                                                </td>
+                                            ))}
+                                        </motion.tr>
+                                    );
+                                })
+                            )}
+                        </tbody>
+                    </table>
+                </motion.div>
+            )}
 
             {isLoadingMore && (
                 <p className="text-center mt-6 text-lg text-blue-400">
@@ -218,7 +259,7 @@ export function Table({
 
             <div ref={observerRef} className="h-1" />
 
-            {!isLoadingMore && !hasMore && items?.length > 0 && (
+            {!isLoadingMore && !hasMore && items.length > 0 && (
                 <p className="text-center mt-6 text-gray-400">
                     Кінець списку ({totalItems} записів).
                 </p>

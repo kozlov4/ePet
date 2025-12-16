@@ -1,5 +1,6 @@
 'use client';
-import { useCallback, useState } from 'react';
+import router from 'next/router';
+import { useCallback } from 'react';
 import {
     ColumnDefinition,
     Organization,
@@ -7,10 +8,8 @@ import {
     ViewConfig,
 } from '../../types/api';
 import { fetchPaginatedData } from '../../utils/api';
+import { API_BASE } from '../../utils/config';
 import { Table } from '../ui/Table';
-import router from 'next/router';
-
-const API_BASE = process.env.NEXT_PUBLIC_API_DOMAIN || '';
 
 export function Organizations() {
     const activeView = 'organizations';
@@ -90,23 +89,20 @@ export function Organizations() {
     if (!config) {
         return <div>Завантаження конфігурації або невірний URL...</div>;
     }
-    const handleAction = async (
-        org: Organization,
-        action: 'edit' | 'delete',
-    ) => {
-        if (action === 'edit') {
+    const handleAction = (org: Organization, actionType: string): void => {
+        if (actionType === 'edit') {
             const dataStr = encodeURIComponent(JSON.stringify(org));
             router.push(
                 `/CNAP/organization/${org.organization_id}?data=${dataStr}`,
             );
-        } else if (action === 'delete') {
+        } else if (actionType === 'delete') {
             if (
                 window.confirm(
                     `Are you sure you want to delete ${org.organization_name}?`,
                 )
             ) {
                 const token = localStorage.getItem('access_token');
-                const res = await fetch(
+                fetch(
                     `${API_BASE}/organizations/organizations/${org.organization_id}`,
                     {
                         method: 'DELETE',
@@ -114,13 +110,16 @@ export function Organizations() {
                             Authorization: `Bearer ${token}`,
                         },
                     },
-                );
-
-                if (!res.ok) {
-                    throw new Error('Failed to delete organization');
-                }
-
-                router.reload();
+                )
+                    .then((res) => {
+                        if (!res.ok) {
+                            throw new Error('Failed to delete organization');
+                        }
+                        router.reload();
+                    })
+                    .catch((error) => {
+                        console.error('Error deleting organization:', error);
+                    });
             }
         }
     };

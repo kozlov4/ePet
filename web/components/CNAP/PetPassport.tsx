@@ -6,8 +6,7 @@ import { useEffect, useState } from 'react';
 import ArrowBack from '../../assets/images/icons/ArrowBack';
 import CopyIcon from '../../assets/images/icons/CopyIcon';
 import { PetPassportData } from '../../types/api';
-
-const API_BASE = process.env.NEXT_PUBLIC_API_DOMAIN || '';
+import { API_BASE } from '../../utils/config';
 
 export function PetPassport({
     actionButton,

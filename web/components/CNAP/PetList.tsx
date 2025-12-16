@@ -6,8 +6,7 @@ import { useCallback } from 'react';
 import { Table } from '../../components/ui/Table';
 import { ColumnDefinition, PaginatedResponse, Pet } from '../../types/api';
 import { fetchPaginatedData } from '../../utils/api';
-
-const API_BASE = process.env.NEXT_PUBLIC_API_DOMAIN || '';
+import { API_BASE } from '../../utils/config';
 
 export function PetList() {
     const router = useRouter();

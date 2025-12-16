@@ -1,38 +1,35 @@
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useAuth } from '../../hooks/useAuth';
-
-const API_BASE = process.env.NEXT_PUBLIC_API_DOMAIN || '';
+import { API_BASE, devError, devLog } from '../../utils/config';
 
 export function Login() {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [emailError, setEmailError] = useState('');
-    const [passwordError, setPasswordError] = useState('');
+    const [email, setEmail] = useState<string>('');
+    const [password, setPassword] = useState<string>('');
+    const [emailError, setEmailError] = useState<string>('');
+    const [passwordError, setPasswordError] = useState<string>('');
     const router = useRouter();
     const { login } = useAuth();
-    const [message, setMessage] = useState('');
+    const [message, setMessage] = useState<string>('');
 
-    const validateEmail = (value) => {
+    const validateEmail = (value: string): string => {
         if (!value) return '';
-        if (value.length > 30) return 'Максимум 30 символів';
+        // Removed arbitrary 30 character limit - standard emails can be longer
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(value)) return 'Невірний формат електронної пошти';
         return '';
     };
 
-    const validatePassword = (value) => {
-        // if (!value) return ''
-        // if (value.length < 8) return 'Пароль повинен містити мінімум 8 символів'
-        // if (!/[A-Z]/.test(value))
-        //     return 'Пароль повинен містити хоча б одну велику літеру'
+    const validatePassword = (value: string): string => {
+        // Password validation can be added here if needed
+        // For now, returning empty string (no validation)
         return '';
     };
 
-    const handleSubmit = async () => {
+    const handleSubmit = async (): Promise<void> => {
         const emailErr = validateEmail(email);
         const passwordErr = validatePassword(password);
         setEmailError(emailErr);
@@ -58,25 +55,35 @@ export function Login() {
                 });
 
                 const data = await response.json();
-                console.log('Response:', data);
+                devLog('Response:', data);
 
                 if (data.detail === 'Organization not found.') {
                     setMessage('Помилка авторизації');
                 } else if (data.access_token) {
                     login({ name: data.user_name }, data.access_token);
+                    // Store organization_type to determine user type
+                    if (data.organization_type) {
+                        localStorage.setItem(
+                            'organization_type',
+                            data.organization_type,
+                        );
+                    } else {
+                        localStorage.setItem('organization_type', 'user');
+                    }
                     if (data.organization_type === 'Ветклініка')
                         router.push('/Vet-Clinic/favorite-list');
-                    else if (data.organization_type == 'ЦНАП')
+                    else if (data.organization_type === 'ЦНАП')
                         router.push('/CNAP/favorite-list');
-                    else if (data.organization_type == 'Притулок')
+                    else if (data.organization_type === 'Притулок')
                         router.push('/Alley/pet-list');
+                    else if (data.organization_type == null)
+                        router.push('/home');
                 } else {
-                     setMessage('Помилка авторизації');
-                
+                    setMessage('Помилка авторизації');
                 }
             } catch (error) {
+                devError(error);
                 setMessage('Помилка авторизації');
-                
             }
         }
     };
@@ -150,7 +157,7 @@ export function Login() {
                       flex w-[94%] justify-end
                       font-medium text-[15px] underline decoration-slate-600 decoration-solid decoration-skip-ink-none text-[#606060]
                       transition-all duration-300 ease-in-out
-                      hover:text-[#1e88e5] h
+                      hover:text-[#1e88e5]
                       active:scale-95 active:text-[#0d47a1]
                     "
                     >
@@ -158,16 +165,13 @@ export function Login() {
                     </a>
 
                     {message && (
-                    <span
-                        className={`flex w-full justify-center text-center text-[14px] mt-2 text-red-500`}
-                    >
-                        {message}
-                    </span>
-                )}
-
+                        <span
+                            className={`flex w-full justify-center text-center text-[14px] mt-2 text-red-500`}
+                        >
+                            {message}
+                        </span>
+                    )}
                 </motion.div>
-
-                
 
                 <motion.button
                     onClick={handleSubmit}
