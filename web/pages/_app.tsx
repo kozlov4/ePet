@@ -1,6 +1,6 @@
 import { AppProps } from 'next/app';
 import { useRouter } from 'next/router';
-import { Layout } from '../components/base/Layout';
+import { Layout } from '../components/Base/Layout';
 import { ErrorBoundary } from '../components/ErrorBoundary';
 import { AuthProvider } from '../hooks/AuthProvider';
 import { useAuth } from '../hooks/useAuth';
