@@ -126,7 +126,7 @@ def add_pet_service(db: Session, file: UploadFile, form_data: PetCreateForm,
         color=form_data.color,
 
         organization_id=target_organization_id,
-
+        cnap_id=current_cnap_id,
 
         user_id=user_id,
         sterilization=False
@@ -238,7 +238,9 @@ def read_pet_information_service(pet_id: int, db: Session, organization_user: An
 
     extended_data = {
         **base_data,
-        "organization_id": pet.organization_id,
+
+        "organization_id": pet.organization_id if pet.organization_id else pet.cnap_id,
+
         "date": fmt_date(identifier.date) if identifier else "—",
         "identifier_type": safe_str(identifier.identifier_type) if identifier else "—",
         "identifier_type_en": translate(identifier.identifier_type) if identifier else "—",
