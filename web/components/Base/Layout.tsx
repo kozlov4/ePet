@@ -1,5 +1,4 @@
 import React from 'react';
-import { usePathname } from 'next/navigation';
 import { HeaderProps } from '../Base/Header/HeaderTypes';
 import { Footer } from './Footer';
 import { Header } from './Header/Header';
@@ -19,7 +18,6 @@ export const Layout: React.FC<LayoutProps> = ({
     showFooter = true,
     customHeader,
 }) => {
-    const currentPath = usePathname(); 
     const defaultHeaderProps: HeaderProps = {
         navProps: [
             { label: 'Головна', href: '/home' },
@@ -34,12 +32,11 @@ export const Layout: React.FC<LayoutProps> = ({
 
     const finalHeaderProps = headerProps || defaultHeaderProps;
 
-
     return (
         <div className="min-h-screen flex flex-col">
             {showHeader && (customHeader || <Header {...finalHeaderProps} />)}
             <main className="flex-grow">{children}</main>
-            {currentPath == "/signIn" || "/reset-password" || "CNAP/menu"  ? <div></div> : showFooter && <Footer />  }
+            {showFooter && <Footer />}
         </div>
     );
 };

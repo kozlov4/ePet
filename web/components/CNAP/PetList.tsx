@@ -4,14 +4,14 @@ import { useRouter } from 'next/router';
 import { useCallback } from 'react';
 
 import { Table } from '../../components/ui/Table';
+import { petService } from '../../services/petService';
+import { fetchPaginated } from '../../services/api';
 import {
     ColumnDefinition,
     PaginatedResponse,
     Pet,
     ViewConfig,
 } from '../../types/api';
-import { fetchPaginatedData } from '../../utils/api';
-import { API_BASE } from '../../utils/config';
 
 export function PetList({
     all_fields_to_search,
@@ -21,8 +21,8 @@ export function PetList({
     const router = useRouter();
     const activeView = (router.query.view as string) || 'animals';
 
-    const handleAction = async (item: any, actionType: string) => {
-        const id = item.pet_id || item.id;
+    const handleAction = async (item: Pet, actionType: string) => {
+        const id = item.pet_id;
 
         if (actionType === 'details') {
             router.push(`/Alley/pet-passport/${id}`);
@@ -30,22 +30,13 @@ export function PetList({
 
         if (actionType === 'delete') {
             if (window.confirm(`Ви впевнені, що хочете видалити ID: ${id}?`)) {
-                const token = localStorage.getItem('access_token');
-                const res = await fetch(
-                    `${API_BASE}/pets/delete/${item.pet_id}`,
-                    {
-                        method: 'DELETE',
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
-                    },
-                );
-
-                if (!res.ok) {
-                    throw new Error('Failed to delete pet');
+                try {
+                    await petService.deletePet(item.pet_id);
+                    router.reload();
+                } catch (error) {
+                    console.error('Failed to delete pet', error);
+                    alert('Не вдалося видалити тварину');
                 }
-
-                router.reload();
             }
         }
     };
@@ -86,7 +77,7 @@ export function PetList({
         },
     ];
 
-    const viewConfigs: Record<string, ViewConfig> = {
+    const viewConfigs: Record<string, ViewConfig<Pet>> = {
         animals: {
             endpoint: '/organizations/animals',
             queryParamName: all_fields_to_search
@@ -111,7 +102,7 @@ export function PetList({
             if (!config) {
                 return Promise.reject(new Error('Конфігурація не знайдена'));
             }
-            return fetchPaginatedData(config.endpoint, {
+            return fetchPaginated(config.endpoint, {
                 page,
                 size,
                 query,

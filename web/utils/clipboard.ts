@@ -20,7 +20,6 @@ export async function copyToClipboard(
             draggable: true,
         });
     } catch (err) {
-        // Fallback for older browsers
         try {
             const textArea = document.createElement('textarea');
             textArea.value = text;
