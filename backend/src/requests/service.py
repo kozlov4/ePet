@@ -96,12 +96,13 @@ def read_list_requests_service(db: Session, user_id: int):
 
     result = []
     for pet in pets:
+        formatted_date = pet.date_of_birth.strftime('%d.%m.%Y') if pet.date_of_birth else None
         result.append(RequestPetsList(
             pet_id=pet.pet_id,
             pet_name=pet.pet_name,
             gender=pet.gender,
             breed=pet.breed,
-            date_of_birth=pet.date_of_birth,
+            date_of_birth=formatted_date,
             img_url=pet.img_url,
         ))
 

@@ -104,7 +104,7 @@ def read_all_animals_service(
                 breed=pet.breed,
                 gender=pet.gender,
                 animal_passport_number=animal_passport,
-                owner=owner_data
+                owner=owner_data,
             )
         )
 

@@ -133,7 +133,6 @@ class ReadPetForVeterinary(ReadPetBase):
 class ReadPetForCnap(ReadPetForVeterinary):
     pass
 
-
 class ReadPetForUser(ReadPetForVeterinary):
     model_config = ConfigDict(from_attributes=True)
 
