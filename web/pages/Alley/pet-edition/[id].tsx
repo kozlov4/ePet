@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import PetRegistration from '../../../components/CNAP/PetRegistration';
 import { PetPassportData } from '../../../types/api';
 import router from 'next/router';
-import { API_BASE } from '../../../utils/config';
+import { petService } from '../../../services/petService';
 
 export default function PetEgitionPage() {
     const [petData, setPetData] = useState<PetPassportData | null>(null);
@@ -14,23 +14,7 @@ export default function PetEgitionPage() {
 
         const fetchPetData = async () => {
             try {
-                const token = localStorage.getItem('access_token');
-                if (!token) {
-                    throw new Error('Токен авторизації відсутній');
-                }
-
-                const response = await fetch(`${API_BASE}/pets/${id}`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                        'Content-Type': 'application/json',
-                    },
-                });
-
-                if (!response.ok) {
-                    throw new Error('Помилка завантаження даних');
-                }
-
-                const data = await response.json();
+                const data = await petService.getPet(id as string);
                 setPetData(data);
             } catch (err) {
                 setError(
