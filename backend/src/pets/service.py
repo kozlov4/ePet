@@ -68,16 +68,25 @@ def generate_passport_number(db) -> str:
             return passport_number
 
 
-def add_pet_service(db:Session, file:UploadFile, form_data:PetCreateForm, org: Annotated[Union[Organizations, Cnap, None], Depends(get_current_org_or_cnap)] = None):
+def add_pet_service(db: Session, file: UploadFile, form_data: PetCreateForm,
+                    org: Annotated[Union[Organizations, Cnap, None], Depends(get_current_org_or_cnap)] = None):
     if org is None:
         raise HTTPException(status_code=403, detail="Недостатньо прав для додавання тварини")
 
+    target_organization_id = None
+    current_cnap_id = None
+    org_type = ""
+
     if isinstance(org, Cnap):
         org_type = "ЦНАП"
-        org_id = org.cnap_id
+        target_organization_id = None
+        current_cnap_id = org.cnap_id
+
     elif isinstance(org, Organizations):
         org_type = org.organization_type
-        org_id = org.organization_id
+        target_organization_id = org.organization_id
+        current_cnap_id = None
+
         if org_type == "Ветклініка":
             raise HTTPException(status_code=403, detail="Ветклініка не може додавати тварин")
 
@@ -95,10 +104,7 @@ def add_pet_service(db:Session, file:UploadFile, form_data:PetCreateForm, org: A
         user_id = user.user_id
 
         if not (form_data.identifier_type and form_data.identifier_number and form_data.chip_date):
-            raise HTTPException(
-                status_code=400,
-                detail="Для реєстрації в ЦНАП необхідно заповнити дані про чип"
-            )
+            raise HTTPException(status_code=400, detail="Для реєстрації в ЦНАП необхідно заповнити дані про чип")
 
         passport_number = generate_passport_number(db)
 
@@ -118,7 +124,10 @@ def add_pet_service(db:Session, file:UploadFile, form_data:PetCreateForm, org: A
         gender=form_data.gender,
         date_of_birth=form_data.date_of_birth,
         color=form_data.color,
-        organization_id=org_id,
+
+        organization_id=target_organization_id,
+
+
         user_id=user_id,
         sterilization=False
     )
@@ -132,7 +141,7 @@ def add_pet_service(db:Session, file:UploadFile, form_data:PetCreateForm, org: A
             identifier_number=form_data.identifier_number,
             identifier_type=form_data.identifier_type,
             date=form_data.chip_date,
-            cnap_id=org_id,
+            cnap_id=current_cnap_id,
             pet_id=new_pet.pet_id
         )
         db.add(identifier)
@@ -140,7 +149,7 @@ def add_pet_service(db:Session, file:UploadFile, form_data:PetCreateForm, org: A
         passport = Passports(
             passport_number=passport_number,
             pet_id=new_pet.pet_id,
-            cnap_id=org_id
+            cnap_id=current_cnap_id
         )
         db.add(passport)
 
