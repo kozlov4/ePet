@@ -198,3 +198,5 @@ export default function VaccinationInfo() {
         </div>
     );
 }
+
+VaccinationInfo.showFooter = false;

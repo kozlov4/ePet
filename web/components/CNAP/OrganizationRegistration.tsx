@@ -31,6 +31,7 @@ export default function OrganizationPage({
 
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
     const id = params?.id as string | undefined;
     const isEditMode = !!id && id !== 'create';
@@ -61,12 +62,70 @@ export default function OrganizationPage({
             ...prev,
             [name]: value,
         }));
+        setFieldErrors((prev) => {
+            if (!prev[name]) return prev;
+            const next = { ...prev };
+            delete next[name];
+            return next;
+        });
+    };
+
+    const parseValidationErrors = (data: unknown) => {
+        const issues = Array.isArray(data)
+            ? data
+            : (data as any)?.detail && Array.isArray((data as any).detail)
+            ? (data as any).detail
+            : null;
+
+        if (!issues) return null;
+
+        const nextFieldErrors: Record<string, string> = {};
+        const nonFieldMessages: string[] = [];
+
+        for (const issue of issues) {
+            const loc = (issue as any)?.loc;
+            const msg = (issue as any)?.msg;
+            const type = (issue as any)?.type;
+            if (typeof msg !== 'string') continue;
+
+            let cleanMsg = msg.replace(/^Value error,\s*/i, '');
+            if (
+                type === 'enum' ||
+                /^Input should be\s/i.test(cleanMsg) ||
+                /^Input should be\s*/i.test(msg)
+            ) {
+                cleanMsg = 'Оберіть коректне місто.';
+            }
+
+            if (Array.isArray(loc) && loc.length) {
+                const field = loc[loc.length - 1];
+                if (typeof field === 'string') {
+                    if (!nextFieldErrors[field]) {
+                        nextFieldErrors[field] = cleanMsg;
+                    }
+                    continue;
+                }
+            }
+
+            nonFieldMessages.push(cleanMsg);
+        }
+
+        const hasFieldErrors = Object.keys(nextFieldErrors).length > 0;
+        return {
+            fieldErrors: nextFieldErrors,
+            message: hasFieldErrors
+                ? 'Перевірте поля.'
+                : nonFieldMessages.length
+                ? nonFieldMessages[0]
+                : 'Виникла помилка валідації. Перевірте введені дані.',
+        };
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
         setError(null);
+        setFieldErrors({});
 
         try {
             const token = localStorage.getItem('access_token');
@@ -91,7 +150,28 @@ export default function OrganizationPage({
             });
 
             if (!response.ok) {
-                throw new Error('Failed to submit form');
+                let data: unknown = null;
+                try {
+                    data = await response.json();
+                } catch (e) {
+                    data = null;
+                }
+
+                const parsed = parseValidationErrors(data);
+                if (parsed) {
+                    setFieldErrors(parsed.fieldErrors);
+                    setError(parsed.message);
+                    return;
+                }
+
+                const detail = (data as any)?.detail;
+                if (typeof detail === 'string' && detail.trim().length > 0) {
+                    setError(detail);
+                    return;
+                }
+
+                setError('Виникла помилка при збереженні. Спробуйте ще раз.');
+                return;
             }
 
             router.push('/CNAP/organizations');
@@ -142,6 +222,11 @@ export default function OrganizationPage({
                                         className="w-full px-4 py-3.5 outline-none text-gray-700 placeholder-gray-400 text-sm bg-transparent"
                                         required
                                     />
+                                    {fieldErrors.organization_name && (
+                                        <div className="px-4 pb-3 text-xs text-red-600">
+                                            {fieldErrors.organization_name}
+                                        </div>
+                                    )}
                                     <select
                                         name="organization_type"
                                         value={formData.organization_type}
@@ -162,6 +247,11 @@ export default function OrganizationPage({
                                             </option>
                                         ))}
                                     </select>
+                                    {fieldErrors.organization_type && (
+                                        <div className="px-4 pb-3 text-xs text-red-600">
+                                            {fieldErrors.organization_type}
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         </div>
@@ -178,6 +268,11 @@ export default function OrganizationPage({
                                         className="w-full px-4 py-3.5 outline-none text-gray-700 placeholder-gray-400 text-sm bg-transparent"
                                         required
                                     />
+                                    {fieldErrors.city && (
+                                        <div className="px-4 pb-3 text-xs text-red-600">
+                                            {fieldErrors.city}
+                                        </div>
+                                    )}
                                     <input
                                         type="text"
                                         name="street"
@@ -187,6 +282,11 @@ export default function OrganizationPage({
                                         className="w-full px-4 py-3.5 outline-none text-gray-700 placeholder-gray-400 text-sm bg-transparent"
                                         required
                                     />
+                                    {fieldErrors.street && (
+                                        <div className="px-4 pb-3 text-xs text-red-600">
+                                            {fieldErrors.street}
+                                        </div>
+                                    )}
                                     <input
                                         type="text"
                                         name="building"
@@ -196,6 +296,11 @@ export default function OrganizationPage({
                                         className="w-full px-4 py-3.5 outline-none text-gray-700 placeholder-gray-400 text-sm bg-transparent"
                                         required
                                     />
+                                    {fieldErrors.building && (
+                                        <div className="px-4 pb-3 text-xs text-red-600">
+                                            {fieldErrors.building}
+                                        </div>
+                                    )}
                                 </div>
                             </div>
 
@@ -210,6 +315,11 @@ export default function OrganizationPage({
                                         className="w-full px-4 py-3.5 outline-none text-gray-700 placeholder-gray-400 text-sm bg-transparent"
                                         required
                                     />
+                                    {fieldErrors.phone_number && (
+                                        <div className="px-4 pb-3 text-xs text-red-600">
+                                            {fieldErrors.phone_number}
+                                        </div>
+                                    )}
                                     <input
                                         type="email"
                                         name="email"
@@ -219,6 +329,11 @@ export default function OrganizationPage({
                                         className="w-full px-4 py-3.5 outline-none text-gray-700 placeholder-gray-400 text-sm bg-transparent"
                                         required
                                     />
+                                    {fieldErrors.email && (
+                                        <div className="px-4 pb-3 text-xs text-red-600">
+                                            {fieldErrors.email}
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         </div>

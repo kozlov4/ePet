@@ -70,7 +70,7 @@ export interface ViewConfig {
     columns: ColumnDefinition<any>[];
     title: string;
     addNewLink: string;
-    addNewText: string;
+    addNewText?: string;
     searchPlaceholder: string;
 }
 
