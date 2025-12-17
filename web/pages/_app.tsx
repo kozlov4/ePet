@@ -26,8 +26,20 @@ function AppContent({
     const router = useRouter();
     const { user } = useAuth();
 
-    const { headerProps, showHeader, customHeader, ...restPageProps } =
-        pageProps as any;
+    const componentConfig = Component as any;
+
+    const {
+        headerProps: pageHeaderProps,
+        showHeader: pageShowHeader,
+        showFooter: pageShowFooter,
+        customHeader: pageCustomHeader,
+        ...restPageProps
+    } = pageProps as any;
+
+    const headerProps = componentConfig.headerProps ?? pageHeaderProps;
+    const showHeader = componentConfig.showHeader ?? pageShowHeader;
+    const showFooter = componentConfig.showFooter ?? pageShowFooter;
+    const customHeader = componentConfig.customHeader ?? pageCustomHeader;
 
     // Header configuration for different route prefixes
     const routeHeaderConfig: Record<
@@ -127,11 +139,13 @@ function AppContent({
             : null);
 
     const finalShowHeader = showHeader !== false;
+    const finalShowFooter = showFooter !== false;
 
     return (
         <Layout
             headerProps={finalHeaderProps}
             showHeader={finalShowHeader}
+            showFooter={finalShowFooter}
             customHeader={customHeader}
         >
             <Component {...restPageProps} />
