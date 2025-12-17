@@ -52,7 +52,7 @@ export function FavoriteList({
             accessor: 'pet_id',
             header: '',
             cell: (pet, onActionCallback) => (
-                <div className="flex flex-row gap-5">
+                <div className="flex flex-row w-[100%] gap-5 justify-center">
                     {activeView === 'cnap' ? (
                         <>
                             <button
