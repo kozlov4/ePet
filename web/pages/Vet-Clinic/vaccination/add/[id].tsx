@@ -3,6 +3,8 @@ import { useEffect, useState } from 'react';
 import ArrowBack from '../../../../assets/images/icons/ArrowBack';
 import CopyIcon from '../../../../assets/images/icons/CopyIcon';
 import { copyToClipboard } from '../../../../utils/clipboard';
+import { API_BASE } from '../../../../utils/config';
+import { fromIsoDateInputToDot } from '../../../../utils/date';
 
 interface VaccinationData {
     passport_number: string;
@@ -22,6 +24,7 @@ export default function AddVaccination() {
     const router = useRouter();
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
     const [vaccinationData, setVaccinationData] =
         useState<VaccinationData | null>(null);
     const [formData, setFormData] = useState({
@@ -48,7 +51,7 @@ export default function AddVaccination() {
                 }
 
                 const response = await fetch(
-                    `https://upcity.live/pets/${id}/vaccinations`,
+                    `${API_BASE}/pets/${id}/vaccinations`,
                     {
                         headers: {
                             Authorization: `Bearer ${token}`,
@@ -90,11 +93,52 @@ export default function AddVaccination() {
             ...prev,
             [name]: value,
         }));
+        setFieldErrors((prev) => {
+            if (!prev[name]) return prev;
+            const next = { ...prev };
+            delete next[name];
+            return next;
+        });
+    };
+
+    const parseValidationErrors = (data: unknown) => {
+        const issues = Array.isArray(data)
+            ? data
+            : (data as any)?.detail && Array.isArray((data as any).detail)
+            ? (data as any).detail
+            : null;
+
+        if (!issues) return null;
+
+        const nextFieldErrors: Record<string, string> = {};
+        for (const issue of issues) {
+            const loc = (issue as any)?.loc;
+            const msg = (issue as any)?.msg;
+            if (typeof msg !== 'string') continue;
+            const cleanMsg = msg.replace(/^Value error,\s*/i, '');
+
+            if (Array.isArray(loc) && loc.length) {
+                const field = loc[loc.length - 1];
+                if (typeof field === 'string' && !nextFieldErrors[field]) {
+                    nextFieldErrors[field] = cleanMsg;
+                }
+            }
+        }
+
+        return {
+            fieldErrors: nextFieldErrors,
+            message:
+                Object.keys(nextFieldErrors).length > 0
+                    ? 'Перевірте поля.'
+                    : 'Виникла помилка валідації. Перевірте введені дані.',
+        };
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setSubmitting(true);
+        setError(null);
+        setFieldErrors({});
 
         try {
             const token = localStorage.getItem('access_token');
@@ -104,38 +148,45 @@ export default function AddVaccination() {
 
             const petId = typeof id === 'string' ? id : String(id?.[0] || '');
 
-            const response = await fetch(
-                `https://upcity.live/vaccinations/${petId}`,
-                {
-                    method: 'POST',
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        drug_name: formData.drug_name,
-                        series_number: formData.series_number,
-                        vaccination_date: formData.vaccination_date,
-                        valid_until: formData.valid_until,
-                    }),
+            const response = await fetch(`${API_BASE}/vaccinations/${petId}`, {
+                method: 'POST',
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json',
                 },
-            );
+                body: JSON.stringify({
+                    drug_name: formData.drug_name,
+                    series_number: formData.series_number,
+                    vaccination_date: fromIsoDateInputToDot(
+                        formData.vaccination_date,
+                    ),
+                    valid_until: fromIsoDateInputToDot(formData.valid_until),
+                }),
+            });
 
             if (!response.ok) {
                 const errorData = await response.json().catch(() => ({}));
+                const parsed = parseValidationErrors(errorData);
+                if (parsed) {
+                    setFieldErrors(parsed.fieldErrors);
+                    setError(parsed.message);
+                    return;
+                }
                 const errorMessage =
-                    errorData.detail || 'Помилка додавання вакцинації';
-                throw new Error(errorMessage);
+                    (errorData as any)?.detail ||
+                    'Помилка додавання вакцинації';
+                setError(errorMessage);
+                return;
             }
 
-            const result = await response.json();
+            await response.json();
             router.push(`/Vet-Clinic/vaccination/${petId}`);
         } catch (err) {
             const errorMessage =
                 err instanceof Error
                     ? err.message
                     : 'Помилка додавання вакцинації';
-            alert(errorMessage);
+            setError(errorMessage);
         } finally {
             setSubmitting(false);
         }
@@ -173,6 +224,7 @@ export default function AddVaccination() {
                         Щеплення улюбленця
                     </p>
                 </div>
+
                 <div className="flex gap-2 items-center">
                     <p className="text-4xl">
                         {vaccinationData.passport_number}
@@ -184,6 +236,12 @@ export default function AddVaccination() {
                         <CopyIcon />
                     </button>
                 </div>
+
+                {error && (
+                    <div className="p-3 text-sm text-red-600 bg-red-50 rounded-xl text-center">
+                        {error}
+                    </div>
+                )}
 
                 <form onSubmit={handleSubmit} className="flex flex-col gap-5">
                     <div className="bg-[#F5F5F5] rounded-2xl px-8 py-5">
@@ -204,10 +262,10 @@ export default function AddVaccination() {
                                 required
                             />
                         </div>
+
                         <div className="flex flex-col gap-2">
                             <label className="text-[13px] font-medium flex flex-col">
                                 <span>Серія:</span>
-
                                 <span className="text-[#B3B3B3] text-[10px">
                                     batch number
                                 </span>
@@ -222,6 +280,7 @@ export default function AddVaccination() {
                                 required
                             />
                         </div>
+
                         <div className="flex flex-col gap-2">
                             <label className="text-[13px] font-medium flex flex-col">
                                 <span>Дата:</span>
@@ -237,7 +296,13 @@ export default function AddVaccination() {
                                 className="w-full rounded-xl bg-white px-4 py-3 text-[15px] border border-gray-200 focus:outline-none focus:border-black"
                                 required
                             />
+                            {fieldErrors.vaccination_date && (
+                                <div className="text-xs text-red-600">
+                                    {fieldErrors.vaccination_date}
+                                </div>
+                            )}
                         </div>
+
                         <div className="flex flex-col gap-2">
                             <label className="text-[13px] font-medium flex flex-col">
                                 <span>До якого дійсне:</span>
@@ -253,8 +318,14 @@ export default function AddVaccination() {
                                 className="w-full rounded-xl bg-white px-4 py-3 text-[15px] border border-gray-200 focus:outline-none focus:border-black"
                                 required
                             />
+                            {fieldErrors.valid_until && (
+                                <div className="text-xs text-red-600">
+                                    {fieldErrors.valid_until}
+                                </div>
+                            )}
                         </div>
                     </div>
+
                     <div className="flex justify-center mt-[22px]">
                         <button
                             type="submit"
@@ -269,4 +340,5 @@ export default function AddVaccination() {
         </div>
     );
 }
+
 AddVaccination.showFooter = false;

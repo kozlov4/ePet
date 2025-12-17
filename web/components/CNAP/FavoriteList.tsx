@@ -30,7 +30,7 @@ export function FavoriteList({
                 router.push(`/Vet-Clinic/pet-passport/${id}`);
             }
         } else if (actionType === 'vaccination') {
-            router.push(`/CNAP/vaccination/${id}`);
+            router.push(`/Vet-Clinic/vaccination/${id}`);
         }
     };
 
@@ -101,7 +101,6 @@ export function FavoriteList({
             columns: animalColumns,
             title: 'Список улюбленців',
             addNewLink: '/CNAP/pet-registration',
-            addNewText: 'Зареєструвати улюбленця',
             searchPlaceholder: 'Пошук...',
         },
     };

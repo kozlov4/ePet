@@ -7,6 +7,7 @@ import ArrowBack from '../../assets/images/icons/ArrowBack';
 import CopyIcon from '../../assets/images/icons/CopyIcon';
 import { PetPassportData } from '../../types/api';
 import { copyToClipboard } from '../../utils/clipboard';
+import { formatUaDate } from '../../utils/date';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_DOMAIN || '';
 
@@ -69,19 +70,6 @@ export function PetPassport({
 
     const handleBack = () => {
         router.back();
-    };
-
-    const formatDate = (dateString: string) => {
-        try {
-            const date = new Date(dateString);
-            return date.toLocaleDateString('uk-UA', {
-                year: 'numeric',
-                month: '2-digit',
-                day: '2-digit',
-            });
-        } catch {
-            return dateString;
-        }
     };
 
     if (loading) {
@@ -222,7 +210,7 @@ export function PetPassport({
                                     Date of birth
                                 </p>
                                 <p className="text-[13px] ">
-                                    {formatDate(petData.date_of_birth)}
+                                    {formatUaDate(petData.date_of_birth)}
                                 </p>
                             </div>
                         </div>
@@ -275,7 +263,7 @@ export function PetPassport({
                                 {
                                     label: 'Дата чіпування:',
                                     labelEn: 'Chip date',
-                                    value: formatDate(petData.date),
+                                    value: formatUaDate(petData.date),
                                 },
                                 {
                                     label: 'Номер чіпу:',
