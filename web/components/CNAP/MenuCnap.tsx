@@ -1,8 +1,11 @@
+'use client';
+
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 import ArrowLeft from '../../assets/images/icons/ArrowLeft';
 import { Organization } from '../../types/api';
+import { AuthContext } from '../../hooks/AuthProvider';
 import { fetchOrganizationInfo } from '../../utils/fetchOrganization';
 
 export function Menu() {
@@ -46,13 +49,12 @@ export function Menu() {
         return <div className="text-red-500 text-center py-4">{error}</div>;
     }
 
-    function logout() {
-        localStorage.clear();
-        sessionStorage.clear();
-        router.push('/signIn');
-    }
+    const auth = useContext(AuthContext);
 
-    ('use client');
+    const handleLogout = () => {
+        auth?.logout();
+        router.push('/signIn');
+    };
 
     return (
         <motion.div
@@ -170,8 +172,6 @@ export function Menu() {
                         </motion.div>
                     ))}
 
-                    
-
                     <motion.div
                         className="
                         w-full max-w-[420px] h-12 mt-12 flex justify-center items-center
@@ -187,7 +187,7 @@ export function Menu() {
                         transition={{ delay: 1.3 }}
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.97 }}
-                        onClick={logout}
+                        onClick={handleLogout}
                     >
                         Вийти
                     </motion.div>
@@ -196,5 +196,3 @@ export function Menu() {
         </motion.div>
     );
 }
-
-
