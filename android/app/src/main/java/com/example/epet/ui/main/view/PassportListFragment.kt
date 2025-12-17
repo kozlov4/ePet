@@ -1,28 +1,27 @@
 package com.example.epet.ui.main.view
 
+import SelectorMenu
+import android.content.Context.MODE_PRIVATE
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.epet.R
+import com.example.epet.data.model.passport.OutputPetItem
 import com.example.epet.ui.main.adapter.PassportListAdapter
-import kotlin.math.abs
-import SelectorMenu
-import android.content.Context.MODE_PRIVATE
-import android.widget.TextView
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import com.example.epet.ui.main.viewmodel.PassportViewModel
 import kotlinx.coroutines.launch
-import com.example.epet.data.model.passport.OutputPetItem
-import kotlin.getValue
-import androidx.fragment.app.activityViewModels
+import kotlin.math.abs
 
 class PassportListFragment : Fragment() {
 

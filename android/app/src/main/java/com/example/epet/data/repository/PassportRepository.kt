@@ -3,7 +3,6 @@ package com.example.epet.data.repository
 import com.example.epet.data.model.passport.OutputPassportDetail
 import com.example.epet.data.model.passport.OutputPetItem
 import com.example.epet.data.model.passport.OutputVaccinationsList
-import kotlin.collections.emptyList
 import com.example.epet.data.network.RetrofitClient
 
 class PassportRepository {

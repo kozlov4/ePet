@@ -15,20 +15,19 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
-import com.example.epet.R
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.example.epet.R
 import com.example.epet.data.model.passport.OutputPetItem
 import com.example.epet.data.model.service.InputExtractPet
+import com.example.epet.ui.main.viewmodel.LoadingViewModel
 import com.example.epet.ui.main.viewmodel.PassportViewModel
 import com.example.epet.ui.service.adapter.PetListAdapter
 import com.example.epet.ui.service.viewmodel.ServiceViewModel
 import kotlinx.coroutines.launch
-import kotlin.getValue
 import kotlin.math.abs
-import com.example.epet.ui.main.viewmodel.LoadingViewModel
 
 class ExtractPetFragment : Fragment() {
 

@@ -1,16 +1,16 @@
 package com.example.epet.ui.auth.viewmodel
 
-import com.example.epet.data.repository.AuthRepository
 import androidx.lifecycle.ViewModel
-import com.example.epet.data.model.auth.OutputAuth
+import androidx.lifecycle.viewModelScope
 import com.example.epet.data.model.auth.InputLogin
 import com.example.epet.data.model.auth.InputRegistration
-import androidx.lifecycle.viewModelScope
 import com.example.epet.data.model.auth.InputResetPassword
+import com.example.epet.data.model.auth.OutputAuth
 import com.example.epet.data.model.auth.OutputResetPassword
+import com.example.epet.data.repository.AuthRepository
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.launch
 
 class AuthViewModel() : ViewModel() {
 

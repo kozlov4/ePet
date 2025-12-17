@@ -1,10 +1,10 @@
 package com.example.epet.data.repository
 
 import com.example.epet.data.helper.ValidationHelper
-import com.example.epet.data.model.settings.OutputUserDetail
-import com.example.epet.data.network.RetrofitClient
 import com.example.epet.data.model.settings.InputUpdateProfile
 import com.example.epet.data.model.settings.OutputUpdateProfile
+import com.example.epet.data.model.settings.OutputUserDetail
+import com.example.epet.data.network.RetrofitClient
 import com.example.epet.data.network.RetrofitClient.gson
 
 class SettingsRepository {

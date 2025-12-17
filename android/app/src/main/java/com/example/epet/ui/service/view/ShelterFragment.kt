@@ -2,7 +2,6 @@ package com.example.epet.ui.services.view
 
 import android.content.Context.MODE_PRIVATE
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,8 +18,8 @@ import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.example.epet.R
 import com.example.epet.data.model.service.InputRequestShelter
-import com.example.epet.data.model.service.OutputShelterPet
 import com.example.epet.data.model.service.OutputRequestShelter
+import com.example.epet.data.model.service.OutputShelterPet
 import com.example.epet.ui.service.viewmodel.ServiceViewModel
 import kotlinx.coroutines.launch
 

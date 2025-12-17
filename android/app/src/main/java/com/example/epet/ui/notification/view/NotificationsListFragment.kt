@@ -17,7 +17,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.epet.R
 import com.example.epet.data.model.notification.OutputNotification
-import com.example.epet.ui.main.adapter.PassportListAdapter
 import com.example.epet.ui.messages.adapter.NotificationsListAdapter
 import com.example.epet.ui.notification.viewmodel.NotificationsViewModel
 import kotlinx.coroutines.launch

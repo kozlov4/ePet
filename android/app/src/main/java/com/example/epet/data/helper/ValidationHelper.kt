@@ -1,8 +1,8 @@
 package com.example.epet.data.helper
 
 import android.util.Patterns
-import com.example.epet.data.model.auth.InputRegistration
 import com.example.epet.data.model.auth.InputLogin
+import com.example.epet.data.model.auth.InputRegistration
 import com.example.epet.data.model.auth.InputResetPassword
 import com.example.epet.data.model.settings.InputUpdateProfile
 

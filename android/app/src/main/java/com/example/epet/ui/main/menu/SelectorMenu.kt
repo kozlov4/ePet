@@ -1,17 +1,17 @@
 import android.app.Dialog
+import android.content.Context
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.content.DialogInterface
 import android.widget.TextView
+import androidx.fragment.app.activityViewModels
+import com.example.epet.R
+import com.example.epet.ui.main.viewmodel.PassportViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.example.epet.R
-import android.content.Context
-import androidx.fragment.app.activityViewModels
-import com.example.epet.ui.main.viewmodel.PassportViewModel
 
 class SelectorMenu(private val onClose: (() -> Unit)? = null) : BottomSheetDialogFragment() {
 

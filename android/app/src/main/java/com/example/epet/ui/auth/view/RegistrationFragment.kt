@@ -1,27 +1,27 @@
 package com.example.epet.ui.auth.view
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-import com.example.epet.R
 import android.widget.EditText
-import android.widget.TextView
 import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.appcompat.widget.AppCompatButton
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
-import android.content.Context
+import com.example.epet.R
 import com.example.epet.data.model.auth.InputRegistration
 import com.example.epet.data.model.auth.OutputAuth
-import androidx.fragment.app.activityViewModels
 import com.example.epet.ui.auth.viewmodel.AuthViewModel
 import com.example.epet.ui.main.view.MainActivity
-import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
-import androidx.lifecycle.repeatOnLifecycle
-import androidx.lifecycle.Lifecycle
 
 class RegistrationFragment : Fragment() {
 

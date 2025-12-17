@@ -1,24 +1,23 @@
 package com.example.epet.ui.auth.view
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageView
-import androidx.fragment.app.Fragment
-import com.example.epet.R
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatButton
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
-import com.example.epet.ui.auth.viewmodel.AuthViewModel
 import androidx.navigation.fragment.navArgs
+import com.example.epet.R
 import com.example.epet.data.model.auth.InputResetPassword
+import com.example.epet.ui.auth.viewmodel.AuthViewModel
 import kotlinx.coroutines.launch
 
 class ResetPassowrdFragment : Fragment() {

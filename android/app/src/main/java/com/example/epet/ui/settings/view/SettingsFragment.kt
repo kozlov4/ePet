@@ -18,9 +18,9 @@ import com.example.epet.R
 import com.example.epet.data.model.settings.InputUpdateProfile
 import com.example.epet.data.model.settings.OutputUpdateProfile
 import com.example.epet.data.model.settings.OutputUserDetail
+import com.example.epet.ui.main.viewmodel.LoadingViewModel
 import com.example.epet.ui.settings.viewmodel.SettingsViewModel
 import kotlinx.coroutines.launch
-import com.example.epet.ui.main.viewmodel.LoadingViewModel
 
 class SettingsFragment : Fragment(R.layout.fragment_settings) {
 
