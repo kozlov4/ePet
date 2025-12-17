@@ -15,6 +15,7 @@ import ReactCrop, {
 import 'react-image-crop/dist/ReactCrop.css';
 import { PetPassportData } from '../../types/api';
 import { API_BASE, devError, devLog } from '../../utils/config';
+import { toIsoDateInput } from '../../utils/date';
 import { getCroppedImg } from '../../utils/getCroppedImg';
 
 type ModalState = {
@@ -32,29 +33,13 @@ export default function PetRegistration({
 }) {
     const router = useRouter();
     const fileInputRef = useRef<HTMLInputElement>(null);
-    function formatDate(dateString: string): string {
-        if (dateString == undefined) {
-            return new Date().toISOString().split('T')[0];
-        }
-        const parts = dateString.split('.');
-
-        if (parts.length !== 3) {
-            throw new Error('Invalid date format. Expected dd.mm.yyyy');
-        }
-
-        const day = parts[0];
-        const month = parts[1];
-        const year = parts[2];
-
-        return `${year}-${month}-${day}`;
-    }
     const [petData, setPetData] = useState({
         pet_name: pet?.pet_name || '',
         gender: pet?.gender || '',
         breed: pet?.breed || '',
         species: pet?.species || '',
         color: pet?.color || '',
-        date_of_birth: formatDate(pet?.date_of_birth || '') || '',
+        date_of_birth: toIsoDateInput(pet?.date_of_birth, true),
         identifier_type: '',
         identifier_number: '',
         chip_date: '',
