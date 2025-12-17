@@ -1,5 +1,6 @@
 'use client';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
+import { AnimatePresence, motion } from 'framer-motion';
 import React, { useEffect, useState } from 'react';
 import ArrowBack from '../../assets/images/icons/ArrowBack';
 import { Organization } from '../../types/api';
@@ -131,7 +132,10 @@ export default function OrganizationPage({
 
         try {
             if (isEditMode) {
-                await organizationService.updateOrganization(id as string, formData);
+                await organizationService.updateOrganization(
+                    id as string,
+                    formData,
+                );
             } else {
                 await organizationService.createOrganization(formData);
             }
@@ -145,12 +149,15 @@ export default function OrganizationPage({
                     setError(parsed.message);
                     return;
                 }
-                if (typeof err.message === 'string' && err.message.trim().length > 0) {
-                     setError(err.message);
-                     return;
+                if (
+                    typeof err.message === 'string' &&
+                    err.message.trim().length > 0
+                ) {
+                    setError(err.message);
+                    return;
                 }
             }
-            
+
             setError('Виникла помилка при збереженні. Спробуйте ще раз.');
             devError('Error saving organization:', err);
         } finally {
@@ -159,35 +166,66 @@ export default function OrganizationPage({
     };
 
     return (
-        <div className="min-h-screen w-full bg-gray-50 px-35 py-10 flex justify-center items-center">
+        <motion.div
+            className="min-h-screen w-full bg-gray-50 px-35 py-10 flex justify-center items-center"
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, ease: 'easeOut' }}
+        >
             <div className="w-full max-w-4xl">
-                <div className="mb-8 flex items-center justify-start">
-                    <button
+                <motion.div
+                    className="mb-8 flex items-center justify-start"
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.1 }}
+                >
+                    <motion.button
                         onClick={() => router.back()}
-                        className="mr-4 rounded-full bg-black p-2 transition-[0.2s] cursor-pointer hover:bg-gray-300"
+                        className="mr-4 rounded-full bg-black p-2 cursor-pointer hover:bg-gray-300 transition-[0.2s]"
+                        whileHover={{ scale: 1.08 }}
+                        whileTap={{ scale: 0.95 }}
                     >
                         <ArrowBack />
-                    </button>
+                    </motion.button>
+
                     <h1 className="text-2xl font-semibold text-gray-800">
                         {isEditMode
                             ? 'Редагування організації'
                             : 'Реєстрація організації'}
                     </h1>
-                </div>
+                </motion.div>
 
-                <div className="w-full justify-center max-w-4xl rounded-xl bg-[rgba(217,217,217,0.27)] p-6 shadow-lg sm:p-8 lg:p-10 mx-auto">
+                <motion.div
+                    className="w-full justify-center max-w-4xl rounded-xl bg-[rgba(217,217,217,0.27)] p-6 shadow-lg sm:p-8 lg:p-10 mx-auto"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.15 }}
+                >
                     <form
                         onSubmit={handleSubmit}
                         className="rounded-3xl p-6 sm:p-8"
                     >
-                        <div className="space-y-4">
+                        <motion.div
+                            className="space-y-4"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ delay: 0.2 }}
+                        >
                             {error && (
-                                <div className="p-3 text-sm text-red-600 bg-red-50 rounded-xl text-center">
+                                <motion.div
+                                    className="p-3 text-sm text-red-600 bg-red-50 rounded-xl text-center"
+                                    initial={{ opacity: 0, y: -10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                >
                                     {error}
-                                </div>
+                                </motion.div>
                             )}
 
-                            <div>
+                            <motion.div
+                                initial={{ opacity: 0, y: 12 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.25 }}
+                            >
                                 <div className="bg-white rounded-xl overflow-hidden shadow-sm border border-transparent focus-within:border-gray-300 transition-colors">
                                     <input
                                         type="text"
@@ -203,6 +241,7 @@ export default function OrganizationPage({
                                             {fieldErrors.organization_name}
                                         </div>
                                     )}
+
                                     <select
                                         name="organization_type"
                                         value={formData.organization_type}
@@ -223,16 +262,22 @@ export default function OrganizationPage({
                                             </option>
                                         ))}
                                     </select>
+
                                     {fieldErrors.organization_type && (
                                         <div className="px-4 pb-3 text-xs text-red-600">
                                             {fieldErrors.organization_type}
                                         </div>
                                     )}
                                 </div>
-                            </div>
-                        </div>
+                            </motion.div>
+                        </motion.div>
 
-                        <div className="space-y-3 pt-2">
+                        <motion.div
+                            className="space-y-3 pt-2"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ delay: 0.3 }}
+                        >
                             <div className="bg-white rounded-xl overflow-hidden shadow-sm border border-transparent focus-within:border-gray-300 transition-colors">
                                 <div className="grid grid-cols-1 divide-y divide-gray-100">
                                     <input
@@ -249,6 +294,7 @@ export default function OrganizationPage({
                                             {fieldErrors.city}
                                         </div>
                                     )}
+
                                     <input
                                         type="text"
                                         name="street"
@@ -263,6 +309,7 @@ export default function OrganizationPage({
                                             {fieldErrors.street}
                                         </div>
                                     )}
+
                                     <input
                                         type="text"
                                         name="building"
@@ -296,6 +343,7 @@ export default function OrganizationPage({
                                             {fieldErrors.phone_number}
                                         </div>
                                     )}
+
                                     <input
                                         type="email"
                                         name="email"
@@ -312,24 +360,31 @@ export default function OrganizationPage({
                                     )}
                                 </div>
                             </div>
-                        </div>
+                        </motion.div>
 
-                        <div className="mt-10">
-                            <button
+                        <motion.div
+                            className="mt-10"
+                            initial={{ opacity: 0, y: 16 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.35 }}
+                        >
+                            <motion.button
                                 type="submit"
                                 disabled={isLoading}
-                                className="w-full bg-black text-white rounded-full py-4 text-sm font-semibold hover:bg-gray-800 transition-colors disabled:bg-gray-600 disabled:cursor-not-allowed"
+                                className="w-full bg-black cursor-pointer text-white rounded-full py-4 text-sm font-semibold hover:bg-gray-800 transition-colors disabled:bg-gray-600 disabled:cursor-not-allowed"
+                                whileHover={{ scale: isLoading ? 1 : 1.03 }}
+                                whileTap={{ scale: isLoading ? 1 : 0.97 }}
                             >
                                 {isLoading
                                     ? 'Завантаження...'
                                     : isEditMode
                                     ? 'Зберегти зміни'
                                     : 'Зареєструвати'}
-                            </button>
-                        </div>
+                            </motion.button>
+                        </motion.div>
                     </form>
-                </div>
+                </motion.div>
             </div>
-        </div>
+        </motion.div>
     );
 }
