@@ -10,7 +10,7 @@ import {
     Pet,
     ViewConfig,
 } from '../../types/api';
-import { fetchPaginatedData } from '../../utils/api';
+import { fetchPaginated } from '../../services/api';
 
 export function FavoriteList({
     activeView,
@@ -20,8 +20,8 @@ export function FavoriteList({
     const router = useRouter();
     const currentPath = router.pathname;
 
-    const handleAction = (item: any, actionType: string) => {
-        const id = item.pet_id || item.id;
+    const handleAction = (item: Pet, actionType: string) => {
+        const id = item.pet_id;
 
         if (actionType === 'details') {
             if (currentPath.includes('/CNAP')) {
@@ -85,7 +85,7 @@ export function FavoriteList({
         },
     ];
 
-    const viewConfigs: Record<string, ViewConfig> = {
+    const viewConfigs: Record<string, ViewConfig<Pet>> = {
         cnap: {
             endpoint: '/organizations/animals',
             queryParamName: 'animal_passport_number',
@@ -116,7 +116,7 @@ export function FavoriteList({
             if (!config) {
                 return Promise.reject(new Error('Конфігурація не знайдена'));
             }
-            return fetchPaginatedData(config.endpoint, {
+            return fetchPaginated(config.endpoint, {
                 page,
                 size,
                 query,

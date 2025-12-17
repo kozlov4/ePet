@@ -14,9 +14,11 @@ import ReactCrop, {
 } from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
 import { PetPassportData } from '../../types/api';
-import { API_BASE, devError, devLog } from '../../utils/config';
+import { petService } from '../../services/petService';
+import { devError, devLog } from '../../utils/config';
 import { toIsoDateInput } from '../../utils/date';
 import { getCroppedImg } from '../../utils/getCroppedImg';
+import InputField from '../ui/InputField';
 
 type ModalState = {
     message: string;
@@ -31,6 +33,58 @@ export default function PetRegistration({
     pet?: PetPassportData;
     Alley?: Boolean;
 }) {
+    const formatValidationErrorMessage = (raw: string): string | null => {
+        const fieldLabels: Record<string, string> = {
+            pet_name: "Ім'я",
+            gender: 'Стать',
+            breed: 'Порода',
+            species: 'Вид',
+            color: 'Масть (Колір)',
+            date_of_birth: 'Дата народження',
+            identifier_type: 'Місце розташування ідентифікатора',
+            identifier_number: 'Номер ідентифікатора',
+            chip_date: 'Дата чіпування',
+            owner_passport_number: 'Номер паспорта власника',
+        };
+
+        const matches = [...raw.matchAll(/\b([a-zA-Z_]+):\s*/g)];
+        if (matches.length < 2) {
+            return null;
+        }
+
+        const items: Array<{ field: string; text: string }> = [];
+
+        for (let i = 0; i < matches.length; i++) {
+            const field = matches[i][1];
+            const start = (matches[i].index ?? 0) + matches[i][0].length;
+            const end =
+                i + 1 < matches.length
+                    ? matches[i + 1].index ?? raw.length
+                    : raw.length;
+            const text = raw
+                .slice(start, end)
+                .trim()
+                .replace(/^,\s*/, '')
+                .replace(/,\s*$/, '');
+            if (text) {
+                items.push({ field, text });
+            }
+        }
+
+        if (items.length === 0) {
+            return null;
+        }
+
+        const formatted = items
+            .map(({ field, text }) => {
+                const label = fieldLabels[field] || field;
+                return `- ${label}: ${text}`;
+            })
+            .join('\n');
+
+        return `Перевірте введені дані:\n${formatted}`;
+    };
+
     const router = useRouter();
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [petData, setPetData] = useState({
@@ -58,6 +112,7 @@ export default function PetRegistration({
     const [isCropping, setIsCropping] = useState(false);
     const [crop, setCrop] = useState<Crop>();
     const [completedCrop, setCompletedCrop] = useState<PixelCrop>();
+    const isEditMode = Boolean(pet?.pet_id);
 
     const handleInputChange = (
         e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
@@ -147,7 +202,7 @@ export default function PetRegistration({
         const formData = new FormData();
         formData.append('file', petFile as Blob);
 
-        Object.keys(petData).forEach((key) => {
+        (Object.keys(petData) as Array<keyof typeof petData>).forEach((key) => {
             formData.append(key, petData[key]);
         });
 
@@ -169,32 +224,9 @@ export default function PetRegistration({
                 return;
             }
 
-            const response = Alley
-                ? await fetch(`${API_BASE}/pets/${pet?.pet_id}/update`, {
-                      method: 'POST',
-                      headers: {
-                          Authorization: `Bearer ${token}`,
-                      },
-                      body: formData,
-                  })
-                : await fetch(`${API_BASE}/pets`, {
-                      method: 'POST',
-                      headers: {
-                          Authorization: `Bearer ${token}`,
-                      },
-                      body: formData,
-                  });
-
-            const data = await response.json();
-
-            if (!response.ok) {
-                throw new Error(
-                    data.detail ||
-                        `Не вдалося ${
-                            Alley ? 'оновити' : 'зареєструвати'
-                        } улюбленця.`,
-                );
-            }
+            const data = isEditMode
+                ? await petService.updatePet(pet!.pet_id, formData)
+                : await petService.registerPet(formData);
 
             if (
                 data.detail ===
@@ -210,18 +242,23 @@ export default function PetRegistration({
 
             setModalState({
                 message: `Улюбленець успішно ${
-                    Alley ? 'оновлений' : 'зареєстрований'
+                    isEditMode ? 'оновлений' : 'зареєстрований'
                 }!`,
                 type: 'success',
                 onClose: () => router.back(),
             });
         } catch (error) {
             devError('Error registering pet:', error);
+            const rawMessage =
+                error instanceof Error
+                    ? error.message
+                    : "Помилка з'єднання з сервером.";
+            const prettyMessage =
+                typeof rawMessage === 'string'
+                    ? formatValidationErrorMessage(rawMessage)
+                    : null;
             setModalState({
-                message:
-                    error instanceof Error
-                        ? error.message
-                        : "Помилка з'єднання з сервером.",
+                message: prettyMessage || rawMessage,
                 type: 'error',
             });
         } finally {
@@ -321,9 +358,11 @@ export default function PetRegistration({
                                     ? 'Успіх!'
                                     : 'Помилка'}
                             </h3>
-                            <p className="mt-3 text-gray-700">
-                                {modalState.message}
-                            </p>
+                            <div className="mt-3 max-h-64 overflow-auto rounded-md bg-gray-50 p-3">
+                                <p className="text-sm leading-6 text-gray-800 whitespace-pre-line">
+                                    {modalState.message}
+                                </p>
+                            </div>
                             <div className="mt-6 flex justify-end">
                                 <button
                                     onClick={closeModal}
@@ -572,47 +611,3 @@ export default function PetRegistration({
         </div>
     );
 }
-
-// Reusable Input Field Component
-interface InputFieldProps {
-    label: string;
-    name: string;
-    value: string;
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    type?: string; // Optional type prop for input (e.g., 'date', 'text')
-    minLength?: number;
-    maxLength?: number;
-    required?: boolean;
-}
-
-const InputField: React.FC<InputFieldProps> = ({
-    label,
-    name,
-    value,
-    onChange,
-    type = 'text',
-    minLength,
-    maxLength,
-    required = false,
-}) => (
-    <div className="relative">
-        <input
-            type={type}
-            id={name}
-            name={name}
-            value={value}
-            onChange={onChange}
-            className="peer block w-full appearance-none rounded-lg border border-gray-300 bg-transparent px-2.5 pb-2.5 pt-4 text-sm text-gray-900 focus:border-blue-600 focus:outline-none focus:ring-0"
-            placeholder=" "
-            minLength={minLength}
-            maxLength={maxLength}
-            required={required}
-        />
-        <label
-            htmlFor={name}
-            className="absolute left-1 top-2 z-10 origin-[0] -translate-y-4 scale-75 transform bg-gray-50 px-2 text-sm text-gray-500 duration-300 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:scale-100 peer-focus:top-2 peer-focus:-translate-y-4 peer-focus:scale-75 peer-focus:px-2 peer-focus:text-blue-600 rtl:peer-focus:left-auto rtl:peer-focus:translate-x-full"
-        >
-            {label}
-        </label>
-    </div>
-);

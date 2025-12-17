@@ -24,7 +24,7 @@ function AppContent({
     pageProps: AppProps['pageProps'];
 }) {
     const router = useRouter();
-    const { user } = useAuth();
+    const { user, organizationType } = useAuth();
 
     const componentConfig = Component as any;
 
@@ -94,10 +94,6 @@ function AppContent({
     const routeConfig = routePrefix ? routeHeaderConfig[routePrefix] : null;
 
     // Check if user is a regular user (not an organization)
-    const organizationType =
-        typeof window !== 'undefined'
-            ? localStorage.getItem('organization_type')
-            : null;
     const isRegularUser =
         organizationType === 'user' || organizationType === null;
 

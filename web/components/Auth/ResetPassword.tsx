@@ -1,7 +1,8 @@
 'use client';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
-import { API_BASE, devError } from '../../utils/config';
+import { authService } from '../../services/authService';
+import { devError, devLog } from '../../utils/config';
 
 export function ResetPasswordPage() {
     const [email, setEmail] = useState<string>('');
@@ -32,19 +33,10 @@ export function ResetPasswordPage() {
         }
 
         try {
-            const response = await fetch(`${API_BASE}/forgot-password/`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email: emailAddress }),
-            });
-
-            if (response.ok) {
-                setMessage(
-                    'Посилання для скидання паролю було надіслано на пошту',
-                );
-            } else {
-                throw new Error('Network response was not ok');
-            }
+            await authService.forgotPassword(emailAddress);
+            setMessage(
+                'Посилання для скидання паролю було надіслано на пошту',
+            );
         } catch (error) {
             devError('Error during password reset:', error);
             setMessage('Сталася помилка. Спробуйте пізніше.');
@@ -52,7 +44,7 @@ export function ResetPasswordPage() {
             setIsLoading(false);
         }
     };
-    console.log(email)
+    devLog(email)
     const isFormValid = !validateEmail(email) && email;
 
     return (

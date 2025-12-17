@@ -6,7 +6,7 @@ import { useCallback, useContext, useEffect, useState } from 'react';
 import ArrowLeft from '../../assets/images/icons/ArrowLeft';
 import { Organization } from '../../types/api';
 import { AuthContext } from '../../hooks/AuthProvider';
-import { fetchOrganizationInfo } from '../../utils/fetchOrganization';
+import { organizationService } from '../../services/organizationService';
 
 export function Menu() {
     const [items, setItems] = useState<Organization | null>(null);
@@ -17,7 +17,7 @@ export function Menu() {
     const executeFetch = useCallback(async () => {
         setError(null);
         try {
-            const data = await fetchOrganizationInfo();
+            const data = await organizationService.getOrganizationInfo();
 
             if (data) {
                 setItems(data);
@@ -29,7 +29,7 @@ export function Menu() {
                 e instanceof Error ? e.message : 'Помилка завантаження даних.';
             setError(message);
 
-            if (message.includes('Авторизація')) {
+            if (message.includes('Авторизація') || message.includes('Authentication')) {
                 router.push('/signIn');
             }
         } finally {

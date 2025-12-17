@@ -2,23 +2,9 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import ArrowBack from '../../../../assets/images/icons/ArrowBack';
 import CopyIcon from '../../../../assets/images/icons/CopyIcon';
+import { vaccinationService, VaccinationData } from '../../../../services/vaccinationService';
 import { copyToClipboard } from '../../../../utils/clipboard';
-import { API_BASE } from '../../../../utils/config';
 import { fromIsoDateInputToDot } from '../../../../utils/date';
-
-interface VaccinationData {
-    passport_number: string;
-    update_datetime: string;
-    vaccinations: VaccinationItem[];
-}
-
-interface VaccinationItem {
-    drug_name: string;
-    series_number: string;
-    vaccination_date: string;
-    valid_until: string;
-    organization_name: string;
-}
 
 export default function AddVaccination() {
     const router = useRouter();
@@ -45,26 +31,7 @@ export default function AddVaccination() {
 
         const fetchPetData = async () => {
             try {
-                const token = localStorage.getItem('access_token');
-                if (!token) {
-                    throw new Error('Токен авторизації відсутній');
-                }
-
-                const response = await fetch(
-                    `${API_BASE}/pets/${id}/vaccinations`,
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                            'Content-Type': 'application/json',
-                        },
-                    },
-                );
-
-                if (!response.ok) {
-                    throw new Error('Помилка завантаження даних');
-                }
-
-                const data = await response.json();
+                const data = await vaccinationService.getVaccinations(id as string);
                 setVaccinationData(data);
             } catch (err) {
                 setError(
@@ -141,47 +108,22 @@ export default function AddVaccination() {
         setFieldErrors({});
 
         try {
-            const token = localStorage.getItem('access_token');
-            if (!token) {
-                throw new Error('Токен авторизації відсутній');
-            }
-
             const petId = typeof id === 'string' ? id : String(id?.[0] || '');
 
-            const response = await fetch(`${API_BASE}/vaccinations/${petId}`, {
-                method: 'POST',
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    drug_name: formData.drug_name,
-                    series_number: formData.series_number,
-                    vaccination_date: fromIsoDateInputToDot(
-                        formData.vaccination_date,
-                    ),
-                    valid_until: fromIsoDateInputToDot(formData.valid_until),
-                }),
+            await vaccinationService.addVaccination(petId, {
+                drug_name: formData.drug_name,
+                series_number: formData.series_number,
+                vaccination_date: fromIsoDateInputToDot(
+                    formData.vaccination_date,
+                ),
+                valid_until: fromIsoDateInputToDot(formData.valid_until),
             });
 
-            if (!response.ok) {
-                const errorData = await response.json().catch(() => ({}));
-                const parsed = parseValidationErrors(errorData);
-                if (parsed) {
-                    setFieldErrors(parsed.fieldErrors);
-                    setError(parsed.message);
-                    return;
-                }
-                const errorMessage =
-                    (errorData as any)?.detail ||
-                    'Помилка додавання вакцинації';
-                setError(errorMessage);
-                return;
-            }
-
-            await response.json();
             router.push(`/Vet-Clinic/vaccination/${petId}`);
         } catch (err) {
+             // Basic error handling for now, as service throws Error with message
+             // Ideally service should return structured errors or throw structured errors
+             // But for now let's just show the message
             const errorMessage =
                 err instanceof Error
                     ? err.message

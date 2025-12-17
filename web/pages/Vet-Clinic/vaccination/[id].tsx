@@ -2,23 +2,10 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import ArrowBack from '../../../assets/images/icons/ArrowBack';
 import CopyIcon from '../../../assets/images/icons/CopyIcon';
+import { vaccinationService, VaccinationData } from '../../../services/vaccinationService';
 import { copyToClipboard } from '../../../utils/clipboard';
-import { API_BASE, devLog } from '../../../utils/config';
+import { devLog } from '../../../utils/config';
 import { formatUaDate } from '../../../utils/date';
-
-interface VaccinationData {
-    passport_number: string;
-    update_datetime: string;
-    vaccinations: VaccinationItem[];
-}
-
-interface VaccinationItem {
-    drug_name: string;
-    series_number: string;
-    vaccination_date: string;
-    valid_until: string;
-    organization_name: string;
-}
 
 export default function VaccinationInfo() {
     const router = useRouter();
@@ -36,26 +23,7 @@ export default function VaccinationInfo() {
 
         const fetchPetData = async () => {
             try {
-                const token = localStorage.getItem('access_token');
-                if (!token) {
-                    throw new Error('Токен авторизації відсутній');
-                }
-
-                const response = await fetch(
-                    `${API_BASE}/pets/${id}/vaccinations`,
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                            'Content-Type': 'application/json',
-                        },
-                    },
-                );
-
-                if (!response.ok) {
-                    throw new Error('Помилка завантаження даних');
-                }
-
-                const data = await response.json();
+                const data = await vaccinationService.getVaccinations(id as string);
                 devLog('Vaccination data:', data);
                 setVaccinationData(data);
             } catch (err) {

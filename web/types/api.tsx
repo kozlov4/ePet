@@ -61,13 +61,13 @@ export interface ColumnDefinition<T> {
     cell?: (
         item: T,
         onAction: (item: T, actionType: string) => void,
-    ) => React.ReactNode;
+    ) => ReactNode;
 }
 
-export interface ViewConfig {
+export interface ViewConfig<T = any> {
     endpoint: string;
     queryParamName: string;
-    columns: ColumnDefinition<any>[];
+    columns: ColumnDefinition<T>[];
     title: string;
     addNewLink: string;
     addNewText?: string;
@@ -82,7 +82,8 @@ export interface AuthContextType {
     user: User | null;
     loading: boolean;
     isAuthenticated: boolean;
-    login: (userData: User, token: string) => void;
+    organizationType: string | null;
+    login: (userData: User, token: string, organizationType?: string) => void;
     logout: () => void;
 }
 
@@ -98,4 +99,27 @@ export interface Notification {
     user_full_name: string;
     user_email: string;
     pet_id: number;
+}
+
+export interface UserPet {
+    pet_id: number;
+    pet_name: string;
+    pet_name_en?: string;
+    img_url?: string;
+    species?: string;
+    breed?: string;
+}
+
+export type ExtractType =
+    | 'Витяг з реєстру домашніх тварин'
+    | 'Медичний витяг про проведені щеплення тварини'
+    | 'Офіційний витяг про ідентифікаційні дані тварини';
+
+export interface GenerateExtractRequest {
+    pet_id: number;
+    name_document: ExtractType;
+}
+
+export interface GenerateExtractResponse {
+    detail: string;
 }

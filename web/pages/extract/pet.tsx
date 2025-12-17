@@ -228,3 +228,4 @@ const PetExtract = () => {
 };
 
 export default PetExtract;
+PetExtract.showFooter = false;
