@@ -45,8 +45,7 @@ export function NewPasswordPage(props: { token: string }) {
                 setMessage('Сталася помилка. Спробуйте пізніше.');
             }
         } finally {
-             // Reset loading state if needed, though we navigated away on success
-             setIsLoading(false);
+            setIsLoading(false);
         }
     };
 

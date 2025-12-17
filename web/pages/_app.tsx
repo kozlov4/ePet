@@ -41,7 +41,6 @@ function AppContent({
     const showFooter = componentConfig.showFooter ?? pageShowFooter;
     const customHeader = componentConfig.customHeader ?? pageCustomHeader;
 
-    // Header configuration for different route prefixes
     const routeHeaderConfig: Record<
         string,
         {
@@ -84,7 +83,6 @@ function AppContent({
         },
     };
 
-    // Find matching route configuration (check more specific routes first)
     const sortedRoutes = Object.keys(routeHeaderConfig).sort(
         (a, b) => b.length - a.length,
     );
@@ -93,15 +91,12 @@ function AppContent({
     );
     const routeConfig = routePrefix ? routeHeaderConfig[routePrefix] : null;
 
-    // Check if user is a regular user (not an organization)
     const isRegularUser =
         organizationType === 'user' || organizationType === null;
 
-    // If on /home and user is a regular user, show extract header
     const shouldShowUserHeader =
         router.pathname === '/home' && isRegularUser && user;
 
-    // Determine final header props
     const finalHeaderProps =
         headerProps ||
         (shouldShowUserHeader && !customHeader

@@ -1,7 +1,6 @@
 import { authService } from '../../services/authService';
 import { request } from '../../services/api';
 
-// Mock the request function
 jest.mock('../../services/api', () => ({
     request: jest.fn(),
 }));
@@ -26,19 +25,21 @@ describe('authService', () => {
         const result = await authService.login(username, password);
 
         expect(request).toHaveBeenCalledTimes(1);
-        expect(request).toHaveBeenCalledWith('/login', expect.objectContaining({
-            method: 'POST',
-            headers: expect.objectContaining({
-                'Content-Type': 'application/x-www-form-urlencoded',
+        expect(request).toHaveBeenCalledWith(
+            '/login',
+            expect.objectContaining({
+                method: 'POST',
+                headers: expect.objectContaining({
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                }),
+                skipAuth: true,
             }),
-            skipAuth: true,
-        }));
-        
-        // Verify body content
+        );
+
         const callArgs = (request as jest.Mock).mock.calls[0];
         const requestOptions = callArgs[1];
         const bodyParams = new URLSearchParams(requestOptions.body);
-        
+
         expect(bodyParams.get('username')).toBe(username);
         expect(bodyParams.get('password')).toBe(password);
         expect(bodyParams.get('grant_type')).toBe('password');

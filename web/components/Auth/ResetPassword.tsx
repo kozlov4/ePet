@@ -14,7 +14,6 @@ export function ResetPasswordPage() {
 
     const validateEmail = (value: string): string => {
         if (!value) return '';
-        // Removed arbitrary 30 character limit
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(value)) return 'Невірний формат електронної пошти';
         return '';
@@ -34,9 +33,7 @@ export function ResetPasswordPage() {
 
         try {
             await authService.forgotPassword(emailAddress);
-            setMessage(
-                'Посилання для скидання паролю було надіслано на пошту',
-            );
+            setMessage('Посилання для скидання паролю було надіслано на пошту');
         } catch (error) {
             devError('Error during password reset:', error);
             setMessage('Сталася помилка. Спробуйте пізніше.');
@@ -44,7 +41,7 @@ export function ResetPasswordPage() {
             setIsLoading(false);
         }
     };
-    devLog(email)
+    devLog(email);
     const isFormValid = !validateEmail(email) && email;
 
     return (
@@ -89,7 +86,7 @@ export function ResetPasswordPage() {
                     )}
                 </motion.div>
 
-               {message && (
+                {message && (
                     <span
                         className={`flex w-full justify-center text-center text-[14px] mt-2 ${
                             message ===

@@ -6,7 +6,11 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useAuth } from '../../hooks/useAuth';
 import { authService } from '../../services/authService';
 import { devError, devLog } from '../../utils/config';
-import { ORGANIZATION_TYPES, ROUTES, VALIDATION_MESSAGES } from '../../utils/constants';
+import {
+    ORGANIZATION_TYPES,
+    ROUTES,
+    VALIDATION_MESSAGES,
+} from '../../utils/constants';
 
 export function Login() {
     const [email, setEmail] = useState<string>('');
@@ -19,15 +23,12 @@ export function Login() {
 
     const validateEmail = (value: string): string => {
         if (!value) return '';
-        // Removed arbitrary 30 character limit - standard emails can be longer
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(value)) return VALIDATION_MESSAGES.EMAIL_INVALID;
         return '';
     };
 
     const validatePassword = (value: string): string => {
-        // Password validation can be added here if needed
-        // For now, returning empty string (no validation)
         return '';
     };
 
@@ -45,14 +46,19 @@ export function Login() {
                 if (data.detail === 'Organization not found.') {
                     setMessage(VALIDATION_MESSAGES.AUTH_ERROR);
                 } else if (data.access_token) {
-                    const orgType = data.organization_type || ORGANIZATION_TYPES.USER;
+                    const orgType =
+                        data.organization_type || ORGANIZATION_TYPES.USER;
                     login({ name: data.user_name }, data.access_token, orgType);
-                    
-                    if (data.organization_type === ORGANIZATION_TYPES.VET_CLINIC)
+
+                    if (
+                        data.organization_type === ORGANIZATION_TYPES.VET_CLINIC
+                    )
                         router.push(ROUTES.VET_CLINIC_HOME);
                     else if (data.organization_type === ORGANIZATION_TYPES.CNAP)
                         router.push(ROUTES.CNAP_HOME);
-                    else if (data.organization_type === ORGANIZATION_TYPES.SHELTER)
+                    else if (
+                        data.organization_type === ORGANIZATION_TYPES.SHELTER
+                    )
                         router.push(ROUTES.SHELTER_HOME);
                     else if (data.organization_type == null)
                         router.push(ROUTES.HOME);
@@ -170,7 +176,6 @@ export function Login() {
             <ToastContainer />
         </div>
     );
-    
 }
 
-Login.showFotter = false
+Login.showFotter = false;

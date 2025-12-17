@@ -27,16 +27,12 @@ export const PetSlider: React.FC<PetSliderProps> = ({ pets, onPetSelect }) => {
         if (!container) return;
 
         const { scrollLeft, scrollWidth, clientWidth } = container;
-
-        // Check if all cards fit in the container (with small tolerance for rounding)
         const canScroll = scrollWidth > clientWidth + 5; // 5px tolerance
         setIsScrollable(canScroll);
 
         if (canScroll) {
             setCanScrollLeft(scrollLeft > 5); // 5px tolerance
             setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 5); // 5px tolerance
-
-            // Update current index based on scroll position
             const newIndex = Math.round(scrollLeft / cardWidth);
         } else {
             setCanScrollLeft(false);
@@ -66,12 +62,10 @@ export const PetSlider: React.FC<PetSliderProps> = ({ pets, onPetSelect }) => {
         });
     };
 
-    // Update scroll buttons on mount and scroll
     useEffect(() => {
         const container = scrollContainerRef.current;
         if (!container) return;
 
-        // Use setTimeout to ensure DOM is fully rendered
         const timeoutId = setTimeout(() => {
             updateScrollButtons();
         }, 100);
@@ -88,7 +82,6 @@ export const PetSlider: React.FC<PetSliderProps> = ({ pets, onPetSelect }) => {
 
     return (
         <div className="relative w-full">
-            {/* Left Arrow */}
             {isScrollable && canScrollLeft && (
                 <button
                     onClick={scrollLeft}
@@ -110,7 +103,6 @@ export const PetSlider: React.FC<PetSliderProps> = ({ pets, onPetSelect }) => {
                 </button>
             )}
 
-            {/* Scrollable Container */}
             <div
                 ref={scrollContainerRef}
                 className={`flex gap-[21px] scroll-smooth scrollbar-hide ${
@@ -150,7 +142,6 @@ export const PetSlider: React.FC<PetSliderProps> = ({ pets, onPetSelect }) => {
                 ))}
             </div>
 
-            {/* Right Arrow */}
             {isScrollable && canScrollRight && (
                 <button
                     onClick={scrollRight}

@@ -2,7 +2,10 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import ArrowBack from '../../../../assets/images/icons/ArrowBack';
 import CopyIcon from '../../../../assets/images/icons/CopyIcon';
-import { vaccinationService, VaccinationData } from '../../../../services/vaccinationService';
+import {
+    vaccinationService,
+    VaccinationData,
+} from '../../../../services/vaccinationService';
 import { copyToClipboard } from '../../../../utils/clipboard';
 import { fromIsoDateInputToDot } from '../../../../utils/date';
 
@@ -31,7 +34,9 @@ export default function AddVaccination() {
 
         const fetchPetData = async () => {
             try {
-                const data = await vaccinationService.getVaccinations(id as string);
+                const data = await vaccinationService.getVaccinations(
+                    id as string,
+                );
                 setVaccinationData(data);
             } catch (err) {
                 setError(
@@ -121,9 +126,6 @@ export default function AddVaccination() {
 
             router.push(`/Vet-Clinic/vaccination/${petId}`);
         } catch (err) {
-             // Basic error handling for now, as service throws Error with message
-             // Ideally service should return structured errors or throw structured errors
-             // But for now let's just show the message
             const errorMessage =
                 err instanceof Error
                     ? err.message
