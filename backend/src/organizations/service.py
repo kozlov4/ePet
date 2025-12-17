@@ -32,35 +32,35 @@ async def get_current_org_or_cnap(
 
     return None
 
-#TODO Видалити paginated
+
 def read_all_animals_service(
-        db:Session,
+        db: Session,
         org_or_cnap: Annotated[Union[Organizations, Cnap], Depends(get_current_org_or_cnap)],
-        page:int,
-        size:int,
-        animal_passport_number:str = None,
+        page: int,
+        size: int,
+        animal_passport_number: str = None,
         search: str = None):
     if isinstance(org_or_cnap, Organizations):
         org_type = org_or_cnap.organization_type
         org_id = org_or_cnap.organization_id
-        is_cnap = False
     elif isinstance(org_or_cnap, Cnap):
         org_type = "ЦНАП"
         org_id = None
-        is_cnap = True
     else:
-        raise HTTPException(status_code=403, detail="Доступ тільки для організацій або ЦНАП.")
+        raise HTTPException(status_code=403, detail="Доступ заборонено")
 
     base_query = db.query(Pets)
 
-    if org_type == 'Притулок' and org_id:
-        base_query = base_query.filter(Pets.organization_id == org_id)
+    if org_type == 'Притулок':
+        if org_id:
+            base_query = base_query.filter(Pets.organization_id == org_id)
+    else:
+        base_query = base_query.filter(Pets.organization_id == None)
+
 
     if search:
         base_query = base_query.outerjoin(Pets.passport)
-
         search_pattern = f"%{search}%"
-
         base_query = base_query.filter(
             or_(
                 Pets.species.ilike(search_pattern),
@@ -72,15 +72,8 @@ def read_all_animals_service(
     if animal_passport_number:
         base_query = (
             base_query
-            .join(Pets.passport, isouter=True)
+            .outerjoin(Pets.passport)
             .filter(Passports.passport_number == animal_passport_number)
-        )
-
-    if org_type in ["ЦНАП", "Ветклініка"]:
-        base_query = (
-            base_query
-            .join(Pets.organization)
-            .filter(Organizations.organization_type != "Притулок")
         )
 
     total_items = base_query.with_entities(func.count(Pets.pet_id)).scalar()
@@ -101,7 +94,6 @@ def read_all_animals_service(
         animal_passport = pet.passport.passport_number if pet.passport else None
 
         owner_data = None
-
         if pet.owner:
             owner_data = OwnerForOrgResponse(passport_number=pet.owner.passport_number)
 
