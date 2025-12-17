@@ -7,7 +7,9 @@ export function ResetPasswordPage() {
     const [email, setEmail] = useState<string>('');
     const [emailError, setEmailError] = useState<string>('');
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [message, setMessage] = useState<string>('');
+    const [message, setMessage] = useState<string>(
+        'Новий пароль буде надіслано на вказану електронну адресу',
+    );
 
     const validateEmail = (value: string): string => {
         if (!value) return '';
@@ -38,7 +40,7 @@ export function ResetPasswordPage() {
 
             if (response.ok) {
                 setMessage(
-                    'Якщо електронна адреса існує, посилання для скидання паролю було надіслано на пошту',
+                    'Посилання для скидання паролю було надіслано на пошту',
                 );
             } else {
                 throw new Error('Network response was not ok');
@@ -50,7 +52,7 @@ export function ResetPasswordPage() {
             setIsLoading(false);
         }
     };
-
+    console.log(email)
     const isFormValid = !validateEmail(email) && email;
 
     return (
@@ -93,16 +95,23 @@ export function ResetPasswordPage() {
                             {emailError}
                         </p>
                     )}
-
-                    {message && (
-                        <span
-                            className={`flex w-full justify-center text-center text-[14px] mt-2 text-green-400`}
-                        >
-                            {message}
-                        </span>
-                    )}
                 </motion.div>
 
+               {message && (
+                    <span
+                        className={`flex w-full justify-center text-center text-[14px] mt-2 ${
+                            message ===
+                            'Новий пароль буде надіслано на вказану електронну адресу'
+                                ? 'text-gray-700'
+                                : message ===
+                                  'Сталася помилка. Спробуйте пізніше.'
+                                ? 'text-red-500'
+                                : 'text-green-500'
+                        }`}
+                    >
+                        {message}
+                    </span>
+                )}
                 <motion.button
                     onClick={() => handleResetPassword(email)}
                     disabled={!isFormValid || isLoading}
@@ -116,7 +125,7 @@ export function ResetPasswordPage() {
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.8, delay: 0.7 }}
                 >
-                    Скинути пароль
+                    Надіслати
                 </motion.button>
             </div>
         </div>

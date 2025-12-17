@@ -56,13 +56,13 @@ export function Menu() {
 
     return (
         <motion.div
-            className="w-full px-[8%] pt-8 pb-12"
+            className="w-full flex-col justify-center px-[8%] pt-8 pb-12 pl-[10%]"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: 'easeOut' }}
         >
             <motion.div
-                className="w-full flex items-center gap-[4%]"
+                className="w-full flex justify-start items-center gap-[4%]"
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.3, duration: 0.5 }}
@@ -77,7 +77,7 @@ export function Menu() {
             </motion.div>
 
             <motion.div
-                className="max-w-[920px] pl-0"
+                className="max-w-[920px]  pl-[7%]"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.45, duration: 0.6 }}
@@ -109,7 +109,7 @@ export function Menu() {
                     {[
                         {
                             label: 'Тип організації',
-                            sub: 'type of organization',
+                            sub: 'Type of organization',
                             value: items?.organization_type || '',
                         },
                         {
@@ -170,28 +170,7 @@ export function Menu() {
                         </motion.div>
                     ))}
 
-                    <motion.div
-                        className="flex w-full justify-end"
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ delay: 1.1 }}
-                    >
-                        <button
-                            className="
-                            flex items-center justify-center
-                            border-black border-[1px]
-                            px-5 py-2 rounded-[30px]
-                            font-medium text-[12px] text-black
-                            bg-white cursor-pointer
-                            transition-all duration-300 ease-out
-                            hover:bg-black hover:text-white hover:shadow-[0_0_15px_rgba(0,0,0,0.3)]
-                            active:scale-[0.97]
-                        "
-                            onClick={() => router.push('/reset-password')}
-                        >
-                            Забув пароль
-                        </button>
-                    </motion.div>
+                    
 
                     <motion.div
                         className="
@@ -217,3 +196,5 @@ export function Menu() {
         </motion.div>
     );
 }
+
+
