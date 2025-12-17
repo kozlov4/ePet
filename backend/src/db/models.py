@@ -113,6 +113,7 @@ class Cnap(Base):
     passports: Mapped[List["Passports"]] = relationship(back_populates="organization")
     identifiers: Mapped[List["Identifiers"]] = relationship(back_populates="cnap")
 
+    pets: Mapped[List["Pets"]] = relationship(back_populates="cnap")
 
 
 class Pets(Base, TableNameMixin):
@@ -124,8 +125,13 @@ class Pets(Base, TableNameMixin):
     gender: Mapped[str_10]
     date_of_birth: Mapped[datetime_req]
     color: Mapped[str_30]
-    organization_id: Mapped[int] = mapped_column(ForeignKey('organizations.organization_id'))
+
+    organization_id: Mapped[Optional[int]] = mapped_column(ForeignKey('organizations.organization_id'), nullable=True)
+
     user_id: Mapped[int] = mapped_column(ForeignKey('users.user_id'))
+
+    cnap_id: Mapped[Optional[int]] = mapped_column(ForeignKey('cnap.cnap_id'), nullable=True)
+
     sterilization: Mapped[bool_req]
 
     owner: Mapped["Users"] = relationship(back_populates="pets")
@@ -135,6 +141,7 @@ class Pets(Base, TableNameMixin):
     extracts: Mapped[List["Extracts"]] = relationship(back_populates="pet")
     identifiers: Mapped[List["Identifiers"]] = relationship(back_populates="pet")
     requests: Mapped[List["Requests"]] = relationship(back_populates="pet")
+    cnap: Mapped["Cnap"] = relationship(back_populates="pets")
 
 
 class Requests(Base, TableNameMixin):
