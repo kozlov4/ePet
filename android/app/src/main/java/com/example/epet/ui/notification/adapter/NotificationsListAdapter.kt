@@ -7,7 +7,6 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.epet.R
 import com.example.epet.data.model.notification.OutputNotification
-import com.example.epet.data.model.passport.OutputPetItem
 
 class NotificationsListAdapter(private var notificationsList: List<OutputNotification>) : RecyclerView.Adapter<NotificationsListAdapter.NotificationsViewHolder>() {
 
