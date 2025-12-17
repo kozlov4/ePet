@@ -158,7 +158,7 @@ export function Menu() {
 
                                 {item.label === 'Пароль' && (
                                     <button
-                                        className="mt-2 border-gray-400 border-[0.5px] px-2 py-0.5 rounded-[8px] font-normal text-[10px] text-gray-600 bg-transparent cursor-pointer transition-all duration-200 ease-out hover:border-gray-600 hover:text-gray-800 active:scale-[0.95]"
+                                        className="mt-2 w-[25%]  border-gray-400 border-[0.5px]  py-0.5 rounded-[8px] font-semibold text-sm text-gray-600 bg-transparent cursor-pointer transition-all duration-200 ease-out hover:border-gray-600 hover:text-gray-800 active:scale-[0.95]"
                                         onClick={() =>
                                             router.push('/reset-password')
                                         }
