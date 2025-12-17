@@ -27,7 +27,7 @@ import kotlin.getValue
 
 class VaccinationInfoMenu(private val onClose: (() -> Unit)? = null) : BottomSheetDialogFragment() {
 
-    val passportViewModel: PassportViewModel by activityViewModels()
+    private val passportViewModel: PassportViewModel by activityViewModels()
 
     private lateinit var ll_main: LinearLayout
     private lateinit var tv_passport_number: TextView

@@ -23,7 +23,7 @@ import android.content.Context
 
 class PassportInfoMenu(private val onClose: (() -> Unit)? = null) : BottomSheetDialogFragment() {
 
-    val passportViewModel: PassportViewModel by activityViewModels()
+    private val passportViewModel: PassportViewModel by activityViewModels()
 
     private lateinit var tv_passport_number: TextView
     private lateinit var iv_copy_passport: ImageView

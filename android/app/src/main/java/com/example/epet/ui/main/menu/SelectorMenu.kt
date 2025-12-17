@@ -15,7 +15,7 @@ import com.example.epet.ui.main.viewmodel.PassportViewModel
 
 class SelectorMenu(private val onClose: (() -> Unit)? = null) : BottomSheetDialogFragment() {
 
-    val passportViewModel: PassportViewModel by activityViewModels()
+    private val passportViewModel: PassportViewModel by activityViewModels()
 
     private lateinit var tv_passport_info: TextView
     private lateinit var tv_vaccination_info: TextView
