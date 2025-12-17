@@ -12,7 +12,7 @@ import com.example.epet.data.model.service.OutputExtractPet
 import com.example.epet.data.model.settings.InputUpdateProfile
 import com.example.epet.data.model.notification.OutputNotification
 import com.example.epet.data.model.service.InputRequestShelter
-import com.example.epet.data.model.service.OutputPetShelter
+import com.example.epet.data.model.service.OutputShelterPet
 import com.example.epet.data.model.service.OutputRequestShelter
 import com.example.epet.data.model.settings.OutputUpdateProfile
 import com.example.epet.data.model.settings.OutputUserDetail
@@ -47,16 +47,16 @@ interface ApiService {
     /** Дані паспорта **/
 
     @GET("users/me/pets")
-    suspend fun passportList(
+    suspend fun getPassportsList(
         @Header("Authorization") token: String): Response<List<OutputPetItem>>
 
     @GET("pets/{pet_id}")
-    suspend fun passportDetail(
+    suspend fun getPassportDetail(
         @Header("Authorization") token: String,
         @Path("pet_id") petId: String): Response<OutputPassportDetail>
 
     @GET("pets/{pet_id}/vaccinations")
-    suspend fun vaccinationsList(
+    suspend fun getVaccinationsList(
         @Header("Authorization") token: String,
         @Path("pet_id") petId: String): Response<OutputVaccinationsList>
 
@@ -70,7 +70,7 @@ interface ApiService {
     /** Налаштування **/
 
     @GET("users/me")
-    suspend fun userRetail(
+    suspend fun getUserDetail(
         @Header("Authorization") token: String): Response<OutputUserDetail>
 
     @PUT("users/me/update-profile")
@@ -81,14 +81,14 @@ interface ApiService {
     /** Список повідомлень **/
 
     @GET("users/notifications")
-    suspend fun getNotifications(
+    suspend fun getNotificationsList(
         @Header("Authorization") token: String): Response<List<OutputNotification>>
 
     /** Притулок **/
 
     @GET("/requests/list")
-    suspend fun getPetsShelter(
-        @Header("Authorization") token: String): Response<List<OutputPetShelter>>
+    suspend fun getShelterPetsList(
+        @Header("Authorization") token: String): Response<List<OutputShelterPet>>
 
     @POST("/requests/apply")
     suspend fun requestShelter(

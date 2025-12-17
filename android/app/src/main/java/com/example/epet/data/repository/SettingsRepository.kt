@@ -9,10 +9,10 @@ import com.example.epet.data.network.RetrofitClient.gson
 
 class SettingsRepository {
 
-    suspend fun userDetail(token: String?) : OutputUserDetail {
+    suspend fun getUserDetail(token: String?) : OutputUserDetail {
 
         return try {
-            val response = RetrofitClient.api.userRetail("Bearer $token")
+            val response = RetrofitClient.api.getUserDetail("Bearer $token")
             if (response.isSuccessful) {
                 response.body() ?: OutputUserDetail()
             } else {

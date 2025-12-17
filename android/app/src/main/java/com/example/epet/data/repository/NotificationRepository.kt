@@ -5,14 +5,14 @@ import com.example.epet.data.network.RetrofitClient
 
 class NotificationRepository {
 
-    suspend fun getNotifications(token: String?) : List<OutputNotification> {
+    suspend fun getNotificationsList(token: String?) : List<OutputNotification> {
 
         if (token == null) {
             return emptyList()
         }
 
         return try {
-            val response = RetrofitClient.api.getNotifications("Bearer $token")
+            val response = RetrofitClient.api.getNotificationsList("Bearer $token")
 
             if (response.isSuccessful) {
                 response.body()!!

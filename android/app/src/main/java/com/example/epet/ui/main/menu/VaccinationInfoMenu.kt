@@ -113,7 +113,7 @@ class VaccinationInfoMenu(private val onClose: (() -> Unit)? = null) : BottomShe
     private fun initStateFlow() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                passportViewModel.outputVaccinationList.collect { state ->
+                passportViewModel.outputVaccinationsList.collect { state ->
                     tv_passport_number.text = state.passport_number
                     setUpdateDatetime(state.update_datetime)
 

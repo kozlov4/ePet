@@ -59,14 +59,14 @@ class NotificationsListFragment : Fragment() {
     fun loadUserNotifications() {
         val sharedPref = requireContext().getSharedPreferences("UserPrefs", MODE_PRIVATE)
         val token = sharedPref.getString("access_token", null)
-        notificationsViewModel.getNotifications(token)
+        notificationsViewModel.getNotificationsList(token)
     }
 
     /** Ініціалізація StateFlow **/
     private fun initStateFlow() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                notificationsViewModel.outputNotifications.collect { state ->
+                notificationsViewModel.outputNotificationsList.collect { state ->
                     if (state == emptyList<OutputNotification>())  {
                         tv_message.visibility = View.VISIBLE
                     } else {

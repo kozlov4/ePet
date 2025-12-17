@@ -1,7 +1,7 @@
 package com.example.epet.ui.services.view
 
 import android.content.Context
-import android.content.Intent
+import android.content.Context.MODE_PRIVATE
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -20,10 +20,8 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.example.epet.data.model.notification.OutputNotification
 import com.example.epet.data.model.passport.OutputPetItem
 import com.example.epet.data.model.service.InputExtractPet
-import com.example.epet.ui.main.view.MainActivity
 import com.example.epet.ui.main.viewmodel.PassportViewModel
 import com.example.epet.ui.service.adapter.PetListAdapter
 import com.example.epet.ui.service.viewmodel.ServiceViewModel
@@ -64,6 +62,7 @@ class ExtractPetFragment : Fragment() {
         initViews(view)
         initExtractInfo()
         initButtons()
+        loadUserPets()
         initStateFlow()
     }
 
@@ -122,7 +121,7 @@ class ExtractPetFragment : Fragment() {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
 
                 launch {
-                    passportViewModel.outputPassportList.collect { state ->
+                    passportViewModel.outputPassportsList.collect { state ->
                         if (state == emptyList<OutputPetItem>())  {
                             tv_message.visibility = View.VISIBLE
                             bth_create_extract.isEnabled = false
@@ -149,6 +148,13 @@ class ExtractPetFragment : Fragment() {
                 }
             }
         }
+    }
+
+    /** Ініціалізація улюбленців користувача **/
+    fun loadUserPets() {
+        val sharedPref = requireContext().getSharedPreferences("UserPrefs", MODE_PRIVATE)
+        val token = sharedPref.getString("access_token", null)
+        passportViewModel.getPassportsList(token)
     }
 
     /** Перехід на сторінку повідомлення **/

@@ -98,7 +98,7 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
                         when (state) {
                             is OutputUpdateProfile.Success -> {
                                 val token = saveUserToken(state)
-                                settingsViewModel.userDetail(token)
+                                settingsViewModel.getUserDetail(token)
                                 tv_message.text = ""
                                 loadingViewModel.hide()
                                 textViewSwitchMode(edit = false)

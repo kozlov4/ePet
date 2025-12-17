@@ -18,7 +18,7 @@ import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.example.epet.R
 import com.example.epet.data.model.service.InputRequestShelter
-import com.example.epet.data.model.service.OutputPetShelter
+import com.example.epet.data.model.service.OutputShelterPet
 import com.example.epet.data.model.service.OutputRequestShelter
 import com.example.epet.ui.service.viewmodel.ServiceViewModel
 import kotlinx.coroutines.launch
@@ -32,7 +32,7 @@ class ShelterFragment : Fragment() {
     private lateinit var ib_dislike: ImageButton
     private lateinit var iv_to_back: ImageView
 
-    private var listPetsShelter: List<OutputPetShelter> = emptyList()
+    private var listPetsShelter: List<OutputShelterPet> = emptyList()
     private var currentIndex = 0
     private var currentPetId = 0
 
@@ -45,6 +45,7 @@ class ShelterFragment : Fragment() {
 
         initViews(view)
         initButtons()
+        loadPets()
         initStateFlow()
     }
 
@@ -82,7 +83,7 @@ class ShelterFragment : Fragment() {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
 
                 launch {
-                    serviceViewModel.outputPetsShelter.collect { state ->
+                    serviceViewModel.outputShelterPetsList.collect { state ->
                         listPetsShelter = state
                         showNextCard(animated = false, listPetsShelter)
                     }
@@ -100,6 +101,13 @@ class ShelterFragment : Fragment() {
         }
     }
 
+    /** Ініціалізація улюбленців притулку **/
+    fun loadPets() {
+        val sharedPref = requireContext().getSharedPreferences("UserPrefs", MODE_PRIVATE)
+        val token = sharedPref.getString("access_token", null)
+        serviceViewModel.getShelterPetsList(token)
+    }
+
     /** Перехід на сторінку повідомлення **/
     private fun navigateToMessage(emoji: String, main: String, description: String) {
         val action = ShelterFragmentDirections.actionShelterToMessage(
@@ -112,7 +120,7 @@ class ShelterFragment : Fragment() {
     }
 
     /** Показ наступної картки **/
-    private fun showNextCard(animated: Boolean = true, listPetsShelter: List<OutputPetShelter>) {
+    private fun showNextCard(animated: Boolean = true, listPetsShelter: List<OutputShelterPet>) {
         if (currentIndex >= listPetsShelter.size) return
 
         val pet = listPetsShelter[currentIndex]

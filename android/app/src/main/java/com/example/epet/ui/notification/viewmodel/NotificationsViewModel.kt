@@ -12,13 +12,13 @@ class NotificationsViewModel : ViewModel() {
 
     private val repository = NotificationRepository()
 
-    private val _outputNotifications = MutableStateFlow<List<OutputNotification>>(emptyList())
-    val outputNotifications = _outputNotifications.asStateFlow()
+    private val _outputNotificationsList = MutableStateFlow<List<OutputNotification>>(emptyList())
+    val outputNotificationsList = _outputNotificationsList.asStateFlow()
 
-    fun getNotifications(token: String?) {
+    fun getNotificationsList(token: String?) {
         viewModelScope.launch {
-            val output = repository.getNotifications(token)
-            _outputNotifications.value = output
+            val output = repository.getNotificationsList(token)
+            _outputNotificationsList.value = output
         }
     }
 }

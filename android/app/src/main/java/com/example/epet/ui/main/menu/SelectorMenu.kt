@@ -99,7 +99,7 @@ class SelectorMenu(private val onClose: (() -> Unit)? = null) : BottomSheetDialo
     private fun initStateFlow() {
         val sharedPref = requireContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
         val token = sharedPref.getString("access_token", null)
-        passportViewModel.passportDetail(token, pet_id)
-        passportViewModel.vaccinationList(token, pet_id)
+        passportViewModel.getPassportDetail(token, pet_id)
+        passportViewModel.getVaccinationsList(token, pet_id)
     }
 }

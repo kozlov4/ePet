@@ -88,10 +88,10 @@ class MainActivity : AppCompatActivity() {
         val sharedPref = getSharedPreferences("UserPrefs", MODE_PRIVATE)
         val token = sharedPref.getString("access_token", null)
 
-        passportViewModel.passportList(token)
-        serviceViewModel.getPetsShelter(token)
-        settingsViewModel.userDetail(token)
-        notificationsViewModel.getNotifications(token)
+        passportViewModel.getPassportsList(token)
+        serviceViewModel.getShelterPetsList(token)
+        settingsViewModel.getUserDetail(token)
+        notificationsViewModel.getNotificationsList(token)
     }
 
     /** Ініціалізація StateFlow **/

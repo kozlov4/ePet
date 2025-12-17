@@ -14,35 +14,35 @@ class PassportViewModel() : ViewModel() {
 
     private val repository = PassportRepository()
 
-    private val _outputPassportList = MutableStateFlow<List<OutputPetItem>>(emptyList())
-    val outputPassportList = _outputPassportList.asStateFlow()
+    private val _outputPassportsList = MutableStateFlow<List<OutputPetItem>>(emptyList())
+    val outputPassportsList = _outputPassportsList.asStateFlow()
 
     private val _outputPassportDetail = MutableStateFlow(OutputPassportDetail())
     val outputPassportDetail = _outputPassportDetail.asStateFlow()
 
-    private val _outputVaccinationList = MutableStateFlow(OutputVaccinationsList())
-    val outputVaccinationList = _outputVaccinationList.asStateFlow()
+    private val _outputVaccinationsList = MutableStateFlow(OutputVaccinationsList())
+    val outputVaccinationsList = _outputVaccinationsList.asStateFlow()
 
-    fun passportList(token: String?) {
+    fun getPassportsList(token: String?) {
         viewModelScope.launch {
-            val output = repository.passportList(token)
-            _outputPassportList.value = output
+            val output = repository.getPassportsList(token)
+            _outputPassportsList.value = output
         }
     }
 
-    fun passportDetail(token: String?, pet_id: String?) {
+    fun getPassportDetail(token: String?, pet_id: String?) {
         viewModelScope.launch {
             val input = pet_id
-            val output = repository.passportDetail(token, input)
+            val output = repository.getPassportDetail(token, input)
             _outputPassportDetail.value = output
         }
     }
 
-    fun vaccinationList(token: String?, pet_id: String?) {
+    fun getVaccinationsList(token: String?, pet_id: String?) {
         viewModelScope.launch {
             val input = pet_id
-            val output = repository.vaccinationsList(token, input)
-            _outputVaccinationList.value = output
+            val output = repository.getVaccinationsList(token, input)
+            _outputVaccinationsList.value = output
         }
     }
 }

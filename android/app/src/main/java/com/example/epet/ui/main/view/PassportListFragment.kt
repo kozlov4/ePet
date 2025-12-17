@@ -13,6 +13,7 @@ import com.example.epet.R
 import com.example.epet.ui.main.adapter.PassportListAdapter
 import kotlin.math.abs
 import SelectorMenu
+import android.content.Context.MODE_PRIVATE
 import android.widget.TextView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -50,6 +51,7 @@ class PassportListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         initViews(view)
+        loadUserPets()
         initStateFlow()
     }
 
@@ -60,11 +62,18 @@ class PassportListFragment : Fragment() {
         tv_message = view.findViewById(R.id.tv_message)
     }
 
+    /** Ініціалізація улюбленців користувача **/
+    fun loadUserPets() {
+        val sharedPref = requireContext().getSharedPreferences("UserPrefs", MODE_PRIVATE)
+        val token = sharedPref.getString("access_token", null)
+        passportViewModel.getPassportsList(token)
+    }
+
     /** Ініціалізація StateFlow **/
     private fun initStateFlow() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                passportViewModel.outputPassportList.collect { state ->
+                passportViewModel.outputPassportsList.collect { state ->
 
                     if (state == emptyList<OutputPetItem>()) {
                         tv_message.visibility = View.VISIBLE
