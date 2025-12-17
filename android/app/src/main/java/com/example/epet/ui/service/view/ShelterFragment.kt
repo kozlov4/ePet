@@ -2,6 +2,7 @@ package com.example.epet.ui.services.view
 
 import android.content.Context.MODE_PRIVATE
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,6 +32,7 @@ class ShelterFragment : Fragment() {
     private lateinit var ib_like: ImageButton
     private lateinit var ib_dislike: ImageButton
     private lateinit var iv_to_back: ImageView
+    private lateinit var tv_message: TextView
 
     private var listPetsShelter: List<OutputShelterPet> = emptyList()
     private var currentIndex = 0
@@ -55,6 +57,7 @@ class ShelterFragment : Fragment() {
         card_container = view.findViewById(R.id.card_container)
         ib_like = view.findViewById(R.id.ib_like)
         ib_dislike = view.findViewById(R.id.ib_dislike)
+        tv_message = view.findViewById(R.id.tv_message)
     }
 
     /** Ініціалізація всіх кнопок інтерфейсу **/
@@ -67,13 +70,14 @@ class ShelterFragment : Fragment() {
             val sharedPref = requireActivity().getSharedPreferences("UserPrefs", MODE_PRIVATE)
             val token = sharedPref.getString("access_token", null)
 
-            serviceViewModel.requestShelter(token, InputRequestShelter(currentPetId))
-
-            swipeCard(exitToLeft = true)
+            if (currentPetId != 0) {
+                serviceViewModel.requestShelter(token, InputRequestShelter(currentPetId))
+                swipeCard(exitToLeft = true)
+            }
         }
 
         ib_dislike.setOnClickListener {
-            swipeCard(exitToLeft = false)
+            if (currentPetId != 0) swipeCard(exitToLeft = false)
         }
     }
 
@@ -81,11 +85,15 @@ class ShelterFragment : Fragment() {
     private fun initStateFlow() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-
                 launch {
                     serviceViewModel.outputShelterPetsList.collect { state ->
-                        listPetsShelter = state
-                        showNextCard(animated = false, listPetsShelter)
+                        if (state.isNotEmpty()) {
+                            listPetsShelter = state
+
+                            if (card_container.childCount == 0) {
+                                showNextCard(animated = false)
+                            }
+                        }
                     }
                 }
 
@@ -120,8 +128,16 @@ class ShelterFragment : Fragment() {
     }
 
     /** Показ наступної картки **/
-    private fun showNextCard(animated: Boolean = true, listPetsShelter: List<OutputShelterPet>) {
-        if (currentIndex >= listPetsShelter.size) return
+    private fun showNextCard(animated: Boolean = true) {
+        if (currentIndex >= listPetsShelter.size) {
+            card_container.removeAllViews()
+            currentPetId = 0
+            tv_message.visibility = View.VISIBLE
+            return
+
+        } else {
+            tv_message.visibility = View.GONE
+        }
 
         val pet = listPetsShelter[currentIndex]
         val cardView = layoutInflater.inflate(R.layout.item_shelter, card_container, false)
@@ -130,43 +146,36 @@ class ShelterFragment : Fragment() {
         val tv_pet_name = cardView.findViewById<TextView>(R.id.tv_pet_name)
         val tv_gender = cardView.findViewById<TextView>(R.id.tv_gender)
         val tv_breed = cardView.findViewById<TextView>(R.id.tv_breed)
-        val tv_birth_date = cardView.findViewById<TextView>(R.id.tv_breed)
+        val tv_birth_date = cardView.findViewById<TextView>(R.id.tv_birth_date)
 
         currentPetId = pet.pet_id
 
-        try {
-            if (pet.img_url.isNotBlank() && pet.img_url != "https://") {
-                Glide.with(requireContext())
-                    .load(pet.img_url)
-                    .error(R.drawable.icon_empty_image)
-                    .into(iv_photo)
-            } else {
-                iv_photo.setImageResource(R.drawable.icon_empty_image)
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-            iv_photo.setImageResource(R.drawable.icon_empty_image)
-        }
+        Glide.with(this)
+            .load(if (pet.img_url.startsWith("http")) pet.img_url else R.drawable.icon_empty_image)
+            .error(R.drawable.icon_empty_image)
+            .into(iv_photo)
 
         tv_pet_name.text = pet.pet_name
         tv_gender.text = "Стать: ${pet.gender}"
         tv_breed.text = "Порода: ${pet.breed}"
         tv_birth_date.text = pet.date_of_birth
 
-        if (animated) {
-            cardView.scaleX = 0.9f
-            cardView.scaleY = 0.9f
-            cardView.alpha = 0f
+        // Важно: если не анимировано, очищаем всё перед добавлением
+        if (!animated) {
+            card_container.removeAllViews()
         }
 
-        card_container.addView(cardView, 0)
+        card_container.addView(cardView)
 
         if (animated) {
+            cardView.alpha = 0f
+            cardView.scaleX = 0.8f
+            cardView.scaleY = 0.8f
             cardView.animate()
                 .alpha(1f)
                 .scaleX(1f)
                 .scaleY(1f)
-                .setDuration(350)
+                .setDuration(300)
                 .start()
         }
     }
@@ -176,17 +185,18 @@ class ShelterFragment : Fragment() {
         if (card_container.childCount == 0) return
 
         val topCard = card_container.getChildAt(card_container.childCount - 1)
-        val direction = if (exitToLeft) -1 else 1
+        val translationX = if (exitToLeft) -1500f else 1500f
+        val rotation = if (exitToLeft) -30f else 30f
 
         topCard.animate()
-            .translationXBy(direction * 800f)
-            .rotationBy(direction * 25f)
+            .translationX(translationX)
+            .rotation(rotation)
             .alpha(0f)
             .setDuration(400)
             .withEndAction {
                 card_container.removeView(topCard)
                 currentIndex++
-                showNextCard(animated = true, listPetsShelter)
+                showNextCard(animated = true)
             }
             .start()
     }

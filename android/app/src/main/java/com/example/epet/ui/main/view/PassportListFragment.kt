@@ -51,6 +51,7 @@ class PassportListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         initViews(view)
+        setupSnapHelper()
         loadUserPets()
         initStateFlow()
     }
@@ -89,22 +90,26 @@ class PassportListFragment : Fragment() {
 
     /** Налаштування RecyclerView **/
     private fun setupRecyclerView(passports: List<OutputPetItem>) {
-        passportListAdapter = PassportListAdapter(passports) { pet_id ->
-            val menu = SelectorMenu()
-            val bundle = Bundle().apply {
-                putString("pet_id", pet_id)
+        if (rv_Passports.adapter == null) {
+            passportListAdapter = PassportListAdapter(passports) { pet_id ->
+                val menu = SelectorMenu()
+                val bundle = Bundle().apply {
+                    putString("pet_id", pet_id)
+                }
+                menu.arguments = bundle
+                menu.show(parentFragmentManager, "SelectorMenu")
             }
-            menu.arguments = bundle
-            menu.show(parentFragmentManager, "SelectorMenu")
+
+            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            rv_Passports.layoutManager = layoutManager
+            rv_Passports.adapter = passportListAdapter
+
+            centerFirstCard()
+            setupScrollListener()
+        } else {
+            (rv_Passports.adapter as PassportListAdapter).updateData(passports)
+            rv_Passports.post { scaleChildren() }
         }
-
-        layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        rv_Passports.layoutManager = layoutManager
-        rv_Passports.adapter = passportListAdapter
-
-        setupSnapHelper()
-        centerFirstCard()
-        setupScrollListener()
     }
 
     /** Налаштування SnapHelper для центрованої прокрутки **/

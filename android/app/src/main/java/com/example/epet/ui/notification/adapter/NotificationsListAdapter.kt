@@ -7,8 +7,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.epet.R
 import com.example.epet.data.model.notification.OutputNotification
+import com.example.epet.data.model.passport.OutputPetItem
 
-class NotificationsListAdapter(private val notificationsList: List<OutputNotification>) : RecyclerView.Adapter<NotificationsListAdapter.NotificationsViewHolder>() {
+class NotificationsListAdapter(private var notificationsList: List<OutputNotification>) : RecyclerView.Adapter<NotificationsListAdapter.NotificationsViewHolder>() {
 
     class NotificationsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val tv_main: TextView = itemView.findViewById(R.id.tv_main)
@@ -24,6 +25,11 @@ class NotificationsListAdapter(private val notificationsList: List<OutputNotific
         val notification = notificationsList[position]
         holder.tv_main.text = notification.message
         holder.tv_description.text = "${notification.extract_name} сформовано ${notification.date}"
+    }
+
+    fun updateData(newList: List<OutputNotification>) {
+        this.notificationsList = newList
+        notifyDataSetChanged()
     }
 
     override fun getItemCount(): Int = notificationsList.size

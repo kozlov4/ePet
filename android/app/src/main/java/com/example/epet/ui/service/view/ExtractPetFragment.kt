@@ -59,7 +59,9 @@ class ExtractPetFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         initViews(view)
+        setupSnapHelper()
         initExtractInfo()
         initButtons()
         loadUserPets()
@@ -170,15 +172,20 @@ class ExtractPetFragment : Fragment() {
 
     /** Налаштування RecyclerView **/
     private fun setupRecyclerView(passports: List<OutputPetItem>) {
-        petListAdapter = PetListAdapter(passports)
-        layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        if (rv_pets.adapter == null) {
+            petListAdapter = PetListAdapter(passports)
+            layoutManager =
+                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
 
-        rv_pets.layoutManager = layoutManager
-        rv_pets.adapter = petListAdapter
+            rv_pets.layoutManager = layoutManager
+            rv_pets.adapter = petListAdapter
 
-        setupSnapHelper()
-        centerFirstCard()
-        setupScrollListener()
+            centerFirstCard()
+            setupScrollListener()
+        } else {
+            (rv_pets.adapter as PetListAdapter).updateData(passports)
+            rv_pets.post { scaleChildren() }
+        }
     }
 
     /** Налаштування SnapHelper для центрованої прокрутки **/

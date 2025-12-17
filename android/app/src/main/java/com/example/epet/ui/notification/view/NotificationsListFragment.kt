@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.epet.R
 import com.example.epet.data.model.notification.OutputNotification
+import com.example.epet.ui.main.adapter.PassportListAdapter
 import com.example.epet.ui.messages.adapter.NotificationsListAdapter
 import com.example.epet.ui.notification.viewmodel.NotificationsViewModel
 import kotlinx.coroutines.launch
@@ -80,8 +81,12 @@ class NotificationsListFragment : Fragment() {
 
     /** Налаштування RecyclerView **/
     private fun setupRecyclerView(notificationsList: List<OutputNotification>) {
-        val adapter = NotificationsListAdapter(notificationsList)
-        rv_messages.layoutManager = LinearLayoutManager(requireContext())
-        rv_messages.adapter = adapter
+        if (rv_messages.adapter == null) {
+            val adapter = NotificationsListAdapter(notificationsList)
+            rv_messages.layoutManager = LinearLayoutManager(requireContext())
+            rv_messages.adapter = adapter
+        } else {
+            (rv_messages.adapter as NotificationsListAdapter).updateData(notificationsList)
+        }
     }
 }

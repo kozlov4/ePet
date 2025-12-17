@@ -10,7 +10,7 @@ import com.bumptech.glide.Glide
 import com.example.epet.R
 import com.example.epet.data.model.passport.OutputPetItem
 
-class PetListAdapter( private val passportList: List<OutputPetItem>) : RecyclerView.Adapter<PetListAdapter.PetListViewHolder>() {
+class PetListAdapter( private var passportList: List<OutputPetItem>) : RecyclerView.Adapter<PetListAdapter.PetListViewHolder>() {
 
     inner class PetListViewHolder(val card: CardView) : RecyclerView.ViewHolder(card) {
         val tv_pet_name_ua: TextView = card.findViewById(R.id.tv_pet_name)
@@ -50,6 +50,11 @@ class PetListAdapter( private val passportList: List<OutputPetItem>) : RecyclerV
 
     fun getItem(position: Int): OutputPetItem {
         return passportList[position]
+    }
+
+    fun updateData(newList: List<OutputPetItem>) {
+        this.passportList = newList
+        notifyDataSetChanged()
     }
 
     override fun getItemCount(): Int = passportList.size
