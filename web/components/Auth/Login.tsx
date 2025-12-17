@@ -192,4 +192,7 @@ export function Login() {
             <ToastContainer />
         </div>
     );
+    
 }
+
+Login.showFotter = false
