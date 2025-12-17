@@ -160,7 +160,6 @@ class ShelterFragment : Fragment() {
         tv_breed.text = "Порода: ${pet.breed}"
         tv_birth_date.text = pet.date_of_birth
 
-        // Важно: если не анимировано, очищаем всё перед добавлением
         if (!animated) {
             card_container.removeAllViews()
         }
