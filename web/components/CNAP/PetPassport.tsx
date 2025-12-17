@@ -5,11 +5,10 @@ import { useEffect, useState } from 'react';
 
 import ArrowBack from '../../assets/images/icons/ArrowBack';
 import CopyIcon from '../../assets/images/icons/CopyIcon';
+import { petService } from '../../services/petService';
 import { PetPassportData } from '../../types/api';
 import { copyToClipboard } from '../../utils/clipboard';
 import { formatUaDate } from '../../utils/date';
-
-const API_BASE = process.env.NEXT_PUBLIC_API_DOMAIN || '';
 
 export function PetPassport({
     actionButton,
@@ -29,23 +28,7 @@ export function PetPassport({
 
         const fetchPetData = async () => {
             try {
-                const token = localStorage.getItem('access_token');
-                if (!token) {
-                    throw new Error('Токен авторизації відсутній');
-                }
-
-                const response = await fetch(`${API_BASE}/pets/${id}`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                        'Content-Type': 'application/json',
-                    },
-                });
-
-                if (!response.ok) {
-                    throw new Error('Помилка завантаження даних');
-                }
-
-                const data = await response.json();
+                const data = await petService.getPet(id as string);
                 setPetData(data);
             } catch (err) {
                 setError(
@@ -101,7 +84,7 @@ export function PetPassport({
         <div className="grid grid-cols-[1fr_1fr] gap-x-6 gap-y-4 bg-[#F5F5F5] rounded-2xl py-6 pl-6 pr-6 w-[368px]">
             {fields.map((field, index) => (
                 <>
-                    <div className="flex flex-col gap-2">
+                    <div key={`${index}-label`} className="flex flex-col gap-1">
                         <p className="text-sm text-black whitespace-nowrap">
                             {field.label}
                         </p>
@@ -111,10 +94,12 @@ export function PetPassport({
                             </p>
                         )}
                     </div>
-                    <div className="flex flex-col gap-2">
-                        <p className="text-sm text-black">{field.value}</p>
+                    <div key={`${index}-value`} className="flex flex-col gap-1">
+                        <p className="text-sm text-black break-words">
+                            {field.value}
+                        </p>
                         {field.valueEn && (
-                            <p className="text-xs text-[#B3B3B3]">
+                            <p className="text-xs text-[#B3B3B3] break-words">
                                 {field.valueEn}
                             </p>
                         )}
@@ -136,24 +121,7 @@ export function PetPassport({
         if (!confirmDelete) return;
 
         try {
-            const token = localStorage.getItem('access_token');
-            if (!token) {
-                alert('Токен авторизації відсутній');
-                return;
-            }
-
-            const response = await fetch(`${API_BASE}/pets/delete/${petId}`, {
-                method: 'DELETE',
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    Accept: 'application/json',
-                },
-            });
-
-            if (!response.ok) {
-                throw new Error('Помилка видалення');
-            }
-
+            await petService.deletePet(Number(petId));
             alert('Улюбленця успішно видалено!');
             router.back();
         } catch (error) {

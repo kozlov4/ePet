@@ -8,6 +8,15 @@ out/
 dist/
 build/
 
+# Next.js / tooling caches
+.turbo/
+.swc/
+.vercel/
+.eslintcache
+
+# TypeScript build info
+*.tsbuildinfo
+
 # Logs
 npm-debug.log*
 yarn-debug.log*
@@ -40,16 +49,8 @@ coverage/
 *.tgz
 *.zip
 
-.env
-env/
-venv/
-.venv/
-
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
 *.egg-info/
-dist/
-build/
-

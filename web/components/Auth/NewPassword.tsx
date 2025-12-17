@@ -2,7 +2,8 @@
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
-import { API_BASE, devError } from '../../utils/config';
+import { authService } from '../../services/authService';
+import { devError } from '../../utils/config';
 
 export function NewPasswordPage(props: { token: string }) {
     const [newPassword, setNewPassword] = useState('');
@@ -29,28 +30,8 @@ export function NewPasswordPage(props: { token: string }) {
         }
 
         try {
-            const response = await fetch(
-                `${API_BASE}/reset-password/`,
-                {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        token: props.token,
-                        new_password: newPassword,
-                    }),
-                }
-            );
-
-            const data = await response.json();
-
-            if (!response.ok) {
-                throw new Error(data.detail || 'Network response was not ok');
-            }else{
-                router.push('/signIn');
-            }
-
+            await authService.resetPassword(props.token, newPassword);
+            router.push('/signIn');
             setMessage('Новий пароль встановлено!');
         } catch (error) {
             devError('Error during setting new password:', error);
@@ -63,6 +44,8 @@ export function NewPasswordPage(props: { token: string }) {
             } else {
                 setMessage('Сталася помилка. Спробуйте пізніше.');
             }
+        } finally {
+            setIsLoading(false);
         }
     };
 

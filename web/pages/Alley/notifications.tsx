@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import NotificationItem from '../../components/ui/NotificationItem';
 import { Notification } from '../../types/api';
-import { API_BASE } from '../../utils/config';
+import { organizationService } from '../../services/organizationService';
 
 export default function NotificationsPage() {
     const [notifications, setNotifications] = useState<Notification[] | null>(
@@ -17,31 +17,9 @@ export default function NotificationsPage() {
     const router = useRouter();
 
     const fetchNotifications = useCallback(async () => {
-        const token = localStorage.getItem('access_token');
-
-        if (!token) {
-            throw new Error(
-                'Токен авторизації відсутній. Будь ласка, увійдіть.',
-            );
-        }
         setError(null);
         try {
-            const res = await fetch(
-                `${API_BASE}/organizations/organization/list`,
-                {
-                    method: 'GET',
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                        Accept: 'application/json',
-                    },
-                },
-            );
-
-            if (!res.ok) {
-                throw new Error('Не вдалося завантажити повідомлення.');
-            }
-
-            const data = await res.json();
+            const data = await organizationService.getOrganizationList();
             setNotifications(data);
         } catch (e) {
             const message =

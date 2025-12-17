@@ -4,7 +4,13 @@ import { useState } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useAuth } from '../../hooks/useAuth';
-import { API_BASE, devError, devLog } from '../../utils/config';
+import { authService } from '../../services/authService';
+import { devError, devLog } from '../../utils/config';
+import {
+    ORGANIZATION_TYPES,
+    ROUTES,
+    VALIDATION_MESSAGES,
+} from '../../utils/constants';
 
 export function Login() {
     const [email, setEmail] = useState<string>('');
@@ -17,15 +23,12 @@ export function Login() {
 
     const validateEmail = (value: string): string => {
         if (!value) return '';
-        // Removed arbitrary 30 character limit - standard emails can be longer
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(value)) return 'Невірний формат електронної пошти';
+        if (!emailRegex.test(value)) return VALIDATION_MESSAGES.EMAIL_INVALID;
         return '';
     };
 
     const validatePassword = (value: string): string => {
-        // Password validation can be added here if needed
-        // For now, returning empty string (no validation)
         return '';
     };
 
@@ -37,53 +40,34 @@ export function Login() {
 
         if (!emailErr && !passwordErr) {
             try {
-                const formData = {
-                    grant_type: 'password',
-                    username: email,
-                    password: password,
-                };
-
-                const formBody = new URLSearchParams(formData);
-
-                const response = await fetch(`${API_BASE}/login`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                        Accept: 'application/json',
-                    },
-                    body: formBody.toString(),
-                });
-
-                const data = await response.json();
+                const data = await authService.login(email, password);
                 devLog('Response:', data);
 
                 if (data.detail === 'Organization not found.') {
-                    setMessage('Помилка авторизації');
+                    setMessage(VALIDATION_MESSAGES.AUTH_ERROR);
                 } else if (data.access_token) {
-                    login({ name: data.user_name }, data.access_token);
-                    // Store organization_type to determine user type
-                    if (data.organization_type) {
-                        localStorage.setItem(
-                            'organization_type',
-                            data.organization_type,
-                        );
-                    } else {
-                        localStorage.setItem('organization_type', 'user');
-                    }
-                    if (data.organization_type === 'Ветклініка')
-                        router.push('/Vet-Clinic/favorite-list');
-                    else if (data.organization_type === 'ЦНАП')
-                        router.push('/CNAP/favorite-list');
-                    else if (data.organization_type === 'Притулок')
-                        router.push('/Alley/pet-list');
+                    const orgType =
+                        data.organization_type || ORGANIZATION_TYPES.USER;
+                    login({ name: data.user_name }, data.access_token, orgType);
+
+                    if (
+                        data.organization_type === ORGANIZATION_TYPES.VET_CLINIC
+                    )
+                        router.push(ROUTES.VET_CLINIC_HOME);
+                    else if (data.organization_type === ORGANIZATION_TYPES.CNAP)
+                        router.push(ROUTES.CNAP_HOME);
+                    else if (
+                        data.organization_type === ORGANIZATION_TYPES.SHELTER
+                    )
+                        router.push(ROUTES.SHELTER_HOME);
                     else if (data.organization_type == null)
-                        router.push('/home');
+                        router.push(ROUTES.HOME);
                 } else {
-                    setMessage('Помилка авторизації');
+                    setMessage(VALIDATION_MESSAGES.AUTH_ERROR);
                 }
             } catch (error) {
                 devError(error);
-                setMessage('Помилка авторизації');
+                setMessage(VALIDATION_MESSAGES.AUTH_ERROR);
             }
         }
     };
@@ -192,7 +176,6 @@ export function Login() {
             <ToastContainer />
         </div>
     );
-    
 }
 
-Login.showFotter = false
+Login.showFotter = false;

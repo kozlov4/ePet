@@ -68,7 +68,6 @@ const PetExtract = () => {
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
     useEffect(() => {
-        // Read extract type from query parameter
         const extractType = routerInstance.query.type as string;
         if (extractType) {
             const decodedType = decodeURIComponent(extractType) as ExtractType;
@@ -81,7 +80,6 @@ const PetExtract = () => {
             try {
                 setLoading(true);
                 const userPets = await fetchUserPets();
-                // Transform API response to Pet format
                 const transformedPets: Pet[] = userPets.map((pet) => ({
                     id: pet.pet_id,
                     name: pet.pet_name,
@@ -90,7 +88,6 @@ const PetExtract = () => {
                 setPets(transformedPets);
             } catch (err) {
                 devError('Error fetching pets:', err);
-                // Don't show error message if it's an auth error - user will be redirected
                 if (!isAuthError(err)) {
                     setError(
                         err instanceof Error
@@ -131,7 +128,6 @@ const PetExtract = () => {
                 name_document: selectedExtractType,
             });
 
-            // Navigate to success page
             router.push(
                 `/extract/success?type=${encodeURIComponent(
                     selectedExtractType,
@@ -228,3 +224,4 @@ const PetExtract = () => {
 };
 
 export default PetExtract;
+PetExtract.showFooter = false;

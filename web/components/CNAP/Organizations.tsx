@@ -7,8 +7,8 @@ import {
     PaginatedResponse,
     ViewConfig,
 } from '../../types/api';
-import { fetchPaginatedData } from '../../utils/api';
-import { API_BASE } from '../../utils/config';
+import { fetchPaginated } from '../../services/api';
+import { organizationService } from '../../services/organizationService';
 import { Table } from '../ui/Table';
 
 export default function Organizations() {
@@ -53,7 +53,7 @@ export default function Organizations() {
         },
     ];
 
-    const viewConfigs: Record<string, ViewConfig> = {
+    const viewConfigs: Record<string, ViewConfig<Organization>> = {
         organizations: {
             endpoint: '/organizations/organizations',
             queryParamName: 'organization_name',
@@ -75,7 +75,7 @@ export default function Organizations() {
                 throw new Error('Конфігурація не знайдена');
             }
 
-            return fetchPaginatedData(config.endpoint, {
+            return fetchPaginated(config.endpoint, {
                 page,
                 size,
                 query,
@@ -88,7 +88,7 @@ export default function Organizations() {
     if (!config) {
         return <div>Завантаження конфігурації або невірний URL...</div>;
     }
-    const handleAction = (org: Organization, actionType: string): void => {
+    const handleAction = async (org: Organization, actionType: string): Promise<void> => {
         if (actionType === 'edit') {
             const dataStr = encodeURIComponent(JSON.stringify(org));
             router.push(
@@ -100,25 +100,13 @@ export default function Organizations() {
                     `Are you sure you want to delete ${org.organization_name}?`,
                 )
             ) {
-                const token = localStorage.getItem('access_token');
-                fetch(
-                    `${API_BASE}/organizations/organizations/${org.organization_id}`,
-                    {
-                        method: 'DELETE',
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
-                    },
-                )
-                    .then((res) => {
-                        if (!res.ok) {
-                            throw new Error('Failed to delete organization');
-                        }
-                        router.reload();
-                    })
-                    .catch((error) => {
-                        console.error('Error deleting organization:', error);
-                    });
+                try {
+                    await organizationService.deleteOrganization(org.organization_id);
+                    router.reload();
+                } catch (error) {
+                    console.error('Error deleting organization:', error);
+                    alert('Failed to delete organization');
+                }
             }
         }
     };

@@ -54,3 +54,4 @@ const ExtractSuccess = () => {
 };
 
 export default ExtractSuccess;
+ExtractSuccess.showFooter = false;

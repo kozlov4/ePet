@@ -2,8 +2,6 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Notification } from '../../types/api';
 
-// Міні-компонент для іконки-стрілки (якщо вона відсутня, потрібно створити/адаптувати)
-// Якщо ArrowDown це SVG, то потрібно додати функціонал для зміни напрямку
 const Chevron = ({ isOpen }: { isOpen: boolean }) => (
     <svg
         className={`w-5 h-5 transition-transform duration-300 ${

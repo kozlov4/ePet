@@ -3,7 +3,9 @@ import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import ArrowBack from '../../assets/images/icons/ArrowBack';
 import { Organization } from '../../types/api';
-import { API_BASE, devError } from '../../utils/config';
+import { devError } from '../../utils/config';
+import { organizationService } from '../../services/organizationService';
+import { ApiError } from '../../services/api';
 
 const ORGANIZATION_TYPES = ['Ветклініка', 'Притулок'];
 
@@ -128,55 +130,29 @@ export default function OrganizationPage({
         setFieldErrors({});
 
         try {
-            const token = localStorage.getItem('access_token');
-            const url = isEditMode
-                ? `${API_BASE}/organizations/organizations/${id}`
-                : `${API_BASE}/organizations/create`;
-
-            const method = isEditMode ? 'PUT' : 'POST';
-
-            const payload = { ...formData };
-            if (!isEditMode) {
-                delete (payload as any).organization_id;
+            if (isEditMode) {
+                await organizationService.updateOrganization(id as string, formData);
+            } else {
+                await organizationService.createOrganization(formData);
             }
 
-            const response = await fetch(url, {
-                method,
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}`,
-                },
-                body: JSON.stringify(payload),
-            });
-
-            if (!response.ok) {
-                let data: unknown = null;
-                try {
-                    data = await response.json();
-                } catch (e) {
-                    data = null;
-                }
-
-                const parsed = parseValidationErrors(data);
+            router.push('/CNAP/organizations');
+        } catch (err) {
+            if (err instanceof ApiError) {
+                const parsed = parseValidationErrors(err.data);
                 if (parsed) {
                     setFieldErrors(parsed.fieldErrors);
                     setError(parsed.message);
                     return;
                 }
-
-                const detail = (data as any)?.detail;
-                if (typeof detail === 'string' && detail.trim().length > 0) {
-                    setError(detail);
-                    return;
+                if (typeof err.message === 'string' && err.message.trim().length > 0) {
+                     setError(err.message);
+                     return;
                 }
-
-                setError('Виникла помилка при збереженні. Спробуйте ще раз.');
-                return;
             }
-
-            router.push('/CNAP/organizations');
-        } catch (err) {
+            
             setError('Виникла помилка при збереженні. Спробуйте ще раз.');
+            devError('Error saving organization:', err);
         } finally {
             setIsLoading(false);
         }
