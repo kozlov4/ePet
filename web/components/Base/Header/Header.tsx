@@ -13,7 +13,7 @@ export const Header: React.FC<HeaderProps> = ({
     buttonProps,
 }) => {
     const router = useRouter();
-    const { logout, isAuthenticated } = useAuth();
+    const { logout, isAuthenticated, organizationType } = useAuth();
     const pathname = router.pathname;
     const isAuthPage = pathname === '/signIn' || pathname === '/reset-password';
 
@@ -124,7 +124,7 @@ export const Header: React.FC<HeaderProps> = ({
                                     </motion.button>
                                 </Link>
                             )}
-                            {isAuthenticated && (
+                            {organizationType == 'user' && (
                                 <motion.button
                                     onClick={handleLogout}
                                     className="flex px-5 py-3 bg-black rounded-3xl cursor-pointer justify-center items-center text-white font-medium text-[15px] transition-all duration-300 ease-in-out hover:bg-[#1e88e5] hover:shadow-[0_0_20px_#1e88e580] hover:scale-[1.05] active:scale-[0.98]"
