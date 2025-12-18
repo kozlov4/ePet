@@ -328,9 +328,36 @@ export default function PetRegistration({
                 });
             }
         }
+        const pageVariants = {
+            hidden: { opacity: 0, y: 24 },
+            visible: {
+                opacity: 1,
+                y: 0,
+                transition: {
+                    duration: 0.45,
+                    ease: 'easeOut',
+                    when: 'beforeChildren',
+                    staggerChildren: 0.08,
+                },
+            },
+        };
+
+        const blockVariants = {
+            hidden: { opacity: 0, y: 16 },
+            visible: {
+                opacity: 1,
+                y: 0,
+                transition: { duration: 0.3, ease: 'easeOut' },
+            },
+        };
     };
     return (
-        <div className="w-full pt-10">
+        <motion.div
+            className="w-full pt-10"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.35, ease: 'easeOut' }}
+        >
             <AnimatePresence>
                 {modalState && (
                     <motion.div
@@ -338,7 +365,6 @@ export default function PetRegistration({
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        transition={{ duration: 0.2 }}
                     >
                         <motion.div
                             className="bg-white rounded-lg shadow-xl p-6 w-full max-w-md mx-4"
@@ -358,18 +384,22 @@ export default function PetRegistration({
                                     ? 'Успіх!'
                                     : 'Помилка'}
                             </h3>
+
                             <div className="mt-3 max-h-64 overflow-auto rounded-md bg-gray-50 p-3">
                                 <p className="text-sm leading-6 text-gray-800 whitespace-pre-line">
                                     {modalState.message}
                                 </p>
                             </div>
+
                             <div className="mt-6 flex justify-end">
-                                <button
+                                <motion.button
                                     onClick={closeModal}
                                     className="px-5 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors"
+                                    whileHover={{ scale: 1.05 }}
+                                    whileTap={{ scale: 0.95 }}
                                 >
                                     OK
-                                </button>
+                                </motion.button>
                             </div>
                         </motion.div>
                     </motion.div>
@@ -383,7 +413,6 @@ export default function PetRegistration({
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        transition={{ duration: 0.2 }}
                     >
                         <motion.div
                             className="bg-white rounded-lg shadow-xl p-6 w-full max-w-md mx-4"
@@ -395,6 +424,7 @@ export default function PetRegistration({
                             <h3 className="text-xl font-semibold text-gray-900 mb-4">
                                 Обріжте фото (3x4)
                             </h3>
+
                             <div className="max-h-[60vh] overflow-auto">
                                 <ReactCrop
                                     crop={crop}
@@ -416,35 +446,49 @@ export default function PetRegistration({
                                     />
                                 </ReactCrop>
                             </div>
+
                             <div className="mt-6 flex justify-end gap-4">
-                                <button
+                                <motion.button
                                     type="button"
                                     onClick={onCropCancel}
                                     className="px-5 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors"
+                                    whileHover={{ scale: 1.04 }}
+                                    whileTap={{ scale: 0.95 }}
                                 >
                                     Скасувати
-                                </button>
-                                <button
+                                </motion.button>
+
+                                <motion.button
                                     type="button"
                                     onClick={onCropSave}
                                     className="px-5 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors"
+                                    whileHover={{ scale: 1.05 }}
+                                    whileTap={{ scale: 0.95 }}
                                 >
                                     Зберегти
-                                </button>
+                                </motion.button>
                             </div>
                         </motion.div>
                     </motion.div>
                 )}
             </AnimatePresence>
 
-            <div className="mb-8 flex items-center justify-center max-w-4xl mx-auto">
+            <motion.div
+                className="mb-8 flex items-center justify-center max-w-4xl mx-auto"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.1 }}
+            >
                 <div className="flex items-center w-full">
-                    <button
+                    <motion.button
                         onClick={() => router.back()}
-                        className="mr-4 rounded-full bg-black p-2 transition-[0.2s] cursor-pointer hover:bg-gray-300"
+                        className="mr-4 rounded-full bg-black p-2 cursor-pointer hover:bg-gray-300"
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.95 }}
                     >
                         <ArrowBack />
-                    </button>
+                    </motion.button>
+
                     <h1 className="text-2xl font-semibold text-gray-800">
                         {`${
                             pet?.pet_id
@@ -453,17 +497,29 @@ export default function PetRegistration({
                         } улюбленця`}
                     </h1>
                 </div>
-            </div>
+            </motion.div>
 
-            <div className="w-full max-w-4xl mx-auto rounded-xl bg-[rgba(217,217,217,0.27)] p-6 shadow-lg sm:p-8 lg:p-10">
+            <motion.div
+                className="w-full max-w-4xl mx-auto rounded-xl bg-[rgba(217,217,217,0.27)] p-6 shadow-lg sm:p-8 lg:p-10"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.15 }}
+            >
                 <form
                     onSubmit={handleSubmit}
                     className="grid grid-cols-1 gap-8 md:grid-cols-2"
                 >
-                    <div className="flex flex-col items-center">
-                        <div
+                    <motion.div
+                        className="flex flex-col items-center"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.2 }}
+                    >
+                        <motion.div
                             className="relative flex w-full max-w-[240px] aspect-[3/4] cursor-pointer items-center justify-center rounded-xl border-2 border-dashed border-gray-300 bg-gray-100 hover:bg-gray-200"
                             onClick={handleImagePlaceholderClick}
+                            whileHover={{ scale: 1.03 }}
+                            whileTap={{ scale: 0.97 }}
                         >
                             {imagePreview ? (
                                 <Image
@@ -496,9 +552,10 @@ export default function PetRegistration({
                                 accept="image/*"
                                 onChange={handleImageChange}
                             />
-                        </div>
-                    </div>
+                        </motion.div>
+                    </motion.div>
 
+                    
                     <div className="space-y-4">
                         <div className="space-y-4 rounded-lg bg-gray-50 p-4">
                             <InputField
@@ -538,6 +595,7 @@ export default function PetRegistration({
                                 onChange={handleInputChange}
                             />
                         </div>
+
                         <div className="space-y-4 rounded-lg bg-gray-50 p-4">
                             <InputField
                                 label="Порода"
@@ -558,6 +616,7 @@ export default function PetRegistration({
                                 onChange={handleInputChange}
                             />
                         </div>
+
                         {!Alley && (
                             <>
                                 <div className="space-y-4 rounded-lg bg-gray-50 p-4">
@@ -581,6 +640,7 @@ export default function PetRegistration({
                                         onChange={handleInputChange}
                                     />
                                 </div>
+
                                 <div className="space-y-4 rounded-lg bg-gray-50 p-4">
                                     <InputField
                                         label="Номер паспорта власника"
@@ -592,10 +652,12 @@ export default function PetRegistration({
                             </>
                         )}
 
-                        <button
+                        <motion.button
                             type="submit"
                             disabled={loading}
                             className="mt-6 w-full rounded-[5em] bg-black px-6 py-3 text-lg font-semibold text-white shadow-md transition-colors hover:bg-gray-800 disabled:bg-gray-400 cursor-pointer"
+                            whileHover={{ scale: 1.03 }}
+                            whileTap={{ scale: 0.97 }}
                         >
                             {loading
                                 ? pet
@@ -604,10 +666,10 @@ export default function PetRegistration({
                                 : pet
                                 ? 'Оновити'
                                 : 'Зареєструвати улюбленця'}
-                        </button>
+                        </motion.button>
                     </div>
                 </form>
-            </div>
-        </div>
+            </motion.div>
+        </motion.div>
     );
 }

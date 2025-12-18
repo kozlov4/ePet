@@ -57,7 +57,7 @@ export function FavoriteList({
                         <>
                             <button
                                 onClick={() => onActionCallback(pet, 'details')}
-                                className="rounded-[10em] bg-black px-4 py-2 text-[15px] font-medium cursor-pointer text-white transition-all duration-300   border-1"
+                                className="cursor-pointer rounded-[10em] bg-black px-4 py-2 text-[15px] font-medium text-white border border-black transition-all duration-300 hover:bg-white hover:text-black hover:shadow-lg hover:shadow-black/30 active:scale-95 "
                             >
                                 Повна інформація
                             </button>
@@ -66,7 +66,7 @@ export function FavoriteList({
                         <>
                             <button
                                 onClick={() => onActionCallback(pet, 'details')}
-                                className="rounded-[10em] bg-white px-4 py-2 text-[15px] font-medium cursor-pointer text-black transition-all duration-300   border-1"
+                                className="rounded-[10em] bg-white px-4 py-2 text-[15px] font-medium text-black border border-black cursor-pointer transition-all duration-300 hover:bg-black hover:text-white hover:shadow-lg hover:shadow-black/30 active:scale-95"
                             >
                                 Повна інформація
                             </button>
@@ -75,7 +75,7 @@ export function FavoriteList({
                     {activeView === 'vetclinic' && (
                         <button
                             onClick={() => onActionCallback(pet, 'vaccination')}
-                            className="rounded-[10em] bg-black px-4 py-2 text-[15px] font-medium cursor-pointer text-white transition-all duration-300   border-1 "
+                            className="rounded-[10em] bg-black px-4 py-2 text-[15px] font-medium text-white border border-black cursor-pointer transition-all duration-300 hover:bg-white hover:text-black hover:shadow-lg hover:shadow-black/30 active:scale-95"
                         >
                             Щеплення
                         </button>
