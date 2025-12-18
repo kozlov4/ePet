@@ -295,7 +295,7 @@ export function PetPassport({
                                 {
                                     label: 'Орган що видав:',
                                     labelEn: 'Issuing authority',
-                                    value: petData.identifier_number,
+                                    value: petData.organization_id?.toString() || '',
                                 },
                             ]}
                         />
