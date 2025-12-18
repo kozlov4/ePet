@@ -8,7 +8,7 @@ export default function PetPasssport() {
                     display: none !important;
                 }
             `}</style>
-            <PetPassport />
+            <PetPassport isAdditionalInfo />
         </>
     );
 }
