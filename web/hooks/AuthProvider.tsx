@@ -1,4 +1,5 @@
 import { createContext, useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 import { AuthContextType, AuthProviderProps, User } from '../types/api';
 
 export const AuthContext = createContext<AuthContextType | undefined>(
@@ -7,7 +8,9 @@ export const AuthContext = createContext<AuthContextType | undefined>(
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
     const [user, setUser] = useState<User | null>(null);
-    const [organizationType, setOrganizationType] = useState<string | null>(null);
+    const [organizationType, setOrganizationType] = useState<string | null>(
+        null,
+    );
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -28,7 +31,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         setUser(userData);
         localStorage.setItem('user_name', userData.name);
         localStorage.setItem('access_token', token);
-        
+
         if (orgType) {
             setOrganizationType(orgType);
             localStorage.setItem('organization_type', orgType);
@@ -39,6 +42,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     };
 
     const logout = () => {
+        toast.dismiss();
         setUser(null);
         setOrganizationType(null);
         localStorage.removeItem('user_name');
