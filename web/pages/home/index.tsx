@@ -94,7 +94,7 @@ const Home = () => {
                 <motion.img
                     src="./download-app.png"
                     alt=""
-                    className="absolute right-0 -top-40"
+                    className="absolute right-0 -top-40 w-220 h-200"
                     initial={{ opacity: 0, x: 50, scale: 0.8 }}
                     animate={{ opacity: 1, x: 0, scale: 1 }}
                     transition={{ duration: 1, delay: 1.7 }}

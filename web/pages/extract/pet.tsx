@@ -10,6 +10,7 @@ interface Pet {
     id: number;
     name: string;
     nameEn: string;
+    imgUrl?: string;
 }
 
 interface ExtractTypeDetails {
@@ -80,10 +81,11 @@ const PetExtract = () => {
             try {
                 setLoading(true);
                 const userPets = await fetchUserPets();
-                const transformedPets: Pet[] = userPets.map((pet) => ({
-                    id: pet.pet_id,
-                    name: pet.pet_name,
-                    nameEn: pet.pet_name_en || pet.pet_name,
+                const transformedPets: Pet[] = userPets.map((pet: any) => ({
+                    id: Number(pet.pet_id),
+                    name: pet.pet_name_ua,
+                    nameEn: pet.pet_name_en || pet.pet_name_ua,
+                    imgUrl: pet.img_url,
                 }));
                 setPets(transformedPets);
             } catch (err) {
@@ -148,7 +150,7 @@ const PetExtract = () => {
     };
 
     return (
-        <div className="min-h-full bg-white flex-1">
+        <div className="min-h-full flex-1">
             <div className="max-w-[830px] w-full mx-auto my-12 flex flex-col">
                 <div className="flex gap-10 items-center translate-x-[-80px]">
                     <button
@@ -197,7 +199,11 @@ const PetExtract = () => {
                             У вас немає зареєстрованих улюбленців
                         </div>
                     ) : (
-                        <PetSlider pets={pets} onPetSelect={handlePetSelect} />
+                        <PetSlider
+                            pets={pets}
+                            onPetSelect={handlePetSelect}
+                            selectedPetId={selectedPet?.id ?? null}
+                        />
                     )}
                 </div>
 
@@ -211,7 +217,7 @@ const PetExtract = () => {
 
                         <button
                             onClick={handleGenerate}
-                            disabled={generating}
+                            disabled={generating || !selectedPet}
                             className="w-full rounded-[10em] bg-black px-6 py-3 text-lg font-semibold text-white shadow-md transition-colors hover:bg-gray-800 disabled:bg-gray-400 disabled:cursor-not-allowed cursor-pointer"
                         >
                             {generating ? 'Генерація витягу...' : 'Розпочати'}

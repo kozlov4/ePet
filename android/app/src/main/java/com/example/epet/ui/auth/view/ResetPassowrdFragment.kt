@@ -6,24 +6,24 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageView
-import androidx.fragment.app.Fragment
-import com.example.epet.R
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatButton
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
-import com.example.epet.data.repository.AuthRepository
-import com.example.epet.ui.auth.viewmodel.AuthViewModel
 import androidx.navigation.fragment.navArgs
+import com.example.epet.R
 import com.example.epet.data.model.auth.InputResetPassword
+import com.example.epet.ui.auth.viewmodel.AuthViewModel
 import kotlinx.coroutines.launch
 
 class ResetPassowrdFragment : Fragment() {
 
     private val args: ResetPassowrdFragmentArgs by navArgs()
-    private val viewModel: AuthViewModel by lazy { AuthViewModel(AuthRepository()) }
+    private val authViewModel: AuthViewModel by activityViewModels()
 
     private lateinit var iv_to_back: ImageView
     private lateinit var et_email_address: EditText
@@ -60,7 +60,7 @@ class ResetPassowrdFragment : Fragment() {
 
         bth_reset_password.setOnClickListener {
             val email = et_email_address.text.toString().trimEnd()
-            viewModel.resetPassword(InputResetPassword(email))
+            authViewModel.resetPassword(InputResetPassword(email))
         }
     }
 
@@ -73,24 +73,28 @@ class ResetPassowrdFragment : Fragment() {
     private fun initStateFlow() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.outputEmail.collect { state ->
+                authViewModel.outputEmail.collect { state ->
                     if (state.msg == "Якщо електронна адреса існує, посилання для скидання паролю було надіслано на пошту.") {
-
                         tv_message.text = ""
+                        navigateToMainActivity()
 
-                        val action = ResetPassowrdFragmentDirections.actionResetPasswordToMessage(
-                            tittletext = "Відновлення паролю",
-                            emoji = "✅",
-                            main = "Успішно!",
-                            description = "Посилання для скидання паролю було надіслано на пошту",
-                            email = et_email_address.text.toString()
-                        )
-                        findNavController().navigate(action)
                     } else {
                         tv_message.text = state.msg
                     }
                 }
             }
         }
+    }
+
+    /** Перехід на наступну активність **/
+    private fun navigateToMainActivity() {
+        val action = ResetPassowrdFragmentDirections.actionResetPasswordToMessage(
+            tittletext = "Відновлення паролю",
+            emoji = "✅",
+            main = "Успішно!",
+            description = "Посилання для скидання паролю було надіслано на пошту",
+            email = et_email_address.text.toString()
+        )
+        findNavController().navigate(action)
     }
 }

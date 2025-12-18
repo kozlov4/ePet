@@ -79,6 +79,22 @@
             android:src="@drawable/icon_dislike" />
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/tv_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:fontFamily="@font/e_ukraine_regular"
+        android:gravity="center"
+        android:text="Ви досягли кінця списку 😥"
+        android:textColor="@color/black"
+        android:textSize="13sp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/card_container"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/card_container" />
+
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_horizontal_text"
         android:layout_width="wrap_content"

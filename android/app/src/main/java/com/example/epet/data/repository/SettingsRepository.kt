@@ -1,18 +1,18 @@
 package com.example.epet.data.repository
 
 import com.example.epet.data.helper.ValidationHelper
-import com.example.epet.data.model.settings.OutputUserDetail
-import com.example.epet.data.network.RetrofitClient
 import com.example.epet.data.model.settings.InputUpdateProfile
 import com.example.epet.data.model.settings.OutputUpdateProfile
+import com.example.epet.data.model.settings.OutputUserDetail
+import com.example.epet.data.network.RetrofitClient
 import com.example.epet.data.network.RetrofitClient.gson
 
 class SettingsRepository {
 
-    suspend fun userDetail(token: String?) : OutputUserDetail {
+    suspend fun getUserDetail(token: String?) : OutputUserDetail {
 
         return try {
-            val response = RetrofitClient.api.userRetail("Bearer $token")
+            val response = RetrofitClient.api.getUserDetail("Bearer $token")
             if (response.isSuccessful) {
                 response.body() ?: OutputUserDetail()
             } else {

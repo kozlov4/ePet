@@ -1,36 +1,37 @@
 import android.app.Dialog
 import android.content.Context
+import android.content.DialogInterface
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.content.DialogInterface
-import android.graphics.Color
 import android.widget.ImageView
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.example.epet.R
+import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.recyclerview.widget.RecyclerView
-import com.example.epet.ui.main.adapter.VaccinationInfoAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.epet.R
 import com.example.epet.data.model.passport.OutputVaccinationItem
+import com.example.epet.ui.main.adapter.VaccinationInfoAdapter
 import com.example.epet.ui.main.viewmodel.PassportViewModel
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.coroutines.launch
-import kotlin.getValue
 
 class VaccinationInfoMenu(private val onClose: (() -> Unit)? = null) : BottomSheetDialogFragment() {
 
-    val viewModel: PassportViewModel by activityViewModels()
+    private val passportViewModel: PassportViewModel by activityViewModels()
 
+    private lateinit var ll_main: LinearLayout
     private lateinit var tv_passport_number: TextView
     private lateinit var tv_update_datetime: TextView
+    private lateinit var tv_message: TextView
     private lateinit var iv_copy_passport: ImageView
     private lateinit var rv_vaccinations: RecyclerView
 
@@ -90,9 +91,11 @@ class VaccinationInfoMenu(private val onClose: (() -> Unit)? = null) : BottomShe
 
     /** Ініціалізація всіх елементів інтерфейсу **/
     private fun initViews(view: View) {
+        ll_main = view.findViewById(R.id.ll_main)
         tv_passport_number = view.findViewById(R.id.tv_passport_number)
-        iv_copy_passport = view.findViewById(R.id.iv_copy_passport)
         tv_update_datetime = view.findViewById(R.id.tv_update_datetime)
+        tv_message = view.findViewById(R.id.tv_message)
+        iv_copy_passport = view.findViewById(R.id.iv_copy_passport)
         rv_vaccinations = view.findViewById(R.id.rv_vaccinations)
     }
 
@@ -109,12 +112,22 @@ class VaccinationInfoMenu(private val onClose: (() -> Unit)? = null) : BottomShe
     private fun initStateFlow() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.outputVaccinationList.collect { state ->
+                passportViewModel.outputVaccinationsList.collect { state ->
                     tv_passport_number.text = state.passport_number
-
                     setUpdateDatetime(state.update_datetime)
 
-                    setupRecyclerView(state.vaccinations)
+                    if (state.vaccinations == emptyList<OutputVaccinationItem>()) {
+                        tv_message.visibility = View.VISIBLE
+                        ll_main.visibility = View.INVISIBLE
+                        rv_vaccinations.visibility = View.INVISIBLE
+
+                    } else {
+                        tv_message.visibility = View.INVISIBLE
+                        ll_main.visibility = View.VISIBLE
+                        rv_vaccinations.visibility = View.VISIBLE
+
+                        setupRecyclerView(state.vaccinations)
+                    }
                 }
             }
         }

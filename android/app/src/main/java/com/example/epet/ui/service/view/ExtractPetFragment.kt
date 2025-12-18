@@ -1,7 +1,7 @@
 package com.example.epet.ui.services.view
 
-import SelectorMenu
 import android.content.Context
+import android.content.Context.MODE_PRIVATE
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -15,22 +15,23 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
-import com.example.epet.R
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.example.epet.R
 import com.example.epet.data.model.passport.OutputPetItem
 import com.example.epet.data.model.service.InputExtractPet
+import com.example.epet.ui.main.viewmodel.LoadingViewModel
 import com.example.epet.ui.main.viewmodel.PassportViewModel
 import com.example.epet.ui.service.adapter.PetListAdapter
 import com.example.epet.ui.service.viewmodel.ServiceViewModel
 import kotlinx.coroutines.launch
-import kotlin.getValue
 import kotlin.math.abs
 
 class ExtractPetFragment : Fragment() {
 
+    private val loadingViewModel: LoadingViewModel by activityViewModels()
     private val passportViewModel: PassportViewModel by activityViewModels()
     private val serviceViewModel: ServiceViewModel by activityViewModels()
 
@@ -43,6 +44,7 @@ class ExtractPetFragment : Fragment() {
     private lateinit var iv_to_back: ImageView
     private lateinit var tv_tittletext: TextView
     private lateinit var tv_description: TextView
+    private lateinit var tv_message: TextView
     private lateinit var rv_pets: RecyclerView
     private lateinit var bth_create_extract: AppCompatButton
 
@@ -56,14 +58,13 @@ class ExtractPetFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         initViews(view)
+        setupSnapHelper()
         initExtractInfo()
         initButtons()
+        loadUserPets()
         initStateFlow()
-
-        setupSnapHelper()
-        centerFirstCard()
-        setupScrollListener()
     }
 
     /** Ініціалізація всіх елементів інтерфейсу **/
@@ -71,6 +72,7 @@ class ExtractPetFragment : Fragment() {
         iv_to_back = view.findViewById(R.id.iv_to_back)
         tv_tittletext = view.findViewById(R.id.tv_tittletext)
         tv_description = view.findViewById(R.id.tv_description)
+        tv_message = view.findViewById(R.id.tv_message)
         rv_pets = view.findViewById(R.id.rv_pets)
         bth_create_extract = view.findViewById(R.id.bth_create_extract)
     }
@@ -82,9 +84,9 @@ class ExtractPetFragment : Fragment() {
         if (extractName == "Витяг з реєстру домашніх тварин") {
             tv_description.setText("• Ім’я тварини\n• Вид\n• Порода\n• Стать\n• Дата народження\n• Колір\n• Фото\n• Інформація про ЦНАП, який видав\n   паспорт\n• Інформація про власника")
         } else if (extractName == "Витяг про щеплення тварини") {
-            tv_description.text = "• Список проведених щеплень\n• Виробник вакцини\n• Назва препарату\n• Серія\n• Дата вакцинації\n• Термін дії\n• Дані організації, яка проводили\n   щеплення"
+            tv_description.text = "• Список проведених щеплень\n• Виробник препарату\n• Назва препарату\n• Серія препарату\n• Дата вакцинації\n• Термін дії вакцинації\n• Назва організації, яка проводила\n   щеплення"
         } else if (extractName == "Витяг за ідентифікаторами") {
-            tv_description.text = "• Тип ідентифікатора\n• Номер\n• Дата встановлення\n• Дані тварини\n• Інформація про ЦНАП, що встановила\n   ідентифікатор"
+            tv_description.text = "• Тип ідентифікатора\n• Номер ідентифікатора\n• Дата встановлення ідентифікатора\n• Дані тварини\n• Інформація про ЦНАП, що встановив\n   ідентифікатор"
         }
     }
 
@@ -106,10 +108,11 @@ class ExtractPetFragment : Fragment() {
             } else if (extractName == "Витяг про щеплення тварини") {
                 inputExtractName = "Медичний витяг про проведені щеплення тварини"
             } else if (extractName == "Витяг за ідентифікаторами") {
-                inputExtractName = "Витяг про ідентифікаційні дані тварини"
+                inputExtractName = "Офіційний витяг про ідентифікаційні дані тварини"
             }
 
             serviceViewModel.generateReport(token, InputExtractPet(selectedPetId, inputExtractName))
+            loadingViewModel.show()
         }
     }
 
@@ -119,47 +122,70 @@ class ExtractPetFragment : Fragment() {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
 
                 launch {
-                    passportViewModel.outputPassportList.collect { state ->
-                        setupRecyclerView(state)
+                    passportViewModel.outputPassportsList.collect { state ->
+                        if (state == emptyList<OutputPetItem>())  {
+                            tv_message.visibility = View.VISIBLE
+                            bth_create_extract.isEnabled = false
+                            bth_create_extract.alpha = 0.5f
+                        } else {
+                            tv_message.visibility = View.INVISIBLE
+                            bth_create_extract.isEnabled = true
+                            bth_create_extract.alpha = 1.0f
+                            setupRecyclerView(state)
+                        }
                     }
                 }
 
                 launch {
                     serviceViewModel.outputGenerateReport.collect { state ->
                         if (state.detail == "Витяг створено успішно та надіслано на вашу пошту") {
-                            val action = ExtractPetFragmentDirections.actionExtractPetToMessage(
-                                tittletext = "Витяг про улюбленця",
-                                emoji = "✅",
-                                main = "Витяг сформовано!",
-                                description = "Документ про пухнастого буде надіслано вам найближчим часом на email"
-                            )
-
-                            findNavController().navigate(action)
+                            navigateToMessage("✅", "Витяг сформовано!", state.detail)
                         } else {
-                            val action = ExtractPetFragmentDirections.actionExtractPetToMessage(
-                                tittletext = "Витяг про улюбленця",
-                                emoji = "⛔",
-                                main = "Помилка!",
-                                description = state.detail
-                            )
-
-                            findNavController().navigate(action)
+                            navigateToMessage("⛔", "Помилка!", state.detail)
                         }
+
+                        loadingViewModel.hide()
                     }
                 }
             }
         }
     }
 
-    /** Налаштування RecyclerView **/
-    private fun setupRecyclerView(passports: List<OutputPetItem>) {
-        petListAdapter = PetListAdapter(passports)
-        layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-
-        rv_pets.layoutManager = layoutManager
-        rv_pets.adapter = petListAdapter
+    /** Ініціалізація улюбленців користувача **/
+    fun loadUserPets() {
+        val sharedPref = requireContext().getSharedPreferences("UserPrefs", MODE_PRIVATE)
+        val token = sharedPref.getString("access_token", null)
+        passportViewModel.getPassportsList(token)
     }
 
+    /** Перехід на сторінку повідомлення **/
+    private fun navigateToMessage(emoji: String, main: String, description: String) {
+        val action = ExtractPetFragmentDirections.actionExtractPetToMessage(
+            tittletext = "Витяг про улюбленця",
+            emoji = emoji,
+            main = main,
+            description = description
+        )
+        findNavController().navigate(action)
+    }
+
+    /** Налаштування RecyclerView **/
+    private fun setupRecyclerView(passports: List<OutputPetItem>) {
+        if (rv_pets.adapter == null) {
+            petListAdapter = PetListAdapter(passports)
+            layoutManager =
+                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+
+            rv_pets.layoutManager = layoutManager
+            rv_pets.adapter = petListAdapter
+
+            centerFirstCard()
+            setupScrollListener()
+        } else {
+            (rv_pets.adapter as PetListAdapter).updateData(passports)
+            rv_pets.post { scaleChildren() }
+        }
+    }
 
     /** Налаштування SnapHelper для центрованої прокрутки **/
     private fun setupSnapHelper() {

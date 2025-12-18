@@ -1,21 +1,21 @@
 import android.app.Dialog
+import android.content.Context
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.content.DialogInterface
 import android.widget.TextView
+import androidx.fragment.app.activityViewModels
+import com.example.epet.R
+import com.example.epet.ui.main.viewmodel.PassportViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.example.epet.R
-import android.content.Context
-import androidx.fragment.app.activityViewModels
-import com.example.epet.ui.main.viewmodel.PassportViewModel
 
 class SelectorMenu(private val onClose: (() -> Unit)? = null) : BottomSheetDialogFragment() {
 
-    val viewModel: PassportViewModel by activityViewModels()
+    private val passportViewModel: PassportViewModel by activityViewModels()
 
     private lateinit var tv_passport_info: TextView
     private lateinit var tv_vaccination_info: TextView
@@ -99,7 +99,7 @@ class SelectorMenu(private val onClose: (() -> Unit)? = null) : BottomSheetDialo
     private fun initStateFlow() {
         val sharedPref = requireContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
         val token = sharedPref.getString("access_token", null)
-        viewModel.passportDetail(token, pet_id)
-        viewModel.vaccinationList(token, pet_id)
+        passportViewModel.getPassportDetail(token, pet_id)
+        passportViewModel.getVaccinationsList(token, pet_id)
     }
 }

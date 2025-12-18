@@ -1,27 +1,38 @@
 package com.example.epet.ui.main.view
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import com.example.epet.R
-import androidx.core.view.WindowInsetsControllerCompat
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.activity.addCallback
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.NavOptions
+import androidx.core.view.WindowInsetsControllerCompat
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavController
+import androidx.navigation.NavOptions
+import androidx.navigation.fragment.NavHostFragment
+import com.example.epet.R
+import com.example.epet.ui.main.viewmodel.LoadingViewModel
 import com.example.epet.ui.main.viewmodel.PassportViewModel
-import androidx.activity.viewModels
+import com.example.epet.ui.notification.viewmodel.NotificationsViewModel
+import com.example.epet.ui.service.viewmodel.ServiceViewModel
 import com.example.epet.ui.settings.viewmodel.SettingsViewModel
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
-    val passportViewModel: PassportViewModel by viewModels()
-    val settingsViewModel: SettingsViewModel by viewModels()
+    private val loadingViewModel: LoadingViewModel by viewModels()
+    private val passportViewModel: PassportViewModel by viewModels()
+    private val serviceViewModel: ServiceViewModel by viewModels()
+    private val settingsViewModel: SettingsViewModel by viewModels()
+    private val notificationsViewModel: NotificationsViewModel by viewModels()
 
     private var lastBackPressedTime = 0L
     private val backPressThreshold = 2000L
@@ -30,6 +41,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var ll_to_documents: LinearLayout
     private lateinit var ll_to_services: LinearLayout
     private lateinit var ll_to_menu: LinearLayout
+    private lateinit var cc_loading: ConstraintLayout
 
     private lateinit var iv_icon_feed: ImageView
     private lateinit var iv_icon_documents: ImageView
@@ -50,6 +62,8 @@ class MainActivity : AppCompatActivity() {
         initNavigationBar()
         initButtons()
         setupBackPressed()
+
+        loadUserData()
         initStateFlow()
     }
 
@@ -59,6 +73,7 @@ class MainActivity : AppCompatActivity() {
         ll_to_documents = findViewById(R.id.ll_to_documents)
         ll_to_services = findViewById(R.id.ll_to_services)
         ll_to_menu = findViewById(R.id.ll_to_menu)
+        cc_loading = findViewById(R.id.cc_loading)
 
         iv_icon_feed = findViewById(R.id.iv_icon_feed)
         iv_icon_documents = findViewById(R.id.iv_icon_documents)
@@ -68,12 +83,30 @@ class MainActivity : AppCompatActivity() {
         v_fake_bar = findViewById(R.id.v_fake_bar)
     }
 
-    /** Ініціалізація StateFlow **/
-    private fun initStateFlow() {
+    /** Завантаження даних користувача **/
+    fun loadUserData() {
         val sharedPref = getSharedPreferences("UserPrefs", MODE_PRIVATE)
         val token = sharedPref.getString("access_token", null)
-        passportViewModel.passportList(token)
-        settingsViewModel.userDetail(token)
+
+        passportViewModel.getPassportsList(token)
+        serviceViewModel.getShelterPetsList(token)
+        settingsViewModel.getUserDetail(token)
+        notificationsViewModel.getNotificationsList(token)
+    }
+
+    /** Ініціалізація StateFlow **/
+    private fun initStateFlow() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                loadingViewModel.loading.collect { state ->
+                    if (state == true) {
+                        cc_loading.visibility = View.VISIBLE
+                    } else {
+                        cc_loading.visibility = View.GONE
+                    }
+                }
+            }
+        }
     }
 
     /** Ініціалізація всіх кнопок інтерфейсу **/
@@ -97,8 +130,7 @@ class MainActivity : AppCompatActivity() {
         icons: List<ImageView>,
         defaultImages: List<Int>,
         selectedImages: List<Int>,
-        selectedIndex: Int
-    ) {
+        selectedIndex: Int) {
         icons.forEachIndexed { i, icon ->
             icon.setImageResource(if (i == selectedIndex) selectedImages[i] else defaultImages[i])
         }
