@@ -1,31 +1,31 @@
 package com.example.epet.ui.auth.view
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-import com.example.epet.R
 import android.widget.EditText
-import android.widget.TextView
 import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.appcompat.widget.AppCompatButton
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
-import android.content.Context
+import com.example.epet.R
 import com.example.epet.data.model.auth.InputRegistration
 import com.example.epet.data.model.auth.OutputAuth
-import com.example.epet.data.repository.AuthRepository
 import com.example.epet.ui.auth.viewmodel.AuthViewModel
 import com.example.epet.ui.main.view.MainActivity
-import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
-import androidx.lifecycle.repeatOnLifecycle
-import androidx.lifecycle.Lifecycle
 
 class RegistrationFragment : Fragment() {
 
-    private val viewModel: AuthViewModel by lazy { AuthViewModel(AuthRepository()) }
+    private val authViewModel: AuthViewModel by activityViewModels()
 
     private lateinit var tv_tittletext: TextView
     private lateinit var tv_message: TextView
@@ -97,7 +97,7 @@ class RegistrationFragment : Fragment() {
             val email = et_email_address.text.toString().trimEnd()
             val password = et_password.text.toString().trimEnd()
 
-            viewModel.registration(
+            authViewModel.registration(
                 InputRegistration(last_name, first_name, patronymic, passport_number, "", "", "", postal_index, email, password), address)
         }
     }
@@ -106,7 +106,7 @@ class RegistrationFragment : Fragment() {
     private fun initStateFlow() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.outputRegisatration.collect { state ->
+                authViewModel.outputRegisatration.collect { state ->
                     when (state) {
                         is OutputAuth.Success -> {
                             tv_message.text = ""

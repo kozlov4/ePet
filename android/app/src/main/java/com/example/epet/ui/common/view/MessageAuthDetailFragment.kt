@@ -32,7 +32,7 @@ class MessageAuthDetailFragment : Fragment() {
         initViews(view)
         initButtons()
         initMessage()
-        initSystemBack()
+        initButtonBack()
     }
 
     /** Ініціалізація всіх елементів інтерфейсу **/
@@ -62,7 +62,7 @@ class MessageAuthDetailFragment : Fragment() {
     }
 
     /** Обробка системної кнопки "Назад" **/
-    private fun initSystemBack() {
+    private fun initButtonBack() {
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
             val email = args.email
             val action = MessageAuthDetailFragmentDirections.actionMessageToLogin(email)

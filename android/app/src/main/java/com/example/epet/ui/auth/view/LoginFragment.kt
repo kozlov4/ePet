@@ -6,27 +6,27 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-import com.example.epet.R
+import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatButton
-import androidx.navigation.fragment.findNavController
-import com.example.epet.data.repository.AuthRepository
-import com.example.epet.ui.auth.viewmodel.AuthViewModel
-import android.widget.EditText
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
+import com.example.epet.R
 import com.example.epet.data.model.auth.InputLogin
 import com.example.epet.data.model.auth.OutputAuth
+import com.example.epet.ui.auth.viewmodel.AuthViewModel
 import com.example.epet.ui.main.view.MainActivity
-import androidx.navigation.fragment.navArgs
 import kotlinx.coroutines.launch
 
 class LoginFragment : Fragment() {
 
     private val args: LoginFragmentArgs by navArgs()
-    private val viewModel: AuthViewModel by lazy { AuthViewModel(AuthRepository()) }
+    private val authViewModel: AuthViewModel by activityViewModels()
 
     private lateinit var tv_to_registration: TextView
     private lateinit var tv_reset_password: TextView
@@ -76,7 +76,7 @@ class LoginFragment : Fragment() {
         bth_login.setOnClickListener {
             val email = et_email_address.text.toString().trimEnd()
             val password = et_password.text.toString().trimEnd()
-            viewModel.login(InputLogin(email, password))
+            authViewModel.login(InputLogin(email, password))
         }
     }
 
@@ -85,14 +85,16 @@ class LoginFragment : Fragment() {
         et_email_address.setText(args.email)
     }
 
+    /** Ініціалізація StateFlow **/
     private fun initStateFlow() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.outputLogin.collect { state ->
+                authViewModel.outputLogin.collect { state ->
                     when(state) {
                         is OutputAuth.Success -> {
                             tv_message.text = ""
                             tv_message.visibility = View.GONE
+
                             saveUserInfo(requireContext(), state.access_token, state.user_name)
                             navigateToMainActivity()
                         }
