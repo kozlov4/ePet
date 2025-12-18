@@ -262,7 +262,45 @@ export function PetPassport({
                             ]}
                         />
                     </div>
-                </motion.div>
+                </div>
+                {actionButton && (
+                    <div className="flex justify-between">
+                        <InfoField
+                            fields={[
+                                {
+                                    label: 'Місцезнаходження чіпу:',
+                                    labelEn: 'Chip location',
+                                    value: petData.identifier_type,
+                                    valueEn: petData.identifier_type_en,
+                                },
+                                {
+                                    label: 'Дата чіпування:',
+                                    labelEn: 'Chip date',
+                                    value: formatUaDate(petData.date),
+                                },
+                                {
+                                    label: 'Номер чіпу:',
+                                    labelEn: 'Chip number',
+                                    value: petData.identifier_number,
+                                },
+                            ]}
+                        />
+                        <InfoField
+                            fields={[
+                                {
+                                    label: 'Власник:',
+                                    labelEn: 'Owner',
+                                    value: petData.owner_passport_number,
+                                },
+                                {
+                                    label: 'Орган що видав:',
+                                    labelEn: 'Issuing authority',
+                                    value: petData.identifier_number,
+                                },
+                            ]}
+                        />
+                    </div>
+                )}
 
                 {actionButton && (
                     <motion.div

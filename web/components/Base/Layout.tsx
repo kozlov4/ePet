@@ -1,4 +1,6 @@
 import React from 'react';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { HeaderProps } from '../Base/Header/HeaderTypes';
 import { Footer } from './Footer';
 import { Header } from './Header/Header';
@@ -37,6 +39,17 @@ export const Layout: React.FC<LayoutProps> = ({
             {showHeader && (customHeader || <Header {...finalHeaderProps} />)}
             <main className="flex-grow">{children}</main>
             {showFooter && <Footer />}
+            <ToastContainer
+                position="top-right"
+                autoClose={2000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+            />
         </div>
     );
 };
