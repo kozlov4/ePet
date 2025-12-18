@@ -150,11 +150,12 @@ export function PetPassport({
     );
 
     return (
-        <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.35, ease: 'easeOut' }}
-        >
+        <>
+            <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.35, ease: 'easeOut' }}
+            >
             <div className="max-w-[830px] mx-auto my-12 flex flex-col gap-8">
                 <motion.div
                     className="flex gap-10 items-start translate-x-[-80px]"
@@ -392,7 +393,7 @@ export function PetPassport({
                     </motion.div>
                 )}
             </AnimatePresence>
-        </motion.div>
+        </>
     );
 }
 
