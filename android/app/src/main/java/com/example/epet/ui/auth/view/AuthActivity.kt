@@ -6,9 +6,6 @@ import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
 import com.example.epet.R
-import com.example.epet.ui.main.view.AdFragment
-import com.example.epet.ui.main.view.MenuFragment
-import com.example.epet.ui.main.view.ServiceListFragment
 
 class AuthActivity : AppCompatActivity() {
 

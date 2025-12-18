@@ -5,6 +5,7 @@
     android:layout_height="match_parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="@+id/guideline_vertical_left"
@@ -14,10 +15,10 @@
             android:id="@+id/iv_to_back"
             android:layout_width="30dp"
             android:layout_height="17dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/icon_arrow_left"
             android:clickable="true"
             android:focusable="true"
+            android:scaleType="centerCrop"
+            android:src="@drawable/icon_arrow_left"
             app:layout_constraintBottom_toBottomOf="@+id/tv_tittletext"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/tv_tittletext" />
@@ -26,9 +27,9 @@
             android:id="@+id/tv_tittletext"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
             android:fontFamily="@font/e_ukraine_regular"
             android:text="Повідомлення"
-            android:layout_marginLeft="15dp"
             android:textColor="@android:color/black"
             android:textSize="20sp"
             app:layout_constraintStart_toEndOf="@+id/iv_to_back"
@@ -38,13 +39,29 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_messages"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:scrollbars="vertical"
+        android:layout_height="0dp"
         android:paddingTop="4dp"
+        android:scrollbars="none"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_horizontal_bottom"
         app:layout_constraintEnd_toEndOf="@+id/guideline_vertical_right"
         app:layout_constraintStart_toStartOf="@+id/guideline_vertical_left"
-        app:layout_constraintTop_toBottomOf="@+id/guideline_horizontal_list"/>
+        app:layout_constraintTop_toBottomOf="@+id/guideline_horizontal_list" />
 
+    <TextView
+        android:id="@+id/tv_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:fontFamily="@font/e_ukraine_regular"
+        android:gravity="center"
+        android:text="У вас ще немає повідомлень 😥"
+        android:textColor="@color/black"
+        android:textSize="13sp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_horizontal_bottom"
+        app:layout_constraintEnd_toEndOf="@+id/guideline_vertical_right"
+        app:layout_constraintStart_toStartOf="@+id/guideline_vertical_left"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_horizontal_text"
@@ -73,4 +90,11 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.93" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_horizontal_bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.865" />
 </androidx.constraintlayout.widget.ConstraintLayout>

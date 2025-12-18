@@ -2,7 +2,11 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import ArrowBack from '../../../assets/images/icons/ArrowBack';
 import CopyIcon from '../../../assets/images/icons/CopyIcon';
-import { vaccinationService, VaccinationData } from '../../../services/vaccinationService';
+import { AnimatePresence, motion } from 'framer-motion';
+import {
+    vaccinationService,
+    VaccinationData,
+} from '../../../services/vaccinationService';
 import { copyToClipboard } from '../../../utils/clipboard';
 import { devLog } from '../../../utils/config';
 import { formatUaDate } from '../../../utils/date';
@@ -23,7 +27,9 @@ export default function VaccinationInfo() {
 
         const fetchPetData = async () => {
             try {
-                const data = await vaccinationService.getVaccinations(id as string);
+                const data = await vaccinationService.getVaccinations(
+                    id as string,
+                );
                 devLog('Vaccination data:', data);
                 setVaccinationData(data);
             } catch (err) {
@@ -62,32 +68,54 @@ export default function VaccinationInfo() {
     };
 
     return (
-        <div className="min-h-screen">
+        <motion.div
+            className="min-h-screen"
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, ease: 'easeOut' }}
+        >
             <div className="max-w-[830px] w-full mx-auto my-12 flex flex-col gap-8">
-                <div className="flex gap-10 items-center translate-x-[-80px]">
-                    <button
+                <motion.div
+                    className="flex gap-10 items-center translate-x-[-80px]"
+                    initial={{ opacity: 0, x: -30 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.1 }}
+                >
+                    <motion.button
                         onClick={handleBack}
-                        className="rounded-full bg-black p-2 transition-[0.2s] cursor-pointer hover:bg-gray-300"
+                        className="rounded-full bg-black p-2 cursor-pointer hover:bg-gray-300 transition-[0.2s]"
+                        whileHover={{ scale: 1.08 }}
+                        whileTap={{ scale: 0.95 }}
                     >
                         <ArrowBack />
-                    </button>
+                    </motion.button>
+
                     <p className="text-2xl whitespace-nowrap">
                         Щеплення улюбленця
                     </p>
-                </div>
-                <div className="flex gap justify-between">
+                </motion.div>
+
+                <motion.div
+                    className="flex gap justify-between"
+                    initial={{ opacity: 0, y: 16 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.15 }}
+                >
                     <div className="flex gap-2 items-center">
                         <p className="text-4xl">
                             {vaccinationData.passport_number}
                         </p>
-                        <button
+                        <motion.button
                             onClick={handleCopyPassport}
                             className="cursor-pointer hover:opacity-70 transition-opacity"
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.95 }}
                         >
                             <CopyIcon />
-                        </button>
+                        </motion.button>
                     </div>
-                    <button
+
+                    <motion.button
                         onClick={() =>
                             addVaccinationHandler(
                                 typeof id === 'string'
@@ -95,12 +123,20 @@ export default function VaccinationInfo() {
                                     : String(id?.[0] || ''),
                             )
                         }
-                        className="rounded-[10em] bg-white px-14 py-2 text-[15px] font-semibold cursor-pointer text-black transition-all duration-300   border-1"
+                        className="rounded-[10em] bg-white px-14 py-2 text-[15px] font-semibold text-black border border-black cursor-pointer transition-all duration-300 hover:bg-black hover:text-white hover:shadow-lg hover:shadow-black/30 active:scale-95"
+                        whileHover={{ scale: 1.04 }}
+                        whileTap={{ scale: 0.96 }}
                     >
                         Нове щеплення
-                    </button>
-                </div>
-                <div className="mt-8">
+                    </motion.button>
+                </motion.div>
+
+                <motion.div
+                    className="mt-8"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.2 }}
+                >
                     <table className="min-w-full border-collapse">
                         <thead>
                             <tr>
@@ -112,13 +148,13 @@ export default function VaccinationInfo() {
                                         Name and batch number
                                     </p>
                                 </th>
-                                <th className="px-6 py-4 text-left  border-b border-gray-300">
+                                <th className="px-6 py-4 text-left border-b border-gray-300">
                                     <p className="text-[13px]">Дата:</p>
                                     <p className="text-[10px] text-[#B3B3B3]">
                                         Date
                                     </p>
                                 </th>
-                                <th className="px-6 py-4 text-left  border-b border-gray-300">
+                                <th className="px-6 py-4 text-left border-b border-gray-300">
                                     <p className="text-[13px]">Лікар:</p>
                                     <p className="text-[10px] text-[#B3B3B3]">
                                         Veterinarian
@@ -126,14 +162,20 @@ export default function VaccinationInfo() {
                                 </th>
                             </tr>
                         </thead>
+
                         <tbody className="divide-y divide-gray-300">
                             {vaccinationData.vaccinations.map(
                                 (vaccination, index) => (
-                                    <tr
+                                    <motion.tr
                                         key={index}
                                         className="hover:bg-gray-50 transition-colors"
+                                        initial={{ opacity: 0, y: 10 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{
+                                            delay: 0.25 + index * 0.05,
+                                        }}
                                     >
-                                        <td className="px-6 py-4  text-[20px]">
+                                        <td className="px-6 py-4 text-[20px]">
                                             {vaccination.drug_name}
                                             <br />
                                             {vaccination.series_number}
@@ -153,17 +195,17 @@ export default function VaccinationInfo() {
                                                 )}
                                             </div>
                                         </td>
-                                        <td className="px-6 py-4  text-[20px]">
+                                        <td className="px-6 py-4 text-[20px]">
                                             {vaccination.organization_name}
                                         </td>
-                                    </tr>
+                                    </motion.tr>
                                 ),
                             )}
                         </tbody>
                     </table>
-                </div>
+                </motion.div>
             </div>
-        </div>
+        </motion.div>
     );
 }
 

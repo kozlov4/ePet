@@ -32,7 +32,7 @@ class MessageMainDetailFragment : Fragment() {
         initViews(view)
         initButtons()
         initMessage()
-        initSystemBack()
+        initButtonBack()
     }
 
     /** Ініціалізація всіх елементів інтерфейсу **/
@@ -60,7 +60,7 @@ class MessageMainDetailFragment : Fragment() {
     }
 
     /** Обробка системної кнопки "Назад" **/
-    private fun initSystemBack() {
+    private fun initButtonBack() {
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
             findNavController().popBackStack()
         }

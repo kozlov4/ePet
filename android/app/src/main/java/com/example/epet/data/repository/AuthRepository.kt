@@ -1,14 +1,13 @@
 package com.example.epet.data.repository
 
 import com.example.epet.data.helper.FunctionHelper
+import com.example.epet.data.helper.ValidationHelper
 import com.example.epet.data.model.auth.InputLogin
 import com.example.epet.data.model.auth.InputRegistration
-import com.example.epet.data.model.auth.OutputAuth
-import com.example.epet.data.network.RetrofitClient
-import com.example.epet.data.helper.ValidationHelper
 import com.example.epet.data.model.auth.InputResetPassword
+import com.example.epet.data.model.auth.OutputAuth
 import com.example.epet.data.model.auth.OutputResetPassword
-import com.google.gson.GsonBuilder
+import com.example.epet.data.network.RetrofitClient
 import com.example.epet.data.network.RetrofitClient.gson
 
 class AuthRepository {

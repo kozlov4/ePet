@@ -1,30 +1,28 @@
 import android.app.Dialog
+import android.content.Context
+import android.content.DialogInterface
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.content.DialogInterface
-import android.graphics.Color
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.example.epet.R
-import android.widget.TextView
 import android.widget.ImageView
+import android.widget.TextView
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.example.epet.ui.main.viewmodel.PassportViewModel
-import kotlinx.coroutines.launch
-import kotlin.getValue
-import androidx.fragment.app.activityViewModels
 import com.bumptech.glide.Glide
-import android.widget.Toast
-import android.content.Context
+import com.example.epet.R
+import com.example.epet.ui.main.viewmodel.PassportViewModel
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import kotlinx.coroutines.launch
 
 class PassportInfoMenu(private val onClose: (() -> Unit)? = null) : BottomSheetDialogFragment() {
 
-    val viewModel: PassportViewModel by activityViewModels()
+    private val passportViewModel: PassportViewModel by activityViewModels()
 
     private lateinit var tv_passport_number: TextView
     private lateinit var iv_copy_passport: ImageView
@@ -140,7 +138,7 @@ class PassportInfoMenu(private val onClose: (() -> Unit)? = null) : BottomSheetD
     private fun initStateFlow() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.outputPassportDetail.collect { state ->
+                passportViewModel.outputPassportDetail.collect { state ->
                     tv_passport_number.text = state.passport_number
                     tv_pet_name.text = state.pet_name
                     tv_pet_name_en.text = state.pet_name_en

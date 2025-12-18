@@ -15,7 +15,7 @@ const ExtractSuccess = () => {
     };
 
     return (
-        <div className="min-h-full bg-white flex-1">
+        <div className="min-h-full flex-1">
             <div className="max-w-[830px] w-full mx-auto my-12 flex flex-col">
                 <div className="flex gap-10 items-center translate-x-[-80px]">
                     <button

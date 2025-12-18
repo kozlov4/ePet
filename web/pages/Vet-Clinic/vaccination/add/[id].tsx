@@ -2,10 +2,8 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import ArrowBack from '../../../../assets/images/icons/ArrowBack';
 import CopyIcon from '../../../../assets/images/icons/CopyIcon';
-import {
-    vaccinationService,
-    VaccinationData,
-} from '../../../../services/vaccinationService';
+import { AnimatePresence, motion } from 'framer-motion';
+import {vaccinationService, VaccinationData, } from '../../../../services/vaccinationService';
 import { copyToClipboard } from '../../../../utils/clipboard';
 import { fromIsoDateInputToDot } from '../../../../utils/date';
 
@@ -155,44 +153,85 @@ export default function AddVaccination() {
     }
 
     return (
-        <div className="">
+        <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, ease: 'easeOut' }}
+        >
             <div className="max-w-[830px] w-full mx-auto my-12 flex flex-col gap-8">
-                <div className="flex gap-10 items-center translate-x-[-80px]">
-                    <button
+                <motion.div
+                    className="flex gap-10 items-center translate-x-[-80px]"
+                    initial={{ opacity: 0, x: -30 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.1 }}
+                >
+                    <motion.button
                         onClick={handleBack}
                         className="rounded-full bg-black p-2 transition-[0.2s] cursor-pointer hover:bg-gray-300"
+                        whileHover={{ scale: 1.08 }}
+                        whileTap={{ scale: 0.95 }}
                     >
                         <ArrowBack />
-                    </button>
+                    </motion.button>
                     <p className="text-2xl whitespace-nowrap">
                         Щеплення улюбленця
                     </p>
-                </div>
+                </motion.div>
 
-                <div className="flex gap-2 items-center">
+                <motion.div
+                    className="flex gap-2 items-center"
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.15 }}
+                >
                     <p className="text-4xl">
                         {vaccinationData.passport_number}
                     </p>
-                    <button
+                    <motion.button
                         onClick={handleCopyPassport}
                         className="cursor-pointer hover:opacity-70 transition-opacity"
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.95 }}
                     >
                         <CopyIcon />
-                    </button>
-                </div>
+                    </motion.button>
+                </motion.div>
 
-                {error && (
-                    <div className="p-3 text-sm text-red-600 bg-red-50 rounded-xl text-center">
-                        {error}
-                    </div>
-                )}
+                <AnimatePresence>
+                    {error && (
+                        <motion.div
+                            className="p-3 text-sm text-red-600 bg-red-50 rounded-xl text-center"
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -10 }}
+                        >
+                            {error}
+                        </motion.div>
+                    )}
+                </AnimatePresence>
 
-                <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-                    <div className="bg-[#F5F5F5] rounded-2xl px-8 py-5">
-                        <div className="flex flex-col gap-2">
+                <motion.form
+                    onSubmit={handleSubmit}
+                    className="flex flex-col gap-5"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.2 }}
+                >
+                    <motion.div
+                        className="bg-[#F5F5F5] rounded-2xl px-8 py-5"
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.25 }}
+                    >
+                        <motion.div
+                            className="flex flex-col gap-2"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ delay: 0.3 }}
+                        >
                             <label className="text-[13px] font-medium flex flex-col">
                                 <span>Назва:</span>
-                                <span className="text-[#B3B3B3] text-[10px">
+                                <span className="text-[#B3B3B3] text-[10px]">
                                     Name
                                 </span>
                             </label>
@@ -205,12 +244,17 @@ export default function AddVaccination() {
                                 className="w-full rounded-xl bg-white px-4 py-3 text-[15px] border border-gray-200 focus:outline-none focus:border-black"
                                 required
                             />
-                        </div>
+                        </motion.div>
 
-                        <div className="flex flex-col gap-2">
+                        <motion.div
+                            className="flex flex-col gap-2"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ delay: 0.35 }}
+                        >
                             <label className="text-[13px] font-medium flex flex-col">
                                 <span>Серія:</span>
-                                <span className="text-[#B3B3B3] text-[10px">
+                                <span className="text-[#B3B3B3] text-[10px]">
                                     batch number
                                 </span>
                             </label>
@@ -223,12 +267,17 @@ export default function AddVaccination() {
                                 className="w-full rounded-xl bg-white px-4 py-3 text-[15px] border border-gray-200 focus:outline-none focus:border-black"
                                 required
                             />
-                        </div>
+                        </motion.div>
 
-                        <div className="flex flex-col gap-2">
+                        <motion.div
+                            className="flex flex-col gap-2"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ delay: 0.4 }}
+                        >
                             <label className="text-[13px] font-medium flex flex-col">
                                 <span>Дата:</span>
-                                <span className="text-[#B3B3B3] text-[10px">
+                                <span className="text-[#B3B3B3] text-[10px]">
                                     Date
                                 </span>
                             </label>
@@ -245,12 +294,17 @@ export default function AddVaccination() {
                                     {fieldErrors.vaccination_date}
                                 </div>
                             )}
-                        </div>
+                        </motion.div>
 
-                        <div className="flex flex-col gap-2">
+                        <motion.div
+                            className="flex flex-col gap-2"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ delay: 0.45 }}
+                        >
                             <label className="text-[13px] font-medium flex flex-col">
                                 <span>До якого дійсне:</span>
-                                <span className="text-[#B3B3B3] text-[10px] ">
+                                <span className="text-[#B3B3B3] text-[10px]">
                                     Date
                                 </span>
                             </label>
@@ -267,21 +321,28 @@ export default function AddVaccination() {
                                     {fieldErrors.valid_until}
                                 </div>
                             )}
-                        </div>
-                    </div>
+                        </motion.div>
+                    </motion.div>
 
-                    <div className="flex justify-center mt-[22px]">
-                        <button
+                    <motion.div
+                        className="flex justify-center mt-[22px]"
+                        initial={{ opacity: 0, y: 16 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.5 }}
+                    >
+                        <motion.button
                             type="submit"
                             disabled={submitting}
                             className="w-full rounded-[10em] bg-white px-14 py-3 text-[15px] font-semibold cursor-pointer text-black transition-all duration-300 border-2 border-black hover:bg-black hover:text-white disabled:opacity-50 disabled:cursor-not-allowed"
+                            whileHover={{ scale: submitting ? 1 : 1.03 }}
+                            whileTap={{ scale: submitting ? 1 : 0.97 }}
                         >
                             {submitting ? 'Додавання...' : 'Додати'}
-                        </button>
-                    </div>
-                </form>
+                        </motion.button>
+                    </motion.div>
+                </motion.form>
             </div>
-        </div>
+        </motion.div>
     );
 }
 

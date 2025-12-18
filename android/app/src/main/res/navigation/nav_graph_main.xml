@@ -107,7 +107,7 @@
 
     <fragment
         android:id="@+id/fragment_messages_list"
-        android:name="com.example.epet.ui.messages.view.MessageListFragment" />
+        android:name="com.example.epet.ui.messages.view.NotificationsListFragment" />
 
     <fragment
         android:id="@+id/fragment_settings"
@@ -115,6 +115,14 @@
 
     <fragment
         android:id="@+id/fragment_services_shelter"
-        android:name="com.example.epet.ui.services.view.ShelterFragment" />
+        android:name="com.example.epet.ui.services.view.ShelterFragment" >
 
+        <action
+            android:id="@+id/action_shelter_to_message"
+            app:destination="@id/fragment_message_main_detail"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
 </navigation>

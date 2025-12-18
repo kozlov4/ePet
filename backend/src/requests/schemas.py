@@ -10,4 +10,4 @@ class RequestPetsList(BaseModel):
     pet_name: str
     gender: str
     breed: str
-    date_of_birth: date
+    date_of_birth: str

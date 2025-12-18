@@ -2,16 +2,16 @@ package com.example.epet.ui.main.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
-import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.epet.R
 import com.example.epet.data.model.passport.OutputPetItem
 
 class PassportListAdapter(
-    private val passportList: List<OutputPetItem>,
+    private var passportsList: List<OutputPetItem>,
     private val onMenuClick: (pet_id: String) -> Unit) : RecyclerView.Adapter<PassportListAdapter.PassportViewHolder>() {
 
     inner class PassportViewHolder(val card: CardView) : RecyclerView.ViewHolder(card) {
@@ -34,7 +34,7 @@ class PassportListAdapter(
     }
 
     override fun onBindViewHolder(holder: PassportViewHolder, position: Int) {
-        val passport = passportList[position]
+        val passport = passportsList[position]
         holder.tv_pet_name_ua.text = passport.pet_name_ua
         holder.tv_pet_name_en.text = passport.pet_name_en
         holder.tv_date_of_birth.text = passport.date_of_birth
@@ -64,5 +64,10 @@ class PassportListAdapter(
         }
     }
 
-    override fun getItemCount(): Int = passportList.size
+    fun updateData(newList: List<OutputPetItem>) {
+        this.passportsList = newList
+        notifyDataSetChanged()
+    }
+
+    override fun getItemCount(): Int = passportsList.size
 }

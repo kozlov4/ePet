@@ -22,9 +22,9 @@ class SettingsViewModel : ViewModel() {
     private val _outputUpdateProfile = MutableSharedFlow<OutputUpdateProfile>()
     val outputUpdateProfile = _outputUpdateProfile.asSharedFlow()
 
-    fun userDetail(token: String?) {
+    fun getUserDetail(token: String?) {
         viewModelScope.launch {
-            val output = repository.userDetail(token)
+            val output = repository.getUserDetail(token)
             _outputUserDetail.value = output.copy()
         }
     }

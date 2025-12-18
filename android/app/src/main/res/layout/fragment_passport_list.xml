@@ -13,7 +13,24 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline_horizontal_documents_top"
-        app:layout_constraintBottom_toBottomOf="@+id/guideline_horizontal_documents_bottom" />
+        app:layout_constraintBottom_toBottomOf="@+id/guideline_horizontal_documents_bottom"/>
+
+    <TextView
+        android:id="@+id/tv_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:background="@null"
+        android:fontFamily="@font/e_ukraine_regular"
+        android:gravity="center"
+        android:visibility="invisible"
+        android:text="Улюбленців не знайдено 😥"
+        android:textColor="@color/black"
+        android:textSize="13sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline_horizontal_documents_top"
+        app:layout_constraintBottom_toBottomOf="@+id/guideline_horizontal_documents_bottom"/>
 
     <LinearLayout
         android:id="@+id/ll_indicators"
