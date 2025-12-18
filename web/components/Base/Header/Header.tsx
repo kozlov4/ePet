@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import React from 'react';
 import CatIcon from '../../../assets/images/icons/CatIcon';
 import UkraineArmsIcon from '../../../assets/images/icons/UkraineArmsIcon';
+import { useAuth } from '../../../hooks/useAuth';
 import { HeaderProps } from './HeaderTypes';
 
 export const Header: React.FC<HeaderProps> = ({
@@ -12,8 +13,14 @@ export const Header: React.FC<HeaderProps> = ({
     buttonProps,
 }) => {
     const router = useRouter();
+    const { logout, isAuthenticated } = useAuth();
     const pathname = router.pathname;
     const isAuthPage = pathname === '/signIn' || pathname === '/reset-password';
+
+    const handleLogout = () => {
+        logout();
+        router.push('/signIn');
+    };
 
     return (
         <div
@@ -85,25 +92,16 @@ export const Header: React.FC<HeaderProps> = ({
                     {accountName && (
                         <span className="text-black">{accountName}</span>
                     )}
-                    {!isAuthPage &&
-                        (buttonProps.action === 'app' ? (
-                            <motion.button
-                                onClick={() => {
-                                    window.open(
-                                        'https://play.google.com/store/apps/details?id=com.example.epet',
-                                        '_blank',
-                                    );
-                                }}
-                                className="flex px-5 py-3 bg-black rounded-3xl cursor-pointer justify-center items-center text-white font-medium text-[15px] transition-all duration-300 ease-in-out hover:bg-[#1e88e5] hover:shadow-[0_0_20px_#1e88e580] hover:scale-[1.05] active:scale-[0.98]"
-                                initial={{ opacity: 0, scale: 0.8 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                transition={{ duration: 0.6, delay: 0.8 }}
-                            >
-                                {buttonProps.label}
-                            </motion.button>
-                        ) : (
-                            <Link href={buttonProps.href}>
+                    {!isAuthPage && (
+                        <>
+                            {buttonProps.action === 'app' ? (
                                 <motion.button
+                                    onClick={() => {
+                                        window.open(
+                                            'https://play.google.com/store/apps/details?id=com.example.epet',
+                                            '_blank',
+                                        );
+                                    }}
                                     className="flex px-5 py-3 bg-black rounded-3xl cursor-pointer justify-center items-center text-white font-medium text-[15px] transition-all duration-300 ease-in-out hover:bg-[#1e88e5] hover:shadow-[0_0_20px_#1e88e580] hover:scale-[1.05] active:scale-[0.98]"
                                     initial={{ opacity: 0, scale: 0.8 }}
                                     animate={{ opacity: 1, scale: 1 }}
@@ -111,8 +109,34 @@ export const Header: React.FC<HeaderProps> = ({
                                 >
                                     {buttonProps.label}
                                 </motion.button>
-                            </Link>
-                        ))}
+                            ) : (
+                                <Link href={buttonProps.href}>
+                                    <motion.button
+                                        className="flex px-5 py-3 bg-black rounded-3xl cursor-pointer justify-center items-center text-white font-medium text-[15px] transition-all duration-300 ease-in-out hover:bg-[#1e88e5] hover:shadow-[0_0_20px_#1e88e580] hover:scale-[1.05] active:scale-[0.98]"
+                                        initial={{ opacity: 0, scale: 0.8 }}
+                                        animate={{ opacity: 1, scale: 1 }}
+                                        transition={{
+                                            duration: 0.6,
+                                            delay: 0.8,
+                                        }}
+                                    >
+                                        {buttonProps.label}
+                                    </motion.button>
+                                </Link>
+                            )}
+                            {isAuthenticated && (
+                                <motion.button
+                                    onClick={handleLogout}
+                                    className="flex px-5 py-3 bg-black rounded-3xl cursor-pointer justify-center items-center text-white font-medium text-[15px] transition-all duration-300 ease-in-out hover:bg-[#1e88e5] hover:shadow-[0_0_20px_#1e88e580] hover:scale-[1.05] active:scale-[0.98]"
+                                    initial={{ opacity: 0, scale: 0.8 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    transition={{ duration: 0.6, delay: 0.8 }}
+                                >
+                                    Вийти
+                                </motion.button>
+                            )}
+                        </>
+                    )}
                 </div>
             </motion.div>
         </div>
