@@ -1,8 +1,8 @@
 'use client';
 
+import { AnimatePresence, motion } from 'framer-motion';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
 
 import ArrowBack from '../../assets/images/icons/ArrowBack';
 import CopyIcon from '../../assets/images/icons/CopyIcon';
@@ -14,9 +14,11 @@ import { formatUaDate } from '../../utils/date';
 export function PetPassport({
     actionButton,
     changeButton,
+    isAdditionalInfo = false,
 }: {
     actionButton?: React.ReactNode;
     changeButton?: React.ReactNode;
+    isAdditionalInfo?: boolean;
 }) {
     const router = useRouter();
     const { id } = router.query;
@@ -262,8 +264,8 @@ export function PetPassport({
                             ]}
                         />
                     </div>
-                </div>
-                {actionButton && (
+                </motion.div>
+                {isAdditionalInfo && (
                     <div className="flex justify-between">
                         <InfoField
                             fields={[
@@ -295,7 +297,9 @@ export function PetPassport({
                                 {
                                     label: 'Орган що видав:',
                                     labelEn: 'Issuing authority',
-                                    value: petData.organization_id?.toString() || '',
+                                    value:
+                                        petData.organization_id?.toString() ||
+                                        '',
                                 },
                             ]}
                         />
