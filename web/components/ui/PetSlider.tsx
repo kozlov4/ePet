@@ -8,14 +8,20 @@ interface Pet {
     id: number;
     name: string;
     nameEn: string;
+    imgUrl?: string;
 }
 
 interface PetSliderProps {
     pets: Pet[];
     onPetSelect?: (pet: Pet) => void;
+    selectedPetId?: number | null;
 }
 
-export const PetSlider: React.FC<PetSliderProps> = ({ pets, onPetSelect }) => {
+export const PetSlider: React.FC<PetSliderProps> = ({
+    pets,
+    onPetSelect,
+    selectedPetId,
+}) => {
     const [canScrollLeft, setCanScrollLeft] = useState(false);
     const [canScrollRight, setCanScrollRight] = useState(false);
     const [isScrollable, setIsScrollable] = useState(false);
@@ -116,17 +122,23 @@ export const PetSlider: React.FC<PetSliderProps> = ({ pets, onPetSelect }) => {
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ delay: index * 0.1 }}
-                        className="flex-shrink-0 w-[263px] cursor-pointer"
+                        className="flex-shrink-0 w-[300px] cursor-pointer"
                         onClick={() => onPetSelect?.(pet)}
                     >
-                        <div className="flex items-center bg-[#eee] rounded-[28px] py-3 pl-4 pr-10 overflow-hidden shadow-md hover:shadow-lg transition-shadow">
-                            <div className="relative w-[121px] h-[143px] flex-shrink-0">
+                        <div
+                            className={`flex items-center rounded-[28px] py-3 pl-4 pr-10 overflow-hidden shadow-md hover:shadow-lg transition-shadow border ${
+                                selectedPetId === pet.id
+                                    ? 'bg-white border-black'
+                                    : 'bg-[#eee] border-transparent'
+                            }`}
+                        >
+                            <div className="relative w-[121px] h-[143px] flex-shrink-0 overflow-hidden rounded-2xl">
                                 <Image
-                                    src="/PetAvatar.png"
-                                    alt={pet.name}
-                                    width={121}
-                                    height={143}
-                                    className="object-cover rounded-2xl"
+                                    src={pet.imgUrl || '/PetAvatar.png'}
+                                    alt={pet.nameEn || pet.name}
+                                    fill
+                                    sizes="121px"
+                                    className="object-cover"
                                 />
                             </div>
                             <div className="p-4">
@@ -134,7 +146,7 @@ export const PetSlider: React.FC<PetSliderProps> = ({ pets, onPetSelect }) => {
                                     {pet.name}
                                 </h3>
                                 <p className="text-[13px]  text-gray-600">
-                                    {pet.nameEn}
+                                    {pet.nameEn || pet.name}
                                 </p>
                             </div>
                         </div>
