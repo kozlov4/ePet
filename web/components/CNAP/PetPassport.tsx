@@ -218,7 +218,7 @@ export function PetPassport({
                         />
                     </div>
                 </div>
-                {!changeButton && (
+                {actionButton && (
                     <div className="flex justify-between">
                         <InfoField
                             fields={[
